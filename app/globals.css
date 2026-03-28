@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Primary Colors */
+  --color-primary-900: #1B3A4B;
+  --color-primary-700: #2C5F7C;
+  --color-primary-500: #3D8EB9;
+  --color-primary-100: #E3F2FD;
+
+  /* Semantic Colors */
+  --color-success: #1B7A3D;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+  --color-info: #1E5A8A;
+
+  /* Surface Colors */
+  --color-surface-background: #F8FAFC;
+  --color-surface-card: #FFFFFF;
+  --color-surface-muted: #F1F5F9;
+  --color-surface-border: #CBD5E1;
+
+  /* Trip Status Colors */
+  --color-status-planejada: #3B82F6;
+  --color-status-em-andamento: #F59E0B;
+  --color-status-concluida: #10B981;
+  --color-status-cancelada: #EF4444;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Border Radius */
+  --radius-default: 8px;
+  --radius-card: 12px;
+  --radius-full: 9999px;
+
+  /* Font Family */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--color-surface-background);
+  color: var(--color-primary-900);
+  font-family: var(--font-sans);
+}
+
+/* Tabular numbers for financial values */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
