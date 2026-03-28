@@ -1,0 +1,12 @@
+schema: 1
+story: '1.5'
+gate: PASS
+status_reason: 'Solid implementation with partial unique index, auto-close logic, explicit role auth, and correct migration ordering.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:30:00Z'
+top_issues:
+  - id: 'DOC-001'
+    severity: medium
+    finding: 'No story file (1.5.story.md) exists in the repository'
+    suggested_action: 'Create the story file with proper AC, file list, and checkboxes'
+waiver: { active: false }

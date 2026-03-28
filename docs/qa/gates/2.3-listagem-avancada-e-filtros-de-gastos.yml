@@ -1,0 +1,20 @@
+schema: 1
+story: '2.3'
+gate: CONCERNS
+status_reason: 'All 10 ACs implemented correctly. Filtering, pagination, subtotals, and CSV export work well. Missing unit tests for CSV generation and query aggregation logic.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:45:00Z'
+top_issues:
+  - id: 'TEST-001'
+    severity: medium
+    finding: 'No unit tests for export-gastos-csv.ts (CSV generation, BRL formatting, field escaping)'
+    suggested_action: 'Add unit tests covering BRL conversion, semicolon delimiter, BOM, and field escaping'
+  - id: 'TEST-002'
+    severity: medium
+    finding: 'No unit tests for lib/queries/gastos.ts filter and aggregation logic'
+    suggested_action: 'Add tests verifying filter application, pagination offset, and category aggregation'
+  - id: 'MNT-001'
+    severity: low
+    finding: 'Client-side aggregation in getGastosTotals fetches all rows. May degrade at scale.'
+    suggested_action: 'Consider Supabase RPC for server-side aggregation when dataset exceeds 10K rows'
+waiver: { active: false }

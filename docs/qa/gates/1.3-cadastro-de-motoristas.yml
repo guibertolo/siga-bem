@@ -1,0 +1,20 @@
+schema: 1
+story: '1.3'
+gate: CONCERNS
+status_reason: 'Code is solid with correct schema, RLS, and validation. Missing explicit role checks in server actions (defense-in-depth gap) and no story file for traceability.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:30:00Z'
+top_issues:
+  - id: 'TEST-001'
+    severity: low
+    finding: '1 shared test failing in validate-placa.test.ts — maskPlaca truncation edge case'
+    suggested_action: 'Fix maskPlaca to re-apply dash after truncation, or adjust test expectation'
+  - id: 'SEC-001'
+    severity: medium
+    finding: 'Motorista server actions lack explicit requireRole() checks — relies solely on RLS for authorization'
+    suggested_action: 'Add requireRole([dono, admin]) to createMotorista, updateMotorista, softDeleteMotorista, reactivateMotorista'
+  - id: 'DOC-001'
+    severity: medium
+    finding: 'No 1.3.story.md file exists in the repository'
+    suggested_action: 'Create the story file with AC, file list, and task checkboxes'
+waiver: { active: false }

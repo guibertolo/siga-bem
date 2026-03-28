@@ -1,0 +1,8 @@
+schema: 1
+story: '2.2'
+gate: PASS
+status_reason: 'All 9 ACs met. Compression targets 200KB correctly. Storage RLS isolates by empresa. Signed URLs prevent public exposure. Upload rollback on failure. 17 tests pass. All 3 prior fixes (SEC-001, SEC-002, MIG-001) confirmed resolved.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:45:00Z'
+top_issues: []
+waiver: { active: false }

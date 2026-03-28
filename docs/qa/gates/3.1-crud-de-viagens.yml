@@ -1,0 +1,28 @@
+schema: 1
+story: '3.1'
+gate: CONCERNS
+status_reason: 'All 13 ACs met. Status FSM, centavos, RLS, and deferred FK all correct. Missing unit tests for critical business logic. 3 pre-existing TS errors in project need fixing before CI passes.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:45:00Z'
+top_issues:
+  - id: 'TS-001'
+    severity: medium
+    finding: '3 pre-existing TypeScript errors: Zod enum syntax in fechamentos and combustivel actions, missing fields in financeiro FechamentoListItem'
+    suggested_action: 'Fix Zod enum to use { error } instead of { required_error } / { errorMap }. Add saldo_motorista and created_at to FechamentoListItem mapping.'
+  - id: 'TEST-001'
+    severity: medium
+    finding: 'No unit tests for viagem status transitions, calcularValorMotorista, or calcularDistancia'
+    suggested_action: 'Add tests for VIAGEM_STATUS_TRANSITIONS validation and viagem-calc.ts functions'
+  - id: 'TEST-002'
+    severity: medium
+    finding: 'No unit tests for viagem-veiculo Zod schema (placa regex, posicao range 1-15, field lengths)'
+    suggested_action: 'Add Zod schema validation tests'
+  - id: 'ARCH-001'
+    severity: low
+    finding: 'createViagem lacks server-side validation that caminhao has active vinculo with motorista'
+    suggested_action: 'Add motorista_caminhao check in createViagem before insert'
+  - id: 'LINT-001'
+    severity: low
+    finding: 'Unused SupabaseClient import in lib/utils/consumo-calc.ts'
+    suggested_action: 'Remove unused import'
+waiver: { active: false }

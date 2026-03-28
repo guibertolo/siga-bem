@@ -1,0 +1,24 @@
+schema: 1
+story: '1.4'
+gate: CONCERNS
+status_reason: 'Well-implemented with proper role authorization and validation. updateCaminhao duplicate check missing empresa_id filter (defense-in-depth gap) and no story file.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:30:00Z'
+top_issues:
+  - id: 'TEST-001'
+    severity: low
+    finding: '1 shared test failing in validate-placa.test.ts — maskPlaca truncation edge case'
+    suggested_action: 'Fix maskPlaca to re-apply dash after truncation, or adjust test expectation'
+  - id: 'SEC-002'
+    severity: medium
+    finding: 'updateCaminhao duplicate placa check does not filter by empresa_id — relies on RLS scoping'
+    suggested_action: 'Add .eq(empresa_id, currentUsuario.empresa_id) to the duplicate check query in updateCaminhao'
+  - id: 'ARCH-001'
+    severity: low
+    finding: 'UUID generation inconsistency — caminhao uses uuid_generate_v4() while motorista uses gen_random_uuid()'
+    suggested_action: 'Standardize on gen_random_uuid() across all migrations'
+  - id: 'DOC-001'
+    severity: medium
+    finding: 'No 1.4.story.md file exists in the repository'
+    suggested_action: 'Create the story file with AC, file list, and task checkboxes'
+waiver: { active: false }

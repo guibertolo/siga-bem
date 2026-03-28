@@ -1,0 +1,24 @@
+schema: 1
+story: '2.1'
+gate: CONCERNS
+status_reason: 'App code is solid with correct centavos handling and motorista ownership enforcement, but migration 180500 has a critical FK reference to viagem(id) which only exists in migration 180700.'
+reviewer: 'Quinn'
+updated: '2026-03-28T19:30:00Z'
+top_issues:
+  - id: 'MIG-001'
+    severity: high
+    finding: 'Migration 180500 references viagem(id) at L75, but viagem table is created in 180700. FK will fail during migration.'
+    suggested_action: 'Move viagem table creation before 180500, or remove the FK and add via ALTER TABLE after viagem exists.'
+  - id: 'SEC-001'
+    severity: medium
+    finding: 'Carried from 1.3: Motorista actions lack explicit requireRole() authorization'
+    suggested_action: 'Add requireRole([dono, admin]) to motorista CRUD actions for defense-in-depth'
+  - id: 'SEC-002'
+    severity: medium
+    finding: 'Carried from 1.4: updateCaminhao duplicate placa check missing empresa_id filter'
+    suggested_action: 'Add .eq(empresa_id, currentUsuario.empresa_id) to the duplicate check query'
+  - id: 'DOC-001'
+    severity: medium
+    finding: 'No story file (2.1.story.md) exists in the repository'
+    suggested_action: 'Create the story file with proper AC, file list, and checkboxes'
+waiver: { active: false }
