@@ -8,17 +8,36 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-primary-900">Dashboard</h2>
-      <p className="text-primary-700">
+    <div>
+      <h2
+        style={{
+          fontSize: '24px',
+          fontWeight: 700,
+          color: '#1B3A4B',
+          marginBottom: '4px',
+        }}
+      >
+        Dashboard
+      </h2>
+      <p
+        style={{
+          fontSize: '14px',
+          color: '#2C5F7C',
+          marginBottom: '24px',
+        }}
+      >
         Bem-vindo, {user?.email}
       </p>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '24px',
+        }}
+      >
         <ViagemSummaryCard />
-
         <GastoSummaryCard />
-
         <FechamentoSummaryCard />
       </div>
     </div>

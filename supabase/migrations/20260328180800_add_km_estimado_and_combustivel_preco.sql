@@ -20,7 +20,7 @@ CREATE TYPE combustivel_tipo AS ENUM ('diesel_s10', 'diesel_comum');
 -- 3. Create combustivel_preco table
 -- ---------------------------------------------------------------------------
 CREATE TABLE combustivel_preco (
-  id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id       UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   regiao           TEXT NOT NULL DEFAULT 'Geral',
   tipo             combustivel_tipo NOT NULL DEFAULT 'diesel_s10',

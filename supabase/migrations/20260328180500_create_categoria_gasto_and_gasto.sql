@@ -6,7 +6,7 @@
 -- 1. TABLE: categoria_gasto
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS categoria_gasto (
-  id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id UUID REFERENCES empresa(id) ON DELETE RESTRICT,  -- NULL = global/default
   nome       TEXT NOT NULL,
   icone      TEXT,        -- icon identifier (e.g., 'fuel', 'toll', 'tire')
@@ -67,7 +67,7 @@ INSERT INTO categoria_gasto (empresa_id, nome, icone, cor, ordem) VALUES
 -- 3. TABLE: gasto
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS gasto (
-  id            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id    UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   categoria_id  UUID NOT NULL REFERENCES categoria_gasto(id) ON DELETE RESTRICT,
   motorista_id  UUID NOT NULL REFERENCES motorista(id) ON DELETE RESTRICT,

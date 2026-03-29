@@ -5,10 +5,25 @@
 -- =============================================================================
 
 -- ---------------------------------------------------------------------------
+-- 0. CUSTOM TYPES
+-- ---------------------------------------------------------------------------
+DO $$ BEGIN
+  CREATE TYPE fechamento_tipo AS ENUM ('semanal', 'mensal');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  CREATE TYPE fechamento_status AS ENUM ('aberto', 'fechado', 'pago');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  CREATE TYPE fechamento_item_tipo AS ENUM ('gasto', 'viagem');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- ---------------------------------------------------------------------------
 -- 1. TABLE: fechamento
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS fechamento (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id        UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   motorista_id      UUID NOT NULL REFERENCES motorista(id) ON DELETE RESTRICT,
   tipo              fechamento_tipo NOT NULL,
@@ -92,7 +107,7 @@ CREATE POLICY fechamento_delete ON fechamento
 -- 5. TABLE: fechamento_item
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS fechamento_item (
-  id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   fechamento_id   UUID NOT NULL REFERENCES fechamento(id) ON DELETE CASCADE,
   tipo            TEXT NOT NULL CHECK (tipo IN ('viagem', 'gasto')),
   referencia_id   UUID NOT NULL,  -- viagem.id or gasto.id

@@ -6,7 +6,7 @@
 -- 1. TABLE: motorista_caminhao (N:N with history)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS motorista_caminhao (
-  id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id   UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   motorista_id UUID NOT NULL REFERENCES motorista(id) ON DELETE RESTRICT,
   caminhao_id  UUID NOT NULL REFERENCES caminhao(id) ON DELETE RESTRICT,

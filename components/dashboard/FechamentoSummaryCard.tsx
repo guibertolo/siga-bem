@@ -2,6 +2,17 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { formatBRL } from '@/lib/utils/currency';
 
+const cardStyle: React.CSSProperties = {
+  display: 'block',
+  borderRadius: '12px',
+  border: '1px solid #E2E8F0',
+  backgroundColor: '#FFFFFF',
+  padding: '24px',
+  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+  textDecoration: 'none',
+  color: 'inherit',
+};
+
 /**
  * Dashboard card showing pending fechamentos count and total value.
  * Story 4.1 — T7: Card "Fechamentos Pendentes" no dashboard principal.
@@ -27,13 +38,20 @@ export async function FechamentoSummaryCard() {
   );
 
   return (
-    <Link
-      href="/fechamentos?status=aberto"
-      className="block rounded-[--radius-card] border border-surface-border bg-surface-card p-6 shadow-sm transition-colors hover:bg-gray-50"
-    >
-      <h3 className="text-lg font-semibold text-primary-900">Fechamentos Pendentes</h3>
-      <p className="mt-2 text-3xl font-bold tabular-nums text-primary-700">{count}</p>
-      <p className="mt-1 text-sm text-primary-500">
+    <Link href="/fechamentos?status=aberto" style={cardStyle}>
+      <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#1B3A4B' }}>Fechamentos Pendentes</h3>
+      <p
+        style={{
+          marginTop: '8px',
+          fontSize: '30px',
+          fontWeight: 700,
+          color: '#2C5F7C',
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {count}
+      </p>
+      <p style={{ marginTop: '4px', fontSize: '14px', color: '#64748B' }}>
         {count > 0 ? `Total: ${formatBRL(totalCentavos)}` : 'Nenhum fechamento aberto'}
       </p>
     </Link>

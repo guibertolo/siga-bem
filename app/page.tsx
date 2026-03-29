@@ -2,23 +2,60 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-8 text-center">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-primary-900">Cegonheiros</h1>
-          <p className="text-lg text-primary-700">
-            Gestao inteligente de frotas de cegonheiros
-          </p>
-        </div>
+    <main
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F8FAFC',
+        padding: '48px 24px',
+      }}
+    >
+      <div style={{ width: '100%', maxWidth: '480px', textAlign: 'center' }}>
+        <h1
+          style={{
+            fontSize: '48px',
+            fontWeight: 800,
+            color: '#1B3A4B',
+            letterSpacing: '-1px',
+            lineHeight: 1.1,
+            marginBottom: '12px',
+          }}
+        >
+          Siga Bem
+        </h1>
+        <p
+          style={{
+            fontSize: '20px',
+            fontWeight: 500,
+            color: '#2C5F7C',
+            marginBottom: '48px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Sua frota no controle
+        </p>
 
-        <div className="space-y-4">
-          <Link
-            href="/login"
-            className="block w-full rounded-[--radius-default] bg-primary-700 px-6 py-3 text-center font-semibold text-white transition-colors hover:bg-primary-900"
-          >
-            Entrar
-          </Link>
-        </div>
+        <Link
+          href="/login"
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            maxWidth: '320px',
+            padding: '16px 32px',
+            backgroundColor: '#2C5F7C',
+            color: '#FFFFFF',
+            fontSize: '18px',
+            fontWeight: 600,
+            borderRadius: '8px',
+            textDecoration: 'none',
+            textAlign: 'center',
+          }}
+        >
+          Entrar
+        </Link>
       </div>
     </main>
   );

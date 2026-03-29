@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Plataforma Cegonheiros',
-  description: 'Gestao de frotas de cegonheiros — viagens, gastos e financeiro',
+  title: 'Siga Bem — Sua frota no controle',
+  description: 'Gestao inteligente de frotas — viagens, gastos e financeiro',
   manifest: '/manifest.json',
   icons: {
     icon: '/icons/icon-192.png',

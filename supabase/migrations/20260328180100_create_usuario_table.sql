@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS usuario (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   auth_id    UUID NOT NULL UNIQUE,  -- references auth.users(id)
   empresa_id UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
-  motorista_id UUID REFERENCES motorista(id),  -- nullable: link with motorista record
+  motorista_id UUID,  -- FK added in migration 180200 after motorista table exists
   nome       TEXT NOT NULL,
   email      TEXT NOT NULL,
   telefone   VARCHAR(20),
@@ -62,6 +62,11 @@ CREATE INDEX IF NOT EXISTS idx_usuario_role ON usuario (empresa_id, role);
 -- 5. RLS HELPER FUNCTIONS (SECURITY DEFINER)
 -- ---------------------------------------------------------------------------
 
+-- Drop placeholder functions from migration 180000 (return type changes from TEXT to specific types)
+DROP FUNCTION IF EXISTS fn_get_empresa_id() CASCADE;
+DROP FUNCTION IF EXISTS fn_get_user_role() CASCADE;
+DROP FUNCTION IF EXISTS fn_get_motorista_id() CASCADE;
+
 -- fn_get_empresa_id: returns empresa_id for the authenticated user
 CREATE OR REPLACE FUNCTION fn_get_empresa_id()
 RETURNS UUID
@@ -88,7 +93,7 @@ $$;
 
 COMMENT ON FUNCTION fn_get_user_role IS 'Retorna role do usuario autenticado (dono/admin/motorista).';
 
--- fn_get_motorista_id: returns motorista_id for the authenticated user (if motorista)
+-- fn_get_motorista_id: placeholder (real implementation in migration 180200 after motorista table)
 CREATE OR REPLACE FUNCTION fn_get_motorista_id()
 RETURNS UUID
 LANGUAGE sql
@@ -96,13 +101,8 @@ STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  SELECT m.id FROM motorista m
-  JOIN usuario u ON u.id = m.usuario_id
-  WHERE u.auth_id = auth.uid()
-  LIMIT 1;
+  SELECT NULL::UUID;
 $$;
-
-COMMENT ON FUNCTION fn_get_motorista_id IS 'Retorna motorista_id do usuario autenticado (se vinculado a motorista).';
 
 -- ---------------------------------------------------------------------------
 -- 6. ROW LEVEL SECURITY
@@ -138,3 +138,14 @@ CREATE POLICY "usuario_update_empresa"
 CREATE POLICY "usuario_select_self"
   ON usuario FOR SELECT
   USING (auth_id = auth.uid());
+
+-- ---------------------------------------------------------------------------
+-- 7. RECREATE empresa RLS policies (dropped by CASCADE on fn_get_empresa_id)
+-- ---------------------------------------------------------------------------
+CREATE POLICY "Usuarios visualizam propria empresa"
+  ON empresa FOR SELECT
+  USING (id = fn_get_empresa_id());
+
+CREATE POLICY "Dono edita propria empresa"
+  ON empresa FOR UPDATE
+  USING (id = fn_get_empresa_id() AND fn_get_user_role() = 'dono');

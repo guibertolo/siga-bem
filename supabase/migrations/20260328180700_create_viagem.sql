@@ -5,13 +5,20 @@
 -- =============================================================================
 
 -- ---------------------------------------------------------------------------
+-- 0. CUSTOM TYPE: viagem_status enum
+-- ---------------------------------------------------------------------------
+DO $$ BEGIN
+  CREATE TYPE viagem_status AS ENUM ('planejada', 'em_andamento', 'concluida', 'cancelada');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+-- ---------------------------------------------------------------------------
 -- 1. TABLE: viagem
 -- ---------------------------------------------------------------------------
--- NOTE: viagem_status enum already exists from migration 20260328180100
--- (created in initial schema as part of custom types)
 
 CREATE TABLE IF NOT EXISTS viagem (
-  id                    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id            UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   motorista_id          UUID NOT NULL REFERENCES motorista(id) ON DELETE RESTRICT,
   caminhao_id           UUID NOT NULL REFERENCES caminhao(id) ON DELETE RESTRICT,

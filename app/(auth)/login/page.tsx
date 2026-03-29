@@ -1,78 +1,151 @@
 'use client';
 
 import { useState } from 'react';
-import { login } from '@/app/(auth)/login/actions';
+import { sendMagicLink } from '@/app/(auth)/login/actions';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
+    setSuccess(false);
     setLoading(true);
     try {
-      const result = await login(formData);
+      const result = await sendMagicLink(formData);
       if (result?.error) {
         setError(result.error);
+      } else {
+        setSuccess(true);
       }
     } catch {
-      setError('Ocorreu um erro ao fazer login. Tente novamente.');
+      setError('Ocorreu um erro ao enviar o link. Tente novamente.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-surface-background p-4">
-      <div className="w-full max-w-sm space-y-6 rounded-[--radius-card] bg-surface-card p-8 shadow-sm">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold text-primary-900">Cegonheiros</h1>
-          <p className="text-sm text-primary-700">Entre com suas credenciais</p>
+    <main
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F8FAFC',
+        padding: '48px 16px',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '12px',
+          padding: '32px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <h1
+            style={{
+              fontSize: '24px',
+              fontWeight: 700,
+              color: '#1B3A4B',
+              marginBottom: '8px',
+            }}
+          >
+            Siga Bem
+          </h1>
+          <p style={{ fontSize: '14px', color: '#2C5F7C' }}>
+            Insira seu email para receber o link de acesso
+          </p>
         </div>
 
-        <form action={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label htmlFor="email" className="block text-sm font-medium text-primary-900">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              placeholder="seu@email.com"
-              className="h-12 w-full rounded-[--radius-default] border border-surface-border px-4 text-base text-primary-900 placeholder:text-surface-border focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-100"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="password" className="block text-sm font-medium text-primary-900">
-              Senha
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              placeholder="Sua senha"
-              className="h-12 w-full rounded-[--radius-default] border border-surface-border px-4 text-base text-primary-900 placeholder:text-surface-border focus:border-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-100"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-[--radius-default] bg-red-50 p-3 text-sm text-danger">
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="h-[52px] w-full rounded-[--radius-default] bg-primary-700 font-semibold text-white transition-colors hover:bg-primary-900 disabled:cursor-not-allowed disabled:opacity-50"
+        {success ? (
+          <div
+            style={{
+              backgroundColor: '#F0FDF4',
+              borderRadius: '8px',
+              padding: '16px',
+              textAlign: 'center',
+              fontSize: '14px',
+              color: '#1B7A3D',
+            }}
           >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
+            Link de acesso enviado! Verifique sua caixa de entrada.
+          </div>
+        ) : (
+          <form action={handleSubmit}>
+            <div style={{ marginBottom: '16px' }}>
+              <label
+                htmlFor="email"
+                style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#1B3A4B',
+                  marginBottom: '4px',
+                }}
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="seu@email.com"
+                style={{
+                  width: '100%',
+                  height: '48px',
+                  borderRadius: '8px',
+                  border: '1px solid #CBD5E1',
+                  padding: '0 16px',
+                  fontSize: '16px',
+                  color: '#1B3A4B',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            {error && (
+              <div
+                style={{
+                  backgroundColor: '#FEF2F2',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  color: '#B91C1C',
+                  marginBottom: '16px',
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                height: '52px',
+                borderRadius: '8px',
+                backgroundColor: loading ? '#94A3B8' : '#2C5F7C',
+                color: '#FFFFFF',
+                fontSize: '16px',
+                fontWeight: 600,
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.5 : 1,
+              }}
+            >
+              {loading ? 'Enviando...' : 'Enviar link de acesso'}
+            </button>
+          </form>
+        )}
       </div>
     </main>
   );

@@ -88,3 +88,20 @@ CREATE POLICY "motorista_update_empresa"
 CREATE POLICY "motorista_select_self"
   ON motorista FOR SELECT
   USING (id = fn_get_motorista_id());
+
+-- Deferred FK: usuario.motorista_id -> motorista.id
+ALTER TABLE usuario ADD CONSTRAINT fk_usuario_motorista FOREIGN KEY (motorista_id) REFERENCES motorista(id) ON DELETE SET NULL;
+
+-- Replace fn_get_motorista_id placeholder with real implementation
+CREATE OR REPLACE FUNCTION fn_get_motorista_id()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT m.id FROM motorista m
+  JOIN usuario u ON u.motorista_id = m.id
+  WHERE u.auth_id = auth.uid()
+  LIMIT 1;
+$$;

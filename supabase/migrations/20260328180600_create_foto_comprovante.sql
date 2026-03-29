@@ -6,7 +6,7 @@
 -- 1. TABLE: foto_comprovante
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS foto_comprovante (
-  id             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   empresa_id     UUID NOT NULL REFERENCES empresa(id) ON DELETE RESTRICT,
   gasto_id       UUID NOT NULL REFERENCES gasto(id) ON DELETE CASCADE,
   storage_path   TEXT NOT NULL,
