@@ -10,6 +10,7 @@ import { calcularConsumoMedio } from '@/lib/utils/consumo-calc';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemStatusActions } from '@/components/viagens/ViagemStatusActions';
 import { VeiculosSection } from '@/components/viagens/VeiculosSection';
+import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
 import type { ViagemStatus } from '@/types/database';
 
 function formatDateTime(isoString: string | null): string {
@@ -240,6 +241,19 @@ export default async function ViagemDetalhePage({
           capacidade={capacidade}
           readonly={isReadonly}
         />
+
+        {/* Abastecimento — Story 5.2 (AC 1, 2) */}
+        {viagem.status === 'em_andamento' && (
+          <AbastecimentoSection
+            viagemId={viagem.id}
+            empresaId={viagem.empresa_id}
+            origem={viagem.origem}
+            destino={viagem.destino}
+            motoristaNome={viagem.motorista?.nome ?? 'Motorista'}
+            caminhaoPlaca={viagem.caminhao ? `${viagem.caminhao.placa} - ${viagem.caminhao.modelo}` : '-'}
+            kmSaida={viagem.km_saida}
+          />
+        )}
 
         {/* Status actions */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">
