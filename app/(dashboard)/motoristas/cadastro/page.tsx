@@ -40,7 +40,7 @@ export default async function CadastroMotoristaPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
         <MotoristaForm mode="create" onSubmit={handleCreate} />
       </div>
     </div>

@@ -27,7 +27,7 @@ export default async function EditarCaminhaoPage({ params }: EditarCaminhaoPageP
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
         <EditarCaminhaoClient caminhao={result.caminhao!} />
       </div>
     </div>

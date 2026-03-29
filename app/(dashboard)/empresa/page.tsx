@@ -16,7 +16,7 @@ export default async function EmpresaPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Minha Empresa</h2>
         <Link
           href="/empresa/editar"
@@ -29,7 +29,7 @@ export default async function EmpresaPage() {
         </Link>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 sm:p-8 shadow-sm overflow-hidden">
         <dl className="divide-y divide-surface-border">
           <DataRow label="CNPJ" value={empresa.cnpj} />
           <DataRow label="Razao Social" value={empresa.razao_social} />
@@ -50,7 +50,7 @@ export default async function EmpresaPage() {
 
 function DataRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
-    <div className="grid grid-cols-[140px_1fr] gap-4 py-4">
+    <div className="grid grid-cols-[140px_1fr] items-start gap-4 py-4">
       <dt className="text-base font-medium text-primary-500">{label}</dt>
       <dd className="text-base text-primary-900 break-words">{value || '—'}</dd>
     </div>

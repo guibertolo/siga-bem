@@ -35,7 +35,7 @@ export default function CadastroCaminhaoPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
         <CaminhaoForm mode="create" onSubmit={handleSubmit} />
       </div>
     </div>

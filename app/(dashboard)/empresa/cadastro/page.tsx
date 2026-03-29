@@ -47,7 +47,7 @@ export default async function CadastroEmpresaPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
         <EmpresaForm mode="create" onSubmit={handleCreate} />
       </div>
     </div>

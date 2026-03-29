@@ -41,7 +41,7 @@ export default async function EditarEmpresaPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
         <EmpresaForm mode="edit" empresa={empresa} onSubmit={handleUpdate} />
       </div>
     </div>
