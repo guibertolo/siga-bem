@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { listCombustivelPrecos } from '@/app/(dashboard)/configuracoes/combustivel/actions';
+import { listCombustivelPrecos, getMediaPorRegiao } from '@/app/(dashboard)/configuracoes/combustivel/actions';
 import { CombustivelPrecoList } from '@/components/configuracoes/CombustivelPrecoList';
+import { MediaCombustivelRegiao } from '@/components/configuracoes/MediaCombustivelRegiao';
+import { getUserRole } from '@/lib/auth/get-user-role';
 
 export default async function CombustivelConfigPage() {
   const result = await listCombustivelPrecos();
@@ -11,6 +13,15 @@ export default async function CombustivelConfigPage() {
   }
 
   const precos = result.data ?? [];
+
+  const role = await getUserRole();
+  const isDono = role === 'dono';
+
+  let mediaData: Awaited<ReturnType<typeof getMediaPorRegiao>>['data'] = null;
+  if (isDono) {
+    const mediaResult = await getMediaPorRegiao();
+    mediaData = mediaResult.data;
+  }
 
   return (
     <div className="w-full max-w-4xl">
@@ -31,6 +42,19 @@ export default async function CombustivelConfigPage() {
       </div>
 
       <CombustivelPrecoList precos={precos} />
+
+      {isDono && mediaData !== null && (
+        <div className="mt-10">
+          <h3 className="mb-1 text-xl font-bold text-primary-900">
+            Media Real por Regiao
+          </h3>
+          <p className="mb-4 text-sm text-primary-500">
+            Precos medios calculados a partir dos abastecimentos registrados pelos
+            motoristas nas viagens.
+          </p>
+          <MediaCombustivelRegiao data={mediaData} />
+        </div>
+      )}
     </div>
   );
 }

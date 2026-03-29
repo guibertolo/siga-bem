@@ -9,6 +9,7 @@ import type {
   CombustivelPreco,
   CombustivelPrecoActionResult,
   CombustivelPrecoFormData,
+  MediaCombustivelRegiao,
 } from '@/types/precificacao';
 import { PRECO_DIESEL_PADRAO_CENTAVOS } from '@/types/precificacao';
 
@@ -247,4 +248,36 @@ export async function getPrecoDieselAtual(): Promise<{
     fonte: 'tabela',
     regiao: data.regiao,
   };
+}
+
+/**
+ * Get fuel price averages by region from the vw_media_combustivel_regiao view.
+ * Only accessible by role=dono (Story 5.4, AC 2).
+ * RLS on the view filters by empresa_id automatically.
+ */
+export async function getMediaPorRegiao(): Promise<{
+  data: MediaCombustivelRegiao[] | null;
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: null, error: 'Nao autenticado' };
+  }
+
+  if (usuario.role !== 'dono') {
+    return { data: null, error: 'Acesso restrito ao dono da empresa' };
+  }
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('vw_media_combustivel_regiao')
+    .select('*')
+    .order('uf_abastecimento', { ascending: true });
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  return { data: data as MediaCombustivelRegiao[], error: null };
 }

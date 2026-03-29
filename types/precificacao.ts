@@ -91,3 +91,23 @@ export const CONSUMO_PADRAO_KM_L = 3.0;
  * Used as fallback when no price configured.
  */
 export const PRECO_DIESEL_PADRAO_CENTAVOS = 650;
+
+/**
+ * Row returned by `vw_media_combustivel_regiao` view.
+ * Story 5.4 — Media de Preco de Combustivel por Regiao
+ *
+ * All monetary values follow CON-003 (centavos for totals, numeric for per-litre).
+ */
+export interface MediaCombustivelRegiao {
+  empresa_id: string;
+  uf_abastecimento: string;
+  tipo_combustivel: string;
+  total_abastecimentos: number;
+  preco_medio_litro: number;
+  preco_min_litro: number;
+  preco_max_litro: number;
+  total_litros: number;
+  total_valor_centavos: number;
+  primeira_data: string;
+  ultima_data: string;
+}
