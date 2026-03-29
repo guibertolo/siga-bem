@@ -1,7 +1,12 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: 'Historico Financeiro',
+};
 import {
   getFechamentosHistorico,
   getResumoFinanceiro,

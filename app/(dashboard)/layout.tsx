@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { MobileSidebar } from '@/components/ui/MobileSidebar';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -39,8 +40,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-60 bg-[#1B3A4B] text-white flex flex-col shrink-0">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-60 bg-[#1B3A4B] text-white flex-col shrink-0">
         <div className="px-5 py-7 border-b border-white/10">
           <Link
             href="/dashboard"
@@ -102,13 +103,22 @@ export default async function DashboardLayout({
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-surface-card border-b border-surface-border px-8 py-4 flex items-center justify-between">
-          <span className="text-sm text-primary-700">
-            {currentUsuario.email}
-          </span>
+        <header className="bg-surface-card border-b border-surface-border px-4 md:px-8 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            {/* Mobile hamburger + drawer */}
+            <MobileSidebar
+              navLinks={navLinks}
+              adminLinks={adminLinks}
+              showAdminLinks={showAdminLinks}
+              showBILink={showBILink}
+            />
+            <span className="text-sm text-primary-700 truncate">
+              {currentUsuario.email}
+            </span>
+          </div>
           <ThemeToggle />
         </header>
-        <main className="flex-1 bg-surface-background p-8 overflow-auto">
+        <main className="flex-1 bg-surface-background p-4 md:p-8 overflow-auto">
           {children}
         </main>
       </div>

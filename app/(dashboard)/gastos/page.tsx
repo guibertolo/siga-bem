@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -5,6 +6,10 @@ import {
   listGastosFiltered,
   fetchFilterOptions,
 } from '@/app/(dashboard)/gastos/actions';
+
+export const metadata: Metadata = {
+  title: 'Gastos',
+};
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { GastoFilters } from '@/components/gastos/GastoFilters';
 import { GastoTable } from '@/components/gastos/GastoTable';

@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { listCaminhoes } from '@/app/(dashboard)/caminhoes/actions';
+
+export const metadata: Metadata = {
+  title: 'Caminhoes',
+};
 import { CaminhaoList } from '@/components/caminhoes/caminhao-list';
 
 export default async function CaminhoesPage() {

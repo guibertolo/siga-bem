@@ -10,11 +10,38 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Siga Bem — Sua frota no controle',
-  description: 'Gestao inteligente de frotas — viagens, gastos e financeiro',
+  title: {
+    default: 'Siga Bem - Gestao de Frotas de Cegonha',
+    template: '%s | Siga Bem',
+  },
+  description:
+    'Plataforma de gestao inteligente para transportadoras de veiculos (cegonheiros). Controle viagens, gastos, combustivel e fechamentos.',
+  keywords: [
+    'gestao de frotas',
+    'cegonheiro',
+    'transporte de veiculos',
+    'caminhao cegonha',
+    'controle de gastos',
+    'fechamento financeiro',
+  ],
+  authors: [{ name: 'Siga Bem' }],
+  openGraph: {
+    title: 'Siga Bem - Sua frota no controle',
+    description: 'Gestao inteligente para transportadoras de veiculos',
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: 'Siga Bem',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   manifest: '/manifest.json',
   icons: {
-    icon: '/icons/icon-192.png',
+    icon: [
+      { url: '/logos/siga-bem-favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
     apple: '/icons/icon-192.png',
   },
 };

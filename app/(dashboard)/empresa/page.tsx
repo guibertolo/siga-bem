@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEmpresa } from '@/app/(dashboard)/empresa/actions';
+
+export const metadata: Metadata = {
+  title: 'Minha Empresa',
+};
 
 export default async function EmpresaPage() {
   const result = await getEmpresa();
@@ -50,7 +55,7 @@ export default async function EmpresaPage() {
 
 function DataRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
-    <div className="grid grid-cols-[140px_1fr] items-start gap-4 py-4">
+    <div className="flex flex-col sm:grid sm:grid-cols-[140px_1fr] items-start gap-1 sm:gap-4 py-3 sm:py-4">
       <dt className="text-base font-medium text-primary-500">{label}</dt>
       <dd className="text-base text-primary-900 break-words">{value || '—'}</dd>
     </div>

@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listMotoristas } from '@/app/(dashboard)/motoristas/actions';
+
+export const metadata: Metadata = {
+  title: 'Motoristas',
+};
 import { MotoristaList } from '@/components/motoristas/MotoristaList';
 
 export default async function MotoristasPage() {

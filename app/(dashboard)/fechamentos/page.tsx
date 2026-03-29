@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -6,6 +7,10 @@ import {
   listFechamentos,
   listMotoristasParaFechamento,
 } from '@/app/(dashboard)/fechamentos/actions';
+
+export const metadata: Metadata = {
+  title: 'Fechamentos',
+};
 import { FechamentoList } from '@/components/fechamentos/FechamentoList';
 import { FechamentoFilters } from '@/components/fechamentos/FechamentoFilters';
 import type { FechamentoStatus } from '@/types/database';

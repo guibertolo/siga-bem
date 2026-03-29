@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listViagens, listMotoristasAtivos } from '@/app/(dashboard)/viagens/actions';
+
+export const metadata: Metadata = {
+  title: 'Viagens',
+};
 import { ViagemList } from '@/components/viagens/ViagemList';
 
 export default async function ViagensPage() {

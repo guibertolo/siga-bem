@@ -38,7 +38,16 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
+    <>
+    {/* Mobile card view */}
+    <div className="space-y-3 md:hidden">
+      {caminhoes.map((caminhao) => (
+        <MobileCaminhaoCard key={caminhao.id} caminhao={caminhao} />
+      ))}
+    </div>
+
+    {/* Desktop table view */}
+    <div className="hidden md:block overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted">
@@ -58,6 +67,62 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
           ))}
         </tbody>
       </table>
+    </div>
+    </>
+  );
+}
+
+function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
+  const [isPending, startTransition] = useTransition();
+  const tipoLabel = caminhao.tipo_cegonha === 'aberta' ? 'Aberta' : 'Fechada';
+
+  function handleToggleAtivo() {
+    startTransition(async () => {
+      await toggleCaminhaoAtivo(caminhao.id, !caminhao.ativo);
+    });
+  }
+
+  return (
+    <div className={cn(
+      'rounded-xl border border-surface-border bg-surface-card p-4 shadow-sm',
+      !caminhao.ativo && 'opacity-60',
+    )}>
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <p className="text-base font-mono font-medium text-primary-900">{maskPlaca(caminhao.placa)}</p>
+          <p className="text-sm text-primary-700">{caminhao.modelo} {caminhao.marca ? `- ${caminhao.marca}` : ''}</p>
+        </div>
+        <span className={cn(
+          'inline-block rounded-full px-3 py-1 text-xs font-semibold',
+          caminhao.ativo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+        )}>
+          {caminhao.ativo ? 'Ativo' : 'Inativo'}
+        </span>
+      </div>
+      <div className="text-sm text-primary-700 space-y-0.5">
+        <p>{tipoLabel} - {caminhao.capacidade_veiculos} veiculos</p>
+        <p>{caminhao.km_atual.toLocaleString('pt-BR')} km</p>
+      </div>
+      <div className="mt-3 flex items-center gap-2">
+        <Link
+          href={`/caminhoes/editar/${caminhao.id}`}
+          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+        >
+          Editar
+        </Link>
+        <button
+          type="button"
+          onClick={handleToggleAtivo}
+          disabled={isPending}
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
+            caminhao.ativo ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50',
+            isPending && 'cursor-not-allowed opacity-50',
+          )}
+        >
+          {isPending ? '...' : caminhao.ativo ? 'Desativar' : 'Reativar'}
+        </button>
+      </div>
     </div>
   );
 }

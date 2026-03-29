@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { listVinculos } from '@/app/(dashboard)/vinculos/actions';
+
+export const metadata: Metadata = {
+  title: 'Vinculos',
+};
 import { VinculoList } from '@/components/vinculos/VinculoList';
 
 export default async function VinculosPage() {

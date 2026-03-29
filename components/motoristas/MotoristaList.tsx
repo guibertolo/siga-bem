@@ -81,7 +81,59 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
           <p className="mt-1 text-sm text-primary-400">Cadastre um motorista para comecar.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
+        <>
+        {/* Mobile card view */}
+        <div className="space-y-3 md:hidden">
+          {filtered.map((m) => (
+            <div key={m.id} className="rounded-xl border border-surface-border bg-surface-card p-4 shadow-sm">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <p className="text-base font-medium text-primary-900">{m.nome}</p>
+                  <p className="text-sm text-primary-500">{m.cpf}</p>
+                </div>
+                <span
+                  className={cn(
+                    'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
+                    m.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600',
+                  )}
+                >
+                  {m.status === 'ativo' ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="text-sm text-primary-700 space-y-0.5">
+                <p>CNH: {m.cnh_numero} ({m.cnh_categoria})</p>
+                <p>
+                  Validade:{' '}
+                  <span
+                    className={cn(
+                      m.cnh_vencida ? 'text-red-700 font-semibold' : m.cnh_vence_em_30_dias ? 'text-amber-700 font-semibold' : '',
+                    )}
+                  >
+                    {m.cnh_validade}
+                  </span>
+                </p>
+                {m.telefone && <p>Tel: {m.telefone}</p>}
+              </div>
+              <div className="mt-3">
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleToggleStatus(m.id, m.status)}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
+                    m.status === 'ativo' ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50',
+                    isPending && 'cursor-not-allowed opacity-50',
+                  )}
+                >
+                  {m.status === 'ativo' ? 'Inativar' : 'Reativar'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table view */}
+        <div className="hidden md:block overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
           <table className="w-full">
             <thead>
               <tr className="border-b border-surface-border bg-surface-background">
@@ -159,6 +211,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

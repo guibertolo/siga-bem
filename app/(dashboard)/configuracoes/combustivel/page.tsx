@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listCombustivelPrecos, getMediaPorRegiao } from '@/app/(dashboard)/configuracoes/combustivel/actions';
+
+export const metadata: Metadata = {
+  title: 'Combustivel',
+};
 import { CombustivelPrecoList } from '@/components/configuracoes/CombustivelPrecoList';
 import { MediaCombustivelRegiao } from '@/components/configuracoes/MediaCombustivelRegiao';
 import { getUserRole } from '@/lib/auth/get-user-role';

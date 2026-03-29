@@ -1,5 +1,10 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+
+export const metadata: Metadata = {
+  title: 'Usuarios',
+};
 import { listUsuarios } from '@/app/(dashboard)/usuarios/actions';
 import UsuariosClientPage from '@/app/(dashboard)/usuarios/client-page';
 

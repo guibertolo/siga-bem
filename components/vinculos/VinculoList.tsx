@@ -52,7 +52,46 @@ export function VinculoList({ vinculos }: VinculoListProps) {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-surface-border">
+      {/* Mobile card view */}
+      <div className="space-y-3 md:hidden">
+        {vinculos.map((v) => (
+          <div key={v.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <p className="text-base font-medium text-primary-900">{v.motorista_nome}</p>
+                <p className="text-sm text-primary-500">{v.motorista_cpf}</p>
+              </div>
+              <span
+                className={cn(
+                  'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
+                  v.ativo ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600',
+                )}
+              >
+                {v.ativo ? 'Ativo' : 'Encerrado'}
+              </span>
+            </div>
+            <div className="text-sm text-primary-700 space-y-0.5">
+              <p>{v.caminhao_placa} - {v.caminhao_modelo}</p>
+              <p>{formatDate(v.data_inicio)}{v.data_fim ? ` - ${formatDate(v.data_fim)}` : ' - atual'}</p>
+            </div>
+            {v.ativo && (
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => handleEncerrar(v.id)}
+                  disabled={isPending && encerrandoId === v.id}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px] disabled:opacity-50"
+                >
+                  {isPending && encerrandoId === v.id ? 'Encerrando...' : 'Encerrar'}
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden md:block overflow-hidden rounded-lg border border-surface-border">
         <table className="min-w-full divide-y divide-surface-border">
           <thead className="bg-surface-card">
             <tr>
@@ -123,3 +162,4 @@ export function VinculoList({ vinculos }: VinculoListProps) {
     </div>
   );
 }
+

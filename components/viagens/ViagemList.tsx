@@ -128,7 +128,64 @@ export function ViagemList({
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
+          {/* Mobile card view */}
+          <div className="space-y-3 md:hidden">
+            {viagens.map((v) => (
+              <div
+                key={v.id}
+                className="rounded-lg border border-surface-border bg-surface-card p-4"
+              >
+                <div className="flex items-start justify-between mb-1">
+                  <div>
+                    <div className="text-base font-medium text-primary-900">{v.origem}</div>
+                    <div className="text-sm text-primary-500">{v.destino}</div>
+                  </div>
+                  <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                    {VIAGEM_STATUS_LABELS[v.status]}
+                  </span>
+                </div>
+                <div className="mt-2 text-sm text-primary-700 space-y-0.5">
+                  <p>{v.motorista_nome} - {v.caminhao_placa}</p>
+                  <p>{formatDateTime(v.data_saida)}</p>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-base font-semibold tabular-nums text-primary-900">
+                    {formatBRL(v.valor_total)}
+                  </span>
+                  <span className="text-sm tabular-nums text-primary-500">{v.percentual_pagamento}%</span>
+                </div>
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                  <Link
+                    href={`/viagens/${v.id}`}
+                    className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                  >
+                    Ver
+                  </Link>
+                  {(v.status === 'planejada' || v.status === 'em_andamento') && (
+                    <Link
+                      href={`/viagens/${v.id}/editar`}
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                    >
+                      Editar
+                    </Link>
+                  )}
+                  {v.status === 'planejada' && (
+                    confirmId === v.id ? (
+                      <span className="flex items-center gap-1">
+                        <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]">Confirmar</button>
+                        <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Nao</button>
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => handleDeleteClick(v.id)} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]">Excluir</button>
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table view */}
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-border bg-surface-muted text-left">

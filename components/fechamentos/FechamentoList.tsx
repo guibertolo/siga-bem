@@ -16,7 +16,50 @@ interface FechamentoListProps {
 
 export function FechamentoList({ fechamentos }: FechamentoListProps) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
+    <>
+    {/* Mobile card view */}
+    <div className="space-y-3 md:hidden">
+      {fechamentos.map((f) => (
+        <div key={f.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-base font-medium text-primary-900">{f.motorista_nome}</p>
+            <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${FECHAMENTO_STATUS_COLORS[f.status]}`}>
+              {FECHAMENTO_STATUS_LABELS[f.status]}
+            </span>
+          </div>
+          <div className="text-sm text-primary-700 space-y-0.5">
+            <p>{formatarPeriodoFechamento(f.periodo_inicio, f.periodo_fim, f.tipo)} - {FECHAMENTO_TIPO_LABELS[f.tipo]}</p>
+          </div>
+          <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+            <div>
+              <p className="text-primary-500">Viagens</p>
+              <p className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_viagens)}</p>
+            </div>
+            <div>
+              <p className="text-primary-500">Gastos</p>
+              <p className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_gastos)}</p>
+            </div>
+            <div>
+              <p className="text-primary-500">Saldo</p>
+              <p className={`font-medium tabular-nums ${f.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                {formatBRL(f.saldo_motorista)}
+              </p>
+            </div>
+          </div>
+          <div className="mt-3">
+            <Link
+              href={`/fechamentos/${f.id}`}
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+            >
+              Detalhes
+            </Link>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Desktop table view */}
+    <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
       <table className="w-full">
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted text-left">
@@ -82,5 +125,6 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }

@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+
+export const metadata: Metadata = {
+  title: 'BI Financeiro',
+};
 import {
   getBIFilterOptions,
   getBIKpis,

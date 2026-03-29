@@ -1,4 +1,9 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+};
 import { GastoSummaryCard } from '@/components/dashboard/GastoSummaryCard';
 import { ViagemSummaryCard } from '@/components/dashboard/ViagemSummaryCard';
 import { FechamentoSummaryCard } from '@/components/dashboard/FechamentoSummaryCard';
@@ -20,7 +25,7 @@ export default async function DashboardPage() {
         Bem-vindo, {user?.email}
       </p>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <ViagemSummaryCard
           count={dashboardData.viagens.count}
           error={dashboardData.viagens.error}
