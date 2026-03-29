@@ -182,7 +182,7 @@ export function ViagemForm({
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
         ? 'border-red-300 bg-red-50'
-        : 'border-surface-border bg-white',
+        : 'border-surface-border bg-surface-card',
     );
 
   return (
@@ -422,7 +422,7 @@ export function ViagemForm({
         <button
           type="button"
           onClick={() => router.push('/viagens')}
-          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted"
         >
           Cancelar
         </button>

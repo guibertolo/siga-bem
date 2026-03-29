@@ -131,7 +131,7 @@ export function ViagemList({
           <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-surface-border bg-gray-50 text-left">
+                <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhao</th>
@@ -146,7 +146,7 @@ export function ViagemList({
                 {viagens.map((v) => (
                   <tr
                     key={v.id}
-                    className="border-b border-surface-border last:border-b-0 hover:bg-gray-50"
+                    className="border-b border-surface-border last:border-b-0 hover:bg-surface-muted"
                   >
                     <td className="px-4 py-3.5">
                       <div className="text-base font-medium text-primary-900">{v.origem}</div>
@@ -242,7 +242,7 @@ export function ViagemList({
                   type="button"
                   onClick={() => handlePageChange(page - 1)}
                   disabled={page <= 1 || isPending}
-                  className="rounded-lg border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Anterior
                 </button>
@@ -253,7 +253,7 @@ export function ViagemList({
                   type="button"
                   onClick={() => handlePageChange(page + 1)}
                   disabled={page >= totalPages || isPending}
-                  className="rounded-lg border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Proxima
                 </button>

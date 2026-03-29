@@ -63,7 +63,7 @@ export function EstimativaViagem({
 
   if (!kmEstimado || kmEstimado <= 0) {
     return (
-      <div className="rounded-lg border border-dashed border-surface-border bg-gray-50 p-4">
+      <div className="rounded-lg border border-dashed border-surface-border bg-surface-muted p-4">
         <p className="text-center text-sm text-primary-500">
           Preencha a distancia estimada para ver a estimativa de custo.
         </p>

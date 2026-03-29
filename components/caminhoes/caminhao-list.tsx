@@ -41,7 +41,7 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
     <div className="overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
       <table className="w-full text-left">
         <thead>
-          <tr className="border-b border-surface-border bg-gray-50">
+          <tr className="border-b border-surface-border bg-surface-muted">
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Placa</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Modelo</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Marca</th>
@@ -75,7 +75,7 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
 
   return (
     <tr className={cn(
-      'border-b border-surface-border transition-colors hover:bg-gray-50',
+      'border-b border-surface-border transition-colors hover:bg-surface-muted',
       !caminhao.ativo && 'opacity-60',
     )}>
       <td className="px-4 py-3.5 text-base font-mono font-medium text-primary-900">

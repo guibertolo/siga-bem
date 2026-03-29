@@ -79,7 +79,7 @@ export default async function FechamentoDetalhePage({
       </div>
 
       {/* Info Card */}
-      <div className="mb-6 rounded-lg border border-surface-border bg-white p-6 shadow-sm">
+      <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-500">Motorista</p>
@@ -131,7 +131,7 @@ export default async function FechamentoDetalhePage({
       )}
 
       {/* Financial Summary */}
-      <div className="mb-6 rounded-lg border border-surface-border bg-white p-6 shadow-sm">
+      <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
           Resumo Financeiro
         </h3>
@@ -178,7 +178,7 @@ export default async function FechamentoDetalhePage({
       </div>
 
       {/* Viagens Table */}
-      <div className="mb-6 rounded-lg border border-surface-border bg-white p-6 shadow-sm">
+      <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
           Viagens ({viagemItens.length})
         </h3>
@@ -213,7 +213,7 @@ export default async function FechamentoDetalhePage({
       </div>
 
       {/* Gastos Table */}
-      <div className="mb-6 rounded-lg border border-surface-border bg-white p-6 shadow-sm">
+      <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
           Gastos ({gastoItens.length})
         </h3>
@@ -249,7 +249,7 @@ export default async function FechamentoDetalhePage({
 
       {/* Observation */}
       {fechamento.observacao && (
-        <div className="mb-6 rounded-lg border border-surface-border bg-white p-6 shadow-sm">
+        <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
           <h3 className="mb-2 text-lg font-semibold text-primary-900">
             Observacao
           </h3>

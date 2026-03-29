@@ -103,19 +103,19 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
 
         {/* Totais */}
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg bg-gray-50 p-3 text-center">
+          <div className="rounded-lg bg-surface-muted p-3 text-center">
             <p className="text-xs text-primary-500">Viagens ({viagemItems.length})</p>
             <p className="text-lg font-bold tabular-nums text-primary-900">
               {formatBRL(fechamento.total_viagens)}
             </p>
           </div>
-          <div className="rounded-lg bg-gray-50 p-3 text-center">
+          <div className="rounded-lg bg-surface-muted p-3 text-center">
             <p className="text-xs text-primary-500">Gastos ({gastoItems.length})</p>
             <p className="text-lg font-bold tabular-nums text-primary-900">
               {formatBRL(fechamento.total_gastos)}
             </p>
           </div>
-          <div className="rounded-lg bg-gray-50 p-3 text-center">
+          <div className="rounded-lg bg-surface-muted p-3 text-center">
             <p className="text-xs text-primary-500">Saldo Liquido</p>
             <p
               className={`text-lg font-bold tabular-nums ${
@@ -156,7 +156,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-surface-border bg-gray-50 text-left">
+                <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-2 font-medium text-primary-700">Data</th>
                   <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
                   <th className="px-4 py-2 text-right font-medium text-primary-700">Valor</th>
@@ -191,7 +191,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-surface-border bg-gray-50 text-left">
+                <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-2 font-medium text-primary-700">Data</th>
                   <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
                   <th className="px-4 py-2 text-right font-medium text-primary-700">Valor</th>
@@ -234,7 +234,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   <button
                     type="button"
                     onClick={() => setConfirmAction(null)}
-                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-gray-50"
+                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                   >
                     Cancelar
                   </button>
@@ -268,7 +268,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   <button
                     type="button"
                     onClick={() => setConfirmAction(null)}
-                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-gray-50"
+                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                   >
                     Cancelar
                   </button>
@@ -302,7 +302,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   <button
                     type="button"
                     onClick={() => setConfirmAction(null)}
-                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-gray-50"
+                    className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                   >
                     Cancelar
                   </button>

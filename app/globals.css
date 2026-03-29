@@ -22,6 +22,20 @@
   --color-surface-muted: #F1F5F9;
   --color-surface-border: #CBD5E1;
   --color-surface-hover: #E2E8F0;
+  --color-surface-input: #FFFFFF;
+  --color-surface-row-alt: #F9FAFB;
+  --color-surface-row-hover: #F3F4F6;
+
+  /* Text Colors */
+  --color-text-muted: #64748B;
+  --color-text-subtle: #94A3B8;
+  --color-text-label: #334155;
+
+  /* Alert Background Colors */
+  --color-alert-success-bg: #F0FDF4;
+  --color-alert-danger-bg: #FEF2F2;
+  --color-alert-warning-bg: #FFFBEB;
+  --color-alert-info-bg: #EFF6FF;
 
   /* Trip Status Colors */
   --color-status-planejada: #3B82F6;
@@ -55,4 +69,68 @@ body {
 /* Tabular numbers for financial values */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Dark mode - auto (system preference) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-primary-900: #E3F2FD;
+    --color-primary-700: #90CAF9;
+    --color-primary-500: #64B5F6;
+    --color-primary-100: #1B3A4B;
+
+    --color-success: #4ADE80;
+    --color-warning: #FBBF24;
+    --color-danger: #F87171;
+    --color-info: #60A5FA;
+
+    --color-surface-background: #0F172A;
+    --color-surface-card: #1E293B;
+    --color-surface-muted: #334155;
+    --color-surface-border: #475569;
+    --color-surface-hover: #475569;
+    --color-surface-input: #1E293B;
+    --color-surface-row-alt: #1E293B;
+    --color-surface-row-hover: #334155;
+
+    --color-text-muted: #94A3B8;
+    --color-text-subtle: #64748B;
+    --color-text-label: #CBD5E1;
+
+    --color-alert-success-bg: #052E16;
+    --color-alert-danger-bg: #450A0A;
+    --color-alert-warning-bg: #451A03;
+    --color-alert-info-bg: #172554;
+  }
+}
+
+/* Dark mode - manual toggle */
+.dark {
+  --color-primary-900: #E3F2FD;
+  --color-primary-700: #90CAF9;
+  --color-primary-500: #64B5F6;
+  --color-primary-100: #1B3A4B;
+
+  --color-success: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+  --color-info: #60A5FA;
+
+  --color-surface-background: #0F172A;
+  --color-surface-card: #1E293B;
+  --color-surface-muted: #334155;
+  --color-surface-border: #475569;
+  --color-surface-hover: #475569;
+  --color-surface-input: #1E293B;
+  --color-surface-row-alt: #1E293B;
+  --color-surface-row-hover: #334155;
+
+  --color-text-muted: #94A3B8;
+  --color-text-subtle: #64748B;
+  --color-text-label: #CBD5E1;
+
+  --color-alert-success-bg: #052E16;
+  --color-alert-danger-bg: #450A0A;
+  --color-alert-warning-bg: #451A03;
+  --color-alert-info-bg: #172554;
 }

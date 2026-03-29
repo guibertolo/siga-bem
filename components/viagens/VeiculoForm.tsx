@@ -104,7 +104,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
       aria-label={isEdit ? 'Editar veiculo' : 'Adicionar veiculo'}
     >
       <div
-        className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl"
+        className="w-full max-w-lg rounded-lg bg-surface-card p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
@@ -142,7 +142,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={100}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.modelo ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                errors.modelo ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Onix, HB20, Corolla"
               {...register('modelo')}
@@ -163,7 +163,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={50}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.marca ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                errors.marca ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Chevrolet, Hyundai, Toyota"
               {...register('marca')}
@@ -185,7 +185,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={8}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.placa ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                  errors.placa ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="ABC-1234 ou ABC1D23"
                 {...register('placa')}
@@ -205,7 +205,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={20}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.chassi ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                  errors.chassi ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Chassi do veiculo"
                 {...register('chassi')}
@@ -228,7 +228,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={30}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.cor ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                  errors.cor ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Ex: Branco, Prata, Preto"
                 {...register('cor')}
@@ -249,7 +249,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 max={15}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.posicao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                  errors.posicao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="1 a 15"
                 {...register('posicao', {
@@ -273,7 +273,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               rows={2}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+                errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Observacoes sobre o veiculo"
               {...register('observacao')}
@@ -288,7 +288,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
+              className="rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted"
               disabled={isPending}
             >
               Cancelar

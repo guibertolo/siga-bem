@@ -89,7 +89,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
 
       {/* List */}
       {precos.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-surface-border bg-gray-50 p-8 text-center">
+        <div className="rounded-lg border border-dashed border-surface-border bg-surface-muted p-8 text-center">
           <p className="text-base text-primary-500">
             Nenhum preco de combustivel cadastrado.
           </p>
@@ -100,7 +100,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
       ) : (
         <div className="overflow-x-auto rounded-lg border border-surface-border">
           <table className="w-full text-left">
-            <thead className="border-b border-surface-border bg-gray-50">
+            <thead className="border-b border-surface-border bg-surface-muted">
               <tr>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Regiao</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Tipo</th>
@@ -110,9 +110,9 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Acoes</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border bg-white">
+            <tbody className="divide-y divide-surface-border bg-surface-card">
               {precos.map((preco) => (
-                <tr key={preco.id} className="transition-colors hover:bg-gray-50">
+                <tr key={preco.id} className="transition-colors hover:bg-surface-muted">
                   <td className="px-4 py-3.5 text-base font-medium text-primary-900">{preco.regiao}</td>
                   <td className="px-4 py-3.5 text-base text-primary-700">{COMBUSTIVEL_TIPO_LABELS[preco.tipo]}</td>
                   <td className="px-4 py-3.5 text-base tabular-nums font-medium text-primary-900">

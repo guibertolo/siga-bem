@@ -253,7 +253,7 @@ export default async function ViagemDetalhePage({
             <div className="mt-4">
               <Link
                 href={`/viagens/${viagem.id}/editar`}
-                className="rounded-lg border border-surface-border px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+                className="rounded-lg border border-surface-border px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-muted"
               >
                 Editar Viagem
               </Link>

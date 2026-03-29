@@ -19,7 +19,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
     <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-surface-border bg-gray-50 text-left">
+          <tr className="border-b border-surface-border bg-surface-muted text-left">
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Periodo</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
@@ -34,7 +34,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
           {fechamentos.map((f) => (
             <tr
               key={f.id}
-              className="border-b border-surface-border last:border-0 hover:bg-gray-50"
+              className="border-b border-surface-border last:border-0 hover:bg-surface-muted"
             >
               <td className="px-4 py-3.5 text-base text-primary-900">{f.motorista_nome}</td>
               <td className="whitespace-nowrap px-4 py-3.5 text-base tabular-nums text-primary-700">

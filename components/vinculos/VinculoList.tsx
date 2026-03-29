@@ -73,7 +73,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-surface-border bg-white">
+          <tbody className="divide-y divide-surface-border bg-surface-card">
             {vinculos.map((v) => (
               <tr key={v.id} className="transition-colors hover:bg-surface-hover">
                 <td className="whitespace-nowrap px-4 py-3.5">

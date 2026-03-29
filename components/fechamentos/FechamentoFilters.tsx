@@ -36,7 +36,7 @@ export function FechamentoFilters({
         <select
           value={searchParams.get('motorista_id') ?? ''}
           onChange={(e) => updateParam('motorista_id', e.target.value)}
-          className="rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
+          className="rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
         >
           <option value="">Todos motoristas</option>
           {motoristas.map((m) => (
@@ -50,7 +50,7 @@ export function FechamentoFilters({
       <select
         value={searchParams.get('status') ?? ''}
         onChange={(e) => updateParam('status', e.target.value)}
-        className="rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
+        className="rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
       >
         <option value="">Todos os status</option>
         <option value="aberto">Aberto</option>
@@ -61,7 +61,7 @@ export function FechamentoFilters({
       <select
         value={searchParams.get('tipo') ?? ''}
         onChange={(e) => updateParam('tipo', e.target.value)}
-        className="rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
+        className="rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
       >
         <option value="">Todos os tipos</option>
         <option value="semanal">Semanal</option>

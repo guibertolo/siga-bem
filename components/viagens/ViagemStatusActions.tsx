@@ -119,7 +119,7 @@ export function ViagemStatusActions({
 
       {/* Concluir form (AC3: requires data_chegada_real) */}
       {showConcluirForm && (
-        <div className="space-y-3 rounded-lg border border-surface-border bg-gray-50 p-4">
+        <div className="space-y-3 rounded-lg border border-surface-border bg-surface-muted p-4">
           <h4 className="text-sm font-medium text-primary-900">Concluir Viagem</h4>
           <div>
             <label htmlFor="data_chegada_real" className="mb-1 block text-sm text-primary-700">
@@ -130,7 +130,7 @@ export function ViagemStatusActions({
               type="datetime-local"
               value={dataChegadaReal}
               onChange={(e) => setDataChegadaReal(e.target.value)}
-              className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+              className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
             />
           </div>
           <div>
@@ -143,7 +143,7 @@ export function ViagemStatusActions({
               min={0}
               value={kmChegada}
               onChange={(e) => setKmChegada(e.target.value)}
-              className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+              className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
             />
           </div>
           <div className="flex gap-2">
@@ -158,7 +158,7 @@ export function ViagemStatusActions({
             <button
               type="button"
               onClick={() => setShowConcluirForm(false)}
-              className="rounded-lg border border-surface-border px-4 py-2 text-sm text-primary-700 hover:bg-gray-50"
+              className="rounded-lg border border-surface-border px-4 py-2 text-sm text-primary-700 hover:bg-surface-muted"
             >
               Cancelar
             </button>
@@ -188,7 +188,7 @@ export function ViagemStatusActions({
                 maxLength={1000}
                 value={obsValue}
                 onChange={(e) => setObsValue(e.target.value)}
-                className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+                className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
               />
               <div className="flex gap-2">
                 <button

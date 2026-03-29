@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -95,6 +96,7 @@ export default async function DashboardLayout({
           <span className="text-sm text-primary-700">
             {user.email}
           </span>
+          <ThemeToggle />
         </header>
         <main className="flex-1 bg-surface-background p-8">
           {children}

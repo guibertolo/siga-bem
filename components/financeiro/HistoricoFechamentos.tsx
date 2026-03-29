@@ -121,7 +121,7 @@ export function HistoricoFechamentos({
         {isAdmin && (
           <a
             href={buildExportUrl()}
-            className="inline-flex items-center gap-2 rounded-md border border-surface-border bg-white px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-muted"
           >
             <svg
               className="h-4 w-4"
@@ -144,7 +144,7 @@ export function HistoricoFechamentos({
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
         <table className="min-w-full divide-y divide-surface-border">
-          <thead className="bg-gray-50">
+          <thead className="bg-surface-muted">
             <tr>
               <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Motorista
@@ -174,7 +174,7 @@ export function HistoricoFechamentos({
           </thead>
           <tbody className="divide-y divide-surface-border">
             {fechamentos.map((f) => (
-              <tr key={f.id} className="hover:bg-gray-50">
+              <tr key={f.id} className="hover:bg-surface-muted">
                 <td className="whitespace-nowrap px-4 py-3.5 text-base font-medium text-primary-900">
                   {f.motorista_nome}
                 </td>
@@ -246,7 +246,7 @@ export function HistoricoFechamentos({
               type="button"
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage <= 1 || isPending}
-              className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
             >
               Anterior
             </button>
@@ -265,7 +265,7 @@ export function HistoricoFechamentos({
                   className={`rounded-md px-3 py-1 text-sm transition-colors ${
                     pageNum === currentPage
                       ? 'bg-primary-700 text-white'
-                      : 'border border-surface-border text-primary-700 hover:bg-gray-50'
+                      : 'border border-surface-border text-primary-700 hover:bg-surface-muted'
                   }`}
                 >
                   {pageNum}
@@ -277,7 +277,7 @@ export function HistoricoFechamentos({
               type="button"
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage >= totalPages || isPending}
-              className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
             >
               Proximo
             </button>

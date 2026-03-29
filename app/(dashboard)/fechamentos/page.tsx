@@ -104,7 +104,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
               {page > 1 && (
                 <Link
                   href={buildUrl(params, page - 1)}
-                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-gray-50"
+                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
                   Anterior
                 </Link>
@@ -115,7 +115,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
               {page < totalPages && (
                 <Link
                   href={buildUrl(params, page + 1)}
-                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-gray-50"
+                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
                   Proxima
                 </Link>

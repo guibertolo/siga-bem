@@ -100,7 +100,7 @@ export function GastoFilters({
             type="date"
             value={currentStartDate}
             onChange={(e) => updateParams({ startDate: e.target.value })}
-            className="w-full rounded-md border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
@@ -117,7 +117,7 @@ export function GastoFilters({
             type="date"
             value={currentEndDate}
             onChange={(e) => updateParams({ endDate: e.target.value })}
-            className="w-full rounded-md border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
@@ -214,7 +214,7 @@ function MultiSelectDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-md border border-surface-border bg-white px-3 py-2 text-left text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+        className="flex w-full items-center justify-between rounded-md border border-surface-border bg-surface-card px-3 py-2 text-left text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       >
         <span className={selected.length === 0 ? 'text-primary-400' : ''}>
           {displayText}
@@ -241,7 +241,7 @@ function MultiSelectDropdown({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-surface-border bg-white py-1 shadow-lg">
+          <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-surface-border bg-surface-card py-1 shadow-lg">
             {options.length === 0 ? (
               <div className="px-3 py-2 text-sm text-primary-400">
                 Nenhuma opcao
@@ -252,7 +252,7 @@ function MultiSelectDropdown({
                   key={option.value}
                   type="button"
                   onClick={() => onToggle(option.value)}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-surface-muted"
                 >
                   <span
                     className={`flex h-4 w-4 items-center justify-center rounded border ${

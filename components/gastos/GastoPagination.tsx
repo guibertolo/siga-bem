@@ -51,7 +51,7 @@ export function GastoPagination({
           type="button"
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage <= 1 || isPending}
-          className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
           Anterior
         </button>
@@ -70,7 +70,7 @@ export function GastoPagination({
               className={`rounded-md px-3 py-1 text-sm transition-colors ${
                 pageNum === currentPage
                   ? 'bg-primary-700 text-white'
-                  : 'border border-surface-border text-primary-700 hover:bg-gray-50'
+                  : 'border border-surface-border text-primary-700 hover:bg-surface-muted'
               }`}
             >
               {pageNum}
@@ -82,7 +82,7 @@ export function GastoPagination({
           type="button"
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage >= totalPages || isPending}
-          className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
           Proximo
         </button>

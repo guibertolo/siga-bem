@@ -65,7 +65,7 @@ export function FechamentoStatusActions({
   }
 
   return (
-    <div className="rounded-lg border border-surface-border bg-white p-4 shadow-sm">
+    <div className="rounded-lg border border-surface-border bg-surface-card p-4 shadow-sm">
       {error && (
         <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
@@ -92,7 +92,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>
@@ -127,7 +127,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>
@@ -162,7 +162,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>

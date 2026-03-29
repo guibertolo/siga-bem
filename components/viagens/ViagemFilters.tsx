@@ -74,7 +74,7 @@ export function ViagemFilters({
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 filters.status.includes(s)
                   ? 'border-primary-500 bg-primary-100 text-primary-800'
-                  : 'border-surface-border text-primary-500 hover:bg-gray-50'
+                  : 'border-surface-border text-primary-500 hover:bg-surface-muted'
               }`}
             >
               {VIAGEM_STATUS_LABELS[s]}
@@ -93,7 +93,7 @@ export function ViagemFilters({
             id="filter-motorista"
             value={filters.motorista_id}
             onChange={(e) => handleChange({ motorista_id: e.target.value })}
-            className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+            className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
           >
             <option value="">Todos</option>
             {motoristas.map((m) => (
@@ -112,7 +112,7 @@ export function ViagemFilters({
             type="date"
             value={filters.data_inicio}
             onChange={(e) => handleChange({ data_inicio: e.target.value })}
-            className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+            className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
           />
         </div>
 
@@ -126,7 +126,7 @@ export function ViagemFilters({
             type="date"
             value={filters.data_fim}
             onChange={(e) => handleChange({ data_fim: e.target.value })}
-            className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+            className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
           />
         </div>
 
@@ -141,7 +141,7 @@ export function ViagemFilters({
             placeholder="Origem ou destino..."
             value={filters.texto}
             onChange={(e) => handleChange({ texto: e.target.value })}
-            className="block w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm"
+            className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
           />
         </div>
       </div>

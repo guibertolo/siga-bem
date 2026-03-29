@@ -34,7 +34,7 @@ export function GastoExportButton({ filters }: GastoExportButtonProps) {
         type="button"
         onClick={handleExport}
         disabled={isPending}
-        className="rounded-lg border border-surface-border bg-white px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+        className="rounded-lg border border-surface-border bg-surface-card px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-muted disabled:opacity-50"
       >
         {isPending ? 'Exportando...' : 'Exportar CSV'}
       </button>

@@ -191,7 +191,7 @@ export function VeiculosSection({
                   key={v.id}
                   className={cn(
                     'border-b border-surface-border last:border-b-0',
-                    !readonly && 'cursor-pointer hover:bg-gray-50',
+                    !readonly && 'cursor-pointer hover:bg-surface-muted',
                   )}
                   onClick={() => openEdit(v)}
                 >
@@ -229,7 +229,7 @@ export function VeiculosSection({
                               e.stopPropagation();
                               setConfirmDeleteId(null);
                             }}
-                            className="rounded border border-gray-300 px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                            className="rounded border border-gray-300 px-2 py-1 text-xs font-medium text-gray-600 hover:bg-surface-muted"
                           >
                             Nao
                           </button>

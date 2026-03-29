@@ -32,7 +32,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={inter.variable}>
+    <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var theme = localStorage.getItem('siga-bem-theme') || 'system';
+                var isDark = theme === 'dark' ||
+                  (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (isDark) document.documentElement.classList.add('dark');
+                if (theme === 'light') document.documentElement.classList.add('light');
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-surface-background font-sans text-primary-900 antialiased">
         {children}
       </body>

@@ -153,7 +153,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               id="motorista"
               value={motoristaId}
               onChange={(e) => setMotoristaId(e.target.value)}
-              className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="">Selecione um motorista</option>
               {motoristas.map((m) => (
@@ -208,7 +208,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
                 id="mes"
                 value={selectedMonth}
                 onChange={(e) => handleMonthChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 <option value="">Selecione o mes</option>
                 {monthOptions.map((opt) => (
@@ -227,7 +227,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
                 id="semana"
                 type="date"
                 onChange={(e) => handleWeekDateChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
               {periodoInicio && periodoFim && (
                 <p className="mt-1 text-xs text-primary-500">
@@ -248,7 +248,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               onChange={(e) => setObservacao(e.target.value)}
               rows={2}
               maxLength={1000}
-              className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="Observacao opcional..."
             />
           </div>
@@ -297,7 +297,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
             <button
               type="button"
               onClick={() => setViagensOpen(!viagensOpen)}
-              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-primary-900 hover:bg-gray-50"
+              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-primary-900 hover:bg-surface-muted"
             >
               <span>Viagens ({preview.viagens.length})</span>
               <svg
@@ -316,7 +316,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
                 ) : (
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-surface-border bg-gray-50 text-left">
+                      <tr className="border-b border-surface-border bg-surface-muted text-left">
                         <th className="px-4 py-2 font-medium text-primary-700">Rota</th>
                         <th className="px-4 py-2 font-medium text-primary-700">Data</th>
                         <th className="px-4 py-2 text-right font-medium text-primary-700">Valor Total</th>
@@ -356,7 +356,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
             <button
               type="button"
               onClick={() => setGastosOpen(!gastosOpen)}
-              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-primary-900 hover:bg-gray-50"
+              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-primary-900 hover:bg-surface-muted"
             >
               <span>Gastos ({preview.gastos.length})</span>
               <svg
@@ -375,7 +375,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
                 ) : (
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-surface-border bg-gray-50 text-left">
+                      <tr className="border-b border-surface-border bg-surface-muted text-left">
                         <th className="px-4 py-2 font-medium text-primary-700">Data</th>
                         <th className="px-4 py-2 font-medium text-primary-700">Categoria</th>
                         <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
@@ -408,7 +408,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               type="button"
               onClick={handleVoltar}
               disabled={isPending}
-              className="flex-1 rounded-lg border border-surface-border bg-white px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted disabled:opacity-50"
             >
               Voltar
             </button>

@@ -229,7 +229,7 @@ export function GastoForm({
         <button
           type="button"
           onClick={() => router.push('/gastos')}
-          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted"
         >
           Cancelar
         </button>

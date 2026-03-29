@@ -69,7 +69,7 @@ export function GastoList({ gastos }: GastoListProps) {
       <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-surface-border bg-gray-50 text-left">
+            <tr className="border-b border-surface-border bg-surface-muted text-left">
               <th className="px-4 py-3.5 text-base font-medium text-primary-700">Data</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-700">Categoria</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
@@ -80,7 +80,7 @@ export function GastoList({ gastos }: GastoListProps) {
           </thead>
           <tbody>
             {gastos.map((gasto) => (
-              <tr key={gasto.id} className="border-b border-surface-border last:border-0 hover:bg-gray-50">
+              <tr key={gasto.id} className="border-b border-surface-border last:border-0 hover:bg-surface-muted">
                 <td className="whitespace-nowrap px-4 py-3.5 text-base tabular-nums text-primary-900">
                   {formatDate(gasto.data)}
                 </td>

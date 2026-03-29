@@ -92,7 +92,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.motorista_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+            errors.motorista_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -119,7 +119,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.caminhao_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+            errors.caminhao_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -147,7 +147,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.data_inicio ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+            errors.data_inicio ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         />
@@ -168,7 +168,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
+            errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
           placeholder="Observacoes sobre este vinculo (opcional)"
