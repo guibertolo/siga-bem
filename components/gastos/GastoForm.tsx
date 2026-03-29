@@ -99,12 +99,12 @@ export function GastoForm({
 
   const isEditing = mode === 'edit';
   const isMotoristaFixo = !!motoristaFixo;
-  const inputClass = 'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
+  const inputClass = 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
@@ -112,7 +112,7 @@ export function GastoForm({
       {/* Categoria + Data row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="categoria_id" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="categoria_id" className="mb-2 block text-base font-medium text-primary-900">
             Categoria <span className="text-red-500">*</span>
           </label>
           <select
@@ -126,12 +126,12 @@ export function GastoForm({
             ))}
           </select>
           {errors.categoria_id && (
-            <p className="mt-1 text-sm text-red-500">{errors.categoria_id.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.categoria_id.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="data" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="data" className="mb-2 block text-base font-medium text-primary-900">
             Data <span className="text-red-500">*</span>
           </label>
           <input
@@ -141,18 +141,18 @@ export function GastoForm({
             className={cn(inputClass, errors.data ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.data && (
-            <p className="mt-1 text-sm text-red-500">{errors.data.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data.message}</p>
           )}
         </div>
       </div>
 
       {/* Valor */}
       <div>
-        <label htmlFor="valor" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="valor" className="mb-2 block text-base font-medium text-primary-900">
           Valor (R$) <span className="text-red-500">*</span>
         </label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-primary-500">R$</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-primary-500">R$</span>
           <input
             id="valor"
             type="text"
@@ -163,14 +163,14 @@ export function GastoForm({
           />
         </div>
         {errors.valor && (
-          <p className="mt-1 text-sm text-red-500">{errors.valor.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.valor.message}</p>
         )}
       </div>
 
       {/* Motorista + Caminhao row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="motorista_id" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-900">
             Motorista <span className="text-red-500">*</span>
           </label>
           <select
@@ -189,12 +189,12 @@ export function GastoForm({
             ))}
           </select>
           {errors.motorista_id && (
-            <p className="mt-1 text-sm text-red-500">{errors.motorista_id.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="caminhao_id" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-900">
             Caminhao
           </label>
           <select
@@ -212,7 +212,7 @@ export function GastoForm({
 
       {/* Descricao */}
       <div>
-        <label htmlFor="descricao" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="descricao" className="mb-2 block text-base font-medium text-primary-900">
           Descricao
         </label>
         <textarea
@@ -229,7 +229,7 @@ export function GastoForm({
         <button
           type="button"
           onClick={() => router.push('/gastos')}
-          className="rounded-lg border border-surface-border px-6 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
         >
           Cancelar
         </button>
@@ -237,11 +237,14 @@ export function GastoForm({
           type="submit"
           disabled={isPending}
           className={cn(
-            'rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors',
+            'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
             'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Registrar Gasto'}
         </button>
       </div>

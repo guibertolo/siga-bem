@@ -76,21 +76,21 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
 
       {/* Motorista Select */}
       <div>
-        <label htmlFor="motorista_id" className="mb-1 block text-sm font-medium text-primary-700">
+        <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-700">
           Motorista *
         </label>
         <select
           id="motorista_id"
           {...register('motorista_id')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm text-primary-900 outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
             errors.motorista_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
           )}
@@ -104,20 +104,20 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           ))}
         </select>
         {errors.motorista_id && (
-          <p className="mt-1 text-xs text-red-600">{errors.motorista_id.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
         )}
       </div>
 
       {/* Caminhao Select */}
       <div>
-        <label htmlFor="caminhao_id" className="mb-1 block text-sm font-medium text-primary-700">
+        <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-700">
           Caminhao *
         </label>
         <select
           id="caminhao_id"
           {...register('caminhao_id')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm text-primary-900 outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
             errors.caminhao_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
           )}
@@ -131,13 +131,13 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           ))}
         </select>
         {errors.caminhao_id && (
-          <p className="mt-1 text-xs text-red-600">{errors.caminhao_id.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.caminhao_id.message}</p>
         )}
       </div>
 
       {/* Data Inicio */}
       <div>
-        <label htmlFor="data_inicio" className="mb-1 block text-sm font-medium text-primary-700">
+        <label htmlFor="data_inicio" className="mb-2 block text-base font-medium text-primary-700">
           Data de Inicio *
         </label>
         <input
@@ -145,20 +145,20 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           type="date"
           {...register('data_inicio')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm text-primary-900 outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
             errors.data_inicio ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
           )}
           disabled={isPending}
         />
         {errors.data_inicio && (
-          <p className="mt-1 text-xs text-red-600">{errors.data_inicio.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_inicio.message}</p>
         )}
       </div>
 
       {/* Observacao */}
       <div>
-        <label htmlFor="observacao" className="mb-1 block text-sm font-medium text-primary-700">
+        <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
           Observacao
         </label>
         <textarea
@@ -166,7 +166,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           rows={3}
           {...register('observacao')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm text-primary-900 outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
             errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
           )}
@@ -174,7 +174,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           placeholder="Observacoes sobre este vinculo (opcional)"
         />
         {errors.observacao && (
-          <p className="mt-1 text-xs text-red-600">{errors.observacao.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
         )}
       </div>
 
@@ -183,15 +183,18 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : 'Criar Vinculo'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/vinculos')}
           disabled={isPending}
-          className="rounded-lg border border-surface-border px-6 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover"
+          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-hover"
         >
           Cancelar
         </button>

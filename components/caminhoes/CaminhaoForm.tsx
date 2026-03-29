@@ -120,12 +120,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
   }
 
   const isEditing = mode === 'edit';
-  const inputClass = 'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
+  const inputClass = 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
@@ -133,7 +133,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Placa + Tipo Cegonha row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="placa" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="placa" className="mb-2 block text-base font-medium text-primary-900">
             Placa <span className="text-red-500">*</span>
           </label>
           <input
@@ -147,12 +147,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.placa ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.placa && (
-            <p className="mt-1 text-sm text-red-500">{errors.placa.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.placa.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="tipo_cegonha" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="tipo_cegonha" className="mb-2 block text-base font-medium text-primary-900">
             Tipo Cegonha <span className="text-red-500">*</span>
           </label>
           <select
@@ -165,7 +165,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             ))}
           </select>
           {errors.tipo_cegonha && (
-            <p className="mt-1 text-sm text-red-500">{errors.tipo_cegonha.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.tipo_cegonha.message}</p>
           )}
         </div>
       </div>
@@ -173,7 +173,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Modelo + Marca row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="modelo" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="modelo" className="mb-2 block text-base font-medium text-primary-900">
             Modelo <span className="text-red-500">*</span>
           </label>
           <input
@@ -184,12 +184,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.modelo ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.modelo && (
-            <p className="mt-1 text-sm text-red-500">{errors.modelo.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.modelo.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="marca" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="marca" className="mb-2 block text-base font-medium text-primary-900">
             Marca
           </label>
           <input
@@ -205,7 +205,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Ano + RENAVAM row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="ano" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="ano" className="mb-2 block text-base font-medium text-primary-900">
             Ano
           </label>
           <input
@@ -218,12 +218,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.ano ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.ano && (
-            <p className="mt-1 text-sm text-red-500">{errors.ano.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.ano.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="renavam" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="renavam" className="mb-2 block text-base font-medium text-primary-900">
             RENAVAM
           </label>
           <input
@@ -235,7 +235,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.renavam ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.renavam && (
-            <p className="mt-1 text-sm text-red-500">{errors.renavam.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.renavam.message}</p>
           )}
         </div>
       </div>
@@ -243,7 +243,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Capacidade + Km row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="capacidade_veiculos" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="capacidade_veiculos" className="mb-2 block text-base font-medium text-primary-900">
             Capacidade (veiculos) <span className="text-red-500">*</span>
           </label>
           <input
@@ -255,12 +255,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.capacidade_veiculos ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.capacidade_veiculos && (
-            <p className="mt-1 text-sm text-red-500">{errors.capacidade_veiculos.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.capacidade_veiculos.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="km_atual" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="km_atual" className="mb-2 block text-base font-medium text-primary-900">
             Km Atual
           </label>
           <input
@@ -271,14 +271,14 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.km_atual ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.km_atual && (
-            <p className="mt-1 text-sm text-red-500">{errors.km_atual.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_atual.message}</p>
           )}
         </div>
       </div>
 
       {/* Observacao */}
       <div>
-        <label htmlFor="observacao" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
           Observacao
         </label>
         <textarea
@@ -296,11 +296,14 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
           type="submit"
           disabled={isPending}
           className={cn(
-            'rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors',
+            'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
             'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Cadastrar Caminhao'}
         </button>
       </div>

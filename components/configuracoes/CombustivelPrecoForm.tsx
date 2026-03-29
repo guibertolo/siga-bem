@@ -93,7 +93,7 @@ export function CombustivelPrecoForm({
 
   const inputClasses = (fieldName: keyof FormValues) =>
     cn(
-      'block w-full rounded-lg border px-3 py-2 text-sm transition-colors',
+      'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
         ? 'border-red-300 bg-red-50'
@@ -103,14 +103,14 @@ export function CombustivelPrecoForm({
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="regiao" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="regiao" className="mb-2 block text-base font-medium text-primary-700">
             Regiao *
           </label>
           <input
@@ -121,12 +121,12 @@ export function CombustivelPrecoForm({
             className={inputClasses('regiao')}
           />
           {errors.regiao && (
-            <p className="mt-1 text-xs text-red-600">{errors.regiao.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.regiao.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="tipo" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="tipo" className="mb-2 block text-base font-medium text-primary-700">
             Tipo *
           </label>
           <select
@@ -139,12 +139,12 @@ export function CombustivelPrecoForm({
             ))}
           </select>
           {errors.tipo && (
-            <p className="mt-1 text-xs text-red-600">{errors.tipo.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.tipo.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="preco" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="preco" className="mb-2 block text-base font-medium text-primary-700">
             Preco por litro (R$) *
           </label>
           <input
@@ -155,12 +155,12 @@ export function CombustivelPrecoForm({
             className={inputClasses('preco')}
           />
           {errors.preco && (
-            <p className="mt-1 text-xs text-red-600">{errors.preco.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.preco.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="data_referencia" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="data_referencia" className="mb-2 block text-base font-medium text-primary-700">
             Data de Referencia *
           </label>
           <input
@@ -170,12 +170,12 @@ export function CombustivelPrecoForm({
             className={inputClasses('data_referencia')}
           />
           {errors.data_referencia && (
-            <p className="mt-1 text-xs text-red-600">{errors.data_referencia.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_referencia.message}</p>
           )}
         </div>
 
         <div className="sm:col-span-2">
-          <label htmlFor="fonte" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="fonte" className="mb-2 block text-base font-medium text-primary-700">
             Fonte
           </label>
           <input
@@ -186,7 +186,7 @@ export function CombustivelPrecoForm({
             className={inputClasses('fonte')}
           />
           {errors.fonte && (
-            <p className="mt-1 text-xs text-red-600">{errors.fonte.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.fonte.message}</p>
           )}
         </div>
       </div>
@@ -195,14 +195,17 @@ export function CombustivelPrecoForm({
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-primary-700 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-5 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : preco ? 'Salvar Alteracoes' : 'Cadastrar'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-surface-border px-5 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-surface-border px-5 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
         >
           Cancelar
         </button>

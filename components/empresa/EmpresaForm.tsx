@@ -98,14 +98,14 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
 
       {/* CNPJ */}
       <div>
-        <label htmlFor="cnpj" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="cnpj" className="mb-2 block text-base font-medium text-primary-900">
           CNPJ <span className="text-red-500">*</span>
         </label>
         <input
@@ -117,20 +117,20 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             onChange: handleMaskedChange('cnpj', maskCNPJ),
           })}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             isEditing && 'cursor-not-allowed bg-gray-100 text-gray-500',
             errors.cnpj ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.cnpj && (
-          <p className="mt-1 text-sm text-red-500">{errors.cnpj.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnpj.message}</p>
         )}
       </div>
 
       {/* Razao Social */}
       <div>
-        <label htmlFor="razao_social" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="razao_social" className="mb-2 block text-base font-medium text-primary-900">
           Razao Social <span className="text-red-500">*</span>
         </label>
         <input
@@ -139,19 +139,19 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           placeholder="Razao social da empresa"
           {...register('razao_social')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             errors.razao_social ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.razao_social && (
-          <p className="mt-1 text-sm text-red-500">{errors.razao_social.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.razao_social.message}</p>
         )}
       </div>
 
       {/* Nome Fantasia */}
       <div>
-        <label htmlFor="nome_fantasia" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="nome_fantasia" className="mb-2 block text-base font-medium text-primary-900">
           Nome Fantasia
         </label>
         <input
@@ -160,19 +160,19 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           placeholder="Nome fantasia (opcional)"
           {...register('nome_fantasia')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             errors.nome_fantasia ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.nome_fantasia && (
-          <p className="mt-1 text-sm text-red-500">{errors.nome_fantasia.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.nome_fantasia.message}</p>
         )}
       </div>
 
       {/* Endereco */}
       <div>
-        <label htmlFor="endereco" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="endereco" className="mb-2 block text-base font-medium text-primary-900">
           Endereco
         </label>
         <input
@@ -180,14 +180,14 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           type="text"
           placeholder="Rua, numero, complemento"
           {...register('endereco')}
-          className="w-full rounded-lg border border-surface-border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         />
       </div>
 
       {/* Cidade + Estado + CEP row */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div>
-          <label htmlFor="cidade" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="cidade" className="mb-2 block text-base font-medium text-primary-900">
             Cidade
           </label>
           <input
@@ -195,19 +195,19 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             type="text"
             placeholder="Cidade"
             {...register('cidade')}
-            className="w-full rounded-lg border border-surface-border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+            className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label htmlFor="estado" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="estado" className="mb-2 block text-base font-medium text-primary-900">
             Estado (UF)
           </label>
           <select
             id="estado"
             {...register('estado')}
             className={cn(
-              'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+              'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
               errors.estado ? 'border-red-500' : 'border-surface-border',
             )}
@@ -220,7 +220,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
         </div>
 
         <div>
-          <label htmlFor="cep" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="cep" className="mb-2 block text-base font-medium text-primary-900">
             CEP
           </label>
           <input
@@ -230,7 +230,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             {...register('cep', {
               onChange: handleMaskedChange('cep', maskCEP),
             })}
-            className="w-full rounded-lg border border-surface-border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+            className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           />
         </div>
       </div>
@@ -238,7 +238,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
       {/* Telefone + Email row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="telefone" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="telefone" className="mb-2 block text-base font-medium text-primary-900">
             Telefone
           </label>
           <input
@@ -248,12 +248,12 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             {...register('telefone', {
               onChange: handleMaskedChange('telefone', maskPhone),
             })}
-            className="w-full rounded-lg border border-surface-border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+            className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="email" className="mb-2 block text-base font-medium text-primary-900">
             Email
           </label>
           <input
@@ -262,13 +262,13 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             placeholder="contato@empresa.com.br"
             {...register('email')}
             className={cn(
-              'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+              'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
               errors.email ? 'border-red-500' : 'border-surface-border',
             )}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.email.message}</p>
           )}
         </div>
       </div>
@@ -279,11 +279,14 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           type="submit"
           disabled={isPending}
           className={cn(
-            'rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors',
+            'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
             'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Cadastrar Empresa'}
         </button>
       </div>

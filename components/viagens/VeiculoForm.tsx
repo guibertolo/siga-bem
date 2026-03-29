@@ -125,7 +125,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
         </div>
 
         {serverError && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-base text-red-700">
             {serverError}
           </div>
         )}
@@ -133,7 +133,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           {/* Modelo (required) */}
           <div>
-            <label htmlFor="vf-modelo" className="mb-1 block text-sm font-medium text-primary-700">
+            <label htmlFor="vf-modelo" className="mb-2 block text-base font-medium text-primary-700">
               Modelo <span className="text-red-500">*</span>
             </label>
             <input
@@ -141,20 +141,20 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               type="text"
               maxLength={100}
               className={cn(
-                'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                 errors.modelo ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
               )}
               placeholder="Ex: Onix, HB20, Corolla"
               {...register('modelo')}
             />
             {errors.modelo && (
-              <p className="mt-1 text-xs text-red-600">{errors.modelo.message}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.modelo.message}</p>
             )}
           </div>
 
           {/* Marca */}
           <div>
-            <label htmlFor="vf-marca" className="mb-1 block text-sm font-medium text-primary-700">
+            <label htmlFor="vf-marca" className="mb-2 block text-base font-medium text-primary-700">
               Marca
             </label>
             <input
@@ -162,21 +162,21 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               type="text"
               maxLength={50}
               className={cn(
-                'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                 errors.marca ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
               )}
               placeholder="Ex: Chevrolet, Hyundai, Toyota"
               {...register('marca')}
             />
             {errors.marca && (
-              <p className="mt-1 text-xs text-red-600">{errors.marca.message}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.marca.message}</p>
             )}
           </div>
 
           {/* Placa + Chassi row */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="vf-placa" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="vf-placa" className="mb-2 block text-base font-medium text-primary-700">
                 Placa
               </label>
               <input
@@ -184,19 +184,19 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 type="text"
                 maxLength={8}
                 className={cn(
-                  'w-full rounded-lg border px-3 py-2 text-sm uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                  'w-full rounded-lg border px-4 py-3 text-base uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                   errors.placa ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
                 )}
                 placeholder="ABC-1234 ou ABC1D23"
                 {...register('placa')}
               />
               {errors.placa && (
-                <p className="mt-1 text-xs text-red-600">{errors.placa.message}</p>
+                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.placa.message}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="vf-chassi" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="vf-chassi" className="mb-2 block text-base font-medium text-primary-700">
                 Chassi
               </label>
               <input
@@ -204,14 +204,14 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 type="text"
                 maxLength={20}
                 className={cn(
-                  'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                  'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                   errors.chassi ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
                 )}
                 placeholder="Chassi do veiculo"
                 {...register('chassi')}
               />
               {errors.chassi && (
-                <p className="mt-1 text-xs text-red-600">{errors.chassi.message}</p>
+                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.chassi.message}</p>
               )}
             </div>
           </div>
@@ -219,7 +219,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
           {/* Cor + Posicao row */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="vf-cor" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="vf-cor" className="mb-2 block text-base font-medium text-primary-700">
                 Cor
               </label>
               <input
@@ -227,19 +227,19 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 type="text"
                 maxLength={30}
                 className={cn(
-                  'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                  'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                   errors.cor ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
                 )}
                 placeholder="Ex: Branco, Prata, Preto"
                 {...register('cor')}
               />
               {errors.cor && (
-                <p className="mt-1 text-xs text-red-600">{errors.cor.message}</p>
+                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cor.message}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="vf-posicao" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="vf-posicao" className="mb-2 block text-base font-medium text-primary-700">
                 Posicao na cegonha
               </label>
               <input
@@ -248,7 +248,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 min={1}
                 max={15}
                 className={cn(
-                  'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                  'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                   errors.posicao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
                 )}
                 placeholder="1 a 15"
@@ -257,14 +257,14 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 })}
               />
               {errors.posicao && (
-                <p className="mt-1 text-xs text-red-600">{errors.posicao.message}</p>
+                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.posicao.message}</p>
               )}
             </div>
           </div>
 
           {/* Observacao */}
           <div>
-            <label htmlFor="vf-observacao" className="mb-1 block text-sm font-medium text-primary-700">
+            <label htmlFor="vf-observacao" className="mb-2 block text-base font-medium text-primary-700">
               Observacao
             </label>
             <textarea
@@ -272,14 +272,14 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={300}
               rows={2}
               className={cn(
-                'w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
+                'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                 errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-white',
               )}
               placeholder="Observacoes sobre o veiculo"
               {...register('observacao')}
             />
             {errors.observacao && (
-              <p className="mt-1 text-xs text-red-600">{errors.observacao.message}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
             )}
           </div>
 
@@ -288,16 +288,19 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-surface-border px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+              className="rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
               disabled={isPending}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
               disabled={isPending}
             >
+              <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
               {isPending ? 'Salvando...' : isEdit ? 'Salvar' : 'Adicionar'}
             </button>
           </div>

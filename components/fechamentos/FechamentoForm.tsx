@@ -135,7 +135,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {error}
         </div>
       )}
@@ -146,14 +146,14 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
 
           {/* Motorista */}
           <div>
-            <label htmlFor="motorista" className="mb-1 block text-sm font-medium text-primary-700">
+            <label htmlFor="motorista" className="mb-2 block text-base font-medium text-primary-700">
               Motorista *
             </label>
             <select
               id="motorista"
               value={motoristaId}
               onChange={(e) => setMotoristaId(e.target.value)}
-              className="w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="">Selecione um motorista</option>
               {motoristas.map((m) => (
@@ -163,17 +163,17 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               ))}
             </select>
             {fieldErrors.motorista_id && (
-              <p className="mt-1 text-xs text-red-600">{fieldErrors.motorista_id}</p>
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{fieldErrors.motorista_id}</p>
             )}
           </div>
 
           {/* Tipo */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-primary-700">
+            <label className="mb-2 block text-base font-medium text-primary-700">
               Tipo de Periodo *
             </label>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-sm text-primary-900">
+              <label className="flex items-center gap-2 text-base text-primary-900">
                 <input
                   type="radio"
                   name="tipo"
@@ -184,7 +184,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
                 />
                 Mensal
               </label>
-              <label className="flex items-center gap-2 text-sm text-primary-900">
+              <label className="flex items-center gap-2 text-base text-primary-900">
                 <input
                   type="radio"
                   name="tipo"
@@ -201,14 +201,14 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
           {/* Periodo selector */}
           {tipo === 'mensal' ? (
             <div>
-              <label htmlFor="mes" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="mes" className="mb-2 block text-base font-medium text-primary-700">
                 Mes/Ano *
               </label>
               <select
                 id="mes"
                 value={selectedMonth}
                 onChange={(e) => handleMonthChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 <option value="">Selecione o mes</option>
                 {monthOptions.map((opt) => (
@@ -220,14 +220,14 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
             </div>
           ) : (
             <div>
-              <label htmlFor="semana" className="mb-1 block text-sm font-medium text-primary-700">
+              <label htmlFor="semana" className="mb-2 block text-base font-medium text-primary-700">
                 Data de referencia da semana *
               </label>
               <input
                 id="semana"
                 type="date"
                 onChange={(e) => handleWeekDateChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
               {periodoInicio && periodoFim && (
                 <p className="mt-1 text-xs text-primary-500">
@@ -239,7 +239,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
 
           {/* Observacao */}
           <div>
-            <label htmlFor="observacao" className="mb-1 block text-sm font-medium text-primary-700">
+            <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
               Observacao
             </label>
             <textarea
@@ -248,7 +248,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               onChange={(e) => setObservacao(e.target.value)}
               rows={2}
               maxLength={1000}
-              className="w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-lg border border-surface-border bg-white px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="Observacao opcional..."
             />
           </div>
@@ -257,7 +257,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
             type="button"
             onClick={handleCalcular}
             disabled={isPending}
-            className="w-full rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:opacity-50"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
           >
             {isPending ? 'Calculando...' : 'Calcular Preview'}
           </button>
@@ -408,7 +408,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               type="button"
               onClick={handleVoltar}
               disabled={isPending}
-              className="flex-1 rounded-lg border border-surface-border bg-white px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-surface-border bg-white px-4 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50 disabled:opacity-50"
             >
               Voltar
             </button>
@@ -416,8 +416,11 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               type="button"
               onClick={handleConfirmar}
               disabled={isPending}
-              className="flex-1 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:opacity-50"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
             >
+              <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
               {isPending ? 'Confirmando...' : 'Confirmar Fechamento'}
             </button>
           </div>

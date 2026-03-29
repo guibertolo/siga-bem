@@ -178,7 +178,7 @@ export function ViagemForm({
 
   const inputClasses = (fieldName: keyof FormValues) =>
     cn(
-      'block w-full rounded-lg border px-3 py-2 text-sm transition-colors',
+      'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
         ? 'border-red-300 bg-red-50'
@@ -188,7 +188,7 @@ export function ViagemForm({
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
@@ -196,7 +196,7 @@ export function ViagemForm({
       <div className="grid gap-6 md:grid-cols-2">
         {/* Motorista */}
         <div>
-          <label htmlFor="motorista_id" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-700">
             Motorista *
           </label>
           <select
@@ -210,13 +210,13 @@ export function ViagemForm({
             ))}
           </select>
           {errors.motorista_id && (
-            <p className="mt-1 text-xs text-red-600">{errors.motorista_id.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
           )}
         </div>
 
         {/* Caminhao */}
         <div>
-          <label htmlFor="caminhao_id" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-700">
             Caminhao *
           </label>
           <select
@@ -233,13 +233,13 @@ export function ViagemForm({
             ))}
           </select>
           {errors.caminhao_id && (
-            <p className="mt-1 text-xs text-red-600">{errors.caminhao_id.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.caminhao_id.message}</p>
           )}
         </div>
 
         {/* Origem */}
         <div>
-          <label htmlFor="origem" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="origem" className="mb-2 block text-base font-medium text-primary-700">
             Origem *
           </label>
           <input
@@ -251,13 +251,13 @@ export function ViagemForm({
             className={inputClasses('origem')}
           />
           {errors.origem && (
-            <p className="mt-1 text-xs text-red-600">{errors.origem.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.origem.message}</p>
           )}
         </div>
 
         {/* Destino */}
         <div>
-          <label htmlFor="destino" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="destino" className="mb-2 block text-base font-medium text-primary-700">
             Destino *
           </label>
           <input
@@ -269,13 +269,13 @@ export function ViagemForm({
             className={inputClasses('destino')}
           />
           {errors.destino && (
-            <p className="mt-1 text-xs text-red-600">{errors.destino.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.destino.message}</p>
           )}
         </div>
 
         {/* Data de Saida */}
         <div>
-          <label htmlFor="data_saida" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="data_saida" className="mb-2 block text-base font-medium text-primary-700">
             Data de Saida *
           </label>
           <input
@@ -285,13 +285,13 @@ export function ViagemForm({
             className={inputClasses('data_saida')}
           />
           {errors.data_saida && (
-            <p className="mt-1 text-xs text-red-600">{errors.data_saida.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_saida.message}</p>
           )}
         </div>
 
         {/* Data de Chegada Prevista */}
         <div>
-          <label htmlFor="data_chegada_prevista" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="data_chegada_prevista" className="mb-2 block text-base font-medium text-primary-700">
             Chegada Prevista
           </label>
           <input
@@ -301,13 +301,13 @@ export function ViagemForm({
             className={inputClasses('data_chegada_prevista')}
           />
           {errors.data_chegada_prevista && (
-            <p className="mt-1 text-xs text-red-600">{errors.data_chegada_prevista.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_chegada_prevista.message}</p>
           )}
         </div>
 
         {/* Valor Total */}
         <div>
-          <label htmlFor="valor_total" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="valor_total" className="mb-2 block text-base font-medium text-primary-700">
             Valor Total (R$) *
           </label>
           <input
@@ -318,13 +318,13 @@ export function ViagemForm({
             className={inputClasses('valor_total')}
           />
           {errors.valor_total && (
-            <p className="mt-1 text-xs text-red-600">{errors.valor_total.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.valor_total.message}</p>
           )}
         </div>
 
         {/* Percentual Pagamento */}
         <div>
-          <label htmlFor="percentual_pagamento" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="percentual_pagamento" className="mb-2 block text-base font-medium text-primary-700">
             Percentual Motorista (%) *
           </label>
           <input
@@ -335,10 +335,10 @@ export function ViagemForm({
             className={inputClasses('percentual_pagamento')}
           />
           {errors.percentual_pagamento && (
-            <p className="mt-1 text-xs text-red-600">{errors.percentual_pagamento.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.percentual_pagamento.message}</p>
           )}
           {valorMotorista && (
-            <p className="mt-1 text-xs text-green-700">
+            <p className="mt-1.5 text-sm text-green-700 font-medium">
               Motorista recebera: {valorMotorista}
             </p>
           )}
@@ -346,7 +346,7 @@ export function ViagemForm({
 
         {/* KM Estimado (Story 3.3 - AC1, AC7/CON-006) */}
         <div>
-          <label htmlFor="km_estimado" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="km_estimado" className="mb-2 block text-base font-medium text-primary-700">
             Distancia Estimada (km)
           </label>
           <input
@@ -358,13 +358,13 @@ export function ViagemForm({
             className={inputClasses('km_estimado')}
           />
           {errors.km_estimado && (
-            <p className="mt-1 text-xs text-red-600">{errors.km_estimado.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_estimado.message}</p>
           )}
         </div>
 
         {/* KM Saida */}
         <div>
-          <label htmlFor="km_saida" className="mb-1 block text-sm font-medium text-primary-700">
+          <label htmlFor="km_saida" className="mb-2 block text-base font-medium text-primary-700">
             KM na Saida
           </label>
           <input
@@ -376,7 +376,7 @@ export function ViagemForm({
             className={inputClasses('km_saida')}
           />
           {errors.km_saida && (
-            <p className="mt-1 text-xs text-red-600">{errors.km_saida.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_saida.message}</p>
           )}
         </div>
       </div>
@@ -390,7 +390,7 @@ export function ViagemForm({
 
       {/* Observacao */}
       <div>
-        <label htmlFor="observacao" className="mb-1 block text-sm font-medium text-primary-700">
+        <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
           Observacao
         </label>
         <textarea
@@ -401,7 +401,7 @@ export function ViagemForm({
           className={inputClasses('observacao')}
         />
         {errors.observacao && (
-          <p className="mt-1 text-xs text-red-600">{errors.observacao.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
         )}
       </div>
 
@@ -410,8 +410,11 @@ export function ViagemForm({
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending
             ? 'Salvando...'
             : mode === 'create' ? 'Cadastrar Viagem' : 'Salvar Alteracoes'}
@@ -419,7 +422,7 @@ export function ViagemForm({
         <button
           type="button"
           onClick={() => router.push('/viagens')}
-          className="rounded-lg border border-surface-border px-6 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-gray-50"
         >
           Cancelar
         </button>

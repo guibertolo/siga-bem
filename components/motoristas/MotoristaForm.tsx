@@ -99,14 +99,14 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
         </div>
       )}
 
       {/* Nome */}
       <div>
-        <label htmlFor="nome" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="nome" className="mb-2 block text-base font-medium text-primary-900">
           Nome Completo <span className="text-red-500">*</span>
         </label>
         <input
@@ -115,19 +115,19 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
           placeholder="Nome completo do motorista"
           {...register('nome')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             errors.nome ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.nome && (
-          <p className="mt-1 text-sm text-red-500">{errors.nome.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.nome.message}</p>
         )}
       </div>
 
       {/* CPF */}
       <div>
-        <label htmlFor="cpf" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="cpf" className="mb-2 block text-base font-medium text-primary-900">
           CPF <span className="text-red-500">*</span>
         </label>
         <input
@@ -139,21 +139,21 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
             onChange: handleMaskedChange('cpf', maskCPF),
           })}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             isEditing && 'cursor-not-allowed bg-gray-100 text-gray-500',
             errors.cpf ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.cpf && (
-          <p className="mt-1 text-sm text-red-500">{errors.cpf.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cpf.message}</p>
         )}
       </div>
 
       {/* CNH Numero + Categoria row */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="cnh_numero" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="cnh_numero" className="mb-2 block text-base font-medium text-primary-900">
             Numero da CNH <span className="text-red-500">*</span>
           </label>
           <input
@@ -162,25 +162,25 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
             placeholder="Numero do registro da CNH"
             {...register('cnh_numero')}
             className={cn(
-              'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+              'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
               errors.cnh_numero ? 'border-red-500' : 'border-surface-border',
             )}
           />
           {errors.cnh_numero && (
-            <p className="mt-1 text-sm text-red-500">{errors.cnh_numero.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_numero.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="cnh_categoria" className="mb-1 block text-sm font-medium text-primary-900">
+          <label htmlFor="cnh_categoria" className="mb-2 block text-base font-medium text-primary-900">
             Categoria <span className="text-red-500">*</span>
           </label>
           <select
             id="cnh_categoria"
             {...register('cnh_categoria')}
             className={cn(
-              'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+              'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
               errors.cnh_categoria ? 'border-red-500' : 'border-surface-border',
             )}
@@ -190,14 +190,14 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
             ))}
           </select>
           {errors.cnh_categoria && (
-            <p className="mt-1 text-sm text-red-500">{errors.cnh_categoria.message}</p>
+            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_categoria.message}</p>
           )}
         </div>
       </div>
 
       {/* CNH Validade */}
       <div>
-        <label htmlFor="cnh_validade" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="cnh_validade" className="mb-2 block text-base font-medium text-primary-900">
           Validade da CNH <span className="text-red-500">*</span>
         </label>
         <input
@@ -205,19 +205,19 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
           type="date"
           {...register('cnh_validade')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             errors.cnh_validade ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.cnh_validade && (
-          <p className="mt-1 text-sm text-red-500">{errors.cnh_validade.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_validade.message}</p>
         )}
       </div>
 
       {/* Telefone */}
       <div>
-        <label htmlFor="telefone" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="telefone" className="mb-2 block text-base font-medium text-primary-900">
           Telefone
         </label>
         <input
@@ -227,13 +227,13 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
           {...register('telefone', {
             onChange: handleMaskedChange('telefone', maskPhone),
           })}
-          className="w-full rounded-lg border border-surface-border px-3 py-2 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         />
       </div>
 
       {/* Observacao */}
       <div>
-        <label htmlFor="observacao" className="mb-1 block text-sm font-medium text-primary-900">
+        <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
           Observacao
         </label>
         <textarea
@@ -242,13 +242,13 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
           placeholder="Observacoes sobre o motorista (opcional)"
           {...register('observacao')}
           className={cn(
-            'w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors',
+            'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             errors.observacao ? 'border-red-500' : 'border-surface-border',
           )}
         />
         {errors.observacao && (
-          <p className="mt-1 text-sm text-red-500">{errors.observacao.message}</p>
+          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
         )}
       </div>
 
@@ -258,11 +258,14 @@ export function MotoristaForm({ motorista, mode, onSubmit }: MotoristaFormProps)
           type="submit"
           disabled={isPending}
           className={cn(
-            'rounded-lg bg-primary-700 px-6 py-2 text-sm font-medium text-white transition-colors',
+            'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
             'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Cadastrar Motorista'}
         </button>
       </div>
