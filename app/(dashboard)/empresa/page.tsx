@@ -50,9 +50,9 @@ export default async function EmpresaPage() {
 
 function DataRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
-    <div className="flex justify-between py-4">
+    <div className="grid grid-cols-[140px_1fr] gap-4 py-4">
       <dt className="text-base font-medium text-primary-500">{label}</dt>
-      <dd className="text-base text-primary-900">{value || '—'}</dd>
+      <dd className="text-base text-primary-900 break-words">{value || '—'}</dd>
     </div>
   );
 }

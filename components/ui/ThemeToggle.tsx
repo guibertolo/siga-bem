@@ -2,113 +2,80 @@
 
 import { useState, useEffect } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
-
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('siga-bem-theme') as Theme | null;
-    if (saved) setTheme(saved);
+    const saved = localStorage.getItem('siga-bem-theme');
+    if (saved === 'dark') {
+      setIsDark(true);
+    } else if (saved === 'light') {
+      setIsDark(false);
+    } else {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    }
   }, []);
 
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => {
-      if (localStorage.getItem('siga-bem-theme') === 'system') {
-        document.documentElement.classList.toggle('dark', media.matches);
-      }
-    };
-    media.addEventListener('change', handler);
-    return () => media.removeEventListener('change', handler);
-  }, []);
-
-  function cycleTheme() {
-    const next: Theme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
-    setTheme(next);
-    localStorage.setItem('siga-bem-theme', next);
+  function toggle() {
+    const next = !isDark;
+    setIsDark(next);
+    localStorage.setItem('siga-bem-theme', next ? 'dark' : 'light');
 
     const html = document.documentElement;
     html.classList.remove('dark', 'light');
-
-    if (next === 'dark') {
-      html.classList.add('dark');
-    } else if (next === 'light') {
-      html.classList.add('light');
-    } else {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        html.classList.add('dark');
-      }
-    }
+    html.classList.add(next ? 'dark' : 'light');
   }
 
   if (!mounted) {
     return (
-      <button
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-primary-700 transition-colors hover:bg-surface-hover"
-        aria-label="Tema"
-      >
-        <span className="h-5 w-5" />
-      </button>
+      <div className="inline-flex rounded-lg border border-surface-border bg-surface-muted p-1 min-h-[44px]">
+        <span className="rounded-md px-3 py-1.5 text-sm w-[70px]" />
+        <span className="rounded-md px-3 py-1.5 text-sm w-[70px]" />
+      </div>
     );
   }
 
-  const label =
-    theme === 'light' ? 'Claro' : theme === 'dark' ? 'Escuro' : 'Sistema';
-
   return (
-    <button
-      onClick={cycleTheme}
-      className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[44px]"
-      aria-label={`Tema: ${label}. Clique para alternar.`}
-      title={`Tema: ${label}`}
+    <div
+      className="inline-flex rounded-lg border border-surface-border bg-surface-muted p-1 min-h-[44px]"
+      role="radiogroup"
+      aria-label="Tema"
     >
-      {theme === 'light' ? (
-        <svg
-          className="h-5 w-5"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="5" />
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      <button
+        type="button"
+        role="radio"
+        aria-checked={!isDark}
+        onClick={() => isDark && toggle()}
+        className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+          !isDark
+            ? 'bg-surface-card text-primary-900 shadow-sm'
+            : 'text-primary-500 hover:text-primary-700'
+        }`}
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="5" strokeWidth={2} />
+          <path strokeWidth={2} d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
         </svg>
-      ) : theme === 'dark' ? (
-        <svg
-          className="h-5 w-5"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          aria-hidden="true"
-        >
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        Claro
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={isDark}
+        onClick={() => !isDark && toggle()}
+        className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+          isDark
+            ? 'bg-surface-card text-primary-900 shadow-sm'
+            : 'text-primary-500 hover:text-primary-700'
+        }`}
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeWidth={2} d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
-      ) : (
-        <svg
-          className="h-5 w-5"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          aria-hidden="true"
-        >
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-          <line x1="8" y1="21" x2="16" y2="21" />
-          <line x1="12" y1="17" x2="12" y2="21" />
-        </svg>
-      )}
-      <span className="hidden sm:inline">{label}</span>
-    </button>
+        Escuro
+      </button>
+    </div>
   );
 }
