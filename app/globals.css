@@ -13,6 +13,9 @@
   --color-danger: #B91C1C;
   --color-info: #1E5A8A;
 
+  /* Accent Colors */
+  --color-accent-green: #2D6A4F;
+
   /* Surface Colors */
   --color-surface-background: #F8FAFC;
   --color-surface-card: #FFFFFF;

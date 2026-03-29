@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="icon-title">
+  <title id="icon-title">Siga Bem</title>
+
+  <rect width="120" height="120" rx="24" fill="#1B3A4B"/>
+
+  <g transform="translate(20, 6)">
+    <path d="M40 6 C24 6 12 18 12 34 C12 54 40 96 40 96 C40 96 68 54 68 34 C68 18 56 6 40 6Z" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+    <circle cx="40" cy="30" r="20" fill="none" stroke="#2D6A4F" stroke-width="3"/>
+
+    <g transform="translate(26, 21.5)">
+      <path d="M1 15 L1 6 L3.5 3 L8 3 L8 8.5" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 8.5 L8 3 L25 3 L27 1 M8 8.5 L27 8.5 L27 1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="8" y1="5.8" x2="27" y2="5.8" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+      <path d="M10 5 L11.2 3.8 L15 3.8 L15.8 5" fill="none" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <path d="M17 5 L18.2 3.8 L22 3.8 L22.8 5" fill="none" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+      <path d="M24 4.5 L24.5 3.8 L26.5 3.8 L26.8 4.5" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+      <rect x="10" y="6.3" width="8" height="1.8" rx="0.6" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+      <line x1="1" y1="11.5" x2="27" y2="11.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="5.5" cy="14" r="2.5" fill="#2D6A4F"/>
+      <circle cx="5.5" cy="14" r="0.8" fill="#1B3A4B"/>
+      <circle cx="20" cy="14" r="2.5" fill="#2D6A4F"/>
+      <circle cx="20" cy="14" r="0.8" fill="#1B3A4B"/>
+      <circle cx="25.5" cy="14" r="2.5" fill="#2D6A4F"/>
+      <circle cx="25.5" cy="14" r="0.8" fill="#1B3A4B"/>
+    </g>
+  </g>
+</svg>
