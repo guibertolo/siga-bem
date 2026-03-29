@@ -12,6 +12,7 @@ export type TipoCegonha = 'aberta' | 'fechada';
 export type ViagemStatus = 'planejada' | 'em_andamento' | 'concluida' | 'cancelada';
 export type FechamentoTipo = 'semanal' | 'mensal';
 export type FechamentoStatus = 'aberto' | 'fechado' | 'pago';
+export type CombustivelTipo = 'diesel_s10' | 'diesel_comum';
 
 export interface Empresa {
   id: string;
@@ -113,6 +114,11 @@ export interface Gasto {
   created_by: string | null;
   created_at: string;
   updated_at: string;
+  // Story 5.1: Fuel detail columns (nullable for backward compatibility)
+  litros: number | null;
+  tipo_combustivel: CombustivelTipo | null;
+  posto_local: string | null;
+  uf_abastecimento: string | null;
 }
 
 export interface CategoriaGasto {
