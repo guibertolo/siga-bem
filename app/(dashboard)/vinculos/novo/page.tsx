@@ -22,7 +22,7 @@ export default async function NovoVinculoPage() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/vinculos"

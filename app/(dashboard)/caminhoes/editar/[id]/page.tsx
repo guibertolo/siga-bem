@@ -19,7 +19,7 @@ export default async function EditarCaminhaoPage({ params }: EditarCaminhaoPageP
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-primary-900">Editar Caminhao</h2>
         <p className="mt-1 text-sm text-primary-500">
@@ -27,7 +27,7 @@ export default async function EditarCaminhaoPage({ params }: EditarCaminhaoPageP
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
         <EditarCaminhaoClient caminhao={result.caminhao!} />
       </div>
     </div>

@@ -24,7 +24,7 @@ export default async function EditarEmpresaPage() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/empresa"
@@ -41,7 +41,7 @@ export default async function EditarEmpresaPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
         <EmpresaForm mode="edit" empresa={empresa} onSubmit={handleUpdate} />
       </div>
     </div>

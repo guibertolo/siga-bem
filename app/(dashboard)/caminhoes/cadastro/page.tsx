@@ -18,7 +18,7 @@ export default function CadastroCaminhaoPage() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/caminhoes"
@@ -35,7 +35,7 @@ export default function CadastroCaminhaoPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
         <CaminhaoForm mode="create" onSubmit={handleSubmit} />
       </div>
     </div>
