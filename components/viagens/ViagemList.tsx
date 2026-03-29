@@ -117,7 +117,8 @@ export function ViagemList({
 
       {viagens.length === 0 ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-          <p className="text-primary-500">Nenhuma viagem encontrada.</p>
+          <p className="text-base text-primary-500">Nenhuma viagem encontrada.</p>
+          <p className="mt-1 text-sm text-primary-400">Cadastre uma viagem para acompanhar suas rotas.</p>
           <Link
             href="/viagens/nova"
             className="mt-4 inline-block rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
@@ -128,17 +129,17 @@ export function ViagemList({
       ) : (
         <>
           <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
-            <table className="w-full text-sm">
+            <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-border bg-gray-50 text-left">
-                  <th className="px-4 py-3 font-medium text-primary-700">Origem/Destino</th>
-                  <th className="px-4 py-3 font-medium text-primary-700">Motorista</th>
-                  <th className="px-4 py-3 font-medium text-primary-700">Caminhao</th>
-                  <th className="px-4 py-3 font-medium text-primary-700">Saida</th>
-                  <th className="px-4 py-3 text-right font-medium text-primary-700">Valor</th>
-                  <th className="px-4 py-3 text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3 font-medium text-primary-700">Status</th>
-                  <th className="px-4 py-3 text-right font-medium text-primary-700">Acoes</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhao</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saida</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Status</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,37 +148,44 @@ export function ViagemList({
                     key={v.id}
                     className="border-b border-surface-border last:border-b-0 hover:bg-gray-50"
                   >
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-primary-900">{v.origem}</div>
-                      <div className="text-xs text-primary-500">{v.destino}</div>
+                    <td className="px-4 py-3.5">
+                      <div className="text-base font-medium text-primary-900">{v.origem}</div>
+                      <div className="text-sm text-primary-500">{v.destino}</div>
                     </td>
-                    <td className="px-4 py-3 text-primary-700">{v.motorista_nome}</td>
-                    <td className="px-4 py-3 text-primary-700">{v.caminhao_placa}</td>
-                    <td className="px-4 py-3 text-primary-700">{formatDateTime(v.data_saida)}</td>
-                    <td className="px-4 py-3 text-right tabular-nums text-primary-700">
+                    <td className="px-4 py-3.5 text-base text-primary-700">{v.motorista_nome}</td>
+                    <td className="px-4 py-3.5 text-base text-primary-700">{v.caminhao_placa}</td>
+                    <td className="px-4 py-3.5 text-base text-primary-700">{formatDateTime(v.data_saida)}</td>
+                    <td className="px-4 py-3.5 text-base text-right tabular-nums text-primary-700">
                       {formatBRL(v.valor_total)}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-primary-700">
+                    <td className="px-4 py-3.5 text-base text-right tabular-nums text-primary-700">
                       {v.percentual_pagamento}%
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
                         {VIAGEM_STATUS_LABELS[v.status]}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/viagens/${v.id}`}
-                          className="text-xs text-primary-500 transition-colors hover:text-primary-700"
+                          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
                         >
+                          <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
                           Ver
                         </Link>
                         {(v.status === 'planejada' || v.status === 'em_andamento') && (
                           <Link
                             href={`/viagens/${v.id}/editar`}
-                            className="text-xs text-primary-500 transition-colors hover:text-primary-700"
+                            className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
                           >
+                            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
                             Editar
                           </Link>
                         )}
@@ -189,14 +197,14 @@ export function ViagemList({
                                   type="button"
                                   onClick={() => handleConfirmDelete(v.id)}
                                   disabled={deletingId === v.id}
-                                  className="text-xs font-medium text-red-600 hover:text-red-800"
+                                  className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
                                 >
                                   Confirmar
                                 </button>
                                 <button
                                   type="button"
                                   onClick={handleCancelDelete}
-                                  className="text-xs text-primary-500 hover:text-primary-700"
+                                  className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
                                 >
                                   Nao
                                 </button>
@@ -205,8 +213,11 @@ export function ViagemList({
                               <button
                                 type="button"
                                 onClick={() => handleDeleteClick(v.id)}
-                                className="text-xs text-red-500 transition-colors hover:text-red-700"
+                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
                               >
+                                <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
                                 Excluir
                               </button>
                             )}

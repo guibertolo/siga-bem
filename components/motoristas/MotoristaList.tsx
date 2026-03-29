@@ -63,10 +63,10 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
             type="button"
             onClick={() => setFilter(option)}
             className={cn(
-              'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+              'rounded-full border px-4 py-2 text-sm font-medium transition-colors min-h-[40px]',
               filter === option
-                ? 'bg-primary-700 text-white'
-                : 'bg-surface-card text-primary-700 hover:bg-surface-hover',
+                ? 'border-primary-700 bg-primary-700 text-white'
+                : 'border-surface-border bg-surface-card text-primary-700 hover:bg-surface-hover',
             )}
           >
             {option === 'todos' ? 'Todos' : option === 'ativo' ? 'Ativos' : 'Inativos'}
@@ -77,34 +77,35 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
       {/* Table */}
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-surface-border bg-surface-card p-8 text-center">
-          <p className="text-sm text-primary-500">Nenhum motorista encontrado.</p>
+          <p className="text-base text-primary-500">Nenhum motorista encontrado.</p>
+          <p className="mt-1 text-sm text-primary-400">Cadastre um motorista para comecar.</p>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
-          <table className="w-full text-sm">
+          <table className="w-full">
             <thead>
               <tr className="border-b border-surface-border bg-surface-background">
-                <th className="px-4 py-3 text-left font-medium text-primary-500">Nome</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">CPF</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">CNH</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">Categoria</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">Validade CNH</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">Telefone</th>
-                <th className="px-4 py-3 text-left font-medium text-primary-500">Status</th>
-                <th className="px-4 py-3 text-right font-medium text-primary-500">Acoes</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Nome</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">CPF</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">CNH</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Categoria</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Validade CNH</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Telefone</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Status</th>
+                <th className="px-4 py-3.5 text-right text-base font-medium text-primary-500">Acoes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border">
               {filtered.map((m) => (
                 <tr key={m.id} className="hover:bg-surface-hover">
-                  <td className="px-4 py-3 font-medium text-primary-900">{m.nome}</td>
-                  <td className="px-4 py-3 text-primary-700">{m.cpf}</td>
-                  <td className="px-4 py-3 text-primary-700">{m.cnh_numero}</td>
-                  <td className="px-4 py-3 text-primary-700">{m.cnh_categoria}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-base font-medium text-primary-900">{m.nome}</td>
+                  <td className="px-4 py-3.5 text-base text-primary-700">{m.cpf}</td>
+                  <td className="px-4 py-3.5 text-base text-primary-700">{m.cnh_numero}</td>
+                  <td className="px-4 py-3.5 text-base text-primary-700">{m.cnh_categoria}</td>
+                  <td className="px-4 py-3.5">
                     <span
                       className={cn(
-                        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                        'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.cnh_vencida
                           ? 'bg-red-100 text-red-700'
                           : m.cnh_vence_em_30_dias
@@ -115,11 +116,11 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       {m.cnh_validade}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-primary-700">{m.telefone || '—'}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-base text-primary-700">{m.telefone || '—'}</td>
+                  <td className="px-4 py-3.5">
                     <span
                       className={cn(
-                        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                        'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.status === 'ativo'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-gray-100 text-gray-600',
@@ -128,20 +129,29 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       {m.status === 'ativo' ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <button
                       type="button"
                       disabled={isPending}
                       onClick={() => handleToggleStatus(m.id, m.status)}
                       className={cn(
-                        'rounded px-2 py-1 text-xs font-medium transition-colors',
+                        'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
                         m.status === 'ativo'
                           ? 'text-red-600 hover:bg-red-50'
                           : 'text-green-600 hover:bg-green-50',
                         isPending && 'cursor-not-allowed opacity-50',
                       )}
                     >
-                      {m.status === 'ativo' ? 'Inativar' : 'Reativar'}
+                      {m.status === 'ativo' ? (
+                        <>
+                          <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Inativar
+                        </>
+                      ) : (
+                        'Reativar'
+                      )}
                     </button>
                   </td>
                 </tr>

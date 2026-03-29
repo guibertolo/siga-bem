@@ -38,7 +38,8 @@ export function VinculoList({ vinculos }: VinculoListProps) {
   if (vinculos.length === 0) {
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-sm text-primary-500">Nenhum vinculo encontrado.</p>
+        <p className="text-base text-primary-500">Nenhum vinculo encontrado.</p>
+        <p className="mt-1 text-sm text-primary-400">Vincule motoristas a caminhoes para gerenciar a frota.</p>
       </div>
     );
   }
@@ -55,19 +56,19 @@ export function VinculoList({ vinculos }: VinculoListProps) {
         <table className="min-w-full divide-y divide-surface-border">
           <thead className="bg-surface-card">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-primary-500">
+              <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Motorista
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-primary-500">
+              <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Caminhao
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-primary-500">
+              <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Periodo
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-primary-500">
+              <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Status
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-primary-500">
+              <th className="px-4 py-3.5 text-right text-sm font-medium uppercase tracking-wider text-primary-500">
                 Acoes
               </th>
             </tr>
@@ -75,22 +76,22 @@ export function VinculoList({ vinculos }: VinculoListProps) {
           <tbody className="divide-y divide-surface-border bg-white">
             {vinculos.map((v) => (
               <tr key={v.id} className="transition-colors hover:bg-surface-hover">
-                <td className="whitespace-nowrap px-4 py-3">
-                  <div className="text-sm font-medium text-primary-900">{v.motorista_nome}</div>
-                  <div className="text-xs text-primary-500">{v.motorista_cpf}</div>
+                <td className="whitespace-nowrap px-4 py-3.5">
+                  <div className="text-base font-medium text-primary-900">{v.motorista_nome}</div>
+                  <div className="text-sm text-primary-500">{v.motorista_cpf}</div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
-                  <div className="text-sm font-medium text-primary-900">{v.caminhao_placa}</div>
-                  <div className="text-xs text-primary-500">{v.caminhao_modelo}</div>
+                <td className="whitespace-nowrap px-4 py-3.5">
+                  <div className="text-base font-medium text-primary-900">{v.caminhao_placa}</div>
+                  <div className="text-sm text-primary-500">{v.caminhao_modelo}</div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-sm text-primary-700">
+                <td className="whitespace-nowrap px-4 py-3.5 text-base text-primary-700">
                   {formatDate(v.data_inicio)}
                   {v.data_fim ? ` — ${formatDate(v.data_fim)}` : ' — atual'}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
+                <td className="whitespace-nowrap px-4 py-3.5">
                   <span
                     className={cn(
-                      'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                      'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                       v.ativo
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-600',
@@ -99,14 +100,17 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                     {v.ativo ? 'Ativo' : 'Encerrado'}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
+                <td className="whitespace-nowrap px-4 py-3.5 text-right">
                   {v.ativo && (
                     <button
                       type="button"
                       onClick={() => handleEncerrar(v.id)}
                       disabled={isPending && encerrandoId === v.id}
-                      className="text-red-600 transition-colors hover:text-red-800 disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px] disabled:opacity-50"
                     >
+                      <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
                       {isPending && encerrandoId === v.id ? 'Encerrando...' : 'Encerrar'}
                     </button>
                   )}

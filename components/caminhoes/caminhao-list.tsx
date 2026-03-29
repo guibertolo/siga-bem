@@ -25,7 +25,8 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
   if (caminhoes.length === 0) {
     return (
       <div className="rounded-xl border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-sm text-primary-500">Nenhum caminhao cadastrado.</p>
+        <p className="text-base text-primary-500">Nenhum caminhao cadastrado.</p>
+        <p className="mt-1 text-sm text-primary-400">Adicione seu primeiro caminhao para comecar a gerenciar a frota.</p>
         <Link
           href="/caminhoes/cadastro"
           className="mt-4 inline-block rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
@@ -38,17 +39,17 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-surface-border bg-surface-card shadow-sm">
-      <table className="w-full text-left text-sm">
+      <table className="w-full text-left">
         <thead>
           <tr className="border-b border-surface-border bg-gray-50">
-            <th className="px-4 py-3 font-medium text-primary-700">Placa</th>
-            <th className="px-4 py-3 font-medium text-primary-700">Modelo</th>
-            <th className="px-4 py-3 font-medium text-primary-700">Marca</th>
-            <th className="px-4 py-3 font-medium text-primary-700">Tipo</th>
-            <th className="px-4 py-3 font-medium text-primary-700 text-center">Capacidade</th>
-            <th className="px-4 py-3 font-medium text-primary-700 text-right">Km Atual</th>
-            <th className="px-4 py-3 font-medium text-primary-700 text-center">Status</th>
-            <th className="px-4 py-3 font-medium text-primary-700 text-center">Acoes</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Placa</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Modelo</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Marca</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Capacidade</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-right">Km Atual</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Status</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Acoes</th>
           </tr>
         </thead>
         <tbody>
@@ -77,19 +78,19 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
       'border-b border-surface-border transition-colors hover:bg-gray-50',
       !caminhao.ativo && 'opacity-60',
     )}>
-      <td className="px-4 py-3 font-mono font-medium text-primary-900">
+      <td className="px-4 py-3.5 text-base font-mono font-medium text-primary-900">
         {maskPlaca(caminhao.placa)}
       </td>
-      <td className="px-4 py-3 text-primary-900">{caminhao.modelo}</td>
-      <td className="px-4 py-3 text-primary-700">{caminhao.marca || '—'}</td>
-      <td className="px-4 py-3 text-primary-700">{tipoLabel}</td>
-      <td className="px-4 py-3 text-center text-primary-700">{caminhao.capacidade_veiculos}</td>
-      <td className="px-4 py-3 text-right text-primary-700">
+      <td className="px-4 py-3.5 text-base text-primary-900">{caminhao.modelo}</td>
+      <td className="px-4 py-3.5 text-base text-primary-700">{caminhao.marca || '—'}</td>
+      <td className="px-4 py-3.5 text-base text-primary-700">{tipoLabel}</td>
+      <td className="px-4 py-3.5 text-base text-center text-primary-700">{caminhao.capacidade_veiculos}</td>
+      <td className="px-4 py-3.5 text-base text-right text-primary-700">
         {caminhao.km_atual.toLocaleString('pt-BR')} km
       </td>
-      <td className="px-4 py-3 text-center">
+      <td className="px-4 py-3.5 text-center">
         <span className={cn(
-          'inline-block rounded-full px-2 py-0.5 text-xs font-medium',
+          'inline-block rounded-full px-3 py-1 text-sm font-semibold',
           caminhao.ativo
             ? 'bg-green-100 text-green-800'
             : 'bg-red-100 text-red-800',
@@ -97,12 +98,15 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
           {caminhao.ativo ? 'Ativo' : 'Inativo'}
         </span>
       </td>
-      <td className="px-4 py-3 text-center">
+      <td className="px-4 py-3.5 text-center">
         <div className="flex items-center justify-center gap-2">
           <Link
             href={`/caminhoes/editar/${caminhao.id}`}
-            className="text-xs text-primary-700 underline transition-colors hover:text-primary-900"
+            className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
           >
+            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
             Editar
           </Link>
           <button
@@ -110,13 +114,18 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
             onClick={handleToggleAtivo}
             disabled={isPending}
             className={cn(
-              'text-xs underline transition-colors',
+              'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
               caminhao.ativo
-                ? 'text-red-600 hover:text-red-800'
-                : 'text-green-600 hover:text-green-800',
+                ? 'text-red-600 hover:bg-red-50'
+                : 'text-green-600 hover:bg-green-50',
               isPending && 'cursor-not-allowed opacity-50',
             )}
           >
+            {caminhao.ativo && (
+              <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            )}
             {isPending ? '...' : caminhao.ativo ? 'Desativar' : 'Reativar'}
           </button>
         </div>

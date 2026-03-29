@@ -90,49 +90,55 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
       {/* List */}
       {precos.length === 0 ? (
         <div className="rounded-lg border border-dashed border-surface-border bg-gray-50 p-8 text-center">
-          <p className="text-sm text-primary-500">
+          <p className="text-base text-primary-500">
             Nenhum preco de combustivel cadastrado.
           </p>
-          <p className="mt-1 text-xs text-primary-400">
+          <p className="mt-1 text-sm text-primary-400">
             O sistema usara o valor padrao de R$ 6,50/l para estimativas.
           </p>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-surface-border">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left">
             <thead className="border-b border-surface-border bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Regiao</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Tipo</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Preco/l</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Referencia</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Fonte</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wide text-primary-500">Acoes</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Regiao</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Tipo</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Preco/l</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Referencia</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Fonte</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Acoes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border bg-white">
               {precos.map((preco) => (
                 <tr key={preco.id} className="transition-colors hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-primary-900">{preco.regiao}</td>
-                  <td className="px-4 py-3 text-primary-700">{COMBUSTIVEL_TIPO_LABELS[preco.tipo]}</td>
-                  <td className="px-4 py-3 tabular-nums font-medium text-primary-900">
+                  <td className="px-4 py-3.5 text-base font-medium text-primary-900">{preco.regiao}</td>
+                  <td className="px-4 py-3.5 text-base text-primary-700">{COMBUSTIVEL_TIPO_LABELS[preco.tipo]}</td>
+                  <td className="px-4 py-3.5 text-base tabular-nums font-medium text-primary-900">
                     {formatBRL(preco.preco_centavos)}
                   </td>
-                  <td className="px-4 py-3 text-primary-700">{formatDate(preco.data_referencia)}</td>
-                  <td className="px-4 py-3 text-primary-500">{preco.fonte ?? '-'}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-base text-primary-700">{formatDate(preco.data_referencia)}</td>
+                  <td className="px-4 py-3.5 text-base text-primary-500">{preco.fonte ?? '-'}</td>
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(preco)}
-                        className="text-sm text-primary-500 transition-colors hover:text-primary-700"
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
                       >
+                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
                         Editar
                       </button>
                       <button
                         onClick={() => handleDelete(preco.id)}
                         disabled={isPending}
-                        className="text-sm text-red-500 transition-colors hover:text-red-700 disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px] disabled:opacity-50"
                       >
+                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
                         {deletingId === preco.id ? 'Confirmar?' : 'Excluir'}
                       </button>
                     </div>

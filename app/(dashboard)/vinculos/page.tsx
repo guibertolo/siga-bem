@@ -22,22 +22,25 @@ export default async function VinculosPage() {
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-primary-900">Vinculos Motorista-Caminhao</h2>
-          <p className="mt-1 text-sm text-primary-500">
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Vinculos Motorista-Caminhao</h2>
+          <p className="mt-1 text-base text-primary-500">
             Gerencie a vinculacao entre motoristas e caminhoes.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/vinculos/historico"
-            className="rounded-lg border border-surface-border px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover"
+            className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
           >
             Historico
           </Link>
           <Link
             href="/vinculos/novo"
-            className="rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-800 min-h-[48px]"
           >
+            <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
             Novo Vinculo
           </Link>
         </div>

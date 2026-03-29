@@ -54,26 +54,26 @@ export function GastoTable({ gastos }: GastoTableProps) {
       )}
 
       <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
-        <table className="w-full text-sm">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-surface-border bg-gray-50 text-left">
-              <th className="px-4 py-3 font-medium text-primary-700">Data</th>
-              <th className="px-4 py-3 font-medium text-primary-700">
+              <th className="px-4 py-3.5 text-base font-medium text-primary-700">Data</th>
+              <th className="px-4 py-3.5 text-base font-medium text-primary-700">
                 Categoria
               </th>
-              <th className="px-4 py-3 font-medium text-primary-700">
+              <th className="px-4 py-3.5 text-base font-medium text-primary-700">
                 Motorista
               </th>
-              <th className="px-4 py-3 font-medium text-primary-700">
+              <th className="px-4 py-3.5 text-base font-medium text-primary-700">
                 Caminhao
               </th>
-              <th className="px-4 py-3 text-right font-medium text-primary-700">
+              <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">
                 Valor
               </th>
-              <th className="w-10 px-4 py-3 text-center font-medium text-primary-700">
+              <th className="w-10 px-4 py-3.5 text-base text-center font-medium text-primary-700">
                 Comp.
               </th>
-              <th className="px-4 py-3 text-right font-medium text-primary-700">
+              <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">
                 Acoes
               </th>
             </tr>
@@ -84,10 +84,10 @@ export function GastoTable({ gastos }: GastoTableProps) {
                 key={gasto.id}
                 className="border-b border-surface-border last:border-0 hover:bg-gray-50"
               >
-                <td className="whitespace-nowrap px-4 py-3 tabular-nums text-primary-900">
+                <td className="whitespace-nowrap px-4 py-3.5 text-base tabular-nums text-primary-900">
                   {formatDate(gasto.data)}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3.5">
                   <div className="flex items-center gap-2">
                     {gasto.categoria_cor && (
                       <span
@@ -95,21 +95,21 @@ export function GastoTable({ gastos }: GastoTableProps) {
                         style={{ backgroundColor: gasto.categoria_cor }}
                       />
                     )}
-                    <span className="text-primary-900">
+                    <span className="text-base text-primary-900">
                       {gasto.categoria_nome}
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-primary-900">
+                <td className="px-4 py-3.5 text-base text-primary-900">
                   {gasto.motorista_nome}
                 </td>
-                <td className="px-4 py-3 text-primary-500">
+                <td className="px-4 py-3.5 text-base text-primary-500">
                   {gasto.caminhao_placa ?? '-'}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums font-medium text-primary-900">
+                <td className="whitespace-nowrap px-4 py-3.5 text-base text-right tabular-nums font-medium text-primary-900">
                   {formatBRL(gasto.valor)}
                 </td>
-                <td className="px-4 py-3 text-center">
+                <td className="px-4 py-3.5 text-center">
                   {gasto.foto_url ? (
                     <button
                       type="button"
@@ -135,12 +135,15 @@ export function GastoTable({ gastos }: GastoTableProps) {
                     <span className="text-primary-300">-</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Link
                       href={`/gastos/${gasto.id}/editar`}
-                      className="text-primary-600 transition-colors hover:text-primary-800"
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
                     >
+                      <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
                       Editar
                     </Link>
 
@@ -150,14 +153,14 @@ export function GastoTable({ gastos }: GastoTableProps) {
                           type="button"
                           onClick={() => handleConfirmDelete(gasto.id)}
                           disabled={isPending}
-                          className="text-red-600 transition-colors hover:text-red-800"
+                          className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
                         >
                           Confirmar
                         </button>
                         <button
                           type="button"
                           onClick={handleCancelDelete}
-                          className="text-primary-500 transition-colors hover:text-primary-700"
+                          className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
                         >
                           Cancelar
                         </button>
@@ -167,8 +170,11 @@ export function GastoTable({ gastos }: GastoTableProps) {
                         type="button"
                         onClick={() => handleDeleteClick(gasto.id)}
                         disabled={isPending && deletingId === gasto.id}
-                        className="text-red-500 transition-colors hover:text-red-700"
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
                       >
+                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
                         {isPending && deletingId === gasto.id
                           ? 'Excluindo...'
                           : 'Excluir'}
