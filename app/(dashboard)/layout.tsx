@@ -40,21 +40,21 @@ export default async function DashboardLayout({
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside className="w-60 bg-[#1B3A4B] text-white flex flex-col shrink-0">
-        <div className="px-5 py-6 border-b border-white/10">
+        <div className="px-5 py-7 border-b border-white/10">
           <Link
             href="/dashboard"
-            className="text-xl font-bold text-white no-underline"
+            className="text-2xl font-extrabold text-white no-underline"
           >
             Siga Bem
           </Link>
         </div>
 
-        <nav className="flex-1 p-3 flex flex-col gap-1">
+        <nav className="flex-1 p-3 flex flex-col gap-0.5">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block px-5 py-2.5 text-sm text-slate-300 no-underline rounded-md hover:bg-white/10 transition-colors"
+              className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               {link.label}
             </Link>
@@ -62,14 +62,14 @@ export default async function DashboardLayout({
 
           {showAdminLinks && (
             <>
-              <div className="mx-2 mt-4 mb-2 text-[11px] font-semibold text-white/40 uppercase tracking-wide">
+              <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">
                 Admin
               </div>
               {adminLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block px-5 py-2.5 text-sm text-slate-300 no-underline rounded-md hover:bg-white/10 transition-colors"
+                  className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
                 >
                   {link.label}
                 </Link>
@@ -82,7 +82,7 @@ export default async function DashboardLayout({
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="w-full px-5 py-2.5 text-sm text-slate-300 bg-transparent border-none cursor-pointer text-left rounded-md hover:bg-white/10 transition-colors"
+              className="w-full px-4 py-3.5 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-red-500/20 hover:text-red-300 transition-colors"
             >
               Sair
             </button>
