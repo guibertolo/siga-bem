@@ -48,7 +48,7 @@ export default async function FechamentoDetalhePage({
   const canManage = usuario.role === 'dono' || usuario.role === 'admin';
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="w-full max-w-4xl">
       {/* Navigation */}
       <div className="mb-6">
         <Link

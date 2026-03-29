@@ -62,7 +62,7 @@ export default async function ViagemDetalhePage({
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/viagens"

@@ -47,7 +47,7 @@ export default async function GastosPage({ searchParams }: GastosPageProps) {
 
   if (resultGastos.error) {
     return (
-      <div className="mx-auto max-w-6xl">
+      <div className="w-full max-w-6xl">
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {resultGastos.error}
         </div>
@@ -66,7 +66,7 @@ export default async function GastosPage({ searchParams }: GastosPageProps) {
   const canExport = usuario.role === 'dono' || usuario.role === 'admin';
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full max-w-6xl">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Gastos</h2>

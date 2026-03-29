@@ -39,7 +39,7 @@ export default async function EditarGastoPage({ params }: EditarGastoPageProps) 
     : null;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full max-w-2xl">
       <h2 className="mb-6 text-2xl font-bold text-primary-900">Editar Gasto</h2>
 
       <EditarGastoClient

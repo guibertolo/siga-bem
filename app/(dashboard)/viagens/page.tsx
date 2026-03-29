@@ -18,7 +18,7 @@ export default async function ViagensPage() {
   const motoristas = motoristasResult.data ?? [];
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full max-w-6xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Viagens</h2>

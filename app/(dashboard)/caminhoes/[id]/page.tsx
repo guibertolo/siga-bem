@@ -22,7 +22,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
   const caminhao = result.caminhao!;
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/caminhoes"

@@ -27,7 +27,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
   const motorista = result.motorista!;
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
           href="/motoristas"

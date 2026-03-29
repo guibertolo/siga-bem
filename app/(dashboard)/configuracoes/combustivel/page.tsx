@@ -13,7 +13,7 @@ export default async function CombustivelConfigPage() {
   const precos = result.data ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="w-full max-w-4xl">
       <div className="mb-6">
         <Link
           href="/dashboard"

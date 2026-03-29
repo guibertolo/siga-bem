@@ -39,7 +39,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
 
   if (result.error) {
     return (
-      <div className="mx-auto max-w-6xl">
+      <div className="w-full max-w-6xl">
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {result.error}
         </div>
@@ -51,7 +51,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
   const totalPages = Math.ceil(result.total / PAGE_SIZE);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full max-w-6xl">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Fechamentos</h2>

@@ -23,7 +23,7 @@ export default async function CadastroMotoristaPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full max-w-2xl">
       <div className="mb-6">
         <Link
           href="/motoristas"
