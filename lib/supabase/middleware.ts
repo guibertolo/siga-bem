@@ -27,12 +27,15 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
+  // Use getSession() instead of getUser() in middleware for performance.
+  // getSession() reads from the cookie locally (no Supabase API round-trip).
+  // The actual getUser() verification happens in the layout/page via getCurrentUsuario().
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (
-    !user &&
+    !session &&
     request.nextUrl.pathname.startsWith('/dashboard')
   ) {
     const url = request.nextUrl.clone();

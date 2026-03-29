@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
@@ -26,16 +25,17 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  // getCurrentUsuario already calls supabase.auth.getUser() internally,
+  // and is wrapped with React.cache() so it deduplicates within this request.
+  // No need for a separate getUser() call here.
+  const currentUsuario = await getCurrentUsuario();
 
-  if (!user) {
+  if (!currentUsuario) {
     redirect('/login');
   }
 
-  const currentUsuario = await getCurrentUsuario();
-  const showAdminLinks = currentUsuario?.role === 'dono' || currentUsuario?.role === 'admin';
-  const showBILink = currentUsuario?.role === 'dono';
+  const showAdminLinks = currentUsuario.role === 'dono' || currentUsuario.role === 'admin';
+  const showBILink = currentUsuario.role === 'dono';
 
   return (
     <div className="flex min-h-screen">
@@ -104,7 +104,7 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-surface-card border-b border-surface-border px-8 py-4 flex items-center justify-between">
           <span className="text-sm text-primary-700">
-            {user.email}
+            {currentUsuario.email}
           </span>
           <ThemeToggle />
         </header>

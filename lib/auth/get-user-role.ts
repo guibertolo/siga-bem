@@ -1,5 +1,6 @@
 'use server';
 
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type { UsuarioRole, Usuario } from '@/types/usuario';
 
@@ -27,8 +28,11 @@ export async function getUserRole(): Promise<UsuarioRole | null> {
 /**
  * Get the full usuario record for the currently authenticated user.
  * Returns null if not authenticated or no usuario record found.
+ *
+ * Wrapped with React.cache() to deduplicate calls within the same
+ * server request (e.g. layout + page both calling getCurrentUsuario).
  */
-export async function getCurrentUsuario(): Promise<Usuario | null> {
+export const getCurrentUsuario = cache(async (): Promise<Usuario | null> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -38,12 +42,12 @@ export async function getCurrentUsuario(): Promise<Usuario | null> {
 
   const { data } = await supabase
     .from('usuario')
-    .select('*')
+    .select('id, auth_id, empresa_id, motorista_id, nome, email, telefone, role, ativo, created_at, updated_at')
     .eq('auth_id', user.id)
     .single();
 
   return (data as Usuario) ?? null;
-}
+});
 
 /**
  * Check if the current user has one of the allowed roles.

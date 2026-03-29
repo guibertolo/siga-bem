@@ -34,7 +34,7 @@ export async function getFechamentosHistorico(
     let query = supabase
       .from('fechamento')
       .select(
-        'id, motorista_id, periodo_inicio, periodo_fim, tipo, total_viagens, total_gastos, saldo, status, created_at, motorista!inner(nome, cpf)',
+        'id, motorista_id, periodo_inicio, periodo_fim, tipo, total_viagens, total_gastos, saldo_motorista, status, created_at, motorista!inner(nome, cpf)',
         { count: 'exact' },
       )
       .order('periodo_inicio', { ascending: false })
@@ -87,7 +87,7 @@ export async function getFechamentosHistorico(
         tipo: f.tipo,
         total_viagens: f.total_viagens as number,
         total_gastos: f.total_gastos as number,
-        saldo_motorista: f.saldo as number,
+        saldo_motorista: f.saldo_motorista as number,
         status: f.status,
         created_at: f.created_at as string,
       };
@@ -141,12 +141,12 @@ export async function getResumoFinanceiro(): Promise<{
     const [pagosNoMes, emAberto, pendentes] = await Promise.all([
       supabase
         .from('fechamento')
-        .select('saldo')
+        .select('saldo_motorista')
         .eq('status', 'pago')
         .gte('periodo_inicio', mesAtualInicio),
       supabase
         .from('fechamento')
-        .select('saldo')
+        .select('saldo_motorista')
         .eq('status', 'aberto'),
       supabase
         .from('fechamento')
@@ -156,13 +156,13 @@ export async function getResumoFinanceiro(): Promise<{
 
     const totalPagoMesCentavos =
       pagosNoMes.data?.reduce(
-        (sum: number, f: { saldo: number }) => sum + f.saldo,
+        (sum: number, f: { saldo_motorista: number }) => sum + f.saldo_motorista,
         0,
       ) ?? 0;
 
     const totalEmAbertoCentavos =
       emAberto.data?.reduce(
-        (sum: number, f: { saldo: number }) => sum + f.saldo,
+        (sum: number, f: { saldo_motorista: number }) => sum + f.saldo_motorista,
         0,
       ) ?? 0;
 
