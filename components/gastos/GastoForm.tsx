@@ -3,17 +3,27 @@
 import { useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { z } from 'zod';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import { cn } from '@/lib/utils/cn';
 import type { Gasto, GastoFormData, GastoActionResult } from '@/types/gasto';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
 
+export interface ViagemOption {
+  id: string;
+  origem: string;
+  destino: string;
+  status: string;
+  motorista_id: string;
+  caminhao_id: string;
+}
+
 const gastoFormSchema = z.object({
   categoria_id: z.string().min(1, 'Selecione uma categoria'),
   motorista_id: z.string().min(1, 'Selecione um motorista'),
   caminhao_id: z.string(),
+  viagem_id: z.string(),
   valor: z.string()
     .min(1, 'Valor e obrigatorio')
     .refine((val) => {
@@ -32,6 +42,8 @@ interface GastoFormProps {
   categorias: CategoriaGastoOption[];
   motoristas: Array<{ id: string; nome: string }>;
   caminhoes: Array<{ id: string; placa: string; modelo: string }>;
+  viagens?: ViagemOption[];
+  viagemIdInicial?: string | null;
   motoristaFixo?: string | null; // Pre-filled for motorista role
   onSubmit: (data: GastoFormData) => Promise<GastoActionResult>;
 }
@@ -50,6 +62,8 @@ export function GastoForm({
   categorias,
   motoristas,
   caminhoes,
+  viagens = [],
+  viagemIdInicial,
   motoristaFixo,
   onSubmit,
 }: GastoFormProps) {
@@ -57,10 +71,14 @@ export function GastoForm({
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
 
+  const defaultViagemId = gasto?.viagem_id ?? viagemIdInicial ?? '';
+
   const {
     register,
     handleSubmit,
     setError,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: standardSchemaResolver(gastoFormSchema),
@@ -68,11 +86,46 @@ export function GastoForm({
       categoria_id: gasto?.categoria_id ?? '',
       motorista_id: gasto?.motorista_id ?? motoristaFixo ?? '',
       caminhao_id: gasto?.caminhao_id ?? '',
+      viagem_id: defaultViagemId,
       valor: gasto ? centavosToInputValue(gasto.valor) : '',
       data: gasto?.data ?? todayISO(),
       descricao: gasto?.descricao ?? '',
     },
   });
+
+  const watchedViagemId = watch('viagem_id');
+
+  // Auto-fill motorista/caminhao from pre-selected viagem on mount
+  useEffect(() => {
+    if (defaultViagemId && viagens.length > 0) {
+      const viagem = viagens.find((v) => v.id === defaultViagemId);
+      if (viagem) {
+        setValue('motorista_id', viagem.motorista_id);
+        setValue('caminhao_id', viagem.caminhao_id);
+      }
+    }
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleViagemChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedId = e.target.value;
+    setValue('viagem_id', selectedId);
+    if (selectedId && !motoristaFixo) {
+      const viagem = viagens.find((v) => v.id === selectedId);
+      if (viagem) {
+        setValue('motorista_id', viagem.motorista_id);
+        setValue('caminhao_id', viagem.caminhao_id);
+      }
+    }
+    if (!selectedId) {
+      // Clear auto-filled fields only if not locked
+      if (!motoristaFixo) {
+        setValue('motorista_id', '');
+        setValue('caminhao_id', '');
+      }
+    }
+  }
 
   async function onFormSubmit(values: FormValues) {
     setServerError(null);
@@ -99,6 +152,9 @@ export function GastoForm({
 
   const isEditing = mode === 'edit';
   const isMotoristaFixo = !!motoristaFixo;
+  const isViagemSelected = !!watchedViagemId;
+  const isMotoristaLocked = isMotoristaFixo || isViagemSelected;
+  const isCaminhaoLocked = isViagemSelected;
   const inputClass = 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
 
   return (
@@ -106,6 +162,33 @@ export function GastoForm({
       {serverError && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
           {serverError}
+        </div>
+      )}
+
+      {/* Viagem (opcional) */}
+      {viagens.length > 0 && (
+        <div>
+          <label htmlFor="viagem_id" className="mb-2 block text-base font-medium text-primary-900">
+            Vincular a viagem (opcional)
+          </label>
+          <select
+            id="viagem_id"
+            {...register('viagem_id')}
+            onChange={handleViagemChange}
+            disabled={!!viagemIdInicial}
+            className={cn(
+              inputClass,
+              'border-surface-border',
+              !!viagemIdInicial && 'cursor-not-allowed bg-gray-100',
+            )}
+          >
+            <option value="">Sem viagem vinculada</option>
+            {viagens.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.origem} &rarr; {v.destino} ({v.status === 'em_andamento' ? 'Em andamento' : 'Planejada'})
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
@@ -175,12 +258,12 @@ export function GastoForm({
           </label>
           <select
             id="motorista_id"
-            disabled={isMotoristaFixo}
+            disabled={isMotoristaLocked}
             {...register('motorista_id')}
             className={cn(
               inputClass,
               errors.motorista_id ? 'border-red-500' : 'border-surface-border',
-              isMotoristaFixo && 'cursor-not-allowed bg-gray-100',
+              isMotoristaLocked && 'cursor-not-allowed bg-gray-100',
             )}
           >
             <option value="">Selecione um motorista</option>
@@ -199,8 +282,13 @@ export function GastoForm({
           </label>
           <select
             id="caminhao_id"
+            disabled={isCaminhaoLocked}
             {...register('caminhao_id')}
-            className={cn(inputClass, 'border-surface-border')}
+            className={cn(
+              inputClass,
+              'border-surface-border',
+              isCaminhaoLocked && 'cursor-not-allowed bg-gray-100',
+            )}
           >
             <option value="">Nenhum (opcional)</option>
             {caminhoes.map((c) => (

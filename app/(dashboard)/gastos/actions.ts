@@ -24,6 +24,10 @@ const gastoSchema = z.object({
     (val) => val === '' || z.string().uuid().safeParse(val).success,
     'Caminhao invalido',
   ),
+  viagem_id: z.string().refine(
+    (val) => val === '' || z.string().uuid().safeParse(val).success,
+    'Viagem invalida',
+  ),
   valor: z.string()
     .min(1, 'Valor e obrigatorio')
     .refine((val) => {
@@ -196,6 +200,7 @@ export async function createGasto(
       categoria_id: data.categoria_id,
       motorista_id: motoristaId,
       caminhao_id: data.caminhao_id || null,
+      viagem_id: data.viagem_id || null,
       valor: valorCentavos,
       data: data.data,
       descricao: data.descricao || null,
@@ -210,6 +215,9 @@ export async function createGasto(
 
   revalidatePath('/gastos');
   revalidatePath('/dashboard');
+  if (data.viagem_id) {
+    revalidatePath(`/viagens/${data.viagem_id}`);
+  }
   return { success: true, gasto };
 }
 
@@ -289,6 +297,7 @@ export async function updateGasto(
       categoria_id: data.categoria_id,
       motorista_id: motoristaId,
       caminhao_id: data.caminhao_id || null,
+      viagem_id: data.viagem_id || null,
       valor: valorCentavos,
       data: data.data,
       descricao: data.descricao || null,
@@ -561,4 +570,38 @@ export async function getGastosMesAtual(): Promise<{
 
   const total = (data ?? []).reduce((sum, row) => sum + row.valor, 0);
   return { total, error: null };
+}
+
+/**
+ * List viagens ativas (planejada or em_andamento) for the gasto form select.
+ * Returns minimal fields needed for display and auto-fill.
+ */
+export async function listViagensAtivas(): Promise<{
+  data: Array<{
+    id: string;
+    origem: string;
+    destino: string;
+    status: string;
+    motorista_id: string;
+    caminhao_id: string;
+  }> | null;
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: null, error: 'Nao autenticado' };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('viagem')
+    .select('id, origem, destino, status, motorista_id, caminhao_id')
+    .in('status', ['planejada', 'em_andamento'])
+    .order('data_saida', { ascending: false });
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  return { data: data ?? [], error: null };
 }

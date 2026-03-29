@@ -7,6 +7,7 @@ import { updateGasto } from '@/app/(dashboard)/gastos/actions'
 import type { Gasto, GastoFormData, GastoActionResult } from '@/types/gasto'
 import type { CategoriaGastoOption } from '@/types/categoria-gasto'
 import type { FotoComprovanteWithUrl } from '@/types/foto-comprovante'
+import type { ViagemOption } from '@/components/gastos/GastoForm'
 
 interface EditarGastoClientProps {
   gastoId: string
@@ -14,6 +15,7 @@ interface EditarGastoClientProps {
   categorias: CategoriaGastoOption[]
   motoristas: Array<{ id: string; nome: string }>
   caminhoes: Array<{ id: string; placa: string; modelo: string }>
+  viagens?: ViagemOption[]
   motoristaFixo: string | null
   comprovantes?: FotoComprovanteWithUrl[]
   empresaId?: string
@@ -25,6 +27,7 @@ export function EditarGastoClient({
   categorias,
   motoristas,
   caminhoes,
+  viagens = [],
   motoristaFixo,
   comprovantes = [],
   empresaId = '',
@@ -47,6 +50,7 @@ export function EditarGastoClient({
         categorias={categorias}
         motoristas={motoristas}
         caminhoes={caminhoes}
+        viagens={viagens}
         motoristaFixo={motoristaFixo}
         onSubmit={handleSubmit}
       />

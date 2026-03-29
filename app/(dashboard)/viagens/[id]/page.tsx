@@ -267,17 +267,31 @@ export default async function ViagemDetalhePage({
           readonly={isReadonly}
         />
 
-        {/* Abastecimento Form — Story 5.2 (AC 1, 2) */}
+        {/* Quick actions — Abastecimento + Despesa */}
         {viagem.status === 'em_andamento' && (
-          <AbastecimentoSection
-            viagemId={viagem.id}
-            empresaId={viagem.empresa_id}
-            origem={viagem.origem}
-            destino={viagem.destino}
-            motoristaNome={viagem.motorista?.nome ?? 'Motorista'}
-            caminhaoPlaca={viagem.caminhao ? `${viagem.caminhao.placa} - ${viagem.caminhao.modelo}` : '-'}
-            kmSaida={viagem.km_saida}
-          />
+          <>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/gastos/novo?viagemId=${viagem.id}`}
+                className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
+              >
+                <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Registrar Despesa
+              </Link>
+            </div>
+
+            <AbastecimentoSection
+              viagemId={viagem.id}
+              empresaId={viagem.empresa_id}
+              origem={viagem.origem}
+              destino={viagem.destino}
+              motoristaNome={viagem.motorista?.nome ?? 'Motorista'}
+              caminhaoPlaca={viagem.caminhao ? `${viagem.caminhao.placa} - ${viagem.caminhao.modelo}` : '-'}
+              kmSaida={viagem.km_saida}
+            />
+          </>
         )}
 
         {/* Abastecimento List — Story 5.3 (visible for ALL statuses, including concluida) */}

@@ -5,21 +5,29 @@ import {
   listCategorias,
   listMotoristasAtivos,
   listCaminhoesAtivos,
+  listViagensAtivas,
   createGasto,
 } from '@/app/(dashboard)/gastos/actions';
 import { GastoForm } from '@/components/gastos/GastoForm';
 
-export default async function NovoGastoPage() {
+interface NovoGastoPageProps {
+  searchParams: Promise<{ viagemId?: string }>;
+}
+
+export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps) {
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
     redirect('/login');
   }
 
-  const [categoriasResult, motoristasResult, caminhoesResult] = await Promise.all([
+  const { viagemId } = await searchParams;
+
+  const [categoriasResult, motoristasResult, caminhoesResult, viagensResult] = await Promise.all([
     listCategorias(),
     listMotoristasAtivos(),
     listCaminhoesAtivos(),
+    listViagensAtivas(),
   ]);
 
   // Determine if motorista role -> pre-fill and lock motorista_id
@@ -32,7 +40,7 @@ export default async function NovoGastoPage() {
     <div className="w-full max-w-3xl">
       <div className="mb-6">
         <Link
-          href="/gastos"
+          href={viagemId ? `/viagens/${viagemId}` : '/gastos'}
           className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
         >
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,6 +62,8 @@ export default async function NovoGastoPage() {
         categorias={categoriasResult.data ?? []}
         motoristas={motoristasResult.data ?? []}
         caminhoes={caminhoesResult.data ?? []}
+        viagens={viagensResult.data ?? []}
+        viagemIdInicial={viagemId ?? null}
         motoristaFixo={motoristaFixo}
         onSubmit={createGasto}
       />

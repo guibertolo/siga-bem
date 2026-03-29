@@ -5,6 +5,7 @@ import {
   listCategorias,
   listMotoristasAtivos,
   listCaminhoesAtivos,
+  listViagensAtivas,
 } from '@/app/(dashboard)/gastos/actions';
 import { listComprovantes } from '@/app/(dashboard)/gastos/comprovante-actions';
 import { EditarGastoClient } from '@/components/gastos/EditarGastoClient';
@@ -21,12 +22,13 @@ export default async function EditarGastoPage({ params }: EditarGastoPageProps) 
     redirect('/login');
   }
 
-  const [gastoResult, categoriasResult, motoristasResult, caminhoesResult, comprovantesResult] = await Promise.all([
+  const [gastoResult, categoriasResult, motoristasResult, caminhoesResult, comprovantesResult, viagensResult] = await Promise.all([
     getGasto(id),
     listCategorias(),
     listMotoristasAtivos(),
     listCaminhoesAtivos(),
     listComprovantes(id),
+    listViagensAtivas(),
   ]);
 
   if (!gastoResult.success || !gastoResult.gasto) {
@@ -48,6 +50,7 @@ export default async function EditarGastoPage({ params }: EditarGastoPageProps) 
         categorias={categoriasResult.data ?? []}
         motoristas={motoristasResult.data ?? []}
         caminhoes={caminhoesResult.data ?? []}
+        viagens={viagensResult.data ?? []}
         motoristaFixo={motoristaFixo}
         comprovantes={comprovantesResult.data ?? []}
         empresaId={usuario.empresa_id}

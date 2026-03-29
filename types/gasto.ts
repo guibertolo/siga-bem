@@ -54,6 +54,7 @@ export interface GastoFormData {
   categoria_id: string;
   motorista_id: string;
   caminhao_id: string;
+  viagem_id: string;         // empty string = no trip linked
   valor: string;             // BRL string from UI, converted to centavos on server
   data: string;              // YYYY-MM-DD
   descricao: string;
