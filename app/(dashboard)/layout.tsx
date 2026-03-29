@@ -91,14 +91,14 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-surface-card border-b border-surface-border px-8 py-4 flex items-center justify-between">
           <span className="text-sm text-primary-700">
             {user.email}
           </span>
           <ThemeToggle />
         </header>
-        <main className="flex-1 bg-surface-background p-8">
+        <main className="flex-1 bg-surface-background p-8 overflow-auto">
           {children}
         </main>
       </div>

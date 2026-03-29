@@ -15,7 +15,7 @@ export default async function EmpresaPage() {
   const empresa = result.empresa!;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full max-w-3xl">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Minha Empresa</h2>
         <Link
@@ -29,7 +29,7 @@ export default async function EmpresaPage() {
         </Link>
       </div>
 
-      <div className="rounded-xl border border-surface-border bg-surface-card p-6 sm:p-8 shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-surface-border bg-surface-card p-6 sm:p-8 shadow-sm">
         <dl className="divide-y divide-surface-border">
           <DataRow label="CNPJ" value={empresa.cnpj} />
           <DataRow label="Razao Social" value={empresa.razao_social} />
