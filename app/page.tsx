@@ -2,57 +2,18 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#F8FAFC',
-        padding: '48px 24px',
-      }}
-    >
-      <div style={{ width: '100%', maxWidth: '480px', textAlign: 'center' }}>
-        <h1
-          style={{
-            fontSize: '48px',
-            fontWeight: 800,
-            color: '#1B3A4B',
-            letterSpacing: '-1px',
-            lineHeight: 1.1,
-            marginBottom: '12px',
-          }}
-        >
+    <main className="flex min-h-screen flex-col items-center justify-center bg-surface-background px-6 py-12">
+      <div className="w-full max-w-[480px] text-center">
+        <h1 className="text-5xl font-extrabold text-primary-900 tracking-tight leading-tight mb-3">
           Siga Bem
         </h1>
-        <p
-          style={{
-            fontSize: '20px',
-            fontWeight: 500,
-            color: '#2C5F7C',
-            marginBottom: '48px',
-            whiteSpace: 'nowrap',
-          }}
-        >
+        <p className="text-xl font-medium text-primary-700 mb-12 whitespace-nowrap">
           Sua frota no controle
         </p>
 
         <Link
           href="/login"
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            maxWidth: '320px',
-            padding: '16px 32px',
-            backgroundColor: '#2C5F7C',
-            color: '#FFFFFF',
-            fontSize: '18px',
-            fontWeight: 600,
-            borderRadius: '8px',
-            textDecoration: 'none',
-            textAlign: 'center',
-          }}
+          className="inline-block w-full max-w-xs px-8 py-4 bg-primary-700 text-white text-lg font-semibold rounded-default text-center no-underline hover:bg-primary-900 transition-colors"
         >
           Entrar
         </Link>

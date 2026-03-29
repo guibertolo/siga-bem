@@ -27,67 +27,27 @@ export default function LoginPage() {
   }
 
   return (
-    <main
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#F8FAFC',
-        padding: '48px 16px',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
-          padding: '32px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h1
-            style={{
-              fontSize: '24px',
-              fontWeight: 700,
-              color: '#1B3A4B',
-              marginBottom: '8px',
-            }}
-          >
+    <main className="flex min-h-screen items-center justify-center bg-surface-background px-4 py-12">
+      <div className="w-full max-w-[400px] bg-surface-card rounded-card p-8 shadow-sm">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-primary-900 mb-2">
             Siga Bem
           </h1>
-          <p style={{ fontSize: '14px', color: '#2C5F7C' }}>
+          <p className="text-sm text-primary-700">
             Insira seu email para receber o link de acesso
           </p>
         </div>
 
         {success ? (
-          <div
-            style={{
-              backgroundColor: '#F0FDF4',
-              borderRadius: '8px',
-              padding: '16px',
-              textAlign: 'center',
-              fontSize: '14px',
-              color: '#1B7A3D',
-            }}
-          >
+          <div className="bg-green-50 rounded-default p-4 text-center text-sm text-success">
             Link de acesso enviado! Verifique sua caixa de entrada.
           </div>
         ) : (
           <form action={handleSubmit}>
-            <div style={{ marginBottom: '16px' }}>
+            <div className="mb-4">
               <label
                 htmlFor="email"
-                style={{
-                  display: 'block',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: '#1B3A4B',
-                  marginBottom: '4px',
-                }}
+                className="block text-sm font-medium text-primary-900 mb-1"
               >
                 Email
               </label>
@@ -97,31 +57,12 @@ export default function LoginPage() {
                 type="email"
                 required
                 placeholder="seu@email.com"
-                style={{
-                  width: '100%',
-                  height: '48px',
-                  borderRadius: '8px',
-                  border: '1px solid #CBD5E1',
-                  padding: '0 16px',
-                  fontSize: '16px',
-                  color: '#1B3A4B',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
+                className="w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
               />
             </div>
 
             {error && (
-              <div
-                style={{
-                  backgroundColor: '#FEF2F2',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  fontSize: '14px',
-                  color: '#B91C1C',
-                  marginBottom: '16px',
-                }}
-              >
+              <div className="bg-red-50 rounded-default p-3 text-sm text-danger mb-4">
                 {error}
               </div>
             )}
@@ -129,18 +70,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              style={{
-                width: '100%',
-                height: '52px',
-                borderRadius: '8px',
-                backgroundColor: loading ? '#94A3B8' : '#2C5F7C',
-                color: '#FFFFFF',
-                fontSize: '16px',
-                fontWeight: 600,
-                border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                opacity: loading ? 0.5 : 1,
-              }}
+              className="w-full h-13 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 transition-colors disabled:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Enviando...' : 'Enviar link de acesso'}
             </button>

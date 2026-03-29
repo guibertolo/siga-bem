@@ -3,16 +3,6 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 
-const sidebarLinkStyle: React.CSSProperties = {
-  display: 'block',
-  padding: '10px 20px',
-  fontSize: '14px',
-  color: '#CBD5E1',
-  textDecoration: 'none',
-  borderRadius: '6px',
-  transition: 'background-color 0.15s',
-};
-
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/empresa', label: 'Empresa' },
@@ -46,60 +36,40 @@ export default async function DashboardLayout({
   const showAdminLinks = currentUsuario?.role === 'dono' || currentUsuario?.role === 'admin';
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside
-        style={{
-          width: '240px',
-          backgroundColor: '#1B3A4B',
-          color: '#FFFFFF',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            padding: '24px 20px',
-            borderBottom: '1px solid rgba(255,255,255,0.1)',
-          }}
-        >
+      <aside className="w-60 bg-primary-900 text-white flex flex-col shrink-0">
+        <div className="px-5 py-6 border-b border-white/10">
           <Link
             href="/dashboard"
-            style={{
-              fontSize: '20px',
-              fontWeight: 700,
-              color: '#FFFFFF',
-              textDecoration: 'none',
-            }}
+            className="text-xl font-bold text-white no-underline"
           >
             Siga Bem
           </Link>
         </div>
 
-        <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <nav className="flex-1 p-3 flex flex-col gap-1">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} style={sidebarLinkStyle}>
+            <Link
+              key={link.href}
+              href={link.href}
+              className="block px-5 py-2.5 text-sm text-slate-300 no-underline rounded-md hover:bg-white/10 transition-colors"
+            >
               {link.label}
             </Link>
           ))}
 
           {showAdminLinks && (
             <>
-              <div
-                style={{
-                  margin: '16px 8px 8px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: 'rgba(255,255,255,0.4)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                }}
-              >
+              <div className="mx-2 mt-4 mb-2 text-[11px] font-semibold text-white/40 uppercase tracking-wide">
                 Admin
               </div>
               {adminLinks.map((link) => (
-                <Link key={link.href} href={link.href} style={sidebarLinkStyle}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block px-5 py-2.5 text-sm text-slate-300 no-underline rounded-md hover:bg-white/10 transition-colors"
+                >
                   {link.label}
                 </Link>
               ))}
@@ -107,21 +77,11 @@ export default async function DashboardLayout({
           )}
         </nav>
 
-        <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="p-3 border-t border-white/10">
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              style={{
-                width: '100%',
-                padding: '10px 20px',
-                fontSize: '14px',
-                color: '#CBD5E1',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                textAlign: 'left',
-                borderRadius: '6px',
-              }}
+              className="w-full px-5 py-2.5 text-sm text-slate-300 bg-transparent border-none cursor-pointer text-left rounded-md hover:bg-white/10 transition-colors"
             >
               Sair
             </button>
@@ -130,22 +90,13 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <header
-          style={{
-            backgroundColor: '#FFFFFF',
-            borderBottom: '1px solid #CBD5E1',
-            padding: '16px 32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span style={{ fontSize: '14px', color: '#2C5F7C' }}>
+      <div className="flex-1 flex flex-col">
+        <header className="bg-surface-card border-b border-surface-border px-8 py-4 flex items-center justify-between">
+          <span className="text-sm text-primary-700">
             {user.email}
           </span>
         </header>
-        <main style={{ flex: 1, backgroundColor: '#F8FAFC', padding: '32px' }}>
+        <main className="flex-1 bg-surface-background p-8">
           {children}
         </main>
       </div>

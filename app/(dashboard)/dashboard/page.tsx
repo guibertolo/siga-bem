@@ -9,33 +9,14 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h2
-        style={{
-          fontSize: '24px',
-          fontWeight: 700,
-          color: '#1B3A4B',
-          marginBottom: '4px',
-        }}
-      >
+      <h2 className="text-2xl font-bold text-primary-900 mb-1">
         Dashboard
       </h2>
-      <p
-        style={{
-          fontSize: '14px',
-          color: '#2C5F7C',
-          marginBottom: '24px',
-        }}
-      >
+      <p className="text-sm text-primary-700 mb-6">
         Bem-vindo, {user?.email}
       </p>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: '24px',
-        }}
-      >
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
         <ViagemSummaryCard />
         <GastoSummaryCard />
         <FechamentoSummaryCard />
