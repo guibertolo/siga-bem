@@ -1,31 +1,18 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { formatBRL } from '@/lib/utils/currency';
 
 /**
  * Dashboard card showing pending fechamentos count and total value.
  * Story 4.1 — T7: Card "Fechamentos Pendentes" no dashboard principal.
+ * Pure presentational component — receives data as props.
  */
-export async function FechamentoSummaryCard() {
-  const supabase = await createClient();
 
-  const [countResult, valueResult] = await Promise.all([
-    supabase
-      .from('fechamento')
-      .select('id', { count: 'exact', head: true })
-      .eq('status', 'aberto'),
-    supabase
-      .from('fechamento')
-      .select('saldo_motorista')
-      .eq('status', 'aberto'),
-  ]);
+interface FechamentoSummaryCardProps {
+  count: number;
+  totalCentavos: number;
+}
 
-  const count = countResult.count ?? 0;
-  const totalCentavos = (valueResult.data ?? []).reduce(
-    (sum: number, f: { saldo_motorista: number }) => sum + f.saldo_motorista,
-    0,
-  );
-
+export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummaryCardProps) {
   return (
     <Link
       href="/fechamentos?status=aberto"

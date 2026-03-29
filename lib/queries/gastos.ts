@@ -116,7 +116,10 @@ export async function getGastos(
 
 /**
  * Fetch totals and subtotals for the filtered set (no pagination).
- * Runs a separate lightweight query for aggregation.
+ * Optimized: fetches only valor + categoria_id (no join), then resolves
+ * category metadata via a separate lightweight query. This drastically
+ * reduces payload size vs the previous approach that joined
+ * categoria_gasto(nome, icone, cor) on every gasto row.
  */
 async function getGastosTotals(
   filters: GastoFilters,
@@ -126,15 +129,10 @@ async function getGastosTotals(
 }> {
   const supabase = await createClient();
 
-  // Fetch valor + categoria data for all matching gastos (no pagination)
+  // 1. Fetch only valor + categoria_id (no join — much smaller payload)
   let query = supabase
     .from('gasto')
-    .select(
-      `
-      valor,
-      categoria_gasto ( nome, icone, cor )
-    `,
-    );
+    .select('valor, categoria_id');
 
   if (filters.motoristaIds.length > 0) {
     query = query.in('motorista_id', filters.motoristaIds);
@@ -152,13 +150,34 @@ async function getGastosTotals(
     query = query.lte('data', filters.endDate);
   }
 
-  const { data, error } = await query;
+  // 2. Fetch all categories once (small table, ~10-20 rows max)
+  const categoriasQuery = supabase
+    .from('categoria_gasto')
+    .select('id, nome, icone, cor');
 
-  if (error) {
+  const [gastosResult, categoriasResult] = await Promise.all([
+    query,
+    categoriasQuery,
+  ]);
+
+  if (gastosResult.error) {
     return { totalValueCentavos: 0, subtotaisByCategoria: [] };
   }
 
-  // Aggregate client-side
+  // 3. Build category lookup map
+  const catLookup = new Map<
+    string,
+    { nome: string; icone: string | null; cor: string | null }
+  >();
+  for (const cat of categoriasResult.data ?? []) {
+    catLookup.set(cat.id, {
+      nome: cat.nome,
+      icone: cat.icone,
+      cor: cat.cor,
+    });
+  }
+
+  // 4. Aggregate client-side using lightweight data
   let totalValueCentavos = 0;
   const categoryMap = new Map<
     string,
@@ -171,15 +190,12 @@ async function getGastosTotals(
     }
   >();
 
-  for (const row of data ?? []) {
+  for (const row of gastosResult.data ?? []) {
     totalValueCentavos += row.valor;
 
-    const cat = row.categoria_gasto as unknown as {
-      nome: string;
-      icone: string | null;
-      cor: string | null;
-    } | null;
-    const catName = cat?.nome ?? 'Sem categoria';
+    const catId = row.categoria_id as string | null;
+    const catMeta = catId ? catLookup.get(catId) : null;
+    const catName = catMeta?.nome ?? 'Sem categoria';
 
     const existing = categoryMap.get(catName);
     if (existing) {
@@ -188,8 +204,8 @@ async function getGastosTotals(
     } else {
       categoryMap.set(catName, {
         categoria_nome: catName,
-        categoria_icone: cat?.icone ?? null,
-        categoria_cor: cat?.cor ?? null,
+        categoria_icone: catMeta?.icone ?? null,
+        categoria_cor: catMeta?.cor ?? null,
         total_centavos: row.valor,
         qtd_gastos: 1,
       });

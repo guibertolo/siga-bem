@@ -4,12 +4,14 @@
  *
  * Uses @react-pdf/renderer for A4 portrait layout.
  * Must be loaded with dynamic import (ssr: false) — client-only.
+ * DO NOT add 'use client' here — this file is loaded exclusively via
+ * dynamic import() in use-fechamento-pdf.ts to keep @react-pdf/renderer
+ * out of the automatic client bundle (~1.49 MB savings).
  *
  * LGPD (AC5): CPF is masked via mascararCpf from @/lib/utils/lgpd
  * Watermark (AC6): "PAGO" diagonal watermark when status === 'pago'
  * Values (CON-003): All monetary values are centavos, formatted via formatBRL
  */
-'use client';
 
 import {
   Document,

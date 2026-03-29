@@ -2,9 +2,13 @@ import { createClient } from '@/lib/supabase/server';
 import { GastoSummaryCard } from '@/components/dashboard/GastoSummaryCard';
 import { ViagemSummaryCard } from '@/components/dashboard/ViagemSummaryCard';
 import { FechamentoSummaryCard } from '@/components/dashboard/FechamentoSummaryCard';
+import { getDashboardData } from '@/app/(dashboard)/dashboard/actions';
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
+  const [supabase, dashboardData] = await Promise.all([
+    createClient(),
+    getDashboardData(),
+  ]);
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
@@ -17,9 +21,15 @@ export default async function DashboardPage() {
       </p>
 
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
-        <ViagemSummaryCard />
-        <GastoSummaryCard />
-        <FechamentoSummaryCard />
+        <ViagemSummaryCard
+          count={dashboardData.viagens.count}
+          error={dashboardData.viagens.error}
+        />
+        <GastoSummaryCard total={dashboardData.gastos.total} />
+        <FechamentoSummaryCard
+          count={dashboardData.fechamentos.count}
+          totalCentavos={dashboardData.fechamentos.totalCentavos}
+        />
       </div>
     </div>
   );

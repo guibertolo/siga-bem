@@ -1,8 +1,9 @@
-import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
+interface ViagemSummaryCardProps {
+  count: number;
+  error: string | null;
+}
 
-export async function ViagemSummaryCard() {
-  const { count, error } = await getViagensEmAndamento();
-
+export function ViagemSummaryCard({ count, error }: ViagemSummaryCardProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900">Viagens</h3>
