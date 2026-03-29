@@ -39,7 +39,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-60 bg-primary-900 text-white flex flex-col shrink-0">
+      <aside className="w-60 bg-[#1B3A4B] text-white flex flex-col shrink-0">
         <div className="px-5 py-6 border-b border-white/10">
           <Link
             href="/dashboard"

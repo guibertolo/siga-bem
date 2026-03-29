@@ -47,7 +47,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/10"
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-primary-700 transition-colors hover:bg-surface-hover"
         aria-label="Tema"
       >
         <span className="h-5 w-5" />
@@ -61,7 +61,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/10"
+      className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[44px]"
       aria-label={`Tema: ${label}. Clique para alternar.`}
       title={`Tema: ${label}`}
     >
@@ -108,6 +108,7 @@ export function ThemeToggle() {
           <line x1="12" y1="17" x2="12" y2="21" />
         </svg>
       )}
+      <span className="hidden sm:inline">{label}</span>
     </button>
   );
 }
