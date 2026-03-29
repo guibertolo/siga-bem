@@ -79,3 +79,72 @@ export interface BIFilterOptions {
   motoristas: Array<{ id: string; nome: string }>;
   categorias: Array<{ id: string; nome: string; icone: string | null; cor: string | null }>;
 }
+
+// ---------------------------------------------------------------------------
+// Story 5.6 — Previsao e Estimativa de Lucro por Viagem
+// ---------------------------------------------------------------------------
+
+/**
+ * Input parameters for the trip cost estimation simulator.
+ */
+export interface BIEstimativaParams {
+  kmEstimado: number;
+  caminhaoId?: string;
+  tipoCombustivel: 'diesel_s10' | 'diesel_comum';
+}
+
+/**
+ * Result of the trip cost estimation.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIEstimativaResult {
+  litrosEstimados: number;
+  custoEstimadoCentavos: number;
+  consumoKmL: number;
+  fonteConsumo: 'historico_real' | 'padrao_cegonheiro';
+  precoMedioLitroCentavos: number;
+  fontePreco: 'historico' | 'tabela' | 'padrao';
+}
+
+/**
+ * Parameters for historical route search.
+ */
+export interface BIHistoricoRotasParams {
+  origem: string;
+  destino: string;
+}
+
+/**
+ * A single historical trip in a similar route.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIHistoricoRotaItem {
+  viagemId: string;
+  dataSaida: string;
+  caminhaoPlaca: string;
+  motoristaNome: string;
+  kmRealizado: number | null;
+  custoTotalCentavos: number;
+  custoCombustivelCentavos: number;
+  freteCentavos: number | null;        // null if valor_total = 0
+  lucroCentavos: number | null;        // frete - custoTotal, null if no frete
+}
+
+/**
+ * Comparative stats for similar routes.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIComparativoRota {
+  totalViagens: number;
+  custoMinCentavos: number;
+  custoMaxCentavos: number;
+  custoMedioCentavos: number;
+}
+
+/**
+ * Full result for the historical routes query.
+ */
+export interface BIHistoricoRotasResult {
+  viagens: BIHistoricoRotaItem[];
+  comparativo: BIComparativoRota | null;
+}

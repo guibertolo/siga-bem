@@ -6,6 +6,7 @@ import {
   listMotoristasAtivos,
   listCaminhoesPorMotorista,
 } from '@/app/(dashboard)/viagens/actions';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ViagemForm } from '@/components/viagens/ViagemForm';
 import type { ViagemFormData } from '@/types/viagem';
 
@@ -16,10 +17,15 @@ export default async function EditarViagemPage({
 }) {
   const { id } = await params;
 
-  const [viagemResult, motoristasResult] = await Promise.all([
+  const [viagemResult, motoristasResult, usuario] = await Promise.all([
     getViagem(id),
     listMotoristasAtivos(),
+    getCurrentUsuario(),
   ]);
+
+  if (!usuario) {
+    redirect('/login');
+  }
 
   if (!viagemResult.success) {
     if (viagemResult.error === 'Nao autenticado') {
@@ -32,6 +38,19 @@ export default async function EditarViagemPage({
 
   // Check if editable (AC6)
   if (viagem.status !== 'planejada' && viagem.status !== 'em_andamento') {
+    redirect(`/viagens/${id}`);
+  }
+
+  // Story 3.4: 3-level lock — core fields editable IF AND ONLY IF:
+  // role === 'dono' OR (editavel_motorista === true AND status === 'planejada')
+  const isMotorista = usuario.role === 'motorista';
+  const camposEditaveis =
+    usuario.role === 'dono' ||
+    (viagem.editavel_motorista === true && viagem.status === 'planejada');
+  const camposLocked = !camposEditaveis;
+
+  // Motorista with fully locked fields should not access edit page at all
+  if (isMotorista && camposLocked) {
     redirect(`/viagens/${id}`);
   }
 
@@ -68,6 +87,8 @@ export default async function EditarViagemPage({
           motoristas={motoristas}
           caminhoes={caminhoes}
           onSubmit={handleUpdate}
+          camposLocked={camposLocked}
+          isMotorista={isMotorista}
         />
       </div>
     </div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getViagem } from '@/app/(dashboard)/viagens/actions';
 import { listVeiculosViagem } from '@/app/(dashboard)/viagens/[id]/veiculos/actions';
 import { getPrecoDieselAtual } from '@/app/(dashboard)/configuracoes/combustivel/actions';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { formatBRL } from '@/lib/utils/currency';
 import { calcularValorMotorista, calcularDistancia } from '@/lib/utils/viagem-calc';
 import { calcularEstimativa } from '@/lib/utils/precificacao';
@@ -28,7 +29,14 @@ export default async function ViagemDetalhePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const result = await getViagem(id);
+  const [result, usuario] = await Promise.all([
+    getViagem(id),
+    getCurrentUsuario(),
+  ]);
+
+  if (!usuario) {
+    redirect('/login');
+  }
 
   if (!result.success) {
     if (result.error === 'Nao autenticado') {
@@ -46,7 +54,18 @@ export default async function ViagemDetalhePage({
   const abastecimentos = abastecimentosResult.data;
   const valorMotorista = calcularValorMotorista(viagem.valor_total, viagem.percentual_pagamento);
   const distancia = calcularDistancia(viagem.km_saida, viagem.km_chegada);
-  const isEditable = viagem.status === 'planejada' || viagem.status === 'em_andamento';
+
+  // Story 3.4: edit button visible only when core fields are editable
+  // Core fields editable IF AND ONLY IF:
+  //   role === 'dono' OR (editavel_motorista === true AND status === 'planejada')
+  const camposEditaveis =
+    usuario.role === 'dono' ||
+    (viagem.editavel_motorista === true && viagem.status === 'planejada');
+  // For dono/admin: show edit for planejada/em_andamento; for motorista: only when campos are editable
+  const isEditable =
+    usuario.role === 'dono' || usuario.role === 'admin'
+      ? viagem.status === 'planejada' || viagem.status === 'em_andamento'
+      : camposEditaveis;
   const isReadonly = viagem.status === 'concluida' || viagem.status === 'cancelada';
   const capacidade = viagem.caminhao?.capacidade_veiculos ?? 11;
 

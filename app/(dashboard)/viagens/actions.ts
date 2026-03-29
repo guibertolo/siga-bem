@@ -189,8 +189,9 @@ export async function createViagem(
     return { success: false, error: 'Usuario desativado' };
   }
 
-  if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode criar viagens' };
+  // Motorista must have a motorista_id linked
+  if (usuario.role === 'motorista' && !usuario.motorista_id) {
+    return { success: false, error: 'Voce nao possui perfil de motorista vinculado. Solicite ao proprietario.' };
   }
 
   const parsed = viagemSchema.safeParse(formData);
@@ -209,13 +210,18 @@ export async function createViagem(
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
   const kmSaida = data.km_saida !== '' ? Number(data.km_saida) : null;
 
+  // Story 3.4: determine editavel_motorista and motorista_id based on role
+  const isMotorista = usuario.role === 'motorista';
+  const editavelMotorista = isMotorista; // true if motorista creates, false if dono/admin
+  const motoristaId = isMotorista ? usuario.motorista_id! : data.motorista_id;
+
   const supabase = await createClient();
 
   const { data: viagem, error: insertError } = await supabase
     .from('viagem')
     .insert({
       empresa_id: usuario.empresa_id,
-      motorista_id: data.motorista_id,
+      motorista_id: motoristaId,
       caminhao_id: data.caminhao_id,
       origem: data.origem,
       destino: data.destino,
@@ -226,6 +232,7 @@ export async function createViagem(
       km_estimado: kmEstimado,
       km_saida: kmSaida,
       observacao: data.observacao || null,
+      editavel_motorista: editavelMotorista,
       created_by: usuario.id,
     })
     .select()
@@ -260,10 +267,10 @@ export async function updateViagem(
 
   const supabase = await createClient();
 
-  // Fetch current viagem to check status
+  // Fetch current viagem to check status and editavel_motorista
   const { data: existing, error: fetchError } = await supabase
     .from('viagem')
-    .select('status')
+    .select('status, editavel_motorista, origem, destino, valor_total')
     .eq('id', viagemId)
     .single();
 
@@ -292,16 +299,35 @@ export async function updateViagem(
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
   const kmSaida = data.km_saida !== '' ? Number(data.km_saida) : null;
 
+  // Story 3.4: 3-level edit lock for core fields (origem, destino, valor_total)
+  // Core fields are editable IF AND ONLY IF:
+  //   role === 'dono' OR (editavel_motorista === true AND status === 'planejada')
+  const camposEditaveis =
+    usuario.role === 'dono' ||
+    (existing.editavel_motorista === true && existing.status === 'planejada');
+
+  const coreFieldChanged =
+    data.origem !== existing.origem ||
+    data.destino !== existing.destino ||
+    valorCentavos !== existing.valor_total;
+
+  if (coreFieldChanged && !camposEditaveis) {
+    return {
+      success: false,
+      error: 'Campos bloqueados para edicao. Origem, destino e valor nao podem ser alterados.',
+    };
+  }
+
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')
     .update({
       motorista_id: data.motorista_id,
       caminhao_id: data.caminhao_id,
-      origem: data.origem,
-      destino: data.destino,
+      origem: camposEditaveis ? data.origem : existing.origem,
+      destino: camposEditaveis ? data.destino : existing.destino,
       data_saida: data.data_saida,
       data_chegada_prevista: data.data_chegada_prevista || null,
-      valor_total: valorCentavos,
+      valor_total: camposEditaveis ? valorCentavos : existing.valor_total,
       percentual_pagamento: percentual,
       km_estimado: kmEstimado,
       km_saida: kmSaida,

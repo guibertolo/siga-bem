@@ -21,6 +21,7 @@ export interface Viagem {
   km_saida: number | null;
   km_chegada: number | null;
   observacao: string | null;
+  editavel_motorista: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;

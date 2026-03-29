@@ -65,6 +65,12 @@ interface ViagemFormProps {
   motoristas: Array<{ id: string; nome: string }>;
   caminhoes: Array<{ id: string; placa: string; modelo: string }>;
   onSubmit: (data: ViagemFormData) => Promise<ViagemActionResult>;
+  /** When true, core fields (origem, destino, valor_total) are disabled */
+  camposLocked?: boolean;
+  /** When true, hides motorista select and auto-assigns motorista */
+  isMotorista?: boolean;
+  /** Message explaining why fields are locked */
+  noCaminhaoMessage?: string;
 }
 
 export function ViagemForm({
@@ -73,6 +79,9 @@ export function ViagemForm({
   motoristas,
   caminhoes: initialCaminhoes,
   onSubmit,
+  camposLocked = false,
+  isMotorista = false,
+  noCaminhaoMessage,
 }: ViagemFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -91,7 +100,7 @@ export function ViagemForm({
   } = useForm<FormValues>({
     resolver: standardSchemaResolver(viagemFormSchema),
     defaultValues: {
-      motorista_id: viagem?.motorista_id ?? '',
+      motorista_id: viagem?.motorista_id ?? (isMotorista && motoristas[0]?.id ? motoristas[0].id : ''),
       caminhao_id: viagem?.caminhao_id ?? '',
       origem: viagem?.origem ?? '',
       destino: viagem?.destino ?? '',
@@ -176,13 +185,14 @@ export function ViagemForm({
     });
   }
 
-  const inputClasses = (fieldName: keyof FormValues) =>
+  const inputClasses = (fieldName: keyof FormValues, disabled = false) =>
     cn(
       'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
         ? 'border-red-300 bg-red-50'
         : 'border-surface-border bg-surface-card',
+      disabled && 'bg-gray-100 text-gray-500 cursor-not-allowed',
     );
 
   return (
@@ -193,26 +203,40 @@ export function ViagemForm({
         </div>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Motorista */}
-        <div>
-          <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-700">
-            Motorista *
-          </label>
-          <select
-            id="motorista_id"
-            {...register('motorista_id')}
-            className={inputClasses('motorista_id')}
-          >
-            <option value="">Selecione um motorista</option>
-            {motoristas.map((m) => (
-              <option key={m.id} value={m.id}>{m.nome}</option>
-            ))}
-          </select>
-          {errors.motorista_id && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
-          )}
+      {camposLocked && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-base text-amber-800">
+          Campos definidos pelo proprietario -- origem, destino e valor nao podem ser alterados.
         </div>
+      )}
+
+      {noCaminhaoMessage && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+          {noCaminhaoMessage}
+        </div>
+      )}
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Motorista — hidden for motorista role (auto-assigned) */}
+        {!isMotorista && (
+          <div>
+            <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-700">
+              Motorista *
+            </label>
+            <select
+              id="motorista_id"
+              {...register('motorista_id')}
+              className={inputClasses('motorista_id')}
+            >
+              <option value="">Selecione um motorista</option>
+              {motoristas.map((m) => (
+                <option key={m.id} value={m.id}>{m.nome}</option>
+              ))}
+            </select>
+            {errors.motorista_id && (
+              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
+            )}
+          </div>
+        )}
 
         {/* Caminhao */}
         <div>
@@ -247,8 +271,9 @@ export function ViagemForm({
             type="text"
             maxLength={200}
             placeholder="Ex: Sao Paulo, SP"
+            disabled={camposLocked}
             {...register('origem')}
-            className={inputClasses('origem')}
+            className={inputClasses('origem', camposLocked)}
           />
           {errors.origem && (
             <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.origem.message}</p>
@@ -265,8 +290,9 @@ export function ViagemForm({
             type="text"
             maxLength={200}
             placeholder="Ex: Rio de Janeiro, RJ"
+            disabled={camposLocked}
             {...register('destino')}
-            className={inputClasses('destino')}
+            className={inputClasses('destino', camposLocked)}
           />
           {errors.destino && (
             <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.destino.message}</p>
@@ -314,8 +340,9 @@ export function ViagemForm({
             id="valor_total"
             type="text"
             placeholder="Ex: 1.500,00"
+            disabled={camposLocked}
             {...register('valor_total')}
-            className={inputClasses('valor_total')}
+            className={inputClasses('valor_total', camposLocked)}
           />
           {errors.valor_total && (
             <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.valor_total.message}</p>
@@ -409,7 +436,7 @@ export function ViagemForm({
       <div className="flex items-center gap-4">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || !!noCaminhaoMessage}
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">

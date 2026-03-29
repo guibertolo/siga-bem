@@ -10,6 +10,11 @@ import type {
   BIRankingMotoristaItem,
   BITendenciaMensalItem,
   BIFilterOptions,
+  BIEstimativaParams,
+  BIEstimativaResult,
+  BIHistoricoRotasParams,
+  BIHistoricoRotasResult,
+  BIHistoricoRotaItem,
 } from '@/types/bi';
 
 // ---------------------------------------------------------------------------
@@ -485,6 +490,207 @@ export async function getBITendenciaMensal(
       .slice(-6);
 
     return { data: items, error: null };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Story 5.6 — Estimativa de Custo de Viagem
+// ---------------------------------------------------------------------------
+
+/** Default fuel consumption for cegonheiro trucks when no history (km/l). */
+const CONSUMO_PADRAO_CEGONHEIRO = 2.5;
+
+/** Default diesel price in centavos (R$ 6,50/l) when no data available. */
+const PRECO_DIESEL_PADRAO = 650;
+
+export async function getEstimativaCustoViagem(
+  params: BIEstimativaParams,
+): Promise<{ data: BIEstimativaResult | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    let consumoKmL = CONSUMO_PADRAO_CEGONHEIRO;
+    let fonteConsumo: BIEstimativaResult['fonteConsumo'] = 'padrao_cegonheiro';
+
+    // Try to get real consumption from truck history
+    if (params.caminhaoId) {
+      const { data: caminhaoView } = await supabase
+        .from('vw_custo_por_caminhao')
+        .select('km_por_litro_estimado')
+        .eq('caminhao_id', params.caminhaoId)
+        .single();
+
+      if (caminhaoView?.km_por_litro_estimado && caminhaoView.km_por_litro_estimado > 0) {
+        consumoKmL = Number(caminhaoView.km_por_litro_estimado);
+        fonteConsumo = 'historico_real';
+      }
+    }
+
+    // Get average fuel price
+    let precoMedioLitroCentavos = PRECO_DIESEL_PADRAO;
+    let fontePreco: BIEstimativaResult['fontePreco'] = 'padrao';
+
+    // Try real average price from last 30 days
+    const { data: mediaPreco } = await supabase
+      .from('vw_media_combustivel_regiao')
+      .select('preco_medio_litro')
+      .eq('tipo_combustivel', params.tipoCombustivel)
+      .order('ultima_data', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (mediaPreco?.preco_medio_litro && Number(mediaPreco.preco_medio_litro) > 0) {
+      // preco_medio_litro is in BRL (e.g. 6.50), convert to centavos
+      precoMedioLitroCentavos = Math.round(Number(mediaPreco.preco_medio_litro) * 100);
+      fontePreco = 'historico';
+    } else {
+      // Fallback: reference price from combustivel_preco table
+      const { data: refPreco } = await supabase
+        .from('combustivel_preco')
+        .select('preco_centavos')
+        .eq('tipo', params.tipoCombustivel)
+        .eq('ativo', true)
+        .order('data_referencia', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (refPreco?.preco_centavos && refPreco.preco_centavos > 0) {
+        precoMedioLitroCentavos = refPreco.preco_centavos;
+        fontePreco = 'tabela';
+      }
+    }
+
+    const litrosEstimados = params.kmEstimado / consumoKmL;
+    const custoEstimadoCentavos = Math.round(litrosEstimados * precoMedioLitroCentavos);
+
+    return {
+      data: {
+        litrosEstimados: Math.round(litrosEstimados * 1000) / 1000,
+        custoEstimadoCentavos,
+        consumoKmL,
+        fonteConsumo,
+        precoMedioLitroCentavos,
+        fontePreco,
+      },
+      error: null,
+    };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Story 5.6 — Historico de Rotas Similares
+// ---------------------------------------------------------------------------
+
+export async function getHistoricoRotasSimilares(
+  params: BIHistoricoRotasParams,
+): Promise<{ data: BIHistoricoRotasResult | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    const origemTerm = params.origem.trim();
+    const destinoTerm = params.destino.trim();
+
+    if (!origemTerm && !destinoTerm) {
+      return { data: { viagens: [], comparativo: null }, error: null };
+    }
+
+    // Fetch viagens matching origin AND destination (ILIKE partial match)
+    let viagemQuery = supabase
+      .from('viagem')
+      .select(`
+        id,
+        data_saida,
+        km_saida,
+        km_chegada,
+        valor_total,
+        status,
+        caminhao:caminhao_id (placa),
+        motorista:motorista_id (nome)
+      `)
+      .eq('status', 'concluida')
+      .order('data_saida', { ascending: false })
+      .limit(10);
+
+    if (origemTerm) {
+      viagemQuery = viagemQuery.ilike('origem', `%${origemTerm}%`);
+    }
+    if (destinoTerm) {
+      viagemQuery = viagemQuery.ilike('destino', `%${destinoTerm}%`);
+    }
+
+    const { data: viagens, error: viagemError } = await viagemQuery;
+    if (viagemError) throw new Error(viagemError.message);
+
+    if (!viagens || viagens.length === 0) {
+      return { data: { viagens: [], comparativo: null }, error: null };
+    }
+
+    // For each viagem, fetch aggregated gastos
+    const viagemIds = viagens.map((v) => v.id);
+    const { data: gastos, error: gastoError } = await supabase
+      .from('gasto')
+      .select('viagem_id, valor, tipo_combustivel')
+      .in('viagem_id', viagemIds);
+
+    if (gastoError) throw new Error(gastoError.message);
+
+    // Aggregate gastos by viagem
+    const gastosByViagem = new Map<string, { total: number; combustivel: number }>();
+    for (const g of gastos ?? []) {
+      if (!g.viagem_id) continue;
+      const existing = gastosByViagem.get(g.viagem_id) ?? { total: 0, combustivel: 0 };
+      existing.total += g.valor;
+      if (g.tipo_combustivel) {
+        existing.combustivel += g.valor;
+      }
+      gastosByViagem.set(g.viagem_id, existing);
+    }
+
+    const items: BIHistoricoRotaItem[] = viagens.map((v) => {
+      const cam = v.caminhao as unknown as { placa: string } | null;
+      const mot = v.motorista as unknown as { nome: string } | null;
+      const gastosViagem = gastosByViagem.get(v.id) ?? { total: 0, combustivel: 0 };
+      const kmRealizado =
+        v.km_saida != null && v.km_chegada != null && v.km_chegada > v.km_saida
+          ? v.km_chegada - v.km_saida
+          : null;
+      const freteCentavos = v.valor_total > 0 ? v.valor_total : null;
+      const lucroCentavos = freteCentavos != null ? freteCentavos - gastosViagem.total : null;
+
+      return {
+        viagemId: v.id,
+        dataSaida: v.data_saida,
+        caminhaoPlaca: cam?.placa ?? '---',
+        motoristaNome: mot?.nome ?? 'Desconhecido',
+        kmRealizado,
+        custoTotalCentavos: gastosViagem.total,
+        custoCombustivelCentavos: gastosViagem.combustivel,
+        freteCentavos,
+        lucroCentavos,
+      };
+    });
+
+    // Build comparative stats
+    const custos = items.map((i) => i.custoTotalCentavos).filter((c) => c > 0);
+    const comparativo =
+      custos.length > 0
+        ? {
+            totalViagens: custos.length,
+            custoMinCentavos: Math.min(...custos),
+            custoMaxCentavos: Math.max(...custos),
+            custoMedioCentavos: Math.round(
+              custos.reduce((sum, c) => sum + c, 0) / custos.length,
+            ),
+          }
+        : null;
+
+    return { data: { viagens: items, comparativo }, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err.message : 'Erro' };
   }

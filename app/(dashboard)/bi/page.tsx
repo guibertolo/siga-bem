@@ -15,6 +15,7 @@ import { BiBreakdownCategorias } from '@/components/bi/BiBreakdownCategorias';
 import { BiRankingCaminhoes } from '@/components/bi/BiRankingCaminhoes';
 import { BiRankingMotoristas } from '@/components/bi/BiRankingMotoristas';
 import { BiTendenciaMensal } from '@/components/bi/BiTendenciaMensal';
+import { BiPrevisaoMargens } from '@/components/bi/BiPrevisaoMargens';
 import type { BIFiltros } from '@/types/bi';
 
 interface BiPageProps {
@@ -119,6 +120,23 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       {/* Monthly Trend */}
       <div className="mb-6">
         <BiTendenciaMensal data={tendencia.data} />
+      </div>
+
+      {/* Separator */}
+      <div className="mb-6 border-t border-slate-300" />
+
+      {/* Story 5.6: Previsao e Margens */}
+      <div className="mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
+          Previsao e Margens
+        </h2>
+        <p className="text-sm text-primary-500 mt-1">
+          Simule custos de viagem e compare margens de lucro em rotas similares
+        </p>
+      </div>
+
+      <div className="mb-6">
+        <BiPrevisaoMargens caminhoes={options.caminhoes} />
       </div>
     </div>
   );

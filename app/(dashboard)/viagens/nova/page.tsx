@@ -1,20 +1,34 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listMotoristasAtivos, listCaminhoesPorMotorista, createViagem } from '@/app/(dashboard)/viagens/actions';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ViagemForm } from '@/components/viagens/ViagemForm';
 
 export default async function NovaViagemPage() {
-  const [motoristasResult, caminhoesResult] = await Promise.all([
-    listMotoristasAtivos(),
-    listCaminhoesPorMotorista(),
-  ]);
-
-  if (motoristasResult.error === 'Nao autenticado') {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
     redirect('/login');
   }
 
+  const isMotorista = usuario.role === 'motorista';
+
+  // For motorista: load own caminhoes via motorista_id
+  // For dono/admin: load all motoristas and all caminhoes
+  const [motoristasResult, caminhoesResult] = await Promise.all([
+    listMotoristasAtivos(),
+    isMotorista && usuario.motorista_id
+      ? listCaminhoesPorMotorista(usuario.motorista_id)
+      : listCaminhoesPorMotorista(),
+  ]);
+
   const motoristas = motoristasResult.data ?? [];
   const caminhoes = caminhoesResult.data ?? [];
+
+  // Story 3.4: motorista without linked caminhao cannot create viagem
+  const noCaminhaoMessage =
+    isMotorista && caminhoes.length === 0
+      ? 'Voce nao possui caminhao vinculado. Solicite ao proprietario.'
+      : undefined;
 
   return (
     <div className="w-full max-w-3xl">
@@ -30,7 +44,9 @@ export default async function NovaViagemPage() {
         </Link>
         <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Nova Viagem</h2>
         <p className="mt-1 text-base text-primary-500">
-          Cadastre uma nova viagem para sua frota.
+          {isMotorista
+            ? 'Cadastre uma nova viagem.'
+            : 'Cadastre uma nova viagem para sua frota.'}
         </p>
       </div>
 
@@ -40,6 +56,8 @@ export default async function NovaViagemPage() {
           motoristas={motoristas}
           caminhoes={caminhoes}
           onSubmit={createViagem}
+          isMotorista={isMotorista}
+          noCaminhaoMessage={noCaminhaoMessage}
         />
       </div>
     </div>
