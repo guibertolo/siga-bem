@@ -35,6 +35,7 @@ export default async function DashboardLayout({
 
   const currentUsuario = await getCurrentUsuario();
   const showAdminLinks = currentUsuario?.role === 'dono' || currentUsuario?.role === 'admin';
+  const showBILink = currentUsuario?.role === 'dono';
 
   return (
     <div className="flex min-h-screen">
@@ -59,6 +60,15 @@ export default async function DashboardLayout({
               {link.label}
             </Link>
           ))}
+
+          {showBILink && (
+            <Link
+              href="/bi"
+              className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+            >
+              BI Financeiro
+            </Link>
+          )}
 
           {showAdminLinks && (
             <>
