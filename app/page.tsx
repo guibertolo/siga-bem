@@ -7,8 +7,8 @@ export default function HomePage() {
       <div className="w-full max-w-[480px] flex flex-col items-center text-center">
         {/* Logo */}
         <Image
-          src="/logos/siga-bem-logo-full.svg"
-          alt="Siga Bem - Gestao de Frotas"
+          src="/logos/frotaviva-logo-full.svg"
+          alt="FrotaViva - Gestao de Frotas"
           width={320}
           height={120}
           className="w-[200px] h-auto sm:w-[320px] mb-6"

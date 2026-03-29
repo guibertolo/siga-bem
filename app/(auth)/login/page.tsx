@@ -47,8 +47,8 @@ export default function LoginPage() {
       <div className="w-full max-w-[400px] bg-surface-card rounded-card p-8 shadow-sm">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src="/logos/siga-bem-logo-full.svg"
-            alt="Siga Bem - Gestao de Frotas"
+            src="/logos/frotaviva-logo-full.svg"
+            alt="FrotaViva - Gestao de Frotas"
             width={200}
             height={75}
             className="w-[160px] h-auto mb-4"

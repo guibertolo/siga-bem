@@ -87,7 +87,7 @@ export function MobileSidebar({
             className="text-2xl font-extrabold text-white no-underline"
             onClick={() => setOpen(false)}
           >
-            Siga Bem
+            FrotaViva
           </Link>
           <button
             type="button"

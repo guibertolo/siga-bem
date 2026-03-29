@@ -1,7 +1,7 @@
 {
-  "name": "Plataforma Cegonheiros",
-  "short_name": "Cegonheiros",
-  "description": "Gestao inteligente de frotas de cegonheiros",
+  "name": "FrotaViva",
+  "short_name": "FrotaViva",
+  "description": "FrotaViva - Gestao inteligente de frotas de cegonheiros",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#F8FAFC",

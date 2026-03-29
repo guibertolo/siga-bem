@@ -47,7 +47,7 @@ export default async function DashboardLayout({
             href="/dashboard"
             className="text-2xl font-extrabold text-white no-underline"
           >
-            Siga Bem
+            FrotaViva
           </Link>
         </div>
 

@@ -11,11 +11,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Siga Bem - Gestao de Frotas de Cegonha',
-    template: '%s | Siga Bem',
+    default: 'FrotaViva - Gestao de Frotas de Cegonha',
+    template: '%s | FrotaViva',
   },
   description:
-    'Plataforma de gestao inteligente para transportadoras de veiculos (cegonheiros). Controle viagens, gastos, combustivel e fechamentos.',
+    'FrotaViva - Plataforma de gestao inteligente para transportadoras de veiculos (cegonheiros). Controle viagens, gastos, combustivel e fechamentos.',
   keywords: [
     'gestao de frotas',
     'cegonheiro',
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     'controle de gastos',
     'fechamento financeiro',
   ],
-  authors: [{ name: 'Siga Bem' }],
+  authors: [{ name: 'FrotaViva' }],
   openGraph: {
-    title: 'Siga Bem - Sua frota no controle',
+    title: 'FrotaViva - Sua frota no controle',
     description: 'Gestao inteligente para transportadoras de veiculos',
     type: 'website',
     locale: 'pt_BR',
-    siteName: 'Siga Bem',
+    siteName: 'FrotaViva',
   },
   robots: {
     index: true,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/logos/siga-bem-favicon.svg', type: 'image/svg+xml' },
+      { url: '/logos/frotaviva-favicon.svg', type: 'image/svg+xml' },
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
     apple: '/icons/icon-192.png',
@@ -65,7 +65,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                var theme = localStorage.getItem('siga-bem-theme') || 'system';
+                var theme = localStorage.getItem('frotaviva-theme') || localStorage.getItem('siga-bem-theme') || 'system';
                 var isDark = theme === 'dark' ||
                   (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 if (isDark) document.documentElement.classList.add('dark');
