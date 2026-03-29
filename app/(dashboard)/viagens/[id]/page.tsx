@@ -11,6 +11,8 @@ import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemStatusActions } from '@/components/viagens/ViagemStatusActions';
 import { VeiculosSection } from '@/components/viagens/VeiculosSection';
 import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
+import { AbastecimentoList } from '@/components/abastecimento/AbastecimentoList';
+import { getAbastecimentosForViagem } from '@/app/(dashboard)/viagens/[id]/actions';
 import type { ViagemStatus } from '@/types/database';
 
 function formatDateTime(isoString: string | null): string {
@@ -36,8 +38,12 @@ export default async function ViagemDetalhePage({
   }
 
   const viagem = result.viagem!;
-  const veiculosResult = await listVeiculosViagem(id);
+  const [veiculosResult, abastecimentosResult] = await Promise.all([
+    listVeiculosViagem(id),
+    getAbastecimentosForViagem(id),
+  ]);
   const veiculos = veiculosResult.data ?? [];
+  const abastecimentos = abastecimentosResult.data;
   const valorMotorista = calcularValorMotorista(viagem.valor_total, viagem.percentual_pagamento);
   const distancia = calcularDistancia(viagem.km_saida, viagem.km_chegada);
   const isEditable = viagem.status === 'planejada' || viagem.status === 'em_andamento';
@@ -242,7 +248,7 @@ export default async function ViagemDetalhePage({
           readonly={isReadonly}
         />
 
-        {/* Abastecimento — Story 5.2 (AC 1, 2) */}
+        {/* Abastecimento Form — Story 5.2 (AC 1, 2) */}
         {viagem.status === 'em_andamento' && (
           <AbastecimentoSection
             viagemId={viagem.id}
@@ -254,6 +260,9 @@ export default async function ViagemDetalhePage({
             kmSaida={viagem.km_saida}
           />
         )}
+
+        {/* Abastecimento List — Story 5.3 (visible for ALL statuses, including concluida) */}
+        <AbastecimentoList abastecimentos={abastecimentos} />
 
         {/* Status actions */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">

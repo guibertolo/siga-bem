@@ -4,6 +4,11 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import {
+  getAbastecimentosPorViagem,
+  type AbastecimentoItem,
+  type AbastecimentoListResult,
+} from '@/lib/queries/combustivel-queries';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -174,4 +179,28 @@ export async function createAbastecimento(
   revalidatePath('/dashboard');
 
   return { success: true, gastoId: gasto.id };
+}
+
+// ---------------------------------------------------------------------------
+// Query: List fuel expenses for a trip (Story 5.3)
+// ---------------------------------------------------------------------------
+
+export { type AbastecimentoItem };
+
+/**
+ * Fetch all fuel expenses (abastecimentos) for a given trip.
+ * Story 5.3 — AC 4, 7, 8, 11
+ *
+ * Delegates to combustivel-queries module. RLS handles role-based filtering.
+ */
+export async function getAbastecimentosForViagem(
+  viagemId: string,
+): Promise<AbastecimentoListResult> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: [], error: 'Nao autenticado' };
+  }
+
+  const supabase = await createClient();
+  return getAbastecimentosPorViagem(supabase, viagemId);
 }
