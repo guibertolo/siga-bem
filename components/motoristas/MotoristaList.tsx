@@ -94,7 +94,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                 <span
                   className={cn(
                     'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
-                    m.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-surface-muted text-gray-600',
+                    m.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-surface-muted text-text-muted',
                   )}
                 >
                   {m.status === 'ativo' ? 'Ativo' : 'Inativo'}
@@ -175,7 +175,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                         'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.status === 'ativo'
                           ? 'bg-green-100 text-green-700'
-                          : 'bg-surface-muted text-gray-600',
+                          : 'bg-surface-muted text-text-muted',
                       )}
                     >
                       {m.status === 'ativo' ? 'Ativo' : 'Inativo'}

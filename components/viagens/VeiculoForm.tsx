@@ -114,7 +114,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded p-1 text-gray-400 transition-colors hover:text-gray-600"
+            className="rounded p-1 text-text-subtle transition-colors hover:text-text-muted"
             aria-label="Fechar"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

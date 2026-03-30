@@ -79,7 +79,7 @@ export function FechamentoStatusActions({
           <>
             {confirmAction === 'fechar' ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Confirmar acerto?</span>
+                <span className="text-sm text-text-muted">Confirmar acerto?</span>
                 <button
                   type="button"
                   onClick={() => handleAction('fechar')}
@@ -114,7 +114,7 @@ export function FechamentoStatusActions({
           <>
             {confirmAction === 'pagar' ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Marcar como pago?</span>
+                <span className="text-sm text-text-muted">Marcar como pago?</span>
                 <button
                   type="button"
                   onClick={() => handleAction('pagar')}

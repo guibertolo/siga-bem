@@ -141,7 +141,7 @@ export function VeiculosSection({
               'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
               excedeu
                 ? 'bg-amber-100 text-amber-800'
-                : 'bg-surface-muted text-gray-600',
+                : 'bg-surface-muted text-text-muted',
             )}
           >
             {qtdVeiculos} de {capacidade} vagas preenchidas
@@ -170,7 +170,7 @@ export function VeiculosSection({
       )}
 
       {sorted.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-400">
+        <p className="py-8 text-center text-sm text-text-subtle">
           Nenhum veiculo cadastrado nesta viagem.
         </p>
       ) : (
@@ -229,7 +229,7 @@ export function VeiculosSection({
                               e.stopPropagation();
                               setConfirmDeleteId(null);
                             }}
-                            className="rounded border border-surface-border px-2 py-1 text-xs font-medium text-gray-600 hover:bg-surface-muted"
+                            className="rounded border border-surface-border px-2 py-1 text-xs font-medium text-text-muted hover:bg-surface-muted"
                           >
                             Nao
                           </button>
@@ -241,7 +241,7 @@ export function VeiculosSection({
                             e.stopPropagation();
                             setConfirmDeleteId(v.id);
                           }}
-                          className="rounded p-1 text-gray-400 transition-colors hover:text-red-600"
+                          className="rounded p-1 text-text-subtle transition-colors hover:text-red-600"
                           aria-label={`Remover veiculo ${v.modelo}`}
                           disabled={isPending}
                         >

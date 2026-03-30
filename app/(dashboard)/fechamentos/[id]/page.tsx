@@ -253,7 +253,7 @@ export default async function FechamentoDetalhePage({
           <h3 className="mb-2 text-lg font-semibold text-primary-900">
             Observacao
           </h3>
-          <p className="text-sm text-gray-600">{fechamento.observacao}</p>
+          <p className="text-sm text-text-muted">{fechamento.observacao}</p>
         </div>
       )}
     </div>
