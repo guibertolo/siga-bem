@@ -236,6 +236,92 @@ export async function previewFechamentoDetalhado(
 }
 
 // ---------------------------------------------------------------------------
+// Viagens Pendentes de Acerto
+// ---------------------------------------------------------------------------
+
+export interface ViagemPendenteAcerto {
+  id: string;
+  motorista_id: string;
+  motorista_nome: string;
+  origem: string;
+  destino: string;
+  data_saida: string;
+  valor_total: number;             // centavos
+  percentual_pagamento: number;
+  valor_motorista: number;         // centavos
+}
+
+/**
+ * List viagens concluidas that are NOT yet part of any fechamento.
+ * Helps the dono see which trips still need an acerto de contas.
+ */
+export async function getViagensPendentesAcerto(): Promise<{
+  data: ViagemPendenteAcerto[] | null;
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: null, error: 'Nao autenticado' };
+  }
+
+  if (usuario.role === 'motorista') {
+    return { data: null, error: 'Permissao insuficiente' };
+  }
+
+  const supabase = await createClient();
+
+  // 1. Get all concluida viagens for this empresa
+  const { data: viagens, error: viagensError } = await supabase
+    .from('viagem')
+    .select('id, motorista_id, origem, destino, data_saida, valor_total, percentual_pagamento, motorista ( nome )')
+    .eq('empresa_id', usuario.empresa_id)
+    .eq('status', 'concluida')
+    .order('data_saida', { ascending: false });
+
+  if (viagensError) {
+    return { data: null, error: viagensError.message };
+  }
+
+  if (!viagens || viagens.length === 0) {
+    return { data: [], error: null };
+  }
+
+  // 2. Get all viagem referencia_ids that already have a fechamento_item
+  const viagemIds = viagens.map((v) => v.id);
+  const { data: itensExistentes, error: itensError } = await supabase
+    .from('fechamento_item')
+    .select('referencia_id')
+    .eq('tipo', 'viagem')
+    .in('referencia_id', viagemIds);
+
+  if (itensError) {
+    return { data: null, error: itensError.message };
+  }
+
+  const idsComAcerto = new Set((itensExistentes ?? []).map((i) => i.referencia_id));
+
+  // 3. Filter out viagens that already have an acerto
+  const pendentes: ViagemPendenteAcerto[] = viagens
+    .filter((v) => !idsComAcerto.has(v.id))
+    .map((v) => {
+      const mot = v.motorista as unknown as { nome: string } | null;
+      return {
+        id: v.id,
+        motorista_id: v.motorista_id,
+        motorista_nome: mot?.nome ?? 'Desconhecido',
+        origem: v.origem,
+        destino: v.destino,
+        data_saida: v.data_saida,
+        valor_total: v.valor_total,
+        percentual_pagamento: v.percentual_pagamento,
+        valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+      };
+    });
+
+  return { data: pendentes, error: null };
+}
+
+// ---------------------------------------------------------------------------
 // CRUD Operations
 // ---------------------------------------------------------------------------
 

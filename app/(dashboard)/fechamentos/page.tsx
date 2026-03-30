@@ -6,6 +6,7 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import {
   listFechamentos,
   listMotoristasParaFechamento,
+  getViagensPendentesAcerto,
 } from '@/app/(dashboard)/fechamentos/actions';
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 import { FechamentoList } from '@/components/fechamentos/FechamentoList';
 import { FechamentoFilters } from '@/components/fechamentos/FechamentoFilters';
+import { ViagensPendentesAcerto } from '@/components/fechamentos/ViagensPendentesAcerto';
 import type { FechamentoStatus } from '@/types/database';
 
 const PAGE_SIZE = 20;
@@ -37,9 +39,10 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
   const canCreate = usuario.role === 'dono' || usuario.role === 'admin';
   const showMotoristaFilter = usuario.role !== 'motorista';
 
-  const [result, motoristasResult] = await Promise.all([
+  const [result, motoristasResult, pendentesResult] = await Promise.all([
     listFechamentos({ motorista_id: motoristaId, status, page, pageSize: PAGE_SIZE }),
     canCreate ? listMotoristasParaFechamento() : Promise.resolve({ data: [], error: null }),
+    canCreate ? getViagensPendentesAcerto() : Promise.resolve({ data: [], error: null }),
   ]);
 
   if (result.error) {
@@ -72,6 +75,13 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
           </Link>
         )}
       </div>
+
+      {/* Viagens Pendentes de Acerto */}
+      {canCreate && (
+        <div className="mb-6">
+          <ViagensPendentesAcerto viagens={pendentesResult.data ?? []} />
+        </div>
+      )}
 
       {/* Filters */}
       <div className="mb-4">

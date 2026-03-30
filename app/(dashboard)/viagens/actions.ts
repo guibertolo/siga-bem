@@ -384,7 +384,7 @@ export async function updateViagemStatus(
 
   const { data: viagem, error: fetchError } = await supabase
     .from('viagem')
-    .select('status, motorista_id')
+    .select('status, motorista_id, caminhao_id')
     .eq('id', viagemId)
     .single();
 
@@ -440,6 +440,14 @@ export async function updateViagemStatus(
 
   if (updateError) {
     return { success: false, error: 'Erro ao atualizar status. Tente novamente.' };
+  }
+
+  // Update caminhao km_atual when concluding viagem with km_chegada
+  if (novoStatus === 'concluida' && kmChegada != null && viagem.caminhao_id) {
+    await supabase
+      .from('caminhao')
+      .update({ km_atual: kmChegada })
+      .eq('id', viagem.caminhao_id);
   }
 
   revalidatePath('/viagens');
