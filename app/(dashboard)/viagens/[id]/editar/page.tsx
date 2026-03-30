@@ -5,6 +5,7 @@ import {
   updateViagem,
   listMotoristasAtivos,
   listCaminhoesPorMotorista,
+  listCidadesUsadas,
 } from '@/app/(dashboard)/viagens/actions';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ViagemForm } from '@/components/viagens/ViagemForm';
@@ -17,10 +18,11 @@ export default async function EditarViagemPage({
 }) {
   const { id } = await params;
 
-  const [viagemResult, motoristasResult, usuario] = await Promise.all([
+  const [viagemResult, motoristasResult, usuario, cidadesResult] = await Promise.all([
     getViagem(id),
     listMotoristasAtivos(),
     getCurrentUsuario(),
+    listCidadesUsadas(),
   ]);
 
   if (!usuario) {
@@ -59,6 +61,7 @@ export default async function EditarViagemPage({
 
   const motoristas = motoristasResult.data ?? [];
   const caminhoes = caminhoesResult.data ?? [];
+  const cidadeSuggestions = cidadesResult.data;
 
   async function handleUpdate(formData: ViagemFormData) {
     'use server';
@@ -89,6 +92,7 @@ export default async function EditarViagemPage({
           onSubmit={handleUpdate}
           camposLocked={camposLocked}
           isMotorista={isMotorista}
+          cidadeSuggestions={cidadeSuggestions}
         />
       </div>
     </div>

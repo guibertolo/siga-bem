@@ -723,6 +723,41 @@ export async function invalidarViagem(
 }
 
 /**
+ * List unique cities used in origem/destino for the current empresa.
+ * Used for autocomplete suggestions in the viagem form.
+ */
+export async function listCidadesUsadas(): Promise<{
+  data: string[];
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: [], error: 'Nao autenticado' };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('viagem')
+    .select('origem, destino');
+
+  if (error) {
+    return { data: [], error: error.message };
+  }
+
+  const cidadesSet = new Set<string>();
+  for (const row of data ?? []) {
+    if (row.origem) cidadesSet.add(row.origem.trim());
+    if (row.destino) cidadesSet.add(row.destino.trim());
+  }
+
+  const sorted = Array.from(cidadesSet).sort((a, b) =>
+    a.localeCompare(b, 'pt-BR'),
+  );
+
+  return { data: sorted, error: null };
+}
+
+/**
  * Get count of viagens em_andamento for dashboard card (T7).
  */
 export async function getViagensEmAndamento(): Promise<{

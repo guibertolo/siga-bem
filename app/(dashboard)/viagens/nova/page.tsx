@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { listMotoristasAtivos, listCaminhoesPorMotorista, createViagem } from '@/app/(dashboard)/viagens/actions';
+import { listMotoristasAtivos, listCaminhoesPorMotorista, createViagem, listCidadesUsadas } from '@/app/(dashboard)/viagens/actions';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { ViagemForm } from '@/components/viagens/ViagemForm';
 
@@ -14,15 +14,17 @@ export default async function NovaViagemPage() {
 
   // For motorista: load own caminhoes via motorista_id
   // For dono/admin: load all motoristas and all caminhoes
-  const [motoristasResult, caminhoesResult] = await Promise.all([
+  const [motoristasResult, caminhoesResult, cidadesResult] = await Promise.all([
     listMotoristasAtivos(),
     isMotorista && usuario.motorista_id
       ? listCaminhoesPorMotorista(usuario.motorista_id)
       : listCaminhoesPorMotorista(),
+    listCidadesUsadas(),
   ]);
 
   const motoristas = motoristasResult.data ?? [];
   const caminhoes = caminhoesResult.data ?? [];
+  const cidadeSuggestions = cidadesResult.data;
 
   // Story 3.4: motorista without linked caminhao cannot create viagem
   const noCaminhaoMessage =
@@ -58,6 +60,7 @@ export default async function NovaViagemPage() {
           onSubmit={createViagem}
           isMotorista={isMotorista}
           noCaminhaoMessage={noCaminhaoMessage}
+          cidadeSuggestions={cidadeSuggestions}
         />
       </div>
     </div>

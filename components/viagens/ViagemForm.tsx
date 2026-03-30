@@ -11,6 +11,7 @@ import { listCaminhoesPorMotorista } from '@/app/(dashboard)/viagens/actions';
 import { cn } from '@/lib/utils/cn';
 import { parseBrlInputToCentavos as parseCentavos } from '@/lib/utils/currency';
 import { EstimativaViagem } from '@/components/viagens/EstimativaViagem';
+import { CidadeAutocomplete } from '@/components/ui/CidadeAutocomplete';
 import type { Viagem, ViagemFormData, ViagemActionResult } from '@/types/viagem';
 
 const viagemFormSchema = z.object({
@@ -71,6 +72,8 @@ interface ViagemFormProps {
   isMotorista?: boolean;
   /** Message explaining why fields are locked */
   noCaminhaoMessage?: string;
+  /** City suggestions for autocomplete on origem/destino */
+  cidadeSuggestions?: string[];
 }
 
 export function ViagemForm({
@@ -82,6 +85,7 @@ export function ViagemForm({
   camposLocked = false,
   isMotorista = false,
   noCaminhaoMessage,
+  cidadeSuggestions = [],
 }: ViagemFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -119,6 +123,8 @@ export function ViagemForm({
   const watchedValorTotal = watch('valor_total');
   const watchedPercentual = watch('percentual_pagamento');
   const watchedKmEstimado = watch('km_estimado');
+  const watchedOrigem = watch('origem');
+  const watchedDestino = watch('destino');
 
   // Auto-populate percentual from motorista cadastro
   useEffect(() => {
@@ -276,14 +282,15 @@ export function ViagemForm({
           <label htmlFor="origem" className="mb-2 block text-base font-medium text-primary-700">
             Origem *
           </label>
-          <input
+          <CidadeAutocomplete
             id="origem"
-            type="text"
-            maxLength={200}
+            value={watchedOrigem}
+            onChange={(val) => setValue('origem', val, { shouldValidate: true })}
+            suggestions={cidadeSuggestions}
             placeholder="Ex: Sao Paulo, SP"
             disabled={camposLocked}
-            {...register('origem')}
-            className={inputClasses('origem', camposLocked)}
+            maxLength={200}
+            hasError={!!errors.origem}
           />
           {errors.origem && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.origem.message}</p>
@@ -295,14 +302,15 @@ export function ViagemForm({
           <label htmlFor="destino" className="mb-2 block text-base font-medium text-primary-700">
             Destino *
           </label>
-          <input
+          <CidadeAutocomplete
             id="destino"
-            type="text"
-            maxLength={200}
+            value={watchedDestino}
+            onChange={(val) => setValue('destino', val, { shouldValidate: true })}
+            suggestions={cidadeSuggestions}
             placeholder="Ex: Rio de Janeiro, RJ"
             disabled={camposLocked}
-            {...register('destino')}
-            className={inputClasses('destino', camposLocked)}
+            maxLength={200}
+            hasError={!!errors.destino}
           />
           {errors.destino && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.destino.message}</p>

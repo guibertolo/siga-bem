@@ -16,7 +16,9 @@ import { VeiculosSection } from '@/components/viagens/VeiculosSection';
 import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
 import { AbastecimentoList } from '@/components/abastecimento/AbastecimentoList';
 import { getAbastecimentosForViagem, getGastosPorViagem } from '@/app/(dashboard)/viagens/[id]/actions';
+import { listCategorias } from '@/app/(dashboard)/gastos/actions';
 import { GastosViagemSection } from '@/components/gastos/GastosViagemSection';
+import { DespesaViagemSection } from '@/components/gastos/DespesaViagemSection';
 import type { ViagemStatus } from '@/types/database';
 
 function formatDateTime(isoString: string | null): string {
@@ -49,15 +51,17 @@ export default async function ViagemDetalhePage({
   }
 
   const viagem = result.viagem!;
-  const [veiculosResult, abastecimentosResult, gastosResult] = await Promise.all([
+  const [veiculosResult, abastecimentosResult, gastosResult, categoriasResult] = await Promise.all([
     listVeiculosViagem(id),
     getAbastecimentosForViagem(id),
     getGastosPorViagem(id),
+    listCategorias(),
   ]);
   const veiculos = veiculosResult.data ?? [];
   const abastecimentos = abastecimentosResult.data;
   const gastosViagem = gastosResult.data;
   const gastosTotalCentavos = gastosResult.totalCentavos;
+  const categorias = categoriasResult.data ?? [];
   const valorMotorista = calcularValorMotorista(viagem.valor_total, viagem.percentual_pagamento);
   const distancia = calcularDistancia(viagem.km_saida, viagem.km_chegada);
 
@@ -296,17 +300,13 @@ export default async function ViagemDetalhePage({
         {/* Quick actions — Abastecimento + Despesa */}
         {viagem.status === 'em_andamento' && (
           <>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href={`/gastos/novo?viagemId=${viagem.id}`}
-                className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
-              >
-                <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Registrar Despesa
-              </Link>
-            </div>
+            <DespesaViagemSection
+              viagemId={viagem.id}
+              empresaId={viagem.empresa_id}
+              motoristaId={viagem.motorista_id}
+              caminhaoId={viagem.caminhao_id}
+              categorias={categorias}
+            />
 
             <AbastecimentoSection
               viagemId={viagem.id}
