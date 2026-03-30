@@ -72,12 +72,19 @@ export default async function DashboardLayout({
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-60 bg-[#1B3A4B] text-white flex-col shrink-0">
-        <div className="px-5 py-7 border-b border-white/10">
+        <div className="px-5 py-5 border-b border-white/10">
           <Link
             href="/dashboard"
-            className="text-2xl font-extrabold text-white no-underline"
+            className="flex items-center gap-3 no-underline"
           >
-            FrotaViva
+            <img
+              src="/logos/frotaviva-logo-icon.svg"
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9"
+            />
+            <span className="text-2xl font-extrabold text-white">FrotaViva</span>
           </Link>
         </div>
 

@@ -87,13 +87,20 @@ export function MobileSidebar({
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between px-5 py-7 border-b border-white/10">
+        <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
           <Link
             href="/dashboard"
-            className="text-2xl font-extrabold text-white no-underline"
+            className="flex items-center gap-3 no-underline"
             onClick={() => setOpen(false)}
           >
-            FrotaViva
+            <img
+              src="/logos/frotaviva-logo-icon.svg"
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9"
+            />
+            <span className="text-2xl font-extrabold text-white">FrotaViva</span>
           </Link>
           <button
             type="button"
