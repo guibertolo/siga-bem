@@ -18,7 +18,7 @@ export function EditarMotoristaClient({ motorista }: EditarMotoristaClientProps)
     const { cpf, ...updateData } = data;
     const result = await updateMotorista(motorista.id, updateData);
     if (result.success) {
-      router.push(`/motoristas/${motorista.id}`);
+      router.push('/motoristas');
     }
     return result;
   }
