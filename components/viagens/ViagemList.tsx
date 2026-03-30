@@ -101,6 +101,10 @@ export function ViagemList({
     });
   }
 
+  // Separate em_andamento trips from others
+  const viagensAtivas = viagens.filter((v) => v.status === 'em_andamento');
+  const viagensOutras = viagens.filter((v) => v.status !== 'em_andamento');
+
   return (
     <div className="space-y-4">
       <ViagemFilters
@@ -115,6 +119,109 @@ export function ViagemList({
         </div>
       )}
 
+      {/* Active trips section */}
+      {viagensAtivas.length > 0 && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:bg-amber-950/30 dark:border-amber-800">
+          <h3 className="text-sm font-bold uppercase tracking-wide text-amber-800 mb-3 dark:text-amber-400">
+            Em Andamento
+          </h3>
+
+          {/* Mobile active cards */}
+          <div className="space-y-3 md:hidden">
+            {viagensAtivas.map((v) => (
+              <div
+                key={v.id}
+                className="rounded-lg border-l-4 border-amber-400 bg-white p-4 dark:bg-surface-card"
+              >
+                <div className="flex items-start justify-between mb-1">
+                  <div>
+                    <div className="text-base font-bold text-primary-900">{v.origem} &rarr; {v.destino}</div>
+                  </div>
+                  <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                    {VIAGEM_STATUS_LABELS[v.status]}
+                  </span>
+                </div>
+                <div className="mt-2 text-sm text-primary-700 space-y-0.5">
+                  <p>{v.motorista_nome} - {v.caminhao_placa}</p>
+                  <p>{formatDateTime(v.data_saida)}</p>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-base font-semibold tabular-nums text-primary-900">
+                    {formatBRL(v.valor_total)}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <Link
+                    href={`/viagens/${v.id}`}
+                    className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                  >
+                    Ver Viagem
+                  </Link>
+                  <Link
+                    href={`/viagens/${v.id}/editar`}
+                    className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                  >
+                    Editar
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop active table */}
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-amber-200 bg-white dark:bg-surface-card dark:border-amber-800">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-amber-200 bg-amber-100/50 text-left dark:bg-amber-900/20 dark:border-amber-800">
+                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Origem/Destino</th>
+                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Motorista</th>
+                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Caminhao</th>
+                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Saida</th>
+                  <th className="px-4 py-3 text-base text-right font-medium text-amber-900 dark:text-amber-300">Valor</th>
+                  <th className="px-4 py-3 text-base text-right font-medium text-amber-900 dark:text-amber-300">Acoes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {viagensAtivas.map((v) => (
+                  <tr key={v.id} className="border-b border-amber-100 last:border-b-0 dark:border-amber-900">
+                    <td className="px-4 py-3">
+                      <div className="text-base font-bold text-primary-900">{v.origem} &rarr; {v.destino}</div>
+                    </td>
+                    <td className="px-4 py-3 text-base text-primary-700">{v.motorista_nome}</td>
+                    <td className="px-4 py-3 text-base text-primary-700">{v.caminhao_placa}</td>
+                    <td className="px-4 py-3 text-base text-primary-700">{formatDateTime(v.data_saida)}</td>
+                    <td className="px-4 py-3 text-base text-right tabular-nums text-primary-700">{formatBRL(v.valor_total)}</td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/viagens/${v.id}`}
+                          className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                        >
+                          Ver
+                        </Link>
+                        <Link
+                          href={`/viagens/${v.id}/editar`}
+                          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                        >
+                          Editar
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Divider label when both sections exist */}
+      {viagensAtivas.length > 0 && viagensOutras.length > 0 && (
+        <h3 className="text-sm font-bold uppercase tracking-wide text-primary-500 pt-2">
+          Outras Viagens
+        </h3>
+      )}
+
       {viagens.length === 0 ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
           <p className="text-base text-primary-500">Nenhuma viagem por aqui.</p>
@@ -126,11 +233,14 @@ export function ViagemList({
             Registrar Primeira Viagem
           </Link>
         </div>
+      ) : viagensOutras.length === 0 && viagensAtivas.length > 0 ? (
+        // All trips are active - already shown above, nothing else to render
+        null
       ) : (
         <>
           {/* Mobile card view */}
           <div className="space-y-3 md:hidden">
-            {viagens.map((v) => (
+            {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => (
               <div
                 key={v.id}
                 className="rounded-lg border border-surface-border bg-surface-card p-4"
@@ -200,7 +310,7 @@ export function ViagemList({
                 </tr>
               </thead>
               <tbody>
-                {viagens.map((v) => (
+                {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => (
                   <tr
                     key={v.id}
                     className="border-b border-surface-border last:border-b-0 hover:bg-surface-muted"

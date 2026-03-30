@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getUserEmpresas } from '@/lib/queries/empresas';
 import { createClient } from '@/lib/supabase/server';
+import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
@@ -38,8 +39,11 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  // Fetch empresas for the sidebar switcher (server-side to avoid flash)
-  const empresas = await getUserEmpresas();
+  // Fetch empresas and viagem count in parallel (after auth check)
+  const [empresas, viagensEmAndamento] = await Promise.all([
+    getUserEmpresas(),
+    getViagensEmAndamento(),
+  ]);
 
   // AC:1/AC:2 — If user has no active empresa, either auto-switch (1 empresa)
   // or redirect to selection screen (multiple empresas).
@@ -62,6 +66,7 @@ export default async function DashboardLayout({
 
   const showAdminLinks = currentUsuario.role === 'dono' || currentUsuario.role === 'admin';
   const showBILink = currentUsuario.role === 'dono';
+  const viagensAtivasCount = viagensEmAndamento.count;
 
   return (
     <div className="flex min-h-screen">
@@ -84,9 +89,14 @@ export default async function DashboardLayout({
               key={link.href}
               href={link.href}
               prefetch={true}
-              className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+              className="flex items-center px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               {link.label}
+              {link.href === '/viagens' && viagensAtivasCount > 0 && (
+                <span className="ml-auto bg-amber-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                  {viagensAtivasCount}
+                </span>
+              )}
             </Link>
           ))}
 
@@ -149,6 +159,7 @@ export default async function DashboardLayout({
               showAdminLinks={showAdminLinks}
               showBILink={showBILink}
               empresas={empresas}
+              viagensAtivasCount={viagensAtivasCount}
             />
             <span className="text-sm text-primary-700 truncate">
               {currentUsuario.email}

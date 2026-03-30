@@ -17,6 +17,7 @@ interface MobileSidebarProps {
   showAdminLinks: boolean;
   showBILink: boolean;
   empresas: UserEmpresa[];
+  viagensAtivasCount?: number;
 }
 
 export function MobileSidebar({
@@ -25,6 +26,7 @@ export function MobileSidebar({
   showAdminLinks,
   showBILink,
   empresas,
+  viagensAtivasCount = 0,
 }: MobileSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -124,13 +126,18 @@ export function MobileSidebar({
               href={link.href}
               prefetch={true}
               onClick={() => setOpen(false)}
-              className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+              className={`flex items-center px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === link.href || pathname.startsWith(link.href + '/')
                   ? 'bg-white/20 text-white'
                   : 'text-slate-200 hover:bg-white/15'
               }`}
             >
               {link.label}
+              {link.href === '/viagens' && viagensAtivasCount > 0 && (
+                <span className="ml-auto bg-amber-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                  {viagensAtivasCount}
+                </span>
+              )}
             </Link>
           ))}
 
