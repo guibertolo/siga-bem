@@ -15,7 +15,7 @@ export function EditarCaminhaoClient({ caminhao }: EditarCaminhaoClientProps) {
   async function handleSubmit(data: CaminhaoFormData): Promise<CaminhaoActionResult> {
     const result = await updateCaminhao(caminhao.id, data);
     if (result.success) {
-      router.push('/caminhoes');
+      router.push(`/caminhoes/${caminhao.id}`);
     }
     return result;
   }
