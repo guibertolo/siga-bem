@@ -15,6 +15,9 @@ import type {
   BIHistoricoRotasParams,
   BIHistoricoRotasResult,
   BIHistoricoRotaItem,
+  BIEficienciaItem,
+  BIManutencaoTruckItem,
+  BIManutencaoTipoItem,
 } from '@/types/bi';
 
 // ---------------------------------------------------------------------------
@@ -691,6 +694,267 @@ export async function getHistoricoRotasSimilares(
         : null;
 
     return { data: { viagens: items, comparativo }, error: null };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Eficiencia de Combustivel — km/L per truck
+// ---------------------------------------------------------------------------
+
+/** Classify fuel efficiency for cegonheiro trucks. */
+function classificarEficiencia(
+  kmPorLitro: number | null,
+): BIEficienciaItem['classificacao'] {
+  if (kmPorLitro == null) return null;
+  if (kmPorLitro > 2.5) return 'bom';
+  if (kmPorLitro >= 2.0) return 'medio';
+  return 'ruim';
+}
+
+export async function getBIEficienciaCombustivel(
+  filtros: BIFiltros,
+): Promise<{ data: BIEficienciaItem[] | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    // Query fuel expenses grouped by truck within the period
+    let query = supabase
+      .from('gasto')
+      .select(`
+        valor,
+        litros,
+        caminhao_id,
+        caminhao (
+          placa,
+          modelo
+        )
+      `)
+      .gte('data', filtros.periodoInicio)
+      .lte('data', filtros.periodoFim)
+      .not('caminhao_id', 'is', null)
+      .not('litros', 'is', null)
+      .not('tipo_combustivel', 'is', null);
+
+    if (filtros.caminhaoId) {
+      query = query.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      query = query.eq('motorista_id', filtros.motoristaId);
+    }
+
+    const { data: gastos, error } = await query;
+    if (error) throw new Error(error.message);
+
+    // Also fetch km_por_litro_estimado from the view for each truck
+    const { data: viewData } = await supabase
+      .from('vw_custo_por_caminhao')
+      .select('caminhao_id, km_por_litro_estimado');
+
+    const kmPorLitroMap = new Map<string, number>();
+    for (const row of viewData ?? []) {
+      if (row.km_por_litro_estimado && Number(row.km_por_litro_estimado) > 0) {
+        kmPorLitroMap.set(row.caminhao_id, Number(row.km_por_litro_estimado));
+      }
+    }
+
+    // Aggregate by truck
+    const byTruck = new Map<
+      string,
+      {
+        caminhaoId: string;
+        placa: string;
+        modelo: string;
+        totalLitros: number;
+        totalGastoCentavos: number;
+        totalAbastecimentos: number;
+      }
+    >();
+
+    for (const gasto of gastos ?? []) {
+      const cam = gasto.caminhao as unknown as {
+        placa: string;
+        modelo: string;
+      } | null;
+      const camId = gasto.caminhao_id!;
+      const existing = byTruck.get(camId);
+      const litros = Number(gasto.litros) || 0;
+
+      if (existing) {
+        existing.totalLitros += litros;
+        existing.totalGastoCentavos += gasto.valor;
+        existing.totalAbastecimentos += 1;
+      } else {
+        byTruck.set(camId, {
+          caminhaoId: camId,
+          placa: cam?.placa ?? '---',
+          modelo: cam?.modelo ?? '---',
+          totalLitros: litros,
+          totalGastoCentavos: gasto.valor,
+          totalAbastecimentos: 1,
+        });
+      }
+    }
+
+    const items: BIEficienciaItem[] = Array.from(byTruck.values())
+      .map((truck) => {
+        const kmPorLitro = kmPorLitroMap.get(truck.caminhaoId) ?? null;
+        return {
+          ...truck,
+          kmPorLitro,
+          classificacao: classificarEficiencia(kmPorLitro),
+        };
+      })
+      .sort((a, b) => (b.kmPorLitro ?? 0) - (a.kmPorLitro ?? 0));
+
+    return { data: items, error: null };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Manutencoes — maintenance tracking per truck
+// ---------------------------------------------------------------------------
+
+/** Category names considered maintenance-related. */
+const CATEGORIAS_MANUTENCAO = ['Manutencao', 'Pneu'];
+
+export async function getBIManutencoes(
+  filtros: BIFiltros,
+): Promise<{ data: BIManutencaoTruckItem[] | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    // First, get the IDs of maintenance categories
+    const { data: catData, error: catError } = await supabase
+      .from('categoria_gasto')
+      .select('id, nome, icone, cor')
+      .in('nome', CATEGORIAS_MANUTENCAO);
+
+    if (catError) throw new Error(catError.message);
+    if (!catData || catData.length === 0) {
+      return { data: [], error: null };
+    }
+
+    const catIds = catData.map((c) => c.id);
+    const catMap = new Map(catData.map((c) => [c.id, c]));
+
+    // Fetch maintenance gastos in the period
+    let query = supabase
+      .from('gasto')
+      .select(`
+        valor,
+        data,
+        categoria_id,
+        caminhao_id,
+        caminhao (
+          placa,
+          modelo
+        )
+      `)
+      .in('categoria_id', catIds)
+      .gte('data', filtros.periodoInicio)
+      .lte('data', filtros.periodoFim)
+      .not('caminhao_id', 'is', null);
+
+    if (filtros.caminhaoId) {
+      query = query.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      query = query.eq('motorista_id', filtros.motoristaId);
+    }
+
+    const { data: gastos, error } = await query;
+    if (error) throw new Error(error.message);
+
+    // Aggregate by truck, with tipo breakdown
+    const byTruck = new Map<
+      string,
+      {
+        caminhaoId: string;
+        placa: string;
+        modelo: string;
+        totalCustoCentavos: number;
+        totalEventos: number;
+        ultimaManutencao: string | null;
+        tipoMap: Map<string, { total: number; count: number }>;
+      }
+    >();
+
+    for (const gasto of gastos ?? []) {
+      const cam = gasto.caminhao as unknown as {
+        placa: string;
+        modelo: string;
+      } | null;
+      const camId = gasto.caminhao_id!;
+      const existing = byTruck.get(camId);
+
+      if (existing) {
+        existing.totalCustoCentavos += gasto.valor;
+        existing.totalEventos += 1;
+        if (
+          !existing.ultimaManutencao ||
+          gasto.data > existing.ultimaManutencao
+        ) {
+          existing.ultimaManutencao = gasto.data;
+        }
+        const tipoEntry = existing.tipoMap.get(gasto.categoria_id) ?? {
+          total: 0,
+          count: 0,
+        };
+        tipoEntry.total += gasto.valor;
+        tipoEntry.count += 1;
+        existing.tipoMap.set(gasto.categoria_id, tipoEntry);
+      } else {
+        const tipoMap = new Map<string, { total: number; count: number }>();
+        tipoMap.set(gasto.categoria_id, {
+          total: gasto.valor,
+          count: 1,
+        });
+        byTruck.set(camId, {
+          caminhaoId: camId,
+          placa: cam?.placa ?? '---',
+          modelo: cam?.modelo ?? '---',
+          totalCustoCentavos: gasto.valor,
+          totalEventos: 1,
+          ultimaManutencao: gasto.data,
+          tipoMap,
+        });
+      }
+    }
+
+    const items: BIManutencaoTruckItem[] = Array.from(byTruck.values())
+      .map((truck) => {
+        const tipos: BIManutencaoTipoItem[] = Array.from(
+          truck.tipoMap.entries(),
+        ).map(([catId, data]) => {
+          const cat = catMap.get(catId);
+          return {
+            categoriaNome: cat?.nome ?? 'Desconhecido',
+            categoriaIcone: cat?.icone ?? null,
+            categoriaCor: cat?.cor ?? null,
+            totalCentavos: data.total,
+            qtdEventos: data.count,
+          };
+        });
+
+        return {
+          caminhaoId: truck.caminhaoId,
+          placa: truck.placa,
+          modelo: truck.modelo,
+          totalCustoCentavos: truck.totalCustoCentavos,
+          totalEventos: truck.totalEventos,
+          ultimaManutencao: truck.ultimaManutencao,
+          tipos,
+        };
+      })
+      .sort((a, b) => b.totalCustoCentavos - a.totalCustoCentavos);
+
+    return { data: items, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err.message : 'Erro' };
   }

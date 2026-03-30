@@ -13,6 +13,8 @@ import {
   getBIRankingCaminhoes,
   getBIRankingMotoristas,
   getBITendenciaMensal,
+  getBIEficienciaCombustivel,
+  getBIManutencoes,
 } from '@/app/(dashboard)/bi/actions';
 import { BiFiltros } from '@/components/bi/BiFiltros';
 import { BiKpiCards } from '@/components/bi/BiKpiCards';
@@ -21,6 +23,8 @@ import { BiRankingCaminhoes } from '@/components/bi/BiRankingCaminhoes';
 import { BiRankingMotoristas } from '@/components/bi/BiRankingMotoristas';
 import { BiTendenciaMensal } from '@/components/bi/BiTendenciaMensal';
 import { BiPrevisaoMargens } from '@/components/bi/BiPrevisaoMargens';
+import { BiEficienciaCombustivel } from '@/components/bi/BiEficienciaCombustivel';
+import { BiManutencoes } from '@/components/bi/BiManutencoes';
 import type { BIFiltros } from '@/types/bi';
 
 interface BiPageProps {
@@ -68,15 +72,25 @@ export default async function BiPage({ searchParams }: BiPageProps) {
   };
 
   // Fetch all data in parallel
-  const [filterOpts, kpis, categorias, caminhoes, motoristas, tendencia] =
-    await Promise.all([
-      getBIFilterOptions(),
-      getBIKpis(filtros),
-      getBICategoriasBreakdown(filtros),
-      getBIRankingCaminhoes(filtros),
-      getBIRankingMotoristas(filtros),
-      getBITendenciaMensal(filtros),
-    ]);
+  const [
+    filterOpts,
+    kpis,
+    categorias,
+    caminhoes,
+    motoristas,
+    tendencia,
+    eficiencia,
+    manutencoes,
+  ] = await Promise.all([
+    getBIFilterOptions(),
+    getBIKpis(filtros),
+    getBICategoriasBreakdown(filtros),
+    getBIRankingCaminhoes(filtros),
+    getBIRankingMotoristas(filtros),
+    getBITendenciaMensal(filtros),
+    getBIEficienciaCombustivel(filtros),
+    getBIManutencoes(filtros),
+  ]);
 
   const options = filterOpts.data ?? {
     caminhoes: [],
@@ -106,31 +120,41 @@ export default async function BiPage({ searchParams }: BiPageProps) {
         </Suspense>
       </div>
 
-      {/* Resumo em Numeros */}
+      {/* 1. KPI Cards */}
       <div className="mb-6">
         <BiKpiCards data={kpis.data} />
       </div>
 
-      {/* Category Breakdown */}
+      {/* 2. Eficiencia de Combustivel (NEW) */}
       <div className="mb-6">
-        <BiBreakdownCategorias data={categorias.data} />
+        <BiEficienciaCombustivel data={eficiencia.data} />
       </div>
 
-      {/* Rankings side by side on desktop */}
+      {/* 3. Manutencoes (NEW) */}
+      <div className="mb-6">
+        <BiManutencoes data={manutencoes.data} />
+      </div>
+
+      {/* 4. Monthly Trend */}
+      <div className="mb-6">
+        <BiTendenciaMensal data={tendencia.data} />
+      </div>
+
+      {/* 5. Rankings side by side on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <BiRankingCaminhoes data={caminhoes.data} />
         <BiRankingMotoristas data={motoristas.data} />
       </div>
 
-      {/* Monthly Trend */}
+      {/* 6. Category Breakdown */}
       <div className="mb-6">
-        <BiTendenciaMensal data={tendencia.data} />
+        <BiBreakdownCategorias data={categorias.data} />
       </div>
 
       {/* Separator */}
       <div className="mb-6 border-t border-surface-border" />
 
-      {/* Story 5.6: Previsao e Margens */}
+      {/* 7. Previsao e Margens */}
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
           Calcular Custo de Viagem

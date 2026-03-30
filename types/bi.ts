@@ -148,3 +148,53 @@ export interface BIHistoricoRotasResult {
   viagens: BIHistoricoRotaItem[];
   comparativo: BIComparativoRota | null;
 }
+
+// ---------------------------------------------------------------------------
+// BI Eficiencia de Combustivel
+// ---------------------------------------------------------------------------
+
+/**
+ * Fuel efficiency item per truck.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIEficienciaItem {
+  caminhaoId: string;
+  placa: string;
+  modelo: string;
+  kmPorLitro: number | null;
+  totalLitros: number;
+  totalGastoCentavos: number;
+  totalAbastecimentos: number;
+  /** 'bom' (> 2.5), 'medio' (2.0-2.5), 'ruim' (< 2.0), null if no data */
+  classificacao: 'bom' | 'medio' | 'ruim' | null;
+}
+
+// ---------------------------------------------------------------------------
+// BI Manutencoes
+// ---------------------------------------------------------------------------
+
+/**
+ * Maintenance summary per truck.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIManutencaoTruckItem {
+  caminhaoId: string;
+  placa: string;
+  modelo: string;
+  totalCustoCentavos: number;
+  totalEventos: number;
+  ultimaManutencao: string | null; // YYYY-MM-DD
+  tipos: BIManutencaoTipoItem[];
+}
+
+/**
+ * Maintenance breakdown by type (category).
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIManutencaoTipoItem {
+  categoriaNome: string;
+  categoriaIcone: string | null;
+  categoriaCor: string | null;
+  totalCentavos: number;
+  qtdEventos: number;
+}
