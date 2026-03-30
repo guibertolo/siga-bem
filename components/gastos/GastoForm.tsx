@@ -169,7 +169,7 @@ export function GastoForm({
       {viagens.length > 0 && (
         <div>
           <label htmlFor="viagem_id" className="mb-2 block text-base font-medium text-primary-900">
-            Vincular a viagem (opcional)
+            De qual viagem? (opcional)
           </label>
           <select
             id="viagem_id"
@@ -185,7 +185,7 @@ export function GastoForm({
             <option value="">Sem viagem vinculada</option>
             {viagens.map((v) => (
               <option key={v.id} value={v.id}>
-                {v.origem} &rarr; {v.destino} ({v.status === 'em_andamento' ? 'Em andamento' : 'Planejada'})
+                {v.origem} &rarr; {v.destino} ({v.status === 'em_andamento' ? 'Em Viagem' : 'Planejada'})
               </option>
             ))}
           </select>
@@ -196,14 +196,14 @@ export function GastoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="categoria_id" className="mb-2 block text-base font-medium text-primary-900">
-            Categoria <span className="text-red-500">*</span>
+            Tipo de Gasto <span className="text-red-500">*</span>
           </label>
           <select
             id="categoria_id"
             {...register('categoria_id')}
             className={cn(inputClass, errors.categoria_id ? 'border-red-500' : 'border-surface-border')}
           >
-            <option value="">Selecione uma categoria</option>
+            <option value="">Selecione o tipo de gasto</option>
             {categorias.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.nome}</option>
             ))}

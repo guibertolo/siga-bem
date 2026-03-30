@@ -22,7 +22,7 @@ export function GastoSummary({
       {/* Total */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-primary-500">Total filtrado</p>
+          <p className="text-sm text-primary-500">Total encontrado</p>
           <p className="text-2xl font-bold text-primary-900">
             {formatBRL(totalValueCentavos)}
           </p>
@@ -37,7 +37,7 @@ export function GastoSummary({
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-sm text-primary-600 transition-colors hover:text-primary-800"
           >
-            {isExpanded ? 'Ocultar detalhes' : 'Ver por categoria'}
+            {isExpanded ? 'Esconder detalhes' : 'Ver por tipo de gasto'}
           </button>
         )}
       </div>

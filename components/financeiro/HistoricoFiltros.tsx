@@ -89,7 +89,7 @@ export function HistoricoFiltros({
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-primary-900">Filtros</h3>
+        <h3 className="text-sm font-semibold text-primary-900">Buscar por</h3>
         {hasActiveFilters && (
           <button
             type="button"
@@ -97,7 +97,7 @@ export function HistoricoFiltros({
             disabled={isPending}
             className="text-xs text-primary-600 transition-colors hover:text-primary-800"
           >
-            Limpar filtros
+            Limpar busca
           </button>
         )}
       </div>
@@ -167,7 +167,7 @@ export function HistoricoFiltros({
             htmlFor="status"
             className="mb-1 block text-xs font-medium text-primary-700"
           >
-            Status
+            Situacao
           </label>
           <select
             id="status"
@@ -218,7 +218,7 @@ export function HistoricoFiltros({
       </div>
 
       {isPending && (
-        <div className="mt-2 text-xs text-primary-500">Filtrando...</div>
+        <div className="mt-2 text-xs text-primary-500">Buscando...</div>
       )}
     </div>
   );

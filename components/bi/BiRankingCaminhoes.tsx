@@ -12,7 +12,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
     return (
       <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Ranking por Caminhao
+          Caminhoes que Mais Gastaram
         </h3>
         <p className="text-sm text-primary-400">
           Nenhum gasto com caminhao no periodo selecionado.
@@ -24,7 +24,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Ranking por Caminhao
+        Caminhoes que Mais Gastaram
       </h3>
 
       {/* Desktop table */}
@@ -35,9 +35,9 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
               <th className="pb-2 font-semibold text-primary-700">#</th>
               <th className="pb-2 font-semibold text-primary-700">Placa</th>
               <th className="pb-2 font-semibold text-primary-700">Modelo</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">Total</th>
+              <th className="pb-2 font-semibold text-primary-700 text-right">Total Gasto</th>
               <th className="pb-2 font-semibold text-primary-700 text-right">%</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">Lanc.</th>
+              <th className="pb-2 font-semibold text-primary-700 text-right">Qtd.</th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +82,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
                 {formatBRL(item.totalGasto)}
               </span>
               <span className="text-xs text-primary-500">
-                {item.qtdLancamentos} lancamentos
+                {item.qtdLancamentos} gastos registrados
               </span>
             </div>
           </div>

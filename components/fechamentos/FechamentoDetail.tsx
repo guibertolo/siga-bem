@@ -151,7 +151,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
           Viagens ({viagemItems.length})
         </h4>
         {viagemItems.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-primary-500">Nenhuma viagem neste fechamento.</p>
+          <p className="px-4 py-3 text-sm text-primary-500">Nenhuma viagem neste acerto.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -186,7 +186,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
           Gastos ({gastoItems.length})
         </h4>
         {gastoItems.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-primary-500">Nenhum gasto neste fechamento.</p>
+          <p className="px-4 py-3 text-sm text-primary-500">Nenhum gasto neste acerto.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -222,7 +222,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
             <>
               {confirmAction === 'fechar' ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-primary-700">Confirmar fechamento?</span>
+                  <span className="text-sm text-primary-700">Confirmar acerto?</span>
                   <button
                     type="button"
                     onClick={handleFechar}
@@ -290,7 +290,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
             <>
               {confirmAction === 'excluir' ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-red-600">Excluir fechamento?</span>
+                  <span className="text-sm text-red-600">Excluir acerto?</span>
                   <button
                     type="button"
                     onClick={handleExcluir}

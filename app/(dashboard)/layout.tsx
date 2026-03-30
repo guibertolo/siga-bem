@@ -7,20 +7,20 @@ import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Inicio' },
   { href: '/empresa', label: 'Empresa' },
   { href: '/viagens', label: 'Viagens' },
   { href: '/gastos', label: 'Gastos' },
-  { href: '/fechamentos', label: 'Fechamentos' },
-  { href: '/financeiro/historico', label: 'Financeiro' },
+  { href: '/fechamentos', label: 'Acerto de Contas' },
+  { href: '/financeiro/historico', label: 'Historico de Acertos' },
 ];
 
 const adminLinks = [
   { href: '/motoristas', label: 'Motoristas' },
   { href: '/caminhoes', label: 'Caminhoes' },
-  { href: '/vinculos', label: 'Vinculos' },
+  { href: '/vinculos', label: 'Vinculos Mot./Cam.' },
   { href: '/usuarios', label: 'Usuarios' },
-  { href: '/configuracoes/combustivel', label: 'Combustivel' },
+  { href: '/configuracoes/combustivel', label: 'Preco Combustivel' },
 ];
 
 export default async function DashboardLayout({
@@ -79,14 +79,14 @@ export default async function DashboardLayout({
               href="/bi"
               className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
-              BI Financeiro
+              Resumo dos Gastos
             </Link>
           )}
 
           {showAdminLinks && (
             <>
               <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">
-                Admin
+                Gerenciar
               </div>
               {adminLinks.map((link) => (
                 <Link

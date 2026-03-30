@@ -73,7 +73,7 @@ export function GastoFilters({
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-primary-900">Filtros</h3>
+        <h3 className="text-sm font-semibold text-primary-900">Buscar por</h3>
         {hasActiveFilters && (
           <button
             type="button"
@@ -81,7 +81,7 @@ export function GastoFilters({
             disabled={isPending}
             className="text-xs text-primary-600 transition-colors hover:text-primary-800"
           >
-            Limpar filtros
+            Limpar busca
           </button>
         )}
       </div>
@@ -179,7 +179,7 @@ export function GastoFilters({
       </div>
 
       {isPending && (
-        <div className="mt-2 text-xs text-primary-500">Filtrando...</div>
+        <div className="mt-2 text-xs text-primary-500">Buscando...</div>
       )}
     </div>
   );
@@ -244,7 +244,7 @@ function MultiSelectDropdown({
           <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-surface-border bg-surface-card py-1 shadow-lg">
             {options.length === 0 ? (
               <div className="px-3 py-2 text-sm text-primary-400">
-                Nenhuma opcao
+                Nada encontrado
               </div>
             ) : (
               options.map((option) => (

@@ -52,7 +52,7 @@ export function FechamentoFilters({
         onChange={(e) => updateParam('status', e.target.value)}
         className="rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none"
       >
-        <option value="">Todos os status</option>
+        <option value="">Todas as situacoes</option>
         <option value="aberto">Aberto</option>
         <option value="fechado">Fechado</option>
         <option value="pago">Pago</option>

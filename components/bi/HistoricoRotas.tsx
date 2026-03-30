@@ -27,7 +27,7 @@ export function HistoricoRotas({
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Historico de Rotas Similares
+        Viagens Parecidas que Voce Ja Fez
       </h3>
 
       {isLoading && (
@@ -59,25 +59,25 @@ export function HistoricoRotas({
       {data?.comparativo && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
           <div className="rounded-lg border border-slate-200 bg-white p-3">
-            <p className="text-xs text-primary-500">Viagens na rota</p>
+            <p className="text-xs text-primary-500">Viagens nessa rota</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {data.comparativo.totalViagens}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-3">
-            <p className="text-xs text-primary-500">Custo minimo</p>
+            <p className="text-xs text-primary-500">Mais barata</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMinCentavos)}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-3">
-            <p className="text-xs text-primary-500">Custo maximo</p>
+            <p className="text-xs text-primary-500">Mais cara</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMaxCentavos)}
             </p>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-3">
-            <p className="text-xs text-primary-500">Custo medio</p>
+            <p className="text-xs text-primary-500">Custo normal</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMedioCentavos)}
             </p>

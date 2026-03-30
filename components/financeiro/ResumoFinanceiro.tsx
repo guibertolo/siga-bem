@@ -31,7 +31,7 @@ export function ResumoFinanceiro({ resumo }: ResumoFinanceiroProps) {
       {/* Pendentes */}
       <div className="rounded-lg border border-surface-border bg-surface-card p-4">
         <p className="text-xs font-medium uppercase tracking-wide text-primary-500">
-          Fechamentos Pendentes
+          Acertos Pendentes
         </p>
         <p className="mt-1 text-2xl font-bold text-primary-900">
           {resumo.qtdPendentes}

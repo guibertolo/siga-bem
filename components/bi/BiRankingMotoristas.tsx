@@ -12,7 +12,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
     return (
       <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Ranking por Motorista
+          Motoristas que Mais Gastaram
         </h3>
         <p className="text-sm text-primary-400">
           Nenhum gasto com motorista no periodo selecionado.
@@ -24,7 +24,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Ranking por Motorista
+        Motoristas que Mais Gastaram
       </h3>
 
       {/* Desktop table */}
@@ -34,9 +34,9 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
             <tr className="border-b border-slate-200 text-left">
               <th className="pb-2 font-semibold text-primary-700">#</th>
               <th className="pb-2 font-semibold text-primary-700">Nome</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">Total</th>
+              <th className="pb-2 font-semibold text-primary-700 text-right">Total Gasto</th>
               <th className="pb-2 font-semibold text-primary-700 text-right">%</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">Lanc.</th>
+              <th className="pb-2 font-semibold text-primary-700 text-right">Qtd.</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +78,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
                 {formatBRL(item.totalGasto)}
               </span>
               <span className="text-xs text-primary-500">
-                {item.qtdLancamentos} lancamentos
+                {item.qtdLancamentos} gastos registrados
               </span>
             </div>
           </div>

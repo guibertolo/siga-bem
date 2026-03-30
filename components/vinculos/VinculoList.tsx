@@ -105,7 +105,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                 Periodo
               </th>
               <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
-                Status
+                Situacao
               </th>
               <th className="px-4 py-3.5 text-right text-sm font-medium uppercase tracking-wider text-primary-500">
                 Acoes

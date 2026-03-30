@@ -117,13 +117,13 @@ export function ViagemList({
 
       {viagens.length === 0 ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-          <p className="text-base text-primary-500">Nenhuma viagem encontrada.</p>
-          <p className="mt-1 text-sm text-primary-400">Cadastre uma viagem para acompanhar suas rotas.</p>
+          <p className="text-base text-primary-500">Nenhuma viagem por aqui.</p>
+          <p className="mt-1 text-sm text-primary-400">Crie uma nova viagem para comecar.</p>
           <Link
             href="/viagens/nova"
             className="mt-4 inline-block rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
           >
-            Cadastrar Primeira Viagem
+            Registrar Primeira Viagem
           </Link>
         </div>
       ) : (
@@ -195,7 +195,7 @@ export function ViagemList({
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saida</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Status</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
                 </tr>
               </thead>

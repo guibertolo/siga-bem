@@ -10,7 +10,7 @@ export function ViagemSummaryCard({ count, error }: ViagemSummaryCardProps) {
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">
         {error ? '\u2014' : count}
       </p>
-      <p className="mt-1 text-sm text-slate-500">Em andamento</p>
+      <p className="mt-1 text-sm text-slate-500">Em viagem</p>
     </div>
   );
 }

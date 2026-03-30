@@ -30,7 +30,7 @@ export default async function NovoFechamentoPage() {
           </svg>
           Voltar
         </Link>
-        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Fechamento</h2>
+        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Acerto de Contas</h2>
       </div>
 
       {motoristasResult.error && (

@@ -18,12 +18,12 @@ export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummar
       href="/fechamentos?status=aberto"
       className="block rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors"
     >
-      <h3 className="text-lg font-semibold text-primary-900">Fechamentos Pendentes</h3>
+      <h3 className="text-lg font-semibold text-primary-900">Acertos Pendentes</h3>
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">
         {count}
       </p>
       <p className="mt-1 text-sm text-slate-500">
-        {count > 0 ? `Total: ${formatBRL(totalCentavos)}` : 'Nenhum fechamento aberto'}
+        {count > 0 ? `Total: ${formatBRL(totalCentavos)}` : 'Nenhum acerto pendente'}
       </p>
     </Link>
   );

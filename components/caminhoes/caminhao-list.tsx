@@ -57,7 +57,7 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Capacidade</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-right">Km Atual</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Status</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Situacao</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Acoes</th>
           </tr>
         </thead>

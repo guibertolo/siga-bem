@@ -14,7 +14,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
     return (
       <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Breakdown por Categoria
+          Gastos por Tipo
         </h3>
         <p className="text-sm text-primary-400">
           Nenhum gasto encontrado no periodo selecionado.
@@ -26,7 +26,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Breakdown por Categoria
+        Gastos por Tipo
       </h3>
       <div className="space-y-4">
         {data.map((cat) => (
@@ -42,7 +42,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-primary-500">
-                  {cat.qtdLancamentos} lanc.
+                  {cat.qtdLancamentos} gastos
                 </span>
                 <span className="text-sm font-semibold text-primary-900 tabular-nums">
                   {formatBRL(cat.total)}

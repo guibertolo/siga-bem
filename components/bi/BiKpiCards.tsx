@@ -10,19 +10,19 @@ interface BiKpiCardsProps {
 export function BiKpiCards({ data }: BiKpiCardsProps) {
   const cards = [
     {
-      label: 'Gasto Total',
+      label: 'Total Gasto',
       value: formatBRL(data?.totalGastos ?? 0),
     },
     {
-      label: 'Lancamentos',
+      label: 'Total de Despesas',
       value: String(data?.totalLancamentos ?? 0),
     },
     {
-      label: 'Media por Viagem',
+      label: 'Gasto Medio por Viagem',
       value: formatBRL(data?.gastoMedioPorViagem ?? 0),
     },
     {
-      label: 'Custo por Km',
+      label: 'Gasto por Quilometro',
       value: data?.custoPorKm != null ? formatBRL(data.custoPorKm) : '\u2014',
     },
   ];

@@ -52,7 +52,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-primary-900">Filtros</h3>
+        <h3 className="text-sm font-semibold text-primary-900">Buscar por</h3>
         {hasActiveFilters && (
           <button
             type="button"
@@ -60,7 +60,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
             disabled={isPending}
             className="text-xs text-primary-600 transition-colors hover:text-primary-800"
           >
-            Limpar filtros
+            Limpar busca
           </button>
         )}
       </div>
@@ -158,7 +158,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
       </div>
 
       {isPending && (
-        <div className="mt-2 text-xs text-primary-500">Atualizando...</div>
+        <div className="mt-2 text-xs text-primary-500">Carregando...</div>
       )}
     </div>
   );

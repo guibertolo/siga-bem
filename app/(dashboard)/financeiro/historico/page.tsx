@@ -5,7 +5,7 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Historico Financeiro',
+  title: 'Historico de Acertos',
 };
 import {
   getFechamentosHistorico,
@@ -64,12 +64,12 @@ export default async function HistoricoPage({ searchParams }: HistoricoPageProps
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-primary-900">
-            Historico de Fechamentos
+            Historico de Acertos
           </h1>
           <p className="mt-1 text-sm text-primary-500">
             {isMotorista
-              ? 'Consulte seus fechamentos financeiros'
-              : 'Consulte e gerencie todos os fechamentos da empresa'}
+              ? 'Veja seus acertos de contas'
+              : 'Veja e gerencie todos os acertos da empresa'}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ export default async function HistoricoPage({ searchParams }: HistoricoPageProps
               href="/fechamentos/novo"
               className="rounded-md bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
             >
-              Novo Fechamento
+              Novo Acerto
             </Link>
           )}
         </div>

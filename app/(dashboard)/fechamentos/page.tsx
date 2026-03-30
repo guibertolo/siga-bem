@@ -9,7 +9,7 @@ import {
 } from '@/app/(dashboard)/fechamentos/actions';
 
 export const metadata: Metadata = {
-  title: 'Fechamentos',
+  title: 'Acerto de Contas',
 };
 import { FechamentoList } from '@/components/fechamentos/FechamentoList';
 import { FechamentoFilters } from '@/components/fechamentos/FechamentoFilters';
@@ -59,7 +59,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
     <div className="w-full max-w-6xl">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Fechamentos</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Acerto de Contas</h2>
         {canCreate && (
           <Link
             href="/fechamentos/novo"
@@ -68,7 +68,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
             <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Novo Fechamento
+            Novo Acerto
           </Link>
         )}
       </div>
@@ -86,7 +86,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
       {/* Table or empty */}
       {fechamentos.length === 0 ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-          <p className="text-primary-500">Nenhum fechamento encontrado.</p>
+          <p className="text-primary-500">Nenhum acerto de contas encontrado.</p>
           {canCreate && (
             <Link
               href="/fechamentos/novo"
@@ -95,7 +95,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
               <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Criar Primeiro Fechamento
+              Fazer Primeiro Acerto
             </Link>
           )}
         </div>

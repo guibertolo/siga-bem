@@ -77,7 +77,7 @@ export default function UsuarioList({
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">Email</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">Role</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">
-                Status
+                Situacao
               </th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">
                 Cadastro

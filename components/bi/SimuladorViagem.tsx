@@ -72,7 +72,7 @@ export function SimuladorViagem({
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Simulador de Viagem
+        Calcular Custo da Viagem
       </h3>
 
       {/* Form */}
@@ -205,30 +205,30 @@ export function SimuladorViagem({
           {/* Estimation card */}
           <div className="rounded-lg border border-primary-200 bg-primary-50 p-4">
             <h4 className="text-sm font-semibold text-primary-900 mb-3">
-              Estimativa para {kmEstimado} km —{' '}
+              Custo estimado para {kmEstimado} km —{' '}
               {COMBUSTIVEL_TIPO_LABELS[tipoCombustivel]}
             </h4>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <p className="text-xs text-primary-500">Litros estimados</p>
+                <p className="text-xs text-primary-500">Vai gastar em diesel</p>
                 <p className="text-lg font-bold text-primary-900 tabular-nums">
                   {resultado.litrosEstimados.toFixed(1)} L
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-500">Custo combustivel</p>
+                <p className="text-xs text-primary-500">Valor do diesel</p>
                 <p className="text-lg font-bold text-primary-900 tabular-nums">
                   {formatBRL(resultado.custoEstimadoCentavos)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-500">Consumo usado</p>
+                <p className="text-xs text-primary-500">Consumo do caminhao</p>
                 <p className="text-lg font-bold text-primary-900 tabular-nums">
                   {resultado.consumoKmL.toFixed(1)} km/l
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-500">Preco por litro</p>
+                <p className="text-xs text-primary-500">Preco do litro</p>
                 <p className="text-lg font-bold text-primary-900 tabular-nums">
                   {formatBRL(resultado.precoMedioLitroCentavos)}
                 </p>
@@ -257,7 +257,7 @@ export function SimuladorViagem({
           {/* Margin calculation */}
           <div className="rounded-lg border border-slate-200 bg-white p-4">
             <h4 className="text-sm font-semibold text-primary-900 mb-3">
-              Margem de Lucro Estimada
+              Quanto Vai Sobrar
             </h4>
             <div>
               <label
@@ -286,13 +286,13 @@ export function SimuladorViagem({
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-primary-500">Custo estimado</p>
+                  <p className="text-xs text-primary-500">Vai gastar</p>
                   <p className="text-lg font-bold text-primary-900 tabular-nums">
                     {formatBRL(resultado.custoEstimadoCentavos)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-primary-500">Margem estimada</p>
+                  <p className="text-xs text-primary-500">Vai sobrar</p>
                   <p
                     className={`text-lg font-bold tabular-nums ${
                       margemCentavos >= 0

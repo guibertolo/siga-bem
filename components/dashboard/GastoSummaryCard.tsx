@@ -17,7 +17,7 @@ export function GastoSummaryCard({ total }: GastoSummaryCardProps) {
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">
         {formatBRL(total)}
       </p>
-      <p className="mt-1 text-sm text-slate-500">Este mes</p>
+      <p className="mt-1 text-sm text-slate-500">{"Este m\u00EAs"}</p>
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default async function FechamentoDetalhePage({
           href="/fechamentos"
           className="text-sm text-primary-500 transition-colors hover:text-primary-700"
         >
-          &larr; Voltar para Fechamentos
+          &larr; Voltar para Acertos
         </Link>
       </div>
 
@@ -63,7 +63,7 @@ export default async function FechamentoDetalhePage({
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold text-primary-900">
-            Fechamento {FECHAMENTO_TIPO_LABELS[tipo]}
+            Acerto de Contas {FECHAMENTO_TIPO_LABELS[tipo]}
           </h2>
           <span
             className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${FECHAMENTO_STATUS_COLORS[status]}`}
@@ -184,7 +184,7 @@ export default async function FechamentoDetalhePage({
         </h3>
         {viagemItens.length === 0 ? (
           <p className="text-sm italic text-gray-400">
-            Nenhuma viagem neste fechamento
+            Nenhuma viagem neste acerto
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -219,7 +219,7 @@ export default async function FechamentoDetalhePage({
         </h3>
         {gastoItens.length === 0 ? (
           <p className="text-sm italic text-gray-400">
-            Nenhum gasto neste fechamento
+            Nenhum gasto neste acerto
           </p>
         ) : (
           <div className="overflow-x-auto">

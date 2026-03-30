@@ -63,7 +63,7 @@ export function ViagemFilters({
       {/* Status multi-select as checkboxes */}
       <div>
         <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-primary-500">
-          Status
+          Situacao
         </label>
         <div className="flex flex-wrap gap-2">
           {VIAGEM_STATUS_OPTIONS.map((s) => (
@@ -152,7 +152,7 @@ export function ViagemFilters({
           onClick={handleClear}
           className="text-xs text-primary-500 transition-colors hover:text-primary-700"
         >
-          Limpar filtros
+          Limpar busca
         </button>
       )}
     </div>

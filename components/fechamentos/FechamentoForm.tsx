@@ -142,7 +142,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
 
       {step === 1 && (
         <div className="space-y-4 rounded-lg border border-surface-border bg-surface-card p-6">
-          <h3 className="text-lg font-semibold text-primary-900">Parametros do Fechamento</h3>
+          <h3 className="text-lg font-semibold text-primary-900">Parametros do Acerto</h3>
 
           {/* Motorista */}
           <div>
@@ -421,7 +421,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              {isPending ? 'Confirmando...' : 'Confirmar Fechamento'}
+              {isPending ? 'Confirmando...' : 'Confirmar Acerto'}
             </button>
           </div>
         </div>

@@ -35,7 +35,7 @@ export default async function CombustivelConfigPage() {
           href="/dashboard"
           className="text-sm text-primary-500 transition-colors hover:text-primary-700"
         >
-          &larr; Voltar ao Dashboard
+          &larr; Voltar ao Inicio
         </Link>
         <h2 className="mt-2 text-2xl font-bold text-primary-900">
           Precos de Combustivel

@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 
 export const metadata: Metadata = {
-  title: 'BI Financeiro',
+  title: 'Resumo dos Gastos',
 };
 import {
   getBIFilterOptions,
@@ -88,10 +88,10 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     <div className="w-full max-w-7xl">
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
-          BI Financeiro
+          Resumo dos Gastos
         </h2>
         <p className="text-sm text-primary-500 mt-1">
-          Visao completa dos gastos operacionais da frota
+          Veja quanto a frota gastou e onde foi o dinheiro
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
         </Suspense>
       </div>
 
-      {/* KPI Cards */}
+      {/* Resumo em Numeros */}
       <div className="mb-6">
         <BiKpiCards data={kpis.data} />
       </div>
@@ -133,10 +133,10 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       {/* Story 5.6: Previsao e Margens */}
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
-          Previsao e Margens
+          Calcular Custo de Viagem
         </h2>
         <p className="text-sm text-primary-500 mt-1">
-          Simule custos de viagem e compare margens de lucro em rotas similares
+          Calcule quanto vai gastar numa viagem e veja se o frete compensa
         </p>
       </div>
 

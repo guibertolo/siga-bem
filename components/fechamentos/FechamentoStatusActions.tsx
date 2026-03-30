@@ -73,13 +73,13 @@ export function FechamentoStatusActions({
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm font-medium text-gray-700">Acoes:</span>
+        <span className="text-sm font-medium text-gray-700">O que deseja fazer:</span>
 
         {validTransitions.includes('fechado') && (
           <>
             {confirmAction === 'fechar' ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Confirmar fechamento?</span>
+                <span className="text-sm text-gray-600">Confirmar acerto?</span>
                 <button
                   type="button"
                   onClick={() => handleAction('fechar')}
@@ -149,7 +149,7 @@ export function FechamentoStatusActions({
           <>
             {confirmAction === 'excluir' ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-red-600">Excluir fechamento?</span>
+                <span className="text-sm text-red-600">Excluir acerto?</span>
                 <button
                   type="button"
                   onClick={() => handleAction('excluir')}

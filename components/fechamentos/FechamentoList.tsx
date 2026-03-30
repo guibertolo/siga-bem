@@ -69,7 +69,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Viagens</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Gastos</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Saldo</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Status</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
           </tr>
         </thead>

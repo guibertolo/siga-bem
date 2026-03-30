@@ -12,10 +12,10 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
     return (
       <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Tendencia Mensal
+          Gastos Mes a Mes
         </h3>
         <p className="text-sm text-primary-400">
-          Nenhum dado de tendencia disponivel para o periodo.
+          Nao tem gastos registrados nesse periodo.
         </p>
       </div>
     );
@@ -26,7 +26,7 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
   return (
     <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Tendencia Mensal
+        Gastos Mes a Mes
       </h3>
 
       {/* Bar chart — CSS only */}

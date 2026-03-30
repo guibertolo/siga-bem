@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  title: 'Inicio',
 };
 import { GastoSummaryCard } from '@/components/dashboard/GastoSummaryCard';
 import { ViagemSummaryCard } from '@/components/dashboard/ViagemSummaryCard';
@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <h2 className="text-2xl font-bold text-primary-900 mb-1">
-        Dashboard
+        Inicio
       </h2>
       <p className="text-sm text-primary-700 mb-6">
         Bem-vindo, {user?.email}

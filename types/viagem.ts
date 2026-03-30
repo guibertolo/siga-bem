@@ -87,7 +87,7 @@ export interface ViagemListItem {
  */
 export const VIAGEM_STATUS_LABELS: Record<ViagemStatus, string> = {
   planejada: 'Planejada',
-  em_andamento: 'Em Andamento',
+  em_andamento: 'Em Viagem',
   concluida: 'Concluida',
   cancelada: 'Cancelada',
 };

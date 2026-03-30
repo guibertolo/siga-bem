@@ -95,7 +95,7 @@ export function HistoricoFechamentos({
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
         <p className="text-base text-primary-500">
-          Nenhum fechamento encontrado com os filtros selecionados.
+          Nenhum acerto encontrado com os filtros selecionados.
         </p>
         <p className="mt-1 text-sm text-primary-400">
           Tente ajustar os filtros ou o periodo de busca.
@@ -116,7 +116,7 @@ export function HistoricoFechamentos({
       {/* Actions bar */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-primary-500">
-          {totalCount} fechamento{totalCount !== 1 ? 's' : ''} encontrado{totalCount !== 1 ? 's' : ''}
+          {totalCount} acerto{totalCount !== 1 ? 's' : ''} encontrado{totalCount !== 1 ? 's' : ''}
         </p>
         {isAdmin && (
           <a
@@ -136,7 +136,7 @@ export function HistoricoFechamentos({
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
-            Exportar CSV
+            Baixar Planilha
           </a>
         )}
       </div>
@@ -165,7 +165,7 @@ export function HistoricoFechamentos({
                 Saldo
               </th>
               <th className="px-4 py-3.5 text-center text-sm font-medium uppercase tracking-wider text-primary-500">
-                Status
+                Situacao
               </th>
               <th className="px-4 py-3.5 text-right text-sm font-medium uppercase tracking-wider text-primary-500">
                 Acoes

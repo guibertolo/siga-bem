@@ -334,7 +334,7 @@ export function ViagemForm({
         {/* Valor Total */}
         <div>
           <label htmlFor="valor_total" className="mb-2 block text-base font-medium text-primary-700">
-            Valor Total (R$) *
+            Valor do Frete (R$) *
           </label>
           <input
             id="valor_total"

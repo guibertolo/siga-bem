@@ -143,14 +143,14 @@ export function MobileSidebar({
                   : 'text-slate-200 hover:bg-white/15'
               }`}
             >
-              BI Financeiro
+              Resumo dos Gastos
             </Link>
           )}
 
           {showAdminLinks && (
             <>
               <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">
-                Admin
+                Gerenciar
               </div>
               {adminLinks.map((link) => (
                 <Link
