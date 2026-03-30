@@ -216,6 +216,17 @@ export async function createViagem(
 
   const supabase = await createClient();
 
+  // Block if motorista already has a viagem em_andamento
+  const { count: emAndamento } = await supabase
+    .from('viagem')
+    .select('id', { count: 'exact', head: true })
+    .eq('motorista_id', motoristaId)
+    .eq('status', 'em_andamento');
+
+  if (emAndamento && emAndamento > 0) {
+    return { success: false, error: 'Este motorista ja possui uma viagem em andamento. Conclua ou cancele antes de criar outra.' };
+  }
+
   // ALWAYS inherit percentual from motorista cadastro — never from form
   const { data: motoristaRecord } = await supabase
     .from('motorista')
@@ -373,7 +384,7 @@ export async function updateViagemStatus(
 
   const { data: viagem, error: fetchError } = await supabase
     .from('viagem')
-    .select('status')
+    .select('status, motorista_id')
     .eq('id', viagemId)
     .single();
 
@@ -387,6 +398,20 @@ export async function updateViagemStatus(
       success: false,
       error: `Transicao invalida: ${viagem.status} para ${novoStatus}`,
     };
+  }
+
+  // Block: motorista can only have 1 viagem em_andamento at a time
+  if (novoStatus === 'em_andamento') {
+    const { count: emAndamento } = await supabase
+      .from('viagem')
+      .select('id', { count: 'exact', head: true })
+      .eq('motorista_id', viagem.motorista_id)
+      .eq('status', 'em_andamento')
+      .neq('id', viagemId);
+
+    if (emAndamento && emAndamento > 0) {
+      return { success: false, error: 'Este motorista ja possui uma viagem em andamento. Conclua ou cancele antes de iniciar outra.' };
+    }
   }
 
   // AC3: data_chegada_real required when concluding
