@@ -68,6 +68,7 @@ export default async function DashboardLayout({
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               {link.label}
@@ -77,6 +78,7 @@ export default async function DashboardLayout({
           {showBILink && (
             <Link
               href="/bi"
+              prefetch={true}
               className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               Resumo dos Gastos
@@ -92,6 +94,7 @@ export default async function DashboardLayout({
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
                 >
                   {link.label}

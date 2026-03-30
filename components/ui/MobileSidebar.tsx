@@ -122,6 +122,7 @@ export function MobileSidebar({
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               onClick={() => setOpen(false)}
               className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === link.href || pathname.startsWith(link.href + '/')
@@ -136,6 +137,7 @@ export function MobileSidebar({
           {showBILink && (
             <Link
               href="/bi"
+              prefetch={true}
               onClick={() => setOpen(false)}
               className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === '/bi'
@@ -156,6 +158,7 @@ export function MobileSidebar({
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={true}
                   onClick={() => setOpen(false)}
                   className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                     pathname === link.href || pathname.startsWith(link.href + '/')
