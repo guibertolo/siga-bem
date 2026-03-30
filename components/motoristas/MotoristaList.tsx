@@ -117,13 +117,10 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
               </div>
               <div className="mt-3 flex items-center gap-2">
                 <Link
-                  href={`/motoristas/${m.id}/editar`}
-                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[40px]"
+                  href={`/motoristas/${m.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
                 >
-                  <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Editar
+                  Ver Detalhes
                 </Link>
                 <button
                   type="button"
@@ -194,13 +191,10 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                   <td className="px-4 py-3.5 text-right">
                     <div className="inline-flex items-center gap-2">
                       <Link
-                        href={`/motoristas/${m.id}/editar`}
-                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[40px]"
+                        href={`/motoristas/${m.id}`}
+                        className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
                       >
-                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Editar
+                        Ver
                       </Link>
                       <button
                         type="button"
