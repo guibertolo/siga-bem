@@ -8,7 +8,7 @@ import type { UsuarioRole } from '@/types/usuario';
 const roleLabel: Record<UsuarioRole, string> = {
   dono: 'Proprietario',
   motorista: 'Motorista',
-  admin: 'Administrador',
+  admin: 'Gestor',
 };
 
 interface DadosPerfilProps {

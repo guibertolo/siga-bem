@@ -615,21 +615,35 @@ export async function fecharFechamento(
 
 /**
  * Reabrir (reopen) a fechamento: fechado -> aberto.
- * Only dono/admin.
+ * Only dono can reopen (gestor/admin restricted).
  */
 export async function reabrirFechamento(
   fechamentoId: string,
 ): Promise<FechamentoActionResult> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { success: false, error: 'Nao autenticado' };
+  }
+  if (usuario.role !== 'dono') {
+    return { success: false, error: 'Apenas o proprietario pode reabrir fechamentos.' };
+  }
   return updateFechamentoStatus(fechamentoId, 'aberto');
 }
 
 /**
  * Marcar como pago: fechado -> pago.
- * Only dono/admin.
+ * Only dono can mark as paid (gestor/admin restricted).
  */
 export async function marcarComoPago(
   fechamentoId: string,
 ): Promise<FechamentoActionResult> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { success: false, error: 'Nao autenticado' };
+  }
+  if (usuario.role !== 'dono') {
+    return { success: false, error: 'Apenas o proprietario pode marcar como pago.' };
+  }
   return updateFechamentoStatus(fechamentoId, 'pago');
 }
 
@@ -707,7 +721,7 @@ async function updateFechamentoStatus(
 
 /**
  * Delete a fechamento (only if status is 'aberto').
- * Only dono/admin.
+ * Only dono can delete (gestor/admin restricted).
  */
 export async function deleteFechamento(
   fechamentoId: string,
@@ -717,8 +731,8 @@ export async function deleteFechamento(
     return { success: false, error: 'Nao autenticado' };
   }
 
-  if (usuario.role === 'motorista') {
-    return { success: false, error: 'Permissao insuficiente' };
+  if (usuario.role !== 'dono') {
+    return { success: false, error: 'Apenas o proprietario pode excluir fechamentos.' };
   }
 
   const supabase = await createClient();

@@ -15,7 +15,7 @@ interface UsuarioListProps {
 
 const ROLE_LABELS: Record<UsuarioRole, string> = {
   dono: 'Dono',
-  admin: 'Admin',
+  admin: 'Gestor',
   motorista: 'Motorista',
 };
 
@@ -119,7 +119,7 @@ export default function UsuarioList({
                         disabled={isPending}
                         className="rounded-md border border-surface-border bg-surface-card px-3 py-2 text-base min-h-[40px]"
                       >
-                        <option value="admin">Admin</option>
+                        <option value="admin">Gestor</option>
                         <option value="motorista">Motorista</option>
                       </select>
                     ) : (

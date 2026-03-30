@@ -2,13 +2,15 @@
 
 import { useState, useTransition } from 'react';
 import { inviteUsuario } from '@/app/(dashboard)/usuarios/actions';
+import type { UsuarioRole } from '@/types/usuario';
 
 interface InviteModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentRole: UsuarioRole;
 }
 
-export default function InviteModal({ isOpen, onClose }: InviteModalProps) {
+export default function InviteModal({ isOpen, onClose, currentRole }: InviteModalProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -107,7 +109,9 @@ export default function InviteModal({ isOpen, onClose }: InviteModalProps) {
               required
               className="mt-1 w-full rounded-md border border-surface-border bg-surface-background px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
-              <option value="admin">Admin</option>
+              {currentRole === 'dono' && (
+                <option value="admin">Gestor</option>
+              )}
               <option value="motorista">Motorista</option>
             </select>
           </div>

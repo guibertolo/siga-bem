@@ -197,11 +197,11 @@ export async function reabrirFechamento(
       return { success: false, error: 'Nao autenticado' };
     }
 
-    // Only dono/admin can reopen
-    if (!['dono', 'admin'].includes(usuario.role)) {
+    // Only dono can reopen (gestor/admin restricted)
+    if (usuario.role !== 'dono') {
       return {
         success: false,
-        error: 'Apenas dono ou admin podem reabrir fechamentos.',
+        error: 'Apenas o proprietario pode reabrir fechamentos.',
       };
     }
 

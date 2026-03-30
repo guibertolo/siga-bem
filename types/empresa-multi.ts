@@ -25,6 +25,6 @@ export interface SwitchEmpresaResult {
  */
 export const ROLE_LABELS: Record<UsuarioRole, string> = {
   dono: 'Dono',
-  admin: 'Administrador',
+  admin: 'Gestor',
   motorista: 'Motorista',
 } as const;

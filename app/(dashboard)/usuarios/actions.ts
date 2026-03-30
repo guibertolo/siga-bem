@@ -62,6 +62,11 @@ export async function inviteUsuario(
     return { error: 'Role invalido para convite. Use admin ou motorista.' };
   }
 
+  // Gestor (admin) can only invite motorista, not other gestores
+  if (currentUsuario.role === 'admin' && input.role !== 'motorista') {
+    return { error: 'Gestores podem convidar apenas motoristas.' };
+  }
+
   if (!input.email || !input.nome) {
     return { error: 'Email e nome sao obrigatorios.' };
   }
@@ -182,6 +187,11 @@ export async function toggleUsuarioAtivo(
 
   if (targetUser.role === 'dono') {
     return { error: 'Nao e permitido desativar o dono da empresa.' };
+  }
+
+  // Gestor (admin) can only toggle motorista users, not other gestores
+  if (currentUsuario.role === 'admin' && targetUser.role !== 'motorista') {
+    return { error: 'Apenas o proprietario pode alterar gestores.' };
   }
 
   const { error: updateError } = await supabase

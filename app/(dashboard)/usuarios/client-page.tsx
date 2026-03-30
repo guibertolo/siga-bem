@@ -49,6 +49,7 @@ export default function UsuariosClientPage({
       <InviteModal
         isOpen={isInviteOpen}
         onClose={() => setIsInviteOpen(false)}
+        currentRole={currentRole}
       />
     </div>
   );
