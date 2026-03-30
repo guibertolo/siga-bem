@@ -20,5 +20,6 @@ export const config = {
     '/empresa/:path*',
     '/configuracoes/:path*',
     '/bi/:path*',
+    '/perfil/:path*',
   ],
 };

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getUserEmpresas } from '@/lib/queries/empresas';
+import { createClient } from '@/lib/supabase/server';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
@@ -37,13 +38,27 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  // If user has no active empresa, redirect to selection screen
-  if (!currentUsuario.empresa_id) {
-    redirect('/selecionar-empresa');
-  }
-
   // Fetch empresas for the sidebar switcher (server-side to avoid flash)
   const empresas = await getUserEmpresas();
+
+  // AC:1/AC:2 — If user has no active empresa, either auto-switch (1 empresa)
+  // or redirect to selection screen (multiple empresas).
+  if (!currentUsuario.empresa_id) {
+    const activeEmpresas = empresas.filter((e) => e.empresa_ativa !== false);
+    if (activeEmpresas.length === 1) {
+      // AC:2 — Auto-switch: user has exactly 1 active empresa, set it directly
+      const supabase = await createClient();
+      const { error } = await supabase.rpc('fn_switch_empresa', {
+        p_empresa_id: activeEmpresas[0].empresa_id,
+      });
+      if (!error) {
+        // Redirect to same path to re-render with the now-set empresa_id
+        redirect('/dashboard');
+      }
+    }
+    // AC:1 — Multiple empresas (or auto-switch failed): show selection screen
+    redirect('/selecionar-empresa');
+  }
 
   const showAdminLinks = currentUsuario.role === 'dono' || currentUsuario.role === 'admin';
   const showBILink = currentUsuario.role === 'dono';
@@ -104,7 +119,14 @@ export default async function DashboardLayout({
           )}
         </nav>
 
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3 border-t border-white/10 flex flex-col gap-0.5">
+          <Link
+            href="/perfil"
+            prefetch={true}
+            className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors"
+          >
+            Meu Perfil
+          </Link>
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"

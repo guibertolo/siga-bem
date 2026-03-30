@@ -173,7 +173,19 @@ export function MobileSidebar({
           )}
         </nav>
 
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3 border-t border-white/10 flex flex-col gap-0.5">
+          <Link
+            href="/perfil"
+            prefetch={true}
+            onClick={() => setOpen(false)}
+            className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors ${
+              pathname === '/perfil'
+                ? 'bg-white/20 text-white'
+                : 'text-slate-200 hover:bg-white/15'
+            }`}
+          >
+            Meu Perfil
+          </Link>
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"

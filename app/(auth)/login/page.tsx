@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { sendMagicLink, signInWithPassword } from '@/app/(auth)/login/actions';
+import { sendMagicLink, signInWithPassword, solicitarResetSenha } from '@/app/(auth)/login/actions';
 
-type LoginMode = 'password' | 'magic-link';
+type LoginMode = 'password' | 'magic-link' | 'recuperar';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +20,14 @@ export default function LoginPage() {
     setSuccess(false);
     setLoading(true);
     try {
-      if (mode === 'magic-link') {
+      if (mode === 'recuperar') {
+        const result = await solicitarResetSenha(formData);
+        if (result?.error) {
+          setError(result.error);
+        } else {
+          setSuccess(true);
+        }
+      } else if (mode === 'magic-link') {
         const result = await sendMagicLink(formData);
         if (result?.error) {
           setError(result.error);
@@ -57,13 +64,17 @@ export default function LoginPage() {
           <p className="text-sm text-primary-700">
             {mode === 'password'
               ? 'Entre com email e senha'
-              : 'Insira seu email para receber o link de acesso'}
+              : mode === 'magic-link'
+                ? 'Insira seu email para receber o link de acesso'
+                : 'Insira seu email para recuperar sua senha'}
           </p>
         </div>
 
         {success ? (
           <div className="bg-green-50 rounded-default p-4 text-center text-sm text-success">
-            Link de acesso enviado! Verifique sua caixa de entrada.
+            {mode === 'recuperar'
+              ? 'Se este email estiver cadastrado, voce recebera um link de recuperacao em breve.'
+              : 'Link de acesso enviado! Verifique sua caixa de entrada.'}
           </div>
         ) : (
           <form action={handleSubmit}>
@@ -84,7 +95,7 @@ export default function LoginPage() {
               />
             </div>
 
-            {mode === 'password' && (
+            {mode !== 'magic-link' && mode !== 'recuperar' && (
               <div className="mb-4">
                 <label
                   htmlFor="password"
@@ -136,19 +147,38 @@ export default function LoginPage() {
               className="flex items-center justify-center w-full h-14 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading
-                ? 'Entrando...'
+                ? (mode === 'recuperar' ? 'Enviando...' : 'Entrando...')
                 : mode === 'password'
                   ? 'Entrar'
-                  : 'Enviar link de acesso'}
+                  : mode === 'magic-link'
+                    ? 'Enviar link de acesso'
+                    : 'Enviar link de recuperacao'}
             </button>
           </form>
         )}
 
-        <div className="mt-4 text-center">
+        <div className="mt-4 text-center flex flex-col gap-2">
+          {mode === 'password' && (
+            <button
+              type="button"
+              onClick={() => {
+                setMode('recuperar');
+                setError(null);
+                setSuccess(false);
+              }}
+              className="text-sm text-primary-500 hover:text-primary-700 bg-transparent border-none cursor-pointer transition-colors"
+            >
+              Esqueci minha senha
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
-              setMode(mode === 'password' ? 'magic-link' : 'password');
+              setMode(
+                mode === 'password' ? 'magic-link' :
+                mode === 'magic-link' ? 'password' :
+                'password'
+              );
               setError(null);
               setSuccess(false);
             }}
