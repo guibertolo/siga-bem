@@ -11,13 +11,29 @@ import type { UsuarioEmpresaComEmpresa } from '@/types/usuario-empresa';
 export async function trocarEmpresa(empresaId: string): Promise<{ success?: boolean; error?: string }> {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Nao autenticado' };
+  }
+
   const { error } = await supabase.rpc('fn_switch_empresa', {
     p_empresa_id: empresaId,
   });
 
   if (error) {
+    console.error(
+      `[switchEmpresa] REJECTED usuario_auth=${user.id} empresa_destino=${empresaId}: ${error.message}`,
+    );
     return { error: error.message };
   }
+
+  // AC:9 — Audit log for successful empresa switch
+  console.log(
+    `[switchEmpresa] usuario_auth=${user.id} empresa_destino=${empresaId}`,
+  );
 
   revalidatePath('/', 'layout');
   return { success: true };

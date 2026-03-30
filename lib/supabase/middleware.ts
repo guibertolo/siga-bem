@@ -34,8 +34,10 @@ export async function updateSession(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const protectedPaths = ['/dashboard', '/selecionar-empresa'];
-  const isProtected = protectedPaths.some((p) => request.nextUrl.pathname.startsWith(p));
+  // All paths in the matcher are protected (require auth session).
+  // Public paths (/login, /signup, /aceitar-convite) are NOT in the matcher
+  // and never reach this function.
+  const isProtected = true;
 
   if (!session && isProtected) {
     const url = request.nextUrl.clone();

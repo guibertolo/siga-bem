@@ -4,7 +4,15 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth/get-user-role';
 import { validateCPF, formatCPF, stripCPF } from '@/lib/utils/validate-cpf';
-import type { MotoristaActionResult, MotoristaFormData, MotoristaListItem } from '@/types/motorista';
+import type {
+  MotoristaActionResult,
+  MotoristaFormData,
+  MotoristaComContaFormData,
+  MotoristaComContaActionResult,
+  MotoristaListItem,
+} from '@/types/motorista';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { gerarSenhaTemporaria } from '@/lib/utils/gerar-senha';
 import { isCnhExpired, isCnhExpiringSoon } from '@/lib/utils/validate-cpf';
 
 const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as const;
@@ -104,6 +112,187 @@ export async function createMotorista(
   }
 
   return { success: true, motorista };
+}
+
+/**
+ * Schema de validacao para motorista com conta.
+ * Estende o schema base com email obrigatorio.
+ */
+const motoristaComContaSchema = motoristaSchema.extend({
+  email: z.string().min(1, 'Email e obrigatorio').email('Email invalido'),
+  criar_conta: z.literal(true),
+});
+
+/**
+ * Server action atomica: cria auth user + motorista + usuario + usuario_empresa.
+ *
+ * Estrategia de atomicidade:
+ * - Supabase JS SDK nao suporta transacoes cross-schema
+ * - Auth user e criado primeiro via admin API
+ * - Se qualquer insercao no banco falhar, o auth user e deletado (rollback)
+ * - A senha temporaria e retornada UMA VEZ para exibicao — nunca armazenada no projeto
+ *
+ * Story 8.1
+ */
+export async function createMotoristaComConta(
+  formData: MotoristaComContaFormData,
+): Promise<MotoristaComContaActionResult> {
+  // 1. Validar role do usuario autenticado (AC: 12)
+  let currentUsuario;
+  try {
+    currentUsuario = await requireRole(['dono', 'admin']);
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+    };
+  }
+
+  // 2. Validar schema incluindo email (AC: 2)
+  const parsed = motoristaComContaSchema.safeParse(formData);
+  if (!parsed.success) {
+    const fieldErrors: Partial<Record<keyof MotoristaComContaFormData, string>> = {};
+    for (const issue of parsed.error.issues) {
+      const field = issue.path[0] as keyof MotoristaComContaFormData;
+      if (!fieldErrors[field]) {
+        fieldErrors[field] = issue.message;
+      }
+    }
+    return { success: false, fieldErrors };
+  }
+
+  const data = parsed.data;
+  const formattedCPF = formatCPF(stripCPF(data.cpf));
+  const empresaId = currentUsuario.empresa_id;
+
+  if (!empresaId) {
+    return { success: false, error: 'Usuario sem empresa vinculada' };
+  }
+
+  const supabase = await createClient();
+
+  // Check for duplicate CPF within empresa
+  const { data: existingMotorista } = await supabase
+    .from('motorista')
+    .select('id')
+    .eq('empresa_id', empresaId)
+    .eq('cpf', formattedCPF)
+    .maybeSingle();
+
+  if (existingMotorista) {
+    return {
+      success: false,
+      fieldErrors: { cpf: 'CPF ja cadastrado nesta empresa' },
+    };
+  }
+
+  // 3. Gerar senha temporaria (AC: 3)
+  const senhaGerada = gerarSenhaTemporaria();
+
+  // 4. Criar auth user via admin client (AC: 4, 5)
+  const adminClient = createAdminClient();
+  const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+    email: data.email,
+    password: senhaGerada,
+    email_confirm: true,
+  });
+
+  if (authError || !authData.user) {
+    // AC: 5 — Se createUser falhar, retornar erro imediatamente
+    const message = authError?.message?.includes('already been registered')
+      ? 'Este email ja esta em uso no sistema'
+      : `Erro ao criar conta de acesso: ${authError?.message ?? 'Erro desconhecido'}`;
+    return { success: false, fieldErrors: { email: message } };
+  }
+
+  const authUserId = authData.user.id;
+
+  // De agora em diante, qualquer falha exige rollback do auth user (AC: 10)
+  try {
+    // 5. Inserir motorista com usuario_id = null provisoriamente (AC: 6)
+    const { data: motorista, error: motoristaError } = await supabase
+      .from('motorista')
+      .insert({
+        empresa_id: empresaId,
+        nome: data.nome,
+        cpf: formattedCPF,
+        cnh_numero: data.cnh_numero,
+        cnh_categoria: data.cnh_categoria,
+        cnh_validade: data.cnh_validade,
+        telefone: data.telefone || null,
+        observacao: data.observacao || null,
+        usuario_id: null,
+      })
+      .select()
+      .single();
+
+    if (motoristaError || !motorista) {
+      if (motoristaError?.code === '23505') {
+        throw new Error('CPF ja cadastrado nesta empresa');
+      }
+      throw new Error(`Erro ao cadastrar motorista: ${motoristaError?.message ?? 'Erro desconhecido'}`);
+    }
+
+    // 6. Inserir usuario com motorista_id (AC: 7)
+    const { data: usuario, error: usuarioError } = await supabase
+      .from('usuario')
+      .insert({
+        auth_id: authUserId,
+        empresa_id: empresaId,
+        motorista_id: motorista.id,
+        nome: data.nome,
+        email: data.email,
+        role: 'motorista',
+        ativo: true,
+      })
+      .select()
+      .single();
+
+    if (usuarioError || !usuario) {
+      throw new Error(`Erro ao criar registro de usuario: ${usuarioError?.message ?? 'Erro desconhecido'}`);
+    }
+
+    // 7. Inserir usuario_empresa (AC: 8)
+    const { error: vinculoError } = await supabase
+      .from('usuario_empresa')
+      .insert({
+        usuario_id: usuario.id,
+        empresa_id: empresaId,
+        role: 'motorista',
+      });
+
+    if (vinculoError) {
+      throw new Error(`Erro ao vincular usuario a empresa: ${vinculoError.message}`);
+    }
+
+    // 8. Atualizar motorista.usuario_id — vinculo bidirecional (AC: 9)
+    const { error: updateMotoristaError } = await supabase
+      .from('motorista')
+      .update({ usuario_id: usuario.id })
+      .eq('id', motorista.id);
+
+    if (updateMotoristaError) {
+      throw new Error(`Erro ao vincular usuario ao motorista: ${updateMotoristaError.message}`);
+    }
+
+    // 9. Sucesso — retornar credenciais (AC: 11)
+    return {
+      success: true,
+      motorista: { ...motorista, usuario_id: usuario.id },
+      credenciais: {
+        email: data.email,
+        senha: senhaGerada,
+      },
+    };
+  } catch (error) {
+    // AC: 10 — Rollback: deletar auth user criado
+    await adminClient.auth.admin.deleteUser(authUserId);
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao cadastrar motorista com conta. Tente novamente.',
+    };
+  }
 }
 
 export async function updateMotorista(

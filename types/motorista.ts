@@ -66,6 +66,31 @@ export interface MotoristaListItem {
 }
 
 /**
+ * Form data for creating a motorista WITH account (auth user + usuario + usuario_empresa).
+ * Extends MotoristaFormData with email and criar_conta flag.
+ * Story 8.1 — Server Action Atomica de Cadastro Motorista com Conta
+ */
+export interface MotoristaComContaFormData extends MotoristaFormData {
+  email: string;
+  criar_conta: true;
+}
+
+/**
+ * Server action response for motorista + conta creation.
+ * Returns credentials on success (senha shown once, never stored in project DB).
+ */
+export interface MotoristaComContaActionResult {
+  success: boolean;
+  error?: string;
+  fieldErrors?: Partial<Record<keyof MotoristaComContaFormData, string>>;
+  motorista?: Motorista;
+  credenciais?: {
+    email: string;
+    senha: string;
+  };
+}
+
+/**
  * CNH category options for select inputs.
  */
 export const CNH_CATEGORIA_OPTIONS = [

@@ -49,17 +49,43 @@ export async function completeInviteAcceptance(): Promise<{
   }
 
   // Create usuario record (using admin client to bypass RLS for first insert)
-  const { error: insertError } = await adminClient.from('usuario').insert({
-    auth_id: user.id,
-    empresa_id: empresaId,
-    nome: nome,
-    email: user.email ?? '',
-    role: role,
-    ativo: true,
-  });
+  const { data: novoUsuario, error: insertError } = await adminClient
+    .from('usuario')
+    .insert({
+      auth_id: user.id,
+      empresa_id: empresaId,
+      nome: nome,
+      email: user.email ?? '',
+      role: role,
+      ativo: true,
+    })
+    .select('id')
+    .single();
 
-  if (insertError) {
-    return { error: `Erro ao criar perfil: ${insertError.message}` };
+  if (insertError || !novoUsuario) {
+    return { error: `Erro ao criar perfil: ${insertError?.message ?? 'Erro desconhecido'}` };
+  }
+
+  // Create usuario_empresa binding so fn_get_user_role() (which JOINs with
+  // usuario_empresa) returns the correct role for this user. Without this
+  // row, the user would be authenticated but have no role — breaking all
+  // RLS policies that depend on fn_get_user_role().
+  const { error: ueError } = await adminClient
+    .from('usuario_empresa')
+    .insert({
+      usuario_id: novoUsuario.id,
+      empresa_id: empresaId,
+      role: role,
+    });
+
+  if (ueError) {
+    console.error(
+      '[completeInviteAcceptance] Failed to insert usuario_empresa:',
+      ueError.message,
+    );
+    // The usuario record exists but the binding is missing. This is
+    // recoverable by an admin re-inviting or manually adding the binding.
+    return { error: `Erro ao vincular empresa: ${ueError.message}` };
   }
 
   redirect('/dashboard');
