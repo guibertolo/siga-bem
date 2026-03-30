@@ -12,13 +12,13 @@ function getBadgeClasses(
 ): string {
   switch (classificacao) {
     case 'bom':
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+      return 'bg-success/10 text-success border border-success/20';
     case 'medio':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+      return 'bg-warning/10 text-warning border border-warning/20';
     case 'ruim':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+      return 'bg-danger/10 text-danger border border-danger/20';
     default:
-      return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+      return 'bg-surface-muted text-text-muted border border-surface-border';
   }
 }
 
