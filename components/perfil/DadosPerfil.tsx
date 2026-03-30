@@ -52,7 +52,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
   const inputReadonlyClasses =
     'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-slate-100 dark:bg-slate-800 cursor-not-allowed';
   const inputEditableClasses =
-    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-white dark:bg-slate-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors';
+    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-input outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors';
 
   return (
     <div className="bg-surface-card rounded-card p-6 shadow-sm">

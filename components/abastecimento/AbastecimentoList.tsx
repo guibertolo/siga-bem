@@ -105,7 +105,7 @@ export function AbastecimentoList({ abastecimentos }: AbastecimentoListProps) {
           {abastecimentos.map((item) => (
             <div
               key={item.id}
-              className="flex min-h-[60px] items-start gap-3 rounded-lg border border-surface-border bg-white p-4"
+              className="flex min-h-[60px] items-start gap-3 rounded-lg border border-surface-border bg-surface-card p-4"
             >
               {/* Main content */}
               <div className="flex-1 min-w-0">

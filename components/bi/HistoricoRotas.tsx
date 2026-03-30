@@ -25,7 +25,7 @@ export function HistoricoRotas({
   error,
 }: HistoricoRotasProps) {
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
         Viagens Parecidas que Voce Ja Fez
       </h3>
@@ -48,7 +48,7 @@ export function HistoricoRotas({
       )}
 
       {searched && !isLoading && data && data.viagens.length === 0 && (
-        <div className="rounded-md bg-gray-50 p-4 text-center">
+        <div className="rounded-md bg-surface-muted p-4 text-center">
           <p className="text-sm text-primary-400">
             Nenhuma viagem concluida encontrada para esta rota.
           </p>
@@ -58,25 +58,25 @@ export function HistoricoRotas({
       {/* Comparative stats */}
       {data?.comparativo && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <div className="rounded-lg border border-surface-border bg-surface-card p-3">
             <p className="text-xs text-primary-500">Viagens nessa rota</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {data.comparativo.totalViagens}
             </p>
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <div className="rounded-lg border border-surface-border bg-surface-card p-3">
             <p className="text-xs text-primary-500">Mais barata</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMinCentavos)}
             </p>
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <div className="rounded-lg border border-surface-border bg-surface-card p-3">
             <p className="text-xs text-primary-500">Mais cara</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMaxCentavos)}
             </p>
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <div className="rounded-lg border border-surface-border bg-surface-card p-3">
             <p className="text-xs text-primary-500">Custo normal</p>
             <p className="text-lg font-bold text-primary-900 tabular-nums">
               {formatBRL(data.comparativo.custoMedioCentavos)}
@@ -91,7 +91,7 @@ export function HistoricoRotas({
           {data.viagens.map((v) => (
             <div
               key={v.viagemId}
-              className="rounded-lg border border-slate-200 bg-white p-4"
+              className="rounded-lg border border-surface-border bg-surface-card p-4"
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>

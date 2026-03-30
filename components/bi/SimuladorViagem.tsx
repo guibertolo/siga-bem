@@ -70,7 +70,7 @@ export function SimuladorViagem({
       : null;
 
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
         Calcular Custo da Viagem
       </h3>
@@ -255,7 +255,7 @@ export function SimuladorViagem({
           </div>
 
           {/* Margin calculation */}
-          <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <div className="rounded-lg border border-surface-border bg-surface-card p-4">
             <h4 className="text-sm font-semibold text-primary-900 mb-3">
               Quanto Vai Sobrar
             </h4>
