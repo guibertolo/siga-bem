@@ -71,6 +71,13 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Select/Option dark mode fix — native options inherit page colors */
+select,
+select option {
+  background-color: var(--color-surface-input);
+  color: var(--color-primary-900);
+}
+
 /* Dark mode - auto (system preference) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
