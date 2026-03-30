@@ -34,10 +34,10 @@ export async function updateSession(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (
-    !session &&
-    request.nextUrl.pathname.startsWith('/dashboard')
-  ) {
+  const protectedPaths = ['/dashboard', '/selecionar-empresa'];
+  const isProtected = protectedPaths.some((p) => request.nextUrl.pathname.startsWith(p));
+
+  if (!session && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);

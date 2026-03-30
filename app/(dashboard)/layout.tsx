@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getUserEmpresas } from '@/lib/queries/empresas';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
+import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -35,6 +37,14 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
+  // If user has no active empresa, redirect to selection screen
+  if (!currentUsuario.empresa_id) {
+    redirect('/selecionar-empresa');
+  }
+
+  // Fetch empresas for the sidebar switcher (server-side to avoid flash)
+  const empresas = await getUserEmpresas();
+
   const showAdminLinks = currentUsuario.role === 'dono' || currentUsuario.role === 'admin';
   const showBILink = currentUsuario.role === 'dono';
 
@@ -50,6 +60,8 @@ export default async function DashboardLayout({
             FrotaViva
           </Link>
         </div>
+
+        <EmpresaSwitcher empresas={empresas} />
 
         <nav className="flex-1 p-3 flex flex-col gap-0.5">
           {navLinks.map((link) => (
@@ -111,6 +123,7 @@ export default async function DashboardLayout({
               adminLinks={adminLinks}
               showAdminLinks={showAdminLinks}
               showBILink={showBILink}
+              empresas={empresas}
             />
             <span className="text-sm text-primary-700 truncate">
               {currentUsuario.email}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
+import type { UserEmpresa } from '@/types/empresa-multi';
 
 interface NavLink {
   href: string;
@@ -14,6 +16,7 @@ interface MobileSidebarProps {
   adminLinks: NavLink[];
   showAdminLinks: boolean;
   showBILink: boolean;
+  empresas: UserEmpresa[];
 }
 
 export function MobileSidebar({
@@ -21,6 +24,7 @@ export function MobileSidebar({
   adminLinks,
   showAdminLinks,
   showBILink,
+  empresas,
 }: MobileSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -111,7 +115,9 @@ export function MobileSidebar({
           </button>
         </div>
 
-        <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-180px)]">
+        <EmpresaSwitcher empresas={empresas} />
+
+        <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-230px)]">
           {navLinks.map((link) => (
             <Link
               key={link.href}
