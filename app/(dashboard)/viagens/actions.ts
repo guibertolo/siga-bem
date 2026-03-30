@@ -591,6 +591,7 @@ export async function listViagens(filters?: {
     .from('viagem')
     .select(`
       id,
+      motorista_id,
       origem,
       destino,
       data_saida,
@@ -641,6 +642,7 @@ export async function listViagens(filters?: {
 
     return {
       id: row.id,
+      motorista_id: row.motorista_id,
       origem: row.origem,
       destino: row.destino,
       motorista_nome: mot?.nome ?? 'Desconhecido',

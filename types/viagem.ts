@@ -72,6 +72,7 @@ export interface ViagemActionResult {
  */
 export interface ViagemListItem {
   id: string;
+  motorista_id: string;
   origem: string;
   destino: string;
   motorista_nome: string;
