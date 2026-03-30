@@ -36,7 +36,7 @@ function extractFieldErrors(
 
 /**
  * Create a new vinculo motorista-caminhao.
- * Automatically closes any existing active vinculo for the same caminhao.
+ * Multiple active vinculos per caminhao are allowed (day/night shifts, alternating).
  * Requires role: dono or admin.
  */
 export async function createVinculo(
@@ -104,38 +104,7 @@ export async function createVinculo(
     };
   }
 
-  // Check for existing active vinculo on this caminhao and close it
-  const { data: vinculoAtivo } = await supabase
-    .from('motorista_caminhao')
-    .select('id')
-    .eq('caminhao_id', data.caminhao_id)
-    .eq('ativo', true)
-    .maybeSingle();
-
-  if (vinculoAtivo) {
-    // Calculate data_fim as new data_inicio - 1 day
-    const novaDataInicio = new Date(data.data_inicio);
-    const dataFim = new Date(novaDataInicio);
-    dataFim.setDate(dataFim.getDate() - 1);
-    const dataFimStr = dataFim.toISOString().split('T')[0];
-
-    const { error: closeError } = await supabase
-      .from('motorista_caminhao')
-      .update({
-        ativo: false,
-        data_fim: dataFimStr,
-      })
-      .eq('id', vinculoAtivo.id);
-
-    if (closeError) {
-      return {
-        success: false,
-        error: 'Erro ao encerrar vinculo anterior. Tente novamente.',
-      };
-    }
-  }
-
-  // Create the new vinculo
+  // Create the new vinculo (multiple active vinculos per caminhao are allowed)
   const { data: vinculo, error: insertError } = await supabase
     .from('motorista_caminhao')
     .insert({
@@ -150,14 +119,6 @@ export async function createVinculo(
     .single();
 
   if (insertError) {
-    // Unique index violation — should not happen since we closed above,
-    // but handle race condition gracefully
-    if (insertError.code === '23505') {
-      return {
-        success: false,
-        error: 'Ja existe um vinculo ativo para este caminhao. Tente novamente.',
-      };
-    }
     return { success: false, error: 'Erro ao criar vinculo. Tente novamente.' };
   }
 
@@ -337,10 +298,11 @@ export async function getActiveCaminhoes(): Promise<{
 }
 
 /**
- * Get the current active vinculo for a specific motorista.
+ * Get all active vinculos for a specific motorista.
+ * Returns array since a motorista can have multiple active vinculos.
  */
 export async function getVinculoAtivoByMotorista(motoristaId: string): Promise<{
-  data: VinculoListItem | null;
+  data: VinculoListItem[];
   error: string | null;
 }> {
   const supabase = await createClient();
@@ -349,41 +311,42 @@ export async function getVinculoAtivoByMotorista(motoristaId: string): Promise<{
     .from('motorista_caminhao')
     .select('id, motorista_id, caminhao_id, data_inicio, data_fim, ativo, observacao, motorista(nome, cpf), caminhao(placa, modelo)')
     .eq('motorista_id', motoristaId)
-    .eq('ativo', true)
-    .maybeSingle();
+    .eq('ativo', true);
 
   if (error) {
-    return { data: null, error: error.message };
+    return { data: [], error: error.message };
   }
 
-  if (!data) {
-    return { data: null, error: null };
+  if (!data || data.length === 0) {
+    return { data: [], error: null };
   }
 
-  const motorista = data.motorista as unknown as { nome: string; cpf: string } | null;
-  const caminhao = data.caminhao as unknown as { placa: string; modelo: string } | null;
+  const items: VinculoListItem[] = data.map((v) => {
+    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
+    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
 
-  return {
-    data: {
-      id: data.id,
+    return {
+      id: v.id,
       motorista_nome: motorista?.nome ?? 'N/A',
       motorista_cpf: motorista?.cpf ?? 'N/A',
       caminhao_placa: caminhao?.placa ?? 'N/A',
       caminhao_modelo: caminhao?.modelo ?? 'N/A',
-      data_inicio: data.data_inicio,
-      data_fim: data.data_fim,
-      ativo: data.ativo,
-      observacao: data.observacao,
-    },
-    error: null,
-  };
+      data_inicio: v.data_inicio,
+      data_fim: v.data_fim,
+      ativo: v.ativo,
+      observacao: v.observacao,
+    };
+  });
+
+  return { data: items, error: null };
 }
 
 /**
- * Get the current active vinculo for a specific caminhao.
+ * Get all active vinculos for a specific caminhao.
+ * Returns array since multiple drivers can be active on the same truck.
  */
 export async function getVinculoAtivoByCaminhao(caminhaoId: string): Promise<{
-  data: VinculoListItem | null;
+  data: VinculoListItem[];
   error: string | null;
 }> {
   const supabase = await createClient();
@@ -392,32 +355,88 @@ export async function getVinculoAtivoByCaminhao(caminhaoId: string): Promise<{
     .from('motorista_caminhao')
     .select('id, motorista_id, caminhao_id, data_inicio, data_fim, ativo, observacao, motorista(nome, cpf), caminhao(placa, modelo)')
     .eq('caminhao_id', caminhaoId)
-    .eq('ativo', true)
-    .maybeSingle();
+    .eq('ativo', true);
 
   if (error) {
-    return { data: null, error: error.message };
+    return { data: [], error: error.message };
   }
 
-  if (!data) {
-    return { data: null, error: null };
+  if (!data || data.length === 0) {
+    return { data: [], error: null };
   }
 
-  const motorista = data.motorista as unknown as { nome: string; cpf: string } | null;
-  const caminhao = data.caminhao as unknown as { placa: string; modelo: string } | null;
+  const items: VinculoListItem[] = data.map((v) => {
+    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
+    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
 
-  return {
-    data: {
-      id: data.id,
+    return {
+      id: v.id,
       motorista_nome: motorista?.nome ?? 'N/A',
       motorista_cpf: motorista?.cpf ?? 'N/A',
       caminhao_placa: caminhao?.placa ?? 'N/A',
       caminhao_modelo: caminhao?.modelo ?? 'N/A',
-      data_inicio: data.data_inicio,
-      data_fim: data.data_fim,
-      ativo: data.ativo,
-      observacao: data.observacao,
-    },
-    error: null,
-  };
+      data_inicio: v.data_inicio,
+      data_fim: v.data_fim,
+      ativo: v.ativo,
+      observacao: v.observacao,
+    };
+  });
+
+  return { data: items, error: null };
+}
+
+/**
+ * Lookup active vinculos for a caminhao — used by the form to show warnings.
+ * Returns motorista names of existing active vinculos.
+ */
+export async function getVinculoAtivoCaminhao(caminhaoId: string): Promise<{
+  motoristas: string[];
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('motorista_caminhao')
+    .select('motorista(nome)')
+    .eq('caminhao_id', caminhaoId)
+    .eq('ativo', true);
+
+  if (error) {
+    return { motoristas: [], error: error.message };
+  }
+
+  const motoristas = (data ?? []).map((v) => {
+    const motorista = v.motorista as unknown as { nome: string } | null;
+    return motorista?.nome ?? 'N/A';
+  });
+
+  return { motoristas, error: null };
+}
+
+/**
+ * Lookup active vinculos for a motorista — used by the form to show warnings.
+ * Returns caminhao placas of existing active vinculos.
+ */
+export async function getVinculoAtivoMotorista(motoristaId: string): Promise<{
+  caminhoes: string[];
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('motorista_caminhao')
+    .select('caminhao(placa)')
+    .eq('motorista_id', motoristaId)
+    .eq('ativo', true);
+
+  if (error) {
+    return { caminhoes: [], error: error.message };
+  }
+
+  const caminhoes = (data ?? []).map((v) => {
+    const caminhao = v.caminhao as unknown as { placa: string } | null;
+    return caminhao?.placa ?? 'N/A';
+  });
+
+  return { caminhoes, error: null };
 }

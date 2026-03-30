@@ -3,9 +3,10 @@
 import { useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { z } from 'zod';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
+import { getVinculoAtivoCaminhao, getVinculoAtivoMotorista } from '@/app/(dashboard)/vinculos/actions';
 import type {
   MotoristaCaminhaoFormData,
   VinculoActionResult,
@@ -33,6 +34,10 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
 
+  // Warning states for active vinculos
+  const [caminhaoWarning, setCaminhaoWarning] = useState<string | null>(null);
+  const [motoristaWarning, setMotoristaWarning] = useState<string | null>(null);
+
   const today = new Date().toISOString().split('T')[0];
 
   const {
@@ -49,6 +54,32 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
       observacao: '',
     },
   });
+
+  const handleCaminhaoChange = useCallback(async (caminhaoId: string) => {
+    setCaminhaoWarning(null);
+    if (!caminhaoId) return;
+
+    const result = await getVinculoAtivoCaminhao(caminhaoId);
+    if (result.motoristas.length > 0) {
+      const nomes = result.motoristas.join(', ');
+      setCaminhaoWarning(
+        `Este caminhao ja possui ${result.motoristas.length === 1 ? 'o motorista' : 'os motoristas'} ${nomes} vinculado${result.motoristas.length > 1 ? 's' : ''}. O novo vinculo sera adicionado.`,
+      );
+    }
+  }, []);
+
+  const handleMotoristaChange = useCallback(async (motoristaId: string) => {
+    setMotoristaWarning(null);
+    if (!motoristaId) return;
+
+    const result = await getVinculoAtivoMotorista(motoristaId);
+    if (result.caminhoes.length > 0) {
+      const placas = result.caminhoes.join(', ');
+      setMotoristaWarning(
+        `Este motorista ja esta vinculado ao${result.caminhoes.length > 1 ? 's' : ''} caminha${result.caminhoes.length > 1 ? 'oes' : 'o'} ${placas}. O novo vinculo sera adicionado.`,
+      );
+    }
+  }, []);
 
   const onFormSubmit = (values: FormValues) => {
     setServerError(null);
@@ -73,6 +104,9 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
     });
   };
 
+  const { onChange: caminhaoRegisterOnChange, ...caminhaoRegisterRest } = register('caminhao_id');
+  const { onChange: motoristaRegisterOnChange, ...motoristaRegisterRest } = register('motorista_id');
+
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
       {serverError && (
@@ -88,7 +122,11 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
         </label>
         <select
           id="motorista_id"
-          {...register('motorista_id')}
+          {...motoristaRegisterRest}
+          onChange={(e) => {
+            motoristaRegisterOnChange(e);
+            handleMotoristaChange(e.target.value);
+          }}
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
@@ -106,6 +144,16 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
         {errors.motorista_id && (
           <p className="mt-1.5 text-sm text-danger font-medium">{errors.motorista_id.message}</p>
         )}
+        {motoristaWarning && (
+          <div className="mt-2 rounded-lg border border-primary-500/30 bg-primary-500/5 p-3 text-sm text-primary-700">
+            <div className="flex items-start gap-2">
+              <svg className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{motoristaWarning}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Caminhao Select */}
@@ -115,7 +163,11 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
         </label>
         <select
           id="caminhao_id"
-          {...register('caminhao_id')}
+          {...caminhaoRegisterRest}
+          onChange={(e) => {
+            caminhaoRegisterOnChange(e);
+            handleCaminhaoChange(e.target.value);
+          }}
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
@@ -132,6 +184,16 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
         </select>
         {errors.caminhao_id && (
           <p className="mt-1.5 text-sm text-danger font-medium">{errors.caminhao_id.message}</p>
+        )}
+        {caminhaoWarning && (
+          <div className="mt-2 rounded-lg border border-warning/30 bg-alert-warning-bg p-3 text-sm text-amber-800 dark:text-amber-200">
+            <div className="flex items-start gap-2">
+              <svg className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.832c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <span>{caminhaoWarning}</span>
+            </div>
+          </div>
         )}
       </div>
 
