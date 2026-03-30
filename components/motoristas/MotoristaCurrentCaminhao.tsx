@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getVinculoAtivoByMotorista, getActiveCaminhoes } from '@/app/(dashboard)/vinculos/actions';
 import { getUserRole } from '@/lib/auth/get-user-role';
 import { VincularCaminhaoInlineForm } from '@/components/vinculos/VincularCaminhaoInlineForm';
+import { EncerrarVinculoButton } from '@/components/vinculos/EncerrarVinculoButton';
 
 interface MotoristaCurrentCaminhaoProps {
   motoristaId: string;
@@ -47,9 +48,14 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
                   Ativo
                 </span>
               </div>
-              <p className="text-xs text-primary-500">
-                Desde {formatDate(vinculo.data_inicio)}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-primary-500">
+                  Desde {formatDate(vinculo.data_inicio)}
+                </p>
+                {canManageVinculos && (
+                  <EncerrarVinculoButton vinculoId={vinculo.id} />
+                )}
+              </div>
             </div>
           ))}
           <Link
