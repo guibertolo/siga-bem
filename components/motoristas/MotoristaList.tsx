@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import type { MotoristaListItem } from '@/types/motorista';
 import { softDeleteMotorista, reactivateMotorista } from '@/app/(dashboard)/motoristas/actions';
 import { cn } from '@/lib/utils/cn';
@@ -114,7 +115,16 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                 </p>
                 {m.telefone && <p>Tel: {m.telefone}</p>}
               </div>
-              <div className="mt-3">
+              <div className="mt-3 flex items-center gap-2">
+                <Link
+                  href={`/motoristas/${m.id}/editar`}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[40px]"
+                >
+                  <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Editar
+                </Link>
                 <button
                   type="button"
                   disabled={isPending}
@@ -182,29 +192,40 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-right">
-                    <button
-                      type="button"
-                      disabled={isPending}
-                      onClick={() => handleToggleStatus(m.id, m.status)}
-                      className={cn(
-                        'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
-                        m.status === 'ativo'
-                          ? 'text-danger hover:bg-alert-danger-bg'
-                          : 'text-success hover:bg-alert-success-bg',
-                        isPending && 'cursor-not-allowed opacity-50',
-                      )}
-                    >
-                      {m.status === 'ativo' ? (
-                        <>
-                          <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                          Inativar
-                        </>
-                      ) : (
-                        'Reativar'
-                      )}
-                    </button>
+                    <div className="inline-flex items-center gap-2">
+                      <Link
+                        href={`/motoristas/${m.id}/editar`}
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[40px]"
+                      >
+                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Editar
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={isPending}
+                        onClick={() => handleToggleStatus(m.id, m.status)}
+                        className={cn(
+                          'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
+                          m.status === 'ativo'
+                            ? 'text-danger hover:bg-alert-danger-bg'
+                            : 'text-success hover:bg-alert-success-bg',
+                          isPending && 'cursor-not-allowed opacity-50',
+                        )}
+                      >
+                        {m.status === 'ativo' ? (
+                          <>
+                            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Inativar
+                          </>
+                        ) : (
+                          'Reativar'
+                        )}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

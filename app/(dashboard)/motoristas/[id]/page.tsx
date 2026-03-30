@@ -35,8 +35,21 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
         >
           &larr; Voltar para motoristas
         </Link>
-        <h2 className="mt-2 text-2xl font-bold text-primary-900">{motorista.nome}</h2>
-        <p className="mt-1 text-sm text-primary-500">Detalhes do motorista</p>
+        <div className="mt-2 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-primary-900">{motorista.nome}</h2>
+            <p className="mt-1 text-sm text-primary-500">Detalhes do motorista</p>
+          </div>
+          <Link
+            href={`/motoristas/${id}/editar`}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 min-h-[48px]"
+          >
+            <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Editar Cadastro
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
