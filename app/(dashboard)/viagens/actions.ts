@@ -206,7 +206,6 @@ export async function createViagem(
     return { success: false, fieldErrors: { valor_total: 'Valor invalido' } };
   }
 
-  const percentual = parseFloat(data.percentual_pagamento.replace(',', '.'));
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
   const kmSaida = data.km_saida !== '' ? Number(data.km_saida) : null;
 
@@ -216,6 +215,15 @@ export async function createViagem(
   const motoristaId = isMotorista ? usuario.motorista_id! : data.motorista_id;
 
   const supabase = await createClient();
+
+  // ALWAYS inherit percentual from motorista cadastro — never from form
+  const { data: motoristaRecord } = await supabase
+    .from('motorista')
+    .select('percentual_pagamento')
+    .eq('id', motoristaId)
+    .single();
+
+  const percentual = motoristaRecord?.percentual_pagamento ?? 0;
 
   const { data: viagem, error: insertError } = await supabase
     .from('viagem')
@@ -270,7 +278,7 @@ export async function updateViagem(
   // Fetch current viagem to check status and editavel_motorista
   const { data: existing, error: fetchError } = await supabase
     .from('viagem')
-    .select('status, editavel_motorista, origem, destino, valor_total')
+    .select('status, editavel_motorista, origem, destino, valor_total, percentual_pagamento')
     .eq('id', viagemId)
     .single();
 
@@ -295,7 +303,6 @@ export async function updateViagem(
     return { success: false, fieldErrors: { valor_total: 'Valor invalido' } };
   }
 
-  const percentual = parseFloat(data.percentual_pagamento.replace(',', '.'));
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
   const kmSaida = data.km_saida !== '' ? Number(data.km_saida) : null;
 
@@ -318,6 +325,7 @@ export async function updateViagem(
     };
   }
 
+  // percentual_pagamento is NEVER updated via viagem edit — it comes from motorista cadastro
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')
     .update({
@@ -328,7 +336,6 @@ export async function updateViagem(
       data_saida: data.data_saida,
       data_chegada_prevista: data.data_chegada_prevista || null,
       valor_total: camposEditaveis ? valorCentavos : existing.valor_total,
-      percentual_pagamento: percentual,
       km_estimado: kmEstimado,
       km_saida: kmSaida,
       observacao: data.observacao || null,

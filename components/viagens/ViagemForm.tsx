@@ -62,7 +62,7 @@ function toDatetimeLocal(isoString: string | null): string {
 interface ViagemFormProps {
   mode: 'create' | 'edit';
   viagem?: Viagem | null;
-  motoristas: Array<{ id: string; nome: string }>;
+  motoristas: Array<{ id: string; nome: string; percentual_pagamento?: number | null }>;
   caminhoes: Array<{ id: string; placa: string; modelo: string }>;
   onSubmit: (data: ViagemFormData) => Promise<ViagemActionResult>;
   /** When true, core fields (origem, destino, valor_total) are disabled */
@@ -119,6 +119,16 @@ export function ViagemForm({
   const watchedValorTotal = watch('valor_total');
   const watchedPercentual = watch('percentual_pagamento');
   const watchedKmEstimado = watch('km_estimado');
+
+  // Auto-populate percentual from motorista cadastro
+  useEffect(() => {
+    if (watchedMotoristaId) {
+      const mot = motoristas.find((m) => m.id === watchedMotoristaId);
+      if (mot && mot.percentual_pagamento != null) {
+        setValue('percentual_pagamento', String(mot.percentual_pagamento).replace('.', ','));
+      }
+    }
+  }, [watchedMotoristaId, motoristas, setValue]);
 
   // Load caminhoes when motorista changes (AC1)
   const loadCaminhoes = useCallback(async (motoristaId: string) => {
@@ -349,27 +359,38 @@ export function ViagemForm({
           )}
         </div>
 
-        {/* Percentual Pagamento */}
-        <div>
-          <label htmlFor="percentual_pagamento" className="mb-2 block text-base font-medium text-primary-700">
-            Percentual Motorista (%) *
-          </label>
-          <input
-            id="percentual_pagamento"
-            type="text"
-            placeholder="Ex: 25,50"
-            {...register('percentual_pagamento')}
-            className={inputClasses('percentual_pagamento')}
-          />
-          {errors.percentual_pagamento && (
-            <p className="mt-1.5 text-sm text-danger font-medium">{errors.percentual_pagamento.message}</p>
-          )}
-          {valorMotorista && (
-            <p className="mt-1.5 text-sm text-success font-medium">
-              Motorista recebera: {valorMotorista}
+        {/* Percentual Pagamento — hidden for motorista, readonly for dono/admin */}
+        {isMotorista ? (
+          <input type="hidden" {...register('percentual_pagamento')} />
+        ) : (
+          <div>
+            <label htmlFor="percentual_pagamento" className="mb-2 block text-base font-medium text-primary-700">
+              Percentual Motorista (%) *
+            </label>
+            <input
+              id="percentual_pagamento"
+              type="text"
+              placeholder="Selecione um motorista"
+              readOnly
+              {...register('percentual_pagamento')}
+              className={cn(
+                inputClasses('percentual_pagamento', true),
+                'bg-surface-muted text-text-muted cursor-not-allowed',
+              )}
+            />
+            <p className="mt-1 text-sm text-primary-500">
+              Herdado do cadastro do motorista. Edite no cadastro do motorista para alterar.
             </p>
-          )}
-        </div>
+            {errors.percentual_pagamento && (
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.percentual_pagamento.message}</p>
+            )}
+            {valorMotorista && (
+              <p className="mt-1.5 text-sm text-success font-medium">
+                Motorista recebera: {valorMotorista}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* KM Estimado (Story 3.3 - AC1, AC7/CON-006) */}
         <div>

@@ -35,6 +35,15 @@ const motoristaSchema = z.object({
     .refine((val) => !isNaN(Date.parse(val)), 'Data invalida'),
   telefone: z.string().max(20, 'Telefone deve ter no maximo 20 caracteres'),
   observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+  percentual_pagamento: z.string()
+    .refine(
+      (val) => {
+        if (val === '') return true;
+        const num = parseFloat(val.replace(',', '.'));
+        return !isNaN(num) && num >= 0 && num <= 100;
+      },
+      'Percentual deve ser entre 0 e 100',
+    ),
 });
 
 const updateMotoristaSchema = motoristaSchema.omit({ cpf: true });
@@ -85,6 +94,10 @@ export async function createMotorista(
     };
   }
 
+  // Parse percentual
+  const percentualStr = data.percentual_pagamento?.replace(',', '.') ?? '';
+  const percentualValue = percentualStr !== '' ? parseFloat(percentualStr) : null;
+
   // Insert motorista
   const { data: motorista, error: insertError } = await supabase
     .from('motorista')
@@ -97,6 +110,7 @@ export async function createMotorista(
       cnh_validade: data.cnh_validade,
       telefone: data.telefone || null,
       observacao: data.observacao || null,
+      percentual_pagamento: percentualValue,
     })
     .select()
     .single();
@@ -209,6 +223,10 @@ export async function createMotoristaComConta(
 
   // De agora em diante, qualquer falha exige rollback do auth user (AC: 10)
   try {
+    // Parse percentual
+    const percStr = data.percentual_pagamento?.replace(',', '.') ?? '';
+    const percValue = percStr !== '' ? parseFloat(percStr) : null;
+
     // 5. Inserir motorista com usuario_id = null provisoriamente (AC: 6)
     const { data: motorista, error: motoristaError } = await supabase
       .from('motorista')
@@ -221,6 +239,7 @@ export async function createMotoristaComConta(
         cnh_validade: data.cnh_validade,
         telefone: data.telefone || null,
         observacao: data.observacao || null,
+        percentual_pagamento: percValue,
         usuario_id: null,
       })
       .select()
@@ -324,6 +343,10 @@ export async function updateMotorista(
 
   const supabase = await createClient();
 
+  // Parse percentual
+  const percentualStr = (data as Record<string, string>).percentual_pagamento?.replace(',', '.') ?? '';
+  const percentualValue = percentualStr !== '' ? parseFloat(percentualStr) : null;
+
   const { data: motorista, error: updateError } = await supabase
     .from('motorista')
     .update({
@@ -333,6 +356,7 @@ export async function updateMotorista(
       cnh_validade: data.cnh_validade,
       telefone: data.telefone || null,
       observacao: data.observacao || null,
+      percentual_pagamento: percentualValue,
     })
     .eq('id', motoristaId)
     .select()

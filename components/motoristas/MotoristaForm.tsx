@@ -30,6 +30,15 @@ const motoristaFormSchema = z.object({
     .min(1, 'Validade da CNH e obrigatoria'),
   telefone: z.string().max(20, 'Telefone deve ter no maximo 20 caracteres'),
   observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+  percentual_pagamento: z.string()
+    .refine(
+      (val) => {
+        if (val === '') return true;
+        const num = parseFloat(val.replace(',', '.'));
+        return !isNaN(num) && num >= 0 && num <= 100;
+      },
+      'Percentual deve ser entre 0 e 100',
+    ),
   email: z.string().max(255).optional(),
 });
 
@@ -82,6 +91,9 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
       cnh_validade: motorista?.cnh_validade ?? '',
       telefone: motorista?.telefone ?? '',
       observacao: motorista?.observacao ?? '',
+      percentual_pagamento: motorista?.percentual_pagamento != null
+        ? String(motorista.percentual_pagamento).replace('.', ',')
+        : '',
       email: '',
     },
   });
@@ -129,6 +141,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
           cnh_validade: values.cnh_validade,
           telefone: values.telefone ?? '',
           observacao: values.observacao ?? '',
+          percentual_pagamento: values.percentual_pagamento ?? '',
           email: values.email!,
           criar_conta: true,
         };
@@ -336,6 +349,33 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             })}
             className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           />
+        </div>
+
+        {/* Percentual de Pagamento */}
+        <div>
+          <label htmlFor="percentual_pagamento" className="mb-2 block text-base font-medium text-primary-900">
+            Quanto o motorista recebe por viagem (%)
+          </label>
+          <input
+            id="percentual_pagamento"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            placeholder="Ex: 25"
+            {...register('percentual_pagamento')}
+            className={cn(
+              'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
+              'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
+              errors.percentual_pagamento ? 'border-red-500' : 'border-surface-border',
+            )}
+          />
+          <p className="mt-1 text-sm text-primary-500">
+            Percentual que o motorista recebe sobre o valor do frete. Sera aplicado automaticamente em cada viagem.
+          </p>
+          {errors.percentual_pagamento && (
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.percentual_pagamento.message}</p>
+          )}
         </div>
 
         {/* Observacao */}

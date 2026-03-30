@@ -21,6 +21,7 @@ export interface Motorista {
   telefone: string | null;
   status: MotoristaStatus;
   observacao: string | null;
+  percentual_pagamento: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -37,6 +38,7 @@ export interface MotoristaFormData {
   cnh_validade: string;
   telefone: string;
   observacao: string;
+  percentual_pagamento: string;
 }
 
 /**
