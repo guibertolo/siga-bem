@@ -49,6 +49,19 @@ export default async function EmpresaPage() {
           <DataRow label="Status" value={empresa.ativa ? 'Ativa' : 'Inativa'} />
         </dl>
       </div>
+
+      {/* Cadastrar outro CNPJ */}
+      <div className="mt-6">
+        <Link
+          href="/empresa/nova"
+          className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-primary-300 px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-primary-50 hover:border-primary-500 min-h-[48px]"
+        >
+          <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Cadastrar Outro CNPJ
+        </Link>
+      </div>
     </div>
   );
 }

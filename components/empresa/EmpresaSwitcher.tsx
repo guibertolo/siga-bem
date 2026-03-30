@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useTransition } from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { formatCNPJ } from '@/lib/utils/validate-cnpj';
 import { switchEmpresa } from '@/app/(dashboard)/empresa/switch/actions';
 import { ROLE_LABELS } from '@/types/empresa-multi';
@@ -112,7 +113,7 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
                 }}
                 disabled={isActive || isPending}
                 className={`
-                  flex flex-col w-full px-4 py-3 text-left border-b border-white/5 last:border-b-0
+                  flex flex-col w-full px-4 py-3 text-left border-b border-white/5
                   transition-colors bg-transparent border-none cursor-pointer
                   ${isActive
                     ? 'bg-white/10 cursor-default'
@@ -140,6 +141,20 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
               </button>
             );
           })}
+
+          {/* Divider + Nova Empresa link */}
+          <div className="border-t border-white/10">
+            <Link
+              href="/empresa/nova"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-primary-400 hover:bg-white/10 transition-colors no-underline min-h-[48px]"
+            >
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Nova Empresa
+            </Link>
+          </div>
         </div>
       )}
     </div>

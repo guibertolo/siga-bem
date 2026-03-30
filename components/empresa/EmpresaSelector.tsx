@@ -37,7 +37,7 @@ export function EmpresaSelector({ empresas }: EmpresaSelectorProps) {
         {/* Nova Empresa button */}
         <div className="text-center">
           <Link
-            href="/empresa/cadastro"
+            href="/empresa/nova"
             className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-primary-300 bg-transparent px-6 min-h-[48px] text-lg font-semibold text-primary-700 no-underline hover:bg-primary-100 hover:border-primary-500 transition-all"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>

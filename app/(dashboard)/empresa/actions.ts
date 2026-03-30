@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { validateCNPJ, formatCNPJ, stripCNPJ } from '@/lib/utils/validate-cnpj';
 import type { EmpresaActionResult, EmpresaFormData } from '@/types/empresa';
@@ -169,6 +170,111 @@ export async function updateEmpresa(
   }
 
   return { success: true, empresa };
+}
+
+export async function createEmpresaAdicional(
+  formData: EmpresaFormData,
+): Promise<EmpresaActionResult> {
+  const supabase = await createClient();
+
+  // Verify authentication
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return { success: false, error: 'Usuario nao autenticado' };
+  }
+
+  // Validate input
+  const parsed = empresaSchema.safeParse(formData);
+  if (!parsed.success) {
+    const fieldErrors: Partial<Record<keyof EmpresaFormData, string>> = {};
+    for (const issue of parsed.error.issues) {
+      const field = issue.path[0] as keyof EmpresaFormData;
+      if (!fieldErrors[field]) {
+        fieldErrors[field] = issue.message;
+      }
+    }
+    return { success: false, fieldErrors };
+  }
+
+  const data = parsed.data;
+
+  // Format CNPJ for storage (00.000.000/0000-00)
+  const formattedCNPJ = formatCNPJ(stripCNPJ(data.cnpj));
+
+  // Check for duplicate CNPJ
+  const { data: existing } = await supabase
+    .from('empresa')
+    .select('id')
+    .eq('cnpj', formattedCNPJ)
+    .maybeSingle();
+
+  if (existing) {
+    return {
+      success: false,
+      fieldErrors: {
+        cnpj: 'Este CNPJ ja esta cadastrado. Solicite um convite ao administrador.',
+      },
+    };
+  }
+
+  // Insert empresa
+  const { data: empresa, error: insertError } = await supabase
+    .from('empresa')
+    .insert({
+      cnpj: formattedCNPJ,
+      razao_social: data.razao_social,
+      nome_fantasia: data.nome_fantasia || null,
+      endereco: data.endereco || null,
+      cidade: data.cidade || null,
+      estado: data.estado || null,
+      cep: data.cep || null,
+      telefone: data.telefone || null,
+      email: data.email || null,
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    if (insertError.code === '23505') {
+      return {
+        success: false,
+        fieldErrors: {
+          cnpj: 'Este CNPJ ja esta cadastrado. Solicite um convite ao administrador.',
+        },
+      };
+    }
+    return { success: false, error: 'Erro ao cadastrar empresa. Tente novamente.' };
+  }
+
+  // Create usuario_empresa binding with role='dono' (existing user, new empresa)
+  const { error: bindingError } = await supabase
+    .from('usuario_empresa')
+    .insert({
+      auth_id: user.id,
+      empresa_id: empresa.id,
+      role: 'dono',
+    });
+
+  if (bindingError) {
+    // Rollback: delete empresa if binding creation fails
+    await supabase.from('empresa').delete().eq('id', empresa.id);
+    return { success: false, error: 'Erro ao vincular usuario a empresa. Tente novamente.' };
+  }
+
+  // Switch to the new empresa via RPC
+  const { error: switchError } = await supabase.rpc('fn_switch_empresa', {
+    p_empresa_id: empresa.id,
+  });
+
+  if (switchError) {
+    // Non-fatal: empresa was created, just couldn't auto-switch
+    console.error('[createEmpresaAdicional] switch failed:', switchError.message);
+  }
+
+  // Revalidate all paths since empresa context changed
+  revalidatePath('/');
+
+  redirect('/dashboard');
 }
 
 export async function getEmpresa(): Promise<EmpresaActionResult> {
