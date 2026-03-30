@@ -32,19 +32,19 @@ function MotoristaView({ viagem }: { viagem: ViagemAtivaItem }) {
     <div
       role="region"
       aria-label={`Viagem em andamento de ${viagem.origem} para ${viagem.destino}`}
-      className="rounded-xl border border-amber-300 border-l-4 bg-alert-warning-bg p-5 mb-6 dark:bg-amber-950/30 dark:border-amber-700"
+      className="rounded-xl border border-warning/30 border-l-4 bg-alert-warning-bg p-5 mb-6"
     >
       <div className="flex items-center gap-2 mb-3">
-        <span className="inline-block rounded-full bg-alert-warning-bg0 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+        <span className="inline-block rounded-full bg-warning px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
           Em Viagem
         </span>
       </div>
 
-      <h3 className="text-xl font-bold text-primary-900 dark:text-primary-100">
+      <h3 className="text-xl font-bold text-primary-900">
         {viagem.origem} &rarr; {viagem.destino}
       </h3>
 
-      <div className="mt-2 space-y-1 text-sm text-primary-700 dark:text-primary-300">
+      <div className="mt-2 space-y-1 text-sm text-primary-700">
         <p>
           Caminhao: {viagem.caminhao_placa} - {viagem.caminhao_modelo}
         </p>
@@ -66,13 +66,13 @@ function MotoristaView({ viagem }: { viagem: ViagemAtivaItem }) {
         </Link>
         <Link
           href={`/viagens/${viagem.id}#despesas`}
-          className="flex items-center justify-center rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 no-underline transition-colors hover:bg-surface-hover min-h-[48px] dark:text-primary-300 dark:border-white/20"
+          className="flex items-center justify-center rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 no-underline transition-colors hover:bg-surface-hover min-h-[48px]"
         >
           + Registrar Despesa
         </Link>
         <Link
           href={`/viagens/${viagem.id}#abastecimentos`}
-          className="flex items-center justify-center rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 no-underline transition-colors hover:bg-surface-hover min-h-[48px] dark:text-primary-300 dark:border-white/20"
+          className="flex items-center justify-center rounded-lg border border-surface-border px-4 py-3 text-base font-medium text-primary-700 no-underline transition-colors hover:bg-surface-hover min-h-[48px]"
         >
           + Abastecimento
         </Link>
@@ -89,10 +89,10 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
     <div
       role="region"
       aria-label={`${count} viagen${count !== 1 ? 's' : ''} em andamento`}
-      className="rounded-xl border border-amber-300 border-l-4 bg-alert-warning-bg p-5 mb-6 dark:bg-amber-950/30 dark:border-amber-700"
+      className="rounded-xl border border-warning/30 border-l-4 bg-alert-warning-bg p-5 mb-6"
     >
       <div className="flex items-center gap-2 mb-3">
-        <span className="inline-block rounded-full bg-alert-warning-bg0 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+        <span className="inline-block rounded-full bg-warning px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
           {count} viagen{count !== 1 ? 's' : ''} em andamento
         </span>
       </div>
@@ -101,10 +101,10 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
         {displayViagens.map((v) => (
           <div
             key={v.id}
-            className="flex items-center justify-between gap-3 rounded-lg border border-warning/20 bg-white/60 p-3 dark:bg-white/5 dark:border-amber-800"
+            className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card p-3"
           >
             <div className="min-w-0 flex-1">
-              <p className="text-base font-bold text-primary-900 truncate dark:text-primary-100">
+              <p className="text-base font-bold text-primary-900 truncate">
                 {v.origem} &rarr; {v.destino}
               </p>
               <p className="text-sm text-primary-600 truncate dark:text-primary-400">
