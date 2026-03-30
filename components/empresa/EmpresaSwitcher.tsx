@@ -22,10 +22,13 @@ interface EmpresaSwitcherProps {
 export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  const activeEmpresa = empresas.find((e) => e.is_active);
+  const activeEmpresa = optimisticActiveId
+    ? empresas.find((e) => e.empresa_id === optimisticActiveId)
+    : empresas.find((e) => e.is_active);
   const hasMultiple = empresas.length > 1;
 
   const displayName = activeEmpresa
@@ -47,9 +50,11 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
 
   function handleSwitch(empresaId: string) {
     if (isPending) return;
+    setOptimisticActiveId(empresaId);
     setOpen(false);
     startTransition(async () => {
       await switchEmpresa(empresaId, pathname);
+      setOptimisticActiveId(null);
     });
   }
 
@@ -100,7 +105,9 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
           aria-label="Lista de empresas"
         >
           {empresas.map((empresa) => {
-            const isActive = empresa.is_active;
+            const isActive = optimisticActiveId
+              ? empresa.empresa_id === optimisticActiveId
+              : empresa.is_active;
             const name = empresa.nome_fantasia ?? empresa.razao_social;
             return (
               <button
