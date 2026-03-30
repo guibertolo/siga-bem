@@ -130,7 +130,7 @@ export default async function GastosPage({ searchParams }: GastosPageProps) {
         </div>
       ) : (
         <>
-          <GastoTable gastos={data.gastos} isMotorista={usuario.role === 'motorista'} />
+          <GastoTable gastos={data.gastos} isMotorista={usuario.role === 'motorista'} isDono={usuario.role === 'dono'} />
           <GastoPagination
             currentPage={filters.page}
             totalCount={data.totalCount}

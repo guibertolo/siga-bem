@@ -10,6 +10,7 @@ import type { GastoListItemWithFoto } from '@/types/gasto';
 interface GastoTableProps {
   gastos: GastoListItemWithFoto[];
   isMotorista?: boolean;
+  isDono?: boolean;
 }
 
 function formatDate(dateStr: string): string {
@@ -17,7 +18,7 @@ function formatDate(dateStr: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export function GastoTable({ gastos, isMotorista = false }: GastoTableProps) {
+export function GastoTable({ gastos, isMotorista = false, isDono = false }: GastoTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -82,12 +83,14 @@ export function GastoTable({ gastos, isMotorista = false }: GastoTableProps) {
               <p>{gasto.caminhao_placa ?? '-'}</p>
             </div>
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <Link
-                href={`/gastos/${gasto.id}/editar`}
-                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
-              >
-                Editar
-              </Link>
+              {isDono && (
+                <Link
+                  href={`/gastos/${gasto.id}/editar`}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                >
+                  Editar
+                </Link>
+              )}
               {gasto.foto_url && (
                 <button
                   type="button"
@@ -97,7 +100,7 @@ export function GastoTable({ gastos, isMotorista = false }: GastoTableProps) {
                   Comprovante
                 </button>
               )}
-              {!isMotorista && (
+              {isDono && (
                 confirmId === gasto.id ? (
                   <span className="flex items-center gap-1">
                     <button
@@ -217,17 +220,19 @@ export function GastoTable({ gastos, isMotorista = false }: GastoTableProps) {
                 </td>
                 <td className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <Link
-                      href={`/gastos/${gasto.id}/editar`}
-                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
-                    >
-                      <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                      Editar
-                    </Link>
+                    {isDono && (
+                      <Link
+                        href={`/gastos/${gasto.id}/editar`}
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                      >
+                        <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Editar
+                      </Link>
+                    )}
 
-                    {!isMotorista && (
+                    {isDono && (
                       confirmId === gasto.id ? (
                         <span className="flex items-center gap-1">
                           <button

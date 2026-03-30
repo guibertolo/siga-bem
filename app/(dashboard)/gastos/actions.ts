@@ -279,6 +279,11 @@ export async function updateGasto(
     return { success: false, error: 'Usuario desativado' };
   }
 
+  // Only dono can edit gastos after creation
+  if (usuario.role !== 'dono') {
+    return { success: false, error: 'Apenas o proprietario pode editar despesas' };
+  }
+
   const parsed = gastoSchema.safeParse(formData);
   if (!parsed.success) {
     return { success: false, fieldErrors: extractFieldErrors(parsed.error) };
@@ -293,44 +298,8 @@ export async function updateGasto(
 
   const supabase = await createClient();
 
-  // Verify ownership for motorista role
-  if (usuario.role === 'motorista') {
-    const { data: existing } = await supabase
-      .from('gasto')
-      .select('motorista_id')
-      .eq('id', gastoId)
-      .single();
-
-    if (!existing) {
-      return { success: false, error: 'Gasto nao encontrado' };
-    }
-
-    const { data: motoristaRecord } = await supabase
-      .from('motorista')
-      .select('id')
-      .eq('usuario_id', usuario.id)
-      .eq('empresa_id', usuario.empresa_id)
-      .maybeSingle();
-
-    if (!motoristaRecord || existing.motorista_id !== motoristaRecord.id) {
-      return { success: false, error: 'Permissao insuficiente' };
-    }
-  }
-
-  // Motorista cannot change motorista_id
-  let motoristaId = data.motorista_id;
-  if (usuario.role === 'motorista') {
-    const { data: motoristaRecord } = await supabase
-      .from('motorista')
-      .select('id')
-      .eq('usuario_id', usuario.id)
-      .eq('empresa_id', usuario.empresa_id)
-      .maybeSingle();
-
-    if (motoristaRecord) {
-      motoristaId = motoristaRecord.id;
-    }
-  }
+  // Dono can freely set motorista_id
+  const motoristaId = data.motorista_id;
 
   const { data: gasto, error: updateError } = await supabase
     .from('gasto')
@@ -368,9 +337,9 @@ export async function deleteGasto(
     return { success: false, error: 'Nao autenticado' };
   }
 
-  // Motorista cannot delete gastos — only dono/admin
-  if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao tem permissao para excluir gastos' };
+  // Only dono can delete gastos
+  if (usuario.role !== 'dono') {
+    return { success: false, error: 'Apenas o proprietario pode excluir despesas' };
   }
 
   const supabase = await createClient();
