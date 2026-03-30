@@ -3,7 +3,7 @@
 import { useState, useTransition, useCallback } from 'react';
 import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
-import { deleteViagem, listViagens } from '@/app/(dashboard)/viagens/actions';
+import { deleteViagem, invalidarViagem, listViagens } from '@/app/(dashboard)/viagens/actions';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemFilters } from '@/components/viagens/ViagemFilters';
 import type { ViagemFilterValues } from '@/components/viagens/ViagemFilters';
@@ -36,6 +36,9 @@ export function ViagemList({
   const [page, setPage] = useState(initialPage);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [invalidarId, setInvalidarId] = useState<string | null>(null);
+  const [invalidarMotivo, setInvalidarMotivo] = useState('');
+  const [invalidandoId, setInvalidandoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ViagemFilterValues>({
     status: [],
@@ -103,6 +106,35 @@ export function ViagemList({
     });
   }
 
+  function handleInvalidarClick(viagemId: string) {
+    setInvalidarId(viagemId);
+    setInvalidarMotivo('');
+  }
+
+  function handleCancelInvalidar() {
+    setInvalidarId(null);
+    setInvalidarMotivo('');
+  }
+
+  function handleConfirmInvalidar(viagemId: string) {
+    if (invalidarMotivo.trim().length < 10) return;
+
+    setError(null);
+    setInvalidandoId(viagemId);
+    setInvalidarId(null);
+
+    startTransition(async () => {
+      const result = await invalidarViagem(viagemId, invalidarMotivo.trim());
+      setInvalidandoId(null);
+      setInvalidarMotivo('');
+      if (!result.success) {
+        setError(result.error ?? 'Erro ao invalidar viagem');
+      } else {
+        fetchViagens(filters, page);
+      }
+    });
+  }
+
   // Separate em_andamento trips from others
   const viagensAtivas = viagens.filter((v) => v.status === 'em_andamento');
   const viagensOutras = viagens.filter((v) => v.status !== 'em_andamento');
@@ -153,7 +185,7 @@ export function ViagemList({
                     {formatBRL(v.valor_total)}
                   </span>
                 </div>
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <Link
                     href={`/viagens/${v.id}`}
                     className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
@@ -166,6 +198,47 @@ export function ViagemList({
                   >
                     Editar
                   </Link>
+                  {!isMotorista && v.status !== 'cancelada' && (
+                    invalidarId === v.id ? (
+                      <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
+                        <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
+                        <input
+                          type="text"
+                          value={invalidarMotivo}
+                          onChange={(e) => setInvalidarMotivo(e.target.value)}
+                          placeholder="Descreva o motivo da invalidacao"
+                          className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
+                          minLength={10}
+                        />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleConfirmInvalidar(v.id)}
+                            disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
+                            className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                          >
+                            Confirmar Invalidacao
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCancelInvalidar}
+                            className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleInvalidarClick(v.id)}
+                        disabled={invalidandoId === v.id}
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                      >
+                        Invalidar
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
             ))}
@@ -195,7 +268,7 @@ export function ViagemList({
                     <td className="px-4 py-3 text-base text-primary-700">{formatDateTime(v.data_saida)}</td>
                     <td className="px-4 py-3 text-base text-right tabular-nums text-primary-700">{formatBRL(v.valor_total)}</td>
                     <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-2 flex-wrap">
                         <Link
                           href={`/viagens/${v.id}`}
                           className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
@@ -208,6 +281,49 @@ export function ViagemList({
                         >
                           Editar
                         </Link>
+                        {!isMotorista && v.status !== 'cancelada' && (
+                          <>
+                            {invalidarId === v.id ? (
+                              <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
+                                <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
+                                <input
+                                  type="text"
+                                  value={invalidarMotivo}
+                                  onChange={(e) => setInvalidarMotivo(e.target.value)}
+                                  placeholder="Descreva o motivo da invalidacao"
+                                  className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
+                                  minLength={10}
+                                />
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleConfirmInvalidar(v.id)}
+                                    disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
+                                    className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                                  >
+                                    Confirmar Invalidacao
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={handleCancelInvalidar}
+                                    className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleInvalidarClick(v.id)}
+                                disabled={invalidandoId === v.id}
+                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                              >
+                                Invalidar
+                              </button>
+                            )}
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -301,6 +417,47 @@ export function ViagemList({
                       </span>
                     ) : (
                       <button type="button" onClick={() => handleDeleteClick(v.id)} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Excluir</button>
+                    )
+                  )}
+                  {!isMotorista && v.status !== 'cancelada' && (
+                    invalidarId === v.id ? (
+                      <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
+                        <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
+                        <input
+                          type="text"
+                          value={invalidarMotivo}
+                          onChange={(e) => setInvalidarMotivo(e.target.value)}
+                          placeholder="Descreva o motivo da invalidacao"
+                          className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
+                          minLength={10}
+                        />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleConfirmInvalidar(v.id)}
+                            disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
+                            className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                          >
+                            Confirmar Invalidacao
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCancelInvalidar}
+                            className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleInvalidarClick(v.id)}
+                        disabled={invalidandoId === v.id}
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                      >
+                        Invalidar
+                      </button>
                     )
                   )}
                 </div>
@@ -414,6 +571,52 @@ export function ViagemList({
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                                 Excluir
+                              </button>
+                            )}
+                          </>
+                        )}
+                        {!isMotorista && v.status !== 'cancelada' && (
+                          <>
+                            {invalidarId === v.id ? (
+                              <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2 text-left">
+                                <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
+                                <input
+                                  type="text"
+                                  value={invalidarMotivo}
+                                  onChange={(e) => setInvalidarMotivo(e.target.value)}
+                                  placeholder="Descreva o motivo da invalidacao"
+                                  className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
+                                  minLength={10}
+                                />
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleConfirmInvalidar(v.id)}
+                                    disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
+                                    className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                                  >
+                                    Confirmar Invalidacao
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={handleCancelInvalidar}
+                                    className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleInvalidarClick(v.id)}
+                                disabled={invalidandoId === v.id}
+                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                              >
+                                <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                                Invalidar
                               </button>
                             )}
                           </>

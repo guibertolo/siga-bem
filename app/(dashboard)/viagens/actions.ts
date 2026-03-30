@@ -658,6 +658,71 @@ export async function listViagens(filters?: {
 }
 
 /**
+ * Invalidar (cancel) a viagem — admin/dono override.
+ * Bypasses normal status transitions. Works for any status except 'cancelada'.
+ * Sets status to 'cancelada' and prepends motivo to observacao.
+ */
+export async function invalidarViagem(
+  viagemId: string,
+  motivo: string,
+): Promise<{ success: boolean; error?: string }> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { success: false, error: 'Nao autenticado' };
+  }
+
+  if (!usuario.ativo) {
+    return { success: false, error: 'Usuario desativado' };
+  }
+
+  // Only dono/admin can invalidate
+  if (usuario.role === 'motorista') {
+    return { success: false, error: 'Motorista nao pode invalidar viagens' };
+  }
+
+  if (!motivo || motivo.trim().length < 10) {
+    return { success: false, error: 'Motivo deve ter no minimo 10 caracteres' };
+  }
+
+  const supabase = await createClient();
+
+  const { data: existing, error: fetchError } = await supabase
+    .from('viagem')
+    .select('status, observacao')
+    .eq('id', viagemId)
+    .single();
+
+  if (fetchError || !existing) {
+    return { success: false, error: 'Viagem nao encontrada' };
+  }
+
+  if (existing.status === 'cancelada') {
+    return { success: false, error: 'Viagem ja esta cancelada' };
+  }
+
+  const observacaoOriginal = existing.observacao ?? '';
+  const novaObservacao = observacaoOriginal
+    ? `[INVALIDADA] ${motivo.trim()} | ${observacaoOriginal}`
+    : `[INVALIDADA] ${motivo.trim()}`;
+
+  const { error: updateError } = await supabase
+    .from('viagem')
+    .update({
+      status: 'cancelada',
+      observacao: novaObservacao,
+    })
+    .eq('id', viagemId);
+
+  if (updateError) {
+    return { success: false, error: 'Erro ao invalidar viagem. Tente novamente.' };
+  }
+
+  revalidatePath('/viagens');
+  revalidatePath('/dashboard');
+  return { success: true };
+}
+
+/**
  * Get count of viagens em_andamento for dashboard card (T7).
  */
 export async function getViagensEmAndamento(): Promise<{

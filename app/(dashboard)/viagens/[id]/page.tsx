@@ -11,6 +11,7 @@ import { calcularConsumoMedio } from '@/lib/utils/consumo-calc';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemStatusActions } from '@/components/viagens/ViagemStatusActions';
 import { ViagemDeleteButton } from '@/components/viagens/ViagemDeleteButton';
+import { ViagemInvalidarButton } from '@/components/viagens/ViagemInvalidarButton';
 import { VeiculosSection } from '@/components/viagens/VeiculosSection';
 import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
 import { AbastecimentoList } from '@/components/abastecimento/AbastecimentoList';
@@ -340,6 +341,12 @@ export default async function ViagemDetalhePage({
           {(usuario.role === 'dono' || usuario.role === 'admin') && viagem.status === 'planejada' && (
             <div className="mt-4">
               <ViagemDeleteButton viagemId={viagem.id} />
+            </div>
+          )}
+          {/* Invalidar button: dono/admin, any status except cancelada */}
+          {(usuario.role === 'dono' || usuario.role === 'admin') && viagem.status !== 'cancelada' && (
+            <div className="mt-4">
+              <ViagemInvalidarButton viagemId={viagem.id} />
             </div>
           )}
         </div>
