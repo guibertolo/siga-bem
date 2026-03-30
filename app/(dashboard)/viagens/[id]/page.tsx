@@ -15,7 +15,8 @@ import { ViagemInvalidarButton } from '@/components/viagens/ViagemInvalidarButto
 import { VeiculosSection } from '@/components/viagens/VeiculosSection';
 import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
 import { AbastecimentoList } from '@/components/abastecimento/AbastecimentoList';
-import { getAbastecimentosForViagem } from '@/app/(dashboard)/viagens/[id]/actions';
+import { getAbastecimentosForViagem, getGastosPorViagem } from '@/app/(dashboard)/viagens/[id]/actions';
+import { GastosViagemSection } from '@/components/gastos/GastosViagemSection';
 import type { ViagemStatus } from '@/types/database';
 
 function formatDateTime(isoString: string | null): string {
@@ -48,12 +49,15 @@ export default async function ViagemDetalhePage({
   }
 
   const viagem = result.viagem!;
-  const [veiculosResult, abastecimentosResult] = await Promise.all([
+  const [veiculosResult, abastecimentosResult, gastosResult] = await Promise.all([
     listVeiculosViagem(id),
     getAbastecimentosForViagem(id),
+    getGastosPorViagem(id),
   ]);
   const veiculos = veiculosResult.data ?? [];
   const abastecimentos = abastecimentosResult.data;
+  const gastosViagem = gastosResult.data;
+  const gastosTotalCentavos = gastosResult.totalCentavos;
   const valorMotorista = calcularValorMotorista(viagem.valor_total, viagem.percentual_pagamento);
   const distancia = calcularDistancia(viagem.km_saida, viagem.km_chegada);
 
@@ -318,6 +322,12 @@ export default async function ViagemDetalhePage({
 
         {/* Abastecimento List — Story 5.3 (visible for ALL statuses, including concluida) */}
         <AbastecimentoList abastecimentos={abastecimentos} />
+
+        {/* Despesas desta Viagem — non-fuel gastos linked to this trip */}
+        <GastosViagemSection
+          gastos={gastosViagem}
+          totalCentavos={gastosTotalCentavos}
+        />
 
         {/* Status actions */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">

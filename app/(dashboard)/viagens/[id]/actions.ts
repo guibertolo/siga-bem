@@ -197,3 +197,83 @@ export async function getAbastecimentosForViagem(
   const supabase = await createClient();
   return getAbastecimentosPorViagem(supabase, viagemId);
 }
+
+// ---------------------------------------------------------------------------
+// Query: List non-fuel gastos for a trip
+// ---------------------------------------------------------------------------
+
+export interface GastoViagemItem {
+  id: string;
+  data: string;
+  valor: number; // centavos
+  descricao: string | null;
+  categoria_nome: string;
+  categoria_icone: string | null;
+  categoria_cor: string | null;
+}
+
+export interface GastoViagemListResult {
+  data: GastoViagemItem[];
+  totalCentavos: number;
+  error: string | null;
+}
+
+/**
+ * Fetch all non-fuel gastos linked to a viagem.
+ * Returns gastos with category info, ordered by date desc.
+ * Fuel expenses (Combustivel) are excluded — shown in AbastecimentoList.
+ */
+export async function getGastosPorViagem(
+  viagemId: string,
+): Promise<GastoViagemListResult> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: [], totalCentavos: 0, error: 'Nao autenticado' };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('gasto')
+    .select(`
+      id,
+      data,
+      valor,
+      descricao,
+      categoria_gasto ( nome, icone, cor )
+    `)
+    .eq('viagem_id', viagemId)
+    .order('data', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    return { data: [], totalCentavos: 0, error: error.message };
+  }
+
+  const items: GastoViagemItem[] = (data ?? [])
+    .filter((row) => {
+      const cat = row.categoria_gasto as unknown as { nome: string } | null;
+      // Exclude fuel entries — those appear in AbastecimentoList
+      return cat?.nome?.toLowerCase() !== 'combustivel';
+    })
+    .map((row) => {
+      const cat = row.categoria_gasto as unknown as {
+        nome: string;
+        icone: string | null;
+        cor: string | null;
+      } | null;
+
+      return {
+        id: row.id,
+        data: row.data,
+        valor: row.valor,
+        descricao: row.descricao,
+        categoria_nome: cat?.nome ?? 'Sem categoria',
+        categoria_icone: cat?.icone ?? null,
+        categoria_cor: cat?.cor ?? null,
+      };
+    });
+
+  const totalCentavos = items.reduce((sum, item) => sum + item.valor, 0);
+
+  return { data: items, totalCentavos, error: null };
+}

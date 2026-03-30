@@ -145,7 +145,7 @@ export function GastoForm({
           setServerError(result.error);
         }
       } else {
-        router.push('/gastos');
+        router.push(viagemIdInicial ? `/viagens/${viagemIdInicial}` : '/gastos');
       }
     });
   }
@@ -321,7 +321,7 @@ export function GastoForm({
       <div className="flex justify-end gap-3">
         <button
           type="button"
-          onClick={() => router.push('/gastos')}
+          onClick={() => router.push(viagemIdInicial ? `/viagens/${viagemIdInicial}` : '/gastos')}
           className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted"
         >
           Cancelar
