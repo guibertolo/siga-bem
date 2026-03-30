@@ -10,6 +10,7 @@ import { calcularEstimativa } from '@/lib/utils/precificacao';
 import { calcularConsumoMedio } from '@/lib/utils/consumo-calc';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemStatusActions } from '@/components/viagens/ViagemStatusActions';
+import { ViagemDeleteButton } from '@/components/viagens/ViagemDeleteButton';
 import { VeiculosSection } from '@/components/viagens/VeiculosSection';
 import { AbastecimentoSection } from '@/components/abastecimento/AbastecimentoSection';
 import { AbastecimentoList } from '@/components/abastecimento/AbastecimentoList';
@@ -313,6 +314,12 @@ export default async function ViagemDetalhePage({
               >
                 Editar Viagem
               </Link>
+            </div>
+          )}
+          {/* Delete button: only dono/admin, only planejada */}
+          {(usuario.role === 'dono' || usuario.role === 'admin') && viagem.status === 'planejada' && (
+            <div className="mt-4">
+              <ViagemDeleteButton viagemId={viagem.id} />
             </div>
           )}
         </div>

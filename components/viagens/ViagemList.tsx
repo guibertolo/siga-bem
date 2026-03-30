@@ -282,11 +282,14 @@ export function ViagemList({
                       Editar
                     </Link>
                   )}
-                  {v.status === 'planejada' && (
+                  {!isMotorista && v.status === 'planejada' && (
                     confirmId === v.id ? (
-                      <span className="flex items-center gap-1">
-                        <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Confirmar</button>
-                        <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Nao</button>
+                      <span className="flex flex-col gap-1">
+                        <span className="text-xs text-danger">Tem certeza que deseja excluir esta viagem? Esta acao nao pode ser desfeita.</span>
+                        <span className="flex items-center gap-1">
+                          <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Confirmar</button>
+                          <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Cancelar</button>
+                        </span>
                       </span>
                     ) : (
                       <button type="button" onClick={() => handleDeleteClick(v.id)} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Excluir</button>
@@ -359,25 +362,28 @@ export function ViagemList({
                             Editar
                           </Link>
                         )}
-                        {v.status === 'planejada' && (
+                        {!isMotorista && v.status === 'planejada' && (
                           <>
                             {confirmId === v.id ? (
-                              <span className="flex items-center gap-1">
-                                <button
-                                  type="button"
-                                  onClick={() => handleConfirmDelete(v.id)}
-                                  disabled={deletingId === v.id}
-                                  className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                                >
-                                  Confirmar
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={handleCancelDelete}
-                                  className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
-                                >
-                                  Nao
-                                </button>
+                              <span className="flex flex-col items-end gap-1">
+                                <span className="text-xs text-danger max-w-[240px] text-right">Tem certeza que deseja excluir esta viagem? Esta acao nao pode ser desfeita.</span>
+                                <span className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleConfirmDelete(v.id)}
+                                    disabled={deletingId === v.id}
+                                    className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                                  >
+                                    Confirmar
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={handleCancelDelete}
+                                    className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
+                                  >
+                                    Cancelar
+                                  </button>
+                                </span>
                               </span>
                             ) : (
                               <button
