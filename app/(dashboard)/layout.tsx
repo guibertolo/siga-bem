@@ -8,13 +8,19 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 
-const navLinks = [
+// Motorista: menu ultra simplificado (só o essencial)
+const motoristaLinks = [
+  { href: '/dashboard', label: 'Inicio' },
+  { href: '/viagens', label: 'Minhas Viagens' },
+];
+
+// Dono/Admin: menu completo com acertos unificado
+const donoLinks = [
   { href: '/dashboard', label: 'Inicio' },
   { href: '/empresa', label: 'Empresa' },
   { href: '/viagens', label: 'Viagens' },
   { href: '/gastos', label: 'Gastos' },
-  { href: '/fechamentos', label: 'Acerto de Contas' },
-  { href: '/financeiro/historico', label: 'Historico de Acertos' },
+  { href: '/fechamentos', label: 'Acertos' },
 ];
 
 const adminLinks = [
@@ -64,9 +70,11 @@ export default async function DashboardLayout({
     redirect('/selecionar-empresa');
   }
 
+  const isMotorista = currentUsuario.role === 'motorista';
   const showAdminLinks = currentUsuario.role === 'dono' || currentUsuario.role === 'admin';
   const showBILink = currentUsuario.role === 'dono';
   const viagensAtivasCount = viagensEmAndamento.count;
+  const navLinks = isMotorista ? motoristaLinks : donoLinks;
 
   return (
     <div className="flex min-h-screen">
