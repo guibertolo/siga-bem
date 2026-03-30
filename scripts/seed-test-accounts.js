@@ -4,11 +4,12 @@
  *
  * Run: node scripts/seed-test-accounts.js
  *
- * Contas criadas:
- *   Dono 1 (existente): teste@sigabem.com.br / SigaBem2026!
- *   Dono 2: dono2@frotaviva.com.br / Dono2026!
- *   Dono 3: dono3@frotaviva.com.br / Dono2026!
- *   Motoristas: mot{N}emp{M}@frotaviva.com.br / Motorista2026!
+ * Contas criadas (senha unica: Teste2026!):
+ *   Dono 1: dono1@frotaviva.com.br (Carlos Bertolo)
+ *   Dono 2: dono2@frotaviva.com.br (Ricardo Mendes)
+ *   Dono 3: dono3@frotaviva.com.br (Fernanda Oliveira)
+ *   Motoristas: mot{N}emp{M}@frotaviva.com.br
+ *   Motorista legado: motorista@frotaviva.com.br (Jose Carlos Silva)
  */
 const { createClient } = require('@supabase/supabase-js');
 
