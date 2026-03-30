@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState, useTransition } from 'react';
 import { validatePlaca, maskPlaca } from '@/lib/utils/validate-placa';
 import { validateRenavam } from '@/lib/utils/validate-renavam';
+import { maskKm } from '@/lib/utils/mask-km';
 import { TIPO_CEGONHA_OPTIONS } from '@/types/caminhao';
 import type { Caminhao, CaminhaoFormData, CaminhaoActionResult } from '@/types/caminhao';
 import { cn } from '@/lib/utils/cn';
@@ -46,7 +47,7 @@ const caminhaoFormSchema = z.object({
   km_atual: z.string().refine(
     (val) => {
       if (val === '' || val === '0') return true;
-      const num = parseInt(val, 10);
+      const num = parseInt(val.replace(/\./g, ''), 10);
       return !isNaN(num) && num >= 0;
     },
     'Km deve ser positivo',
@@ -82,7 +83,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       renavam: caminhao?.renavam ?? '',
       tipo_cegonha: caminhao?.tipo_cegonha ?? 'aberta',
       capacidade_veiculos: caminhao?.capacidade_veiculos?.toString() ?? '11',
-      km_atual: caminhao?.km_atual?.toString() ?? '0',
+      km_atual: caminhao?.km_atual ? maskKm(caminhao.km_atual.toString()) : '0',
       observacao: caminhao?.observacao ?? '',
     },
   });
@@ -265,9 +266,12 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
           </label>
           <input
             id="km_atual"
-            type="number"
-            min={0}
-            {...register('km_atual')}
+            type="text"
+            inputMode="numeric"
+            placeholder="Ex: 320.450"
+            {...register('km_atual', {
+              onChange: handleMaskedChange('km_atual', maskKm),
+            })}
             className={cn(inputClass, errors.km_atual ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.km_atual && (

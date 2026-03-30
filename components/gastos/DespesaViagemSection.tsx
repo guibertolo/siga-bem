@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createGasto } from '@/app/(dashboard)/gastos/actions';
 import { cn } from '@/lib/utils/cn';
+import { maskCurrency } from '@/lib/utils/mask-currency';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
 import type { GastoFormData } from '@/types/gasto';
 
@@ -207,10 +208,10 @@ export function DespesaViagemSection({
                 <input
                   id="despesa-valor"
                   type="text"
-                  inputMode="decimal"
+                  inputMode="numeric"
                   placeholder="0,00"
                   value={valor}
-                  onChange={(e) => setValor(e.target.value)}
+                  onChange={(e) => setValor(maskCurrency(e.target.value))}
                   className={cn(inputClass, 'pl-10')}
                 />
               </div>

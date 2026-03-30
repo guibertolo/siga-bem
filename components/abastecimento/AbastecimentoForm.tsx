@@ -6,6 +6,8 @@ import { createAbastecimento } from '@/app/(dashboard)/viagens/[id]/actions';
 import type { AbastecimentoInput } from '@/app/(dashboard)/viagens/[id]/actions';
 import { ComprovantesUpload } from '@/components/gastos/ComprovantesUpload';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
+import { maskCurrency } from '@/lib/utils/mask-currency';
+import { maskKm, unmaskKm } from '@/lib/utils/mask-km';
 import { cn } from '@/lib/utils/cn';
 
 // ---------------------------------------------------------------------------
@@ -100,7 +102,7 @@ export function AbastecimentoForm({
     const errors: Partial<Record<string, string>> = {};
     const litros = parseFloat(litrosStr.replace(',', '.'));
     const valorCentavos = parseBrlInputToCentavos(valorStr);
-    const kmOdometro = kmOdometroStr ? parseInt(kmOdometroStr, 10) : null;
+    const kmOdometro = kmOdometroStr ? parseInt(unmaskKm(kmOdometroStr), 10) : null;
 
     if (!litros || litros <= 0) {
       errors.litros = 'Litros deve ser maior que zero';
@@ -267,10 +269,10 @@ export function AbastecimentoForm({
             <input
               id="valor_total"
               type="text"
-              inputMode="decimal"
-              placeholder="Ex: 3.500,00"
+              inputMode="numeric"
+              placeholder="0,00"
               value={valorStr}
-              onChange={(e) => setValorStr(e.target.value)}
+              onChange={(e) => setValorStr(maskCurrency(e.target.value))}
               className={cn(inputClass, 'pl-10', fieldErrors.valor_centavos ? 'border-red-500' : 'border-surface-border')}
             />
           </div>
@@ -365,9 +367,9 @@ export function AbastecimentoForm({
             id="km_odometro"
             type="text"
             inputMode="numeric"
-            placeholder={kmSaida != null ? `Minimo: ${kmSaida.toLocaleString('pt-BR')} km` : 'Opcional'}
+            placeholder={kmSaida != null ? `Minimo: ${kmSaida.toLocaleString('pt-BR')} km` : 'Ex: 320.450'}
             value={kmOdometroStr}
-            onChange={(e) => setKmOdometroStr(e.target.value)}
+            onChange={(e) => setKmOdometroStr(maskKm(e.target.value))}
             className={cn(inputClass, fieldErrors.km_odometro ? 'border-red-500' : 'border-surface-border')}
           />
           {fieldErrors.km_odometro && <p className={errorClass}>{fieldErrors.km_odometro}</p>}

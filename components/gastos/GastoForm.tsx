@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
+import { maskCurrency } from '@/lib/utils/mask-currency';
 import { cn } from '@/lib/utils/cn';
 import type { Gasto, GastoFormData, GastoActionResult } from '@/types/gasto';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
@@ -48,10 +49,6 @@ interface GastoFormProps {
   onSubmit: (data: GastoFormData) => Promise<GastoActionResult>;
 }
 
-function centavosToInputValue(centavos: number): string {
-  return (centavos / 100).toFixed(2).replace('.', ',');
-}
-
 function todayISO(): string {
   return new Date().toISOString().split('T')[0];
 }
@@ -87,13 +84,24 @@ export function GastoForm({
       motorista_id: gasto?.motorista_id ?? motoristaFixo ?? '',
       caminhao_id: gasto?.caminhao_id ?? '',
       viagem_id: defaultViagemId,
-      valor: gasto ? centavosToInputValue(gasto.valor) : '',
+      valor: gasto ? maskCurrency(String(gasto.valor)) : '',
       data: gasto?.data ?? todayISO(),
       descricao: gasto?.descricao ?? '',
     },
   });
 
   const watchedViagemId = watch('viagem_id');
+  const watchedValor = watch('valor');
+
+  // Currency mask for valor field
+  useEffect(() => {
+    if (watchedValor) {
+      const masked = maskCurrency(watchedValor);
+      if (masked !== watchedValor) {
+        setValue('valor', masked, { shouldValidate: false });
+      }
+    }
+  }, [watchedValor, setValue]);
 
   // Auto-fill motorista/caminhao from pre-selected viagem on mount
   useEffect(() => {
@@ -244,7 +252,7 @@ export function GastoForm({
           <input
             id="valor"
             type="text"
-            inputMode="decimal"
+            inputMode="numeric"
             placeholder="0,00"
             {...register('valor')}
             className={cn(inputClass, 'pl-10', errors.valor ? 'border-red-500' : 'border-surface-border')}

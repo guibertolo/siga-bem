@@ -10,6 +10,8 @@ import { calcularValorMotorista } from '@/lib/utils/viagem-calc';
 import { listCaminhoesPorMotorista } from '@/app/(dashboard)/viagens/actions';
 import { cn } from '@/lib/utils/cn';
 import { parseBrlInputToCentavos as parseCentavos } from '@/lib/utils/currency';
+import { maskCurrency } from '@/lib/utils/mask-currency';
+import { maskKm, unmaskKm } from '@/lib/utils/mask-km';
 import { EstimativaViagem } from '@/components/viagens/EstimativaViagem';
 import { CidadeAutocomplete } from '@/components/ui/CidadeAutocomplete';
 import type { Viagem, ViagemFormData, ViagemActionResult } from '@/types/viagem';
@@ -39,7 +41,11 @@ const viagemFormSchema = z.object({
     }, 'Percentual deve ser entre 0 e 100'),
   km_estimado: z.string()
     .refine(
-      (val) => val === '' || (!isNaN(Number(val)) && Number(val) > 0),
+      (val) => {
+        if (val === '') return true;
+        const num = Number(val.replace(/\./g, ''));
+        return !isNaN(num) && num > 0;
+      },
       'Distancia estimada deve ser maior que zero',
     ),
   km_saida: z.string(),
@@ -47,10 +53,6 @@ const viagemFormSchema = z.object({
 });
 
 type FormValues = z.infer<typeof viagemFormSchema>;
-
-function centavosToInputValue(centavos: number): string {
-  return (centavos / 100).toFixed(2).replace('.', ',');
-}
 
 function toDatetimeLocal(isoString: string | null): string {
   if (!isoString) return '';
@@ -110,10 +112,10 @@ export function ViagemForm({
       destino: viagem?.destino ?? '',
       data_saida: viagem ? toDatetimeLocal(viagem.data_saida) : '',
       data_chegada_prevista: viagem ? toDatetimeLocal(viagem.data_chegada_prevista) : '',
-      valor_total: viagem ? centavosToInputValue(viagem.valor_total) : '',
+      valor_total: viagem ? maskCurrency(String(viagem.valor_total)) : '',
       percentual_pagamento: viagem ? String(viagem.percentual_pagamento).replace('.', ',') : '0',
-      km_estimado: viagem?.km_estimado != null ? String(viagem.km_estimado) : '',
-      km_saida: viagem?.km_saida != null ? String(viagem.km_saida) : '',
+      km_estimado: viagem?.km_estimado != null ? maskKm(String(viagem.km_estimado)) : '',
+      km_saida: viagem?.km_saida != null ? maskKm(String(viagem.km_saida)) : '',
       observacao: viagem?.observacao ?? '',
     },
   });
@@ -162,6 +164,37 @@ export function ViagemForm({
       loadCaminhoes(watchedMotoristaId);
     }
   }, [watchedMotoristaId, viagem?.motorista_id, loadCaminhoes]);
+
+  // Currency mask for valor_total field
+  useEffect(() => {
+    if (watchedValorTotal) {
+      const masked = maskCurrency(watchedValorTotal);
+      if (masked !== watchedValorTotal) {
+        setValue('valor_total', masked, { shouldValidate: false });
+      }
+    }
+  }, [watchedValorTotal, setValue]);
+
+  // KM mask for km_estimado field
+  useEffect(() => {
+    if (watchedKmEstimado) {
+      const masked = maskKm(watchedKmEstimado);
+      if (masked !== watchedKmEstimado) {
+        setValue('km_estimado', masked, { shouldValidate: false });
+      }
+    }
+  }, [watchedKmEstimado, setValue]);
+
+  // KM mask for km_saida field
+  const watchedKmSaida = watch('km_saida');
+  useEffect(() => {
+    if (watchedKmSaida) {
+      const masked = maskKm(watchedKmSaida);
+      if (masked !== watchedKmSaida) {
+        setValue('km_saida', masked, { shouldValidate: false });
+      }
+    }
+  }, [watchedKmSaida, setValue]);
 
   // Real-time motorista payment calculation (AC2)
   useEffect(() => {
@@ -354,14 +387,18 @@ export function ViagemForm({
           <label htmlFor="valor_total" className="mb-2 block text-base font-medium text-primary-700">
             Valor do Frete (R$) *
           </label>
-          <input
-            id="valor_total"
-            type="text"
-            placeholder="Ex: 1.500,00"
-            disabled={camposLocked}
-            {...register('valor_total')}
-            className={inputClasses('valor_total', camposLocked)}
-          />
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base font-medium text-primary-500">R$</span>
+            <input
+              id="valor_total"
+              type="text"
+              inputMode="numeric"
+              placeholder="0,00"
+              disabled={camposLocked}
+              {...register('valor_total')}
+              className={cn(inputClasses('valor_total', camposLocked), 'pl-12')}
+            />
+          </div>
           {errors.valor_total && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.valor_total.message}</p>
           )}
@@ -407,9 +444,9 @@ export function ViagemForm({
           </label>
           <input
             id="km_estimado"
-            type="number"
-            min={1}
-            placeholder="ex: 1.250 km (SP -> BH)"
+            type="text"
+            inputMode="numeric"
+            placeholder="Ex: 1.250"
             {...register('km_estimado')}
             className={inputClasses('km_estimado')}
           />
@@ -425,9 +462,9 @@ export function ViagemForm({
           </label>
           <input
             id="km_saida"
-            type="number"
-            min={0}
-            placeholder="Ex: 120000"
+            type="text"
+            inputMode="numeric"
+            placeholder="Ex: 120.000"
             {...register('km_saida')}
             className={inputClasses('km_saida')}
           />
@@ -439,7 +476,7 @@ export function ViagemForm({
 
       {/* Estimativa de Custo (Story 3.3 - AC3) */}
       <EstimativaViagem
-        kmEstimado={watchedKmEstimado ? Number(watchedKmEstimado) : null}
+        kmEstimado={watchedKmEstimado ? Number(unmaskKm(watchedKmEstimado)) : null}
         caminhaoId={watchedCaminhaoId}
         valorTotalCentavos={parseCentavos(watchedValorTotal || '0') ?? 0}
       />
