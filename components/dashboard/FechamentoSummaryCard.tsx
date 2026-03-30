@@ -15,7 +15,7 @@ interface FechamentoSummaryCardProps {
 export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummaryCardProps) {
   return (
     <Link
-      href="/fechamentos?status=aberto"
+      href="/fechamentos"
       className="block rounded-card border border-surface-border bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors"
     >
       <h3 className="text-lg font-semibold text-primary-900">Acertos Pendentes</h3>
@@ -23,7 +23,7 @@ export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummar
         {count}
       </p>
       <p className="mt-1 text-sm text-text-muted">
-        {count > 0 ? `Total: ${formatBRL(totalCentavos)}` : 'Nenhum acerto pendente'}
+        {count > 0 ? `${count} viagen${count !== 1 ? 's' : ''} sem acerto — ${formatBRL(totalCentavos)}` : 'Todas as viagens acertadas'}
       </p>
     </Link>
   );

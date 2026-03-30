@@ -104,24 +104,33 @@ async function getFechamentosPendentes(): Promise<{
 }> {
   const supabase = await createClient();
 
-  const [countResult, valueResult] = await Promise.all([
-    supabase
-      .from('fechamento')
-      .select('id', { count: 'exact', head: true })
-      .eq('status', 'aberto'),
-    supabase
-      .from('fechamento')
-      .select('saldo_motorista')
-      .eq('status', 'aberto'),
-  ]);
+  // Count viagens concluidas without an acerto (same logic as getViagensPendentesAcerto)
+  const { data: viagens } = await supabase
+    .from('viagem')
+    .select('id, valor_total, percentual_pagamento')
+    .eq('status', 'concluida');
 
-  const count = countResult.count ?? 0;
-  const totalCentavos = (valueResult.data ?? []).reduce(
-    (sum: number, f: { saldo_motorista: number }) => sum + f.saldo_motorista,
+  if (!viagens || viagens.length === 0) {
+    return { count: 0, totalCentavos: 0 };
+  }
+
+  const viagemIds = viagens.map((v: { id: string }) => v.id);
+  const { data: itens } = await supabase
+    .from('fechamento_item')
+    .select('referencia_id')
+    .eq('tipo', 'viagem')
+    .in('referencia_id', viagemIds);
+
+  const idsComAcerto = new Set((itens ?? []).map((i: { referencia_id: string }) => i.referencia_id));
+  const pendentes = viagens.filter((v: { id: string }) => !idsComAcerto.has(v.id));
+
+  const totalCentavos = pendentes.reduce(
+    (sum: number, v: { valor_total: number; percentual_pagamento: number }) =>
+      sum + Math.round((v.valor_total * v.percentual_pagamento) / 100),
     0,
   );
 
-  return { count, totalCentavos };
+  return { count: pendentes.length, totalCentavos };
 }
 
 async function getReceitaCustoMes(): Promise<{
