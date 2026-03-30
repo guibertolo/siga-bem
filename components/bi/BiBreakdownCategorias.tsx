@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { resolveIcone } from '@/lib/utils/categoria-icone';
 import type { BICategoriaItem } from '@/types/bi';
 
 interface BiBreakdownCategoriasProps {
@@ -8,25 +9,6 @@ interface BiBreakdownCategoriasProps {
 }
 
 const DEFAULT_COLOR = '#6B7280';
-
-const ICONE_MAP: Record<string, string> = {
-  toll: '🛣️',
-  fuel: '⛽',
-  tire: '🔧',
-  wrench: '🔩',
-  droplet: '💧',
-  parking: '🅿️',
-  utensils: '🍽️',
-  bed: '🛏️',
-  shield: '🛡️',
-  alert: '⚠️',
-  ellipsis: '📦',
-};
-
-function resolveIcone(icone?: string | null): string {
-  if (!icone) return '📋';
-  return ICONE_MAP[icone] ?? icone;
-}
 
 export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
   if (!data || data.length === 0) {

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
+import { resolveIcone } from '@/lib/utils/categoria-icone';
 import type { GastoViagemItem } from '@/app/(dashboard)/viagens/[id]/actions';
 
 // ---------------------------------------------------------------------------
@@ -29,7 +30,7 @@ function CategoryIcon({
         style={{ backgroundColor: cor ? `${cor}20` : undefined }}
         aria-hidden="true"
       >
-        {icone}
+        {resolveIcone(icone)}
       </span>
     );
   }
