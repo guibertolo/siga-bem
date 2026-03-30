@@ -237,7 +237,7 @@ export function SimuladorViagem({
 
             {/* Source warning */}
             {resultado.fonteConsumo === 'padrao_cegonheiro' && (
-              <div className="mt-3 rounded-md bg-yellow-50 border border-yellow-200 p-2 text-xs text-yellow-800">
+              <div className="mt-3 rounded-md bg-alert-warning-bg border border-warning/20 p-2 text-xs text-warning">
                 Sem historico — usando consumo padrao de cegonheiros (2,5 km/l)
               </div>
             )}
@@ -247,7 +247,7 @@ export function SimuladorViagem({
               </p>
             )}
             {resultado.fontePreco === 'padrao' && (
-              <p className="mt-1 text-xs text-yellow-700">
+              <p className="mt-1 text-xs text-warning">
                 Preco: Padrao nacional (R$ 6,50/l) — cadastre precos para
                 estimativa mais precisa
               </p>

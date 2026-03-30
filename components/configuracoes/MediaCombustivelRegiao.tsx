@@ -65,7 +65,7 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
                 </span>
               </div>
               {poucoDados && (
-                <span className="rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-700">
+                <span className="rounded-full bg-alert-warning-bg px-2.5 py-0.5 text-xs font-medium text-warning">
                   Dados insuficientes ({regiao.total_abastecimentos}{' '}
                   abastecimento
                   {regiao.total_abastecimentos !== 1 ? 's' : ''})

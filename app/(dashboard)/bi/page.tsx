@@ -128,7 +128,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       </div>
 
       {/* Separator */}
-      <div className="mb-6 border-t border-slate-300" />
+      <div className="mb-6 border-t border-surface-border" />
 
       {/* Story 5.6: Previsao e Margens */}
       <div className="mb-6">

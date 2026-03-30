@@ -280,7 +280,7 @@ export function AbastecimentoForm({
 
       {/* Preco por litro (AC 6) — readonly, calculated */}
       {precoLitro && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+        <div className="rounded-lg border border-info/20 bg-alert-info-bg p-4">
           <p className="text-sm text-primary-500">Preco por litro (calculado automaticamente)</p>
           <p className="mt-1 text-lg font-bold tabular-nums text-primary-900">
             R$ {precoLitro}/L

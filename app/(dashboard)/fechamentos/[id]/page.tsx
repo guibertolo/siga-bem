@@ -136,7 +136,7 @@ export default async function FechamentoDetalhePage({
           Resumo Financeiro
         </h3>
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="rounded-lg bg-blue-50 p-4">
+          <div className="rounded-lg bg-alert-info-bg p-4">
             <p className="text-sm text-blue-600">Total Viagens</p>
             <p className="text-xl font-bold text-blue-900">
               {formatBRL(fechamento.total_viagens)}

@@ -60,7 +60,7 @@ export function TrocaSenhaForm() {
     <button
       type="button"
       onClick={toggle}
-      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-primary-700 bg-transparent border-none cursor-pointer transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-subtle hover:text-primary-700 bg-transparent border-none cursor-pointer transition-colors"
       aria-label={show ? 'Ocultar senha' : 'Mostrar senha'}
     >
       {show ? (
@@ -163,7 +163,7 @@ export function TrocaSenhaForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 flex items-center justify-center gap-2 w-full h-12 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-2 flex items-center justify-center gap-2 w-full h-12 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-surface-border disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             'Alterando...'

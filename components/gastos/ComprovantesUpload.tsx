@@ -232,7 +232,7 @@ export function ComprovantesUpload({
           <div className="mb-1 text-xs text-primary-500">
             {status === 'compressing' ? 'Comprimindo imagem...' : 'Enviando...'}
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-surface-hover">
             <div
               className="h-full rounded-full bg-primary-600 transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -324,7 +324,7 @@ export function ComprovantesUpload({
                     <button
                       type="button"
                       onClick={() => setConfirmDeleteId(null)}
-                      className="rounded-full bg-gray-400 p-1 text-white shadow-sm"
+                      className="rounded-full bg-text-muted p-1 text-white shadow-sm"
                       title="Cancelar"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

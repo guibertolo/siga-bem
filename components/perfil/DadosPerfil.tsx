@@ -50,7 +50,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
   }
 
   const inputReadonlyClasses =
-    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-slate-100 dark:bg-slate-800 cursor-not-allowed';
+    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-muted dark:bg-slate-800 cursor-not-allowed';
   const inputEditableClasses =
     'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-input outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors';
 
@@ -142,7 +142,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
           type="button"
           onClick={handleSave}
           disabled={loading}
-          className="mt-6 flex items-center justify-center gap-2 px-6 h-12 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-6 flex items-center justify-center gap-2 px-6 h-12 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-surface-border disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             'Salvando...'

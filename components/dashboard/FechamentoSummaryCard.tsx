@@ -22,7 +22,7 @@ export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummar
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">
         {count}
       </p>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-text-muted">
         {count > 0 ? `Total: ${formatBRL(totalCentavos)}` : 'Nenhum acerto pendente'}
       </p>
     </Link>

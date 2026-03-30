@@ -188,7 +188,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
       <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
         {/* InfoBox — empresa ativa (Story 8.2) */}
         {empresaInfo && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <div className="rounded-lg border border-info/20 bg-alert-info-bg p-4">
             <div className="flex items-start gap-3">
               <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -197,7 +197,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
                 <p className="text-base font-semibold text-blue-900">
                   Cadastrando para: {empresaInfo.nome}
                 </p>
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-info">
                   CNPJ: {empresaInfo.cnpj}
                 </p>
               </div>
@@ -381,7 +381,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
                 }}
                 className={cn(
                   'relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                  criarConta ? 'bg-primary-700' : 'bg-gray-300',
+                  criarConta ? 'bg-primary-700' : 'bg-surface-border',
                 )}
               >
                 <span

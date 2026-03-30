@@ -86,7 +86,7 @@ export function EstimativaViagem({
   const margemNegativa = estimativa.margem_bruta_centavos < 0;
 
   return (
-    <div className="rounded-lg border border-surface-border bg-blue-50 p-4">
+    <div className="rounded-lg border border-surface-border bg-surface-card p-4">
       <h4 className="mb-3 text-sm font-medium uppercase tracking-wide text-primary-700">
         Estimativa de Custo
       </h4>

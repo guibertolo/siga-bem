@@ -21,7 +21,7 @@ const ROLE_LABELS: Record<UsuarioRole, string> = {
 
 const ROLE_COLORS: Record<UsuarioRole, string> = {
   dono: 'bg-amber-100 text-amber-800',
-  admin: 'bg-blue-100 text-blue-800',
+  admin: 'bg-info/20 text-info',
   motorista: 'bg-green-100 text-green-800',
 };
 

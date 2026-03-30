@@ -59,7 +59,7 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
         {data.map((item) => (
           <div
             key={item.mesAno}
-            className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2"
+            className="flex items-center justify-between rounded-lg border border-surface-border bg-surface-muted px-3 py-2"
           >
             <span className="text-sm font-medium text-primary-700">
               {item.mesAnoLabel}

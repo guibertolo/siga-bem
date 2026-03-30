@@ -53,7 +53,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
             Inativa
           </span>
         )}
-        <span className="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <span className="inline-flex items-center rounded-full bg-surface-muted dark:bg-slate-800 px-3 py-1 text-sm font-medium text-text-muted dark:text-slate-300">
           {ROLE_LABELS[empresa.role] ?? empresa.role}
         </span>
       </div>
@@ -69,7 +69,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
         </p>
       )}
 
-      <p className="text-base text-slate-500 dark:text-slate-400 font-mono mb-6">
+      <p className="text-base text-text-muted dark:text-text-subtle font-mono mb-6">
         CNPJ: {formatCNPJ(empresa.cnpj)}
       </p>
 
@@ -82,7 +82,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
           flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl
           text-lg font-semibold transition-all
           ${isInactive
-            ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+            ? 'bg-surface-hover dark:bg-slate-700 text-text-subtle dark:text-text-muted cursor-not-allowed'
             : isPending
               ? 'bg-primary-500 text-white cursor-wait'
               : 'bg-primary-700 text-white hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer'}

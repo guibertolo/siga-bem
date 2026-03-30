@@ -41,7 +41,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr key={item.motoristaId} className="border-b border-slate-100">
+              <tr key={item.motoristaId} className="border-b border-surface-border">
                 <td className="py-2.5 text-primary-500">{index + 1}</td>
                 <td className="py-2.5 font-medium text-primary-900">{item.nome}</td>
                 <td className="py-2.5 text-right font-semibold text-primary-900 tabular-nums">
@@ -64,7 +64,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
         {data.map((item, index) => (
           <div
             key={item.motoristaId}
-            className="rounded-lg border border-slate-100 bg-slate-50 p-3"
+            className="rounded-lg border border-surface-border bg-surface-muted p-3"
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-primary-500">#{index + 1}</span>

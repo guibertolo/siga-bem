@@ -115,7 +115,7 @@ export function AbastecimentoList({ abastecimentos }: AbastecimentoListProps) {
                     {formatDate(item.data)}
                   </span>
                   {item.tipo_combustivel && (
-                    <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                    <span className="rounded bg-info/20 px-2 py-0.5 text-xs font-medium text-info">
                       {TIPO_COMBUSTIVEL_LABELS[item.tipo_combustivel] ?? item.tipo_combustivel}
                     </span>
                   )}

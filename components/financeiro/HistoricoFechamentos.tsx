@@ -217,7 +217,7 @@ export function HistoricoFechamentos({
                         type="button"
                         onClick={() => handleReabrir(f.id)}
                         disabled={reabrirId === f.id}
-                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-yellow-600 hover:bg-yellow-50 transition-colors min-h-[40px] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-warning hover:bg-alert-warning-bg transition-colors min-h-[40px] disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {reabrirId === f.id ? 'Reabrindo...' : 'Reabrir'}
                       </button>

@@ -42,7 +42,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr key={item.caminhaoId} className="border-b border-slate-100">
+              <tr key={item.caminhaoId} className="border-b border-surface-border">
                 <td className="py-2.5 text-primary-500">{index + 1}</td>
                 <td className="py-2.5 font-medium text-primary-900">{item.placa}</td>
                 <td className="py-2.5 text-primary-700">{item.modelo}</td>
@@ -66,7 +66,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
         {data.map((item, index) => (
           <div
             key={item.caminhaoId}
-            className="rounded-lg border border-slate-100 bg-slate-50 p-3"
+            className="rounded-lg border border-surface-border bg-surface-muted p-3"
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-primary-500">#{index + 1}</span>

@@ -166,7 +166,7 @@ export default async function ViagemDetalhePage({
 
         {/* Estimativa de Custo (Story 3.3 - AC3, AC4) */}
         {estimativa && (
-          <div className="rounded-lg border border-surface-border bg-blue-50 p-6">
+          <div className="rounded-lg border border-surface-border bg-alert-info-bg p-6">
             <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-700">
               Estimativa de Custo
             </h3>
