@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
+import { BackButton } from '@/components/ui/BackButton';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 
 // Motorista: menu ultra simplificado (só o essencial)
@@ -167,6 +168,8 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-surface-card border-b border-surface-border px-4 md:px-8 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
+            {/* Mobile back button (hidden on desktop and on /dashboard) */}
+            <BackButton />
             {/* Mobile hamburger + drawer */}
             <MobileSidebar
               navLinks={navLinks}

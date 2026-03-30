@@ -104,7 +104,27 @@ export default async function ViagemDetalhePage({
           <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${VIAGEM_STATUS_COLORS[viagem.status as ViagemStatus]}`}>
             {VIAGEM_STATUS_LABELS[viagem.status as ViagemStatus]}
           </span>
+          {/* Motorista: show earnings badge next to status */}
+          {usuario.role === 'motorista' && valorMotorista > 0 && (
+            <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+              Seu ganho: {formatBRL(valorMotorista)}
+            </span>
+          )}
         </div>
+        {/* Dono/Admin: quick link to create closing for this motorista */}
+        {(usuario.role === 'dono' || usuario.role === 'admin') && (
+          <div className="mt-2">
+            <Link
+              href={`/fechamentos/novo?motorista_id=${viagem.motorista_id}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-surface-border px-4 py-2 text-sm font-medium text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              Fazer Acerto
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="space-y-6">

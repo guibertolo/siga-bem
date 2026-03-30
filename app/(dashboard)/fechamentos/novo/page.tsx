@@ -4,7 +4,11 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { listMotoristasParaFechamento } from '@/app/(dashboard)/fechamentos/actions';
 import { FechamentoForm } from '@/components/fechamentos/FechamentoForm';
 
-export default async function NovoFechamentoPage() {
+export default async function NovoFechamentoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ motorista_id?: string }>;
+}) {
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
@@ -16,6 +20,7 @@ export default async function NovoFechamentoPage() {
     redirect('/fechamentos');
   }
 
+  const { motorista_id: motoristaIdParam } = await searchParams;
   const motoristasResult = await listMotoristasParaFechamento();
 
   return (
@@ -39,7 +44,7 @@ export default async function NovoFechamentoPage() {
         </div>
       )}
 
-      <FechamentoForm motoristas={motoristasResult.data ?? []} />
+      <FechamentoForm motoristas={motoristasResult.data ?? []} initialMotoristaId={motoristaIdParam} />
     </div>
   );
 }
