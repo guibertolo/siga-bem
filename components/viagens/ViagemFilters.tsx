@@ -16,12 +16,14 @@ interface ViagemFiltersProps {
   motoristas: Array<{ id: string; nome: string }>;
   initialFilters: ViagemFilterValues;
   onFilter: (filters: ViagemFilterValues) => void;
+  isMotorista?: boolean;
 }
 
 export function ViagemFilters({
   motoristas,
   initialFilters,
   onFilter,
+  isMotorista = false,
 }: ViagemFiltersProps) {
   const [filters, setFilters] = useState<ViagemFilterValues>(initialFilters);
 
@@ -83,24 +85,26 @@ export function ViagemFilters({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Motorista */}
-        <div>
-          <label htmlFor="filter-motorista" className="mb-1 block text-xs font-medium uppercase tracking-wide text-primary-500">
-            Motorista
-          </label>
-          <select
-            id="filter-motorista"
-            value={filters.motorista_id}
-            onChange={(e) => handleChange({ motorista_id: e.target.value })}
-            className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
-          >
-            <option value="">Todos</option>
-            {motoristas.map((m) => (
-              <option key={m.id} value={m.id}>{m.nome}</option>
-            ))}
-          </select>
-        </div>
+      <div className={`grid gap-4 sm:grid-cols-2 ${isMotorista ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+        {/* Motorista — escondido para role motorista */}
+        {!isMotorista && (
+          <div>
+            <label htmlFor="filter-motorista" className="mb-1 block text-xs font-medium uppercase tracking-wide text-primary-500">
+              Motorista
+            </label>
+            <select
+              id="filter-motorista"
+              value={filters.motorista_id}
+              onChange={(e) => handleChange({ motorista_id: e.target.value })}
+              className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
+            >
+              <option value="">Todos</option>
+              {motoristas.map((m) => (
+                <option key={m.id} value={m.id}>{m.nome}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Data Inicio */}
         <div>

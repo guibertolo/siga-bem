@@ -2,16 +2,18 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listViagens, listMotoristasAtivos } from '@/app/(dashboard)/viagens/actions';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { ViagemList } from '@/components/viagens/ViagemList';
 
 export const metadata: Metadata = {
   title: 'Viagens',
 };
-import { ViagemList } from '@/components/viagens/ViagemList';
 
 export default async function ViagensPage() {
-  const [viagensResult, motoristasResult] = await Promise.all([
+  const [viagensResult, motoristasResult, currentUsuario] = await Promise.all([
     listViagens({ page: 1, pageSize: 20 }),
     listMotoristasAtivos(),
+    getCurrentUsuario(),
   ]);
 
   if (viagensResult.error === 'Nao autenticado' || motoristasResult.error === 'Nao autenticado') {
@@ -21,14 +23,17 @@ export default async function ViagensPage() {
   const viagens = viagensResult.data ?? [];
   const total = viagensResult.total;
   const motoristas = motoristasResult.data ?? [];
+  const isMotorista = currentUsuario?.role === 'motorista';
 
   return (
     <div className="w-full max-w-6xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Viagens</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
+            {isMotorista ? 'Minhas Viagens' : 'Viagens'}
+          </h2>
           <p className="mt-1 text-base text-primary-500">
-            Gerencie as viagens da sua frota.
+            {isMotorista ? 'Veja suas viagens e registre gastos.' : 'Gerencie as viagens da sua frota.'}
           </p>
         </div>
         <Link
@@ -47,6 +52,7 @@ export default async function ViagensPage() {
         total={total}
         motoristas={motoristas}
         initialPage={1}
+        isMotorista={isMotorista}
       />
     </div>
   );

@@ -14,6 +14,7 @@ interface ViagemListProps {
   total: number;
   motoristas: Array<{ id: string; nome: string }>;
   initialPage: number;
+  isMotorista?: boolean;
 }
 
 function formatDateTime(isoString: string): string {
@@ -27,6 +28,7 @@ export function ViagemList({
   total: initialTotal,
   motoristas,
   initialPage,
+  isMotorista = false,
 }: ViagemListProps) {
   const [isPending, startTransition] = useTransition();
   const [viagens, setViagens] = useState(initialViagens);
@@ -111,6 +113,7 @@ export function ViagemList({
         motoristas={motoristas}
         initialFilters={filters}
         onFilter={handleFilter}
+        isMotorista={isMotorista}
       />
 
       {error && (
