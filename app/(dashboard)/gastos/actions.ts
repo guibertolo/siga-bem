@@ -317,7 +317,7 @@ export async function updateGasto(
 
 /**
  * Delete a gasto (hard delete).
- * Motorista role: can only delete their own.
+ * Only dono/admin can delete gastos. Motorista CANNOT delete.
  */
 export async function deleteGasto(
   gastoId: string,
@@ -327,31 +327,12 @@ export async function deleteGasto(
     return { success: false, error: 'Nao autenticado' };
   }
 
-  const supabase = await createClient();
-
-  // Verify ownership for motorista role
+  // Motorista cannot delete gastos — only dono/admin
   if (usuario.role === 'motorista') {
-    const { data: existing } = await supabase
-      .from('gasto')
-      .select('motorista_id')
-      .eq('id', gastoId)
-      .single();
-
-    if (!existing) {
-      return { success: false, error: 'Gasto nao encontrado' };
-    }
-
-    const { data: motoristaRecord } = await supabase
-      .from('motorista')
-      .select('id')
-      .eq('usuario_id', usuario.id)
-      .eq('empresa_id', usuario.empresa_id)
-      .maybeSingle();
-
-    if (!motoristaRecord || existing.motorista_id !== motoristaRecord.id) {
-      return { success: false, error: 'Permissao insuficiente' };
-    }
+    return { success: false, error: 'Motorista nao tem permissao para excluir gastos' };
   }
+
+  const supabase = await createClient();
 
   const { error } = await supabase
     .from('gasto')

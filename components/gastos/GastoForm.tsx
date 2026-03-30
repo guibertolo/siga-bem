@@ -150,6 +150,11 @@ export function GastoForm({
     });
   }
 
+  // Filter out "Combustivel" — fuel is registered via AbastecimentoSection
+  const filteredCategorias = categorias.filter(
+    (c) => c.nome.toLowerCase() !== 'combustivel',
+  );
+
   const isEditing = mode === 'edit';
   const isMotoristaFixo = !!motoristaFixo;
   const isViagemSelected = !!watchedViagemId;
@@ -204,7 +209,7 @@ export function GastoForm({
             className={cn(inputClass, errors.categoria_id ? 'border-red-500' : 'border-surface-border')}
           >
             <option value="">Selecione o tipo de gasto</option>
-            {categorias.map((cat) => (
+            {filteredCategorias.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.nome}</option>
             ))}
           </select>
