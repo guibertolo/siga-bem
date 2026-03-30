@@ -90,7 +90,7 @@ export default async function HistoricoPage({ searchParams }: HistoricoPageProps
       )}
 
       {/* Filters */}
-      <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-gray-100" />}>
+      <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-surface-muted" />}>
         <HistoricoFiltros
           showMotoristaFilter={isAdmin}
           filterOptions={filterOptions}

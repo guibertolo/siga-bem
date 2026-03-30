@@ -50,7 +50,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
     currentCategoriaId !== '';
 
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-4 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-primary-900">Buscar por</h3>
         {hasActiveFilters && (

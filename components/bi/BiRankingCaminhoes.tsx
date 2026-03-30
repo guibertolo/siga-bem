@@ -10,7 +10,7 @@ interface BiRankingCaminhoesProps {
 export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+      <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Caminhoes que Mais Gastaram
         </h3>
@@ -22,7 +22,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
   }
 
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
         Caminhoes que Mais Gastaram
       </h3>
@@ -31,7 +31,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left">
+            <tr className="border-b border-surface-border text-left">
               <th className="pb-2 font-semibold text-primary-700">#</th>
               <th className="pb-2 font-semibold text-primary-700">Placa</th>
               <th className="pb-2 font-semibold text-primary-700">Modelo</th>

@@ -64,7 +64,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
               <span
                 className={cn(
                   'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
-                  v.ativo ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600',
+                  v.ativo ? 'bg-green-100 text-green-800' : 'bg-surface-muted text-gray-600',
                 )}
               >
                 {v.ativo ? 'Ativo' : 'Encerrado'}
@@ -133,7 +133,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                       'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                       v.ativo
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600',
+                        : 'bg-surface-muted text-gray-600',
                     )}
                   >
                     {v.ativo ? 'Ativo' : 'Encerrado'}

@@ -5,7 +5,7 @@ interface ViagemSummaryCardProps {
 
 export function ViagemSummaryCard({ count, error }: ViagemSummaryCardProps) {
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900">Viagens</h3>
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">
         {error ? '\u2014' : count}

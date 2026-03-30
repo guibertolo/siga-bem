@@ -141,7 +141,7 @@ export function VeiculosSection({
               'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
               excedeu
                 ? 'bg-amber-100 text-amber-800'
-                : 'bg-gray-100 text-gray-600',
+                : 'bg-surface-muted text-gray-600',
             )}
           >
             {qtdVeiculos} de {capacidade} vagas preenchidas
@@ -229,7 +229,7 @@ export function VeiculosSection({
                               e.stopPropagation();
                               setConfirmDeleteId(null);
                             }}
-                            className="rounded border border-gray-300 px-2 py-1 text-xs font-medium text-gray-600 hover:bg-surface-muted"
+                            className="rounded border border-surface-border px-2 py-1 text-xs font-medium text-gray-600 hover:bg-surface-muted"
                           >
                             Nao
                           </button>

@@ -32,7 +32,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-card border border-slate-200 bg-surface-card p-5 shadow-sm"
+          className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm"
         >
           <p className="text-sm font-medium text-primary-500">{card.label}</p>
           <p className="mt-1 text-2xl font-bold text-primary-900 tabular-nums">

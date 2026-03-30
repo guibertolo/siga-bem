@@ -12,7 +12,7 @@ const DEFAULT_COLOR = '#6B7280';
 export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+      <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Gastos por Tipo
         </h3>
@@ -24,7 +24,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
   }
 
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
         Gastos por Tipo
       </h3>
@@ -52,7 +52,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
                 </span>
               </div>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
+            <div className="w-full bg-surface-muted rounded-full h-2">
               <div
                 className="h-2 rounded-full transition-all duration-300"
                 style={{

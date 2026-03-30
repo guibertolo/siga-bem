@@ -248,7 +248,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              isEditing && 'cursor-not-allowed bg-gray-100 text-gray-500',
+              isEditing && 'cursor-not-allowed bg-surface-muted text-text-muted',
               errors.cpf ? 'border-red-500' : 'border-surface-border',
             )}
           />
@@ -361,7 +361,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
 
         {/* Toggle: Criar acesso ao sistema (Story 8.2) — only in create mode */}
         {mode === 'create' && onSubmitComConta && (
-          <div className="rounded-lg border border-surface-border bg-gray-50 p-4">
+          <div className="rounded-lg border border-surface-border bg-surface-muted p-4">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-base font-medium text-primary-900">

@@ -82,39 +82,39 @@ export default async function FechamentoDetalhePage({
       <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-500">Motorista</p>
-            <p className="font-medium text-gray-900">
+            <p className="text-sm text-text-muted">Motorista</p>
+            <p className="font-medium text-primary-900">
               {mot?.nome ?? 'Desconhecido'}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Periodo</p>
-            <p className="font-medium text-gray-900">
+            <p className="text-sm text-text-muted">Periodo</p>
+            <p className="font-medium text-primary-900">
               {formatarData(fechamento.periodo_inicio)} a{' '}
               {formatarData(fechamento.periodo_fim)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Tipo</p>
-            <p className="font-medium text-gray-900">
+            <p className="text-sm text-text-muted">Tipo</p>
+            <p className="font-medium text-primary-900">
               {FECHAMENTO_TIPO_LABELS[tipo]}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">ID</p>
-            <p className="font-mono text-sm text-gray-600">
+            <p className="text-sm text-text-muted">ID</p>
+            <p className="font-mono text-sm text-text-muted">
               {fechamento.id.slice(0, 8).toUpperCase()}
             </p>
           </div>
         </div>
 
         {fechamento.fechado_em && (
-          <p className="mt-3 text-xs text-gray-500">
+          <p className="mt-3 text-xs text-text-muted">
             Fechado em: {formatarData(fechamento.fechado_em.split('T')[0])}
           </p>
         )}
         {fechamento.pago_em && (
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-text-muted">
             Pago em: {formatarData(fechamento.pago_em.split('T')[0])}
           </p>
         )}
@@ -183,14 +183,14 @@ export default async function FechamentoDetalhePage({
           Viagens ({viagemItens.length})
         </h3>
         {viagemItens.length === 0 ? (
-          <p className="text-sm italic text-gray-400">
+          <p className="text-sm italic text-text-subtle">
             Nenhuma viagem neste acerto
           </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-left text-gray-500">
+                <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
                   <th className="pb-2 font-medium">Descricao</th>
                   <th className="pb-2 text-right font-medium">Valor</th>
@@ -198,7 +198,7 @@ export default async function FechamentoDetalhePage({
               </thead>
               <tbody>
                 {viagemItens.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-100">
+                  <tr key={item.id} className="border-b border-surface-border">
                     <td className="py-2">{formatarData(item.data)}</td>
                     <td className="py-2">{item.descricao}</td>
                     <td className="py-2 text-right font-medium">
@@ -218,14 +218,14 @@ export default async function FechamentoDetalhePage({
           Gastos ({gastoItens.length})
         </h3>
         {gastoItens.length === 0 ? (
-          <p className="text-sm italic text-gray-400">
+          <p className="text-sm italic text-text-subtle">
             Nenhum gasto neste acerto
           </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-left text-gray-500">
+                <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
                   <th className="pb-2 font-medium">Descricao</th>
                   <th className="pb-2 text-right font-medium">Valor</th>
@@ -233,7 +233,7 @@ export default async function FechamentoDetalhePage({
               </thead>
               <tbody>
                 {gastoItens.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-100">
+                  <tr key={item.id} className="border-b border-surface-border">
                     <td className="py-2">{formatarData(item.data)}</td>
                     <td className="py-2">{item.descricao}</td>
                     <td className="py-2 text-right font-medium">

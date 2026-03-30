@@ -10,7 +10,7 @@ interface BiTendenciaMensalProps {
 export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+      <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Gastos Mes a Mes
         </h3>
@@ -24,7 +24,7 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
   const maxTotal = Math.max(...data.map((d) => d.total));
 
   return (
-    <div className="rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm">
+    <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
         Gastos Mes a Mes
       </h3>

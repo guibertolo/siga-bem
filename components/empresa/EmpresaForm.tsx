@@ -119,7 +119,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-            isEditing && 'cursor-not-allowed bg-gray-100 text-gray-500',
+            isEditing && 'cursor-not-allowed bg-surface-muted text-text-muted',
             errors.cnpj ? 'border-red-500' : 'border-surface-border',
           )}
         />

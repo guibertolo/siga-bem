@@ -75,7 +75,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
 
       {/* Filters */}
       <div className="mb-4">
-        <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-gray-100" />}>
+        <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-surface-muted" />}>
           <FechamentoFilters
             motoristas={motoristasResult.data ?? []}
             showMotoristaFilter={showMotoristaFilter}

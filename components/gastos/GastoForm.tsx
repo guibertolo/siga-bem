@@ -179,7 +179,7 @@ export function GastoForm({
             className={cn(
               inputClass,
               'border-surface-border',
-              !!viagemIdInicial && 'cursor-not-allowed bg-gray-100',
+              !!viagemIdInicial && 'cursor-not-allowed bg-surface-muted',
             )}
           >
             <option value="">Sem viagem vinculada</option>
@@ -263,7 +263,7 @@ export function GastoForm({
             className={cn(
               inputClass,
               errors.motorista_id ? 'border-red-500' : 'border-surface-border',
-              isMotoristaLocked && 'cursor-not-allowed bg-gray-100',
+              isMotoristaLocked && 'cursor-not-allowed bg-surface-muted',
             )}
           >
             <option value="">Selecione um motorista</option>
@@ -287,7 +287,7 @@ export function GastoForm({
             className={cn(
               inputClass,
               'border-surface-border',
-              isCaminhaoLocked && 'cursor-not-allowed bg-gray-100',
+              isCaminhaoLocked && 'cursor-not-allowed bg-surface-muted',
             )}
           >
             <option value="">Nenhum (opcional)</option>

@@ -99,7 +99,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       <div className="mb-6">
         <Suspense
           fallback={
-            <div className="h-20 animate-pulse rounded-lg bg-gray-100" />
+            <div className="h-20 animate-pulse rounded-lg bg-surface-muted" />
           }
         >
           <BiFiltros options={options} />

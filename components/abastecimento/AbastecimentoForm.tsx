@@ -218,7 +218,7 @@ export function AbastecimentoForm({
       )}
 
       {/* Readonly pre-filled fields (AC 3, 13) */}
-      <div className="rounded-lg border border-surface-border bg-gray-50 p-4">
+      <div className="rounded-lg border border-surface-border bg-surface-muted p-4">
         <p className="mb-2 text-sm font-medium text-primary-500">Dados da viagem (automaticos)</p>
         <div className="grid gap-3 sm:grid-cols-2">
           <div>

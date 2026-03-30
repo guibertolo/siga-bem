@@ -101,7 +101,7 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
         <div className="mb-6 space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium text-primary-500">Email</label>
-            <div className="rounded-lg border border-surface-border bg-gray-50 px-4 py-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted px-4 py-3">
               <span className="font-mono text-lg font-semibold text-primary-900 sm:text-xl">
                 {email}
               </span>
@@ -109,7 +109,7 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-primary-500">Senha Temporaria</label>
-            <div className="rounded-lg border border-surface-border bg-gray-50 px-4 py-3">
+            <div className="rounded-lg border border-surface-border bg-surface-muted px-4 py-3">
               <span className="font-mono text-lg font-semibold text-primary-900 sm:text-xl">
                 {senha}
               </span>
@@ -175,7 +175,7 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
           <button
             type="button"
             onClick={onClose}
-            className="flex w-full items-center justify-center rounded-lg px-4 py-3 text-base font-medium text-primary-500 min-h-[48px] transition-colors hover:text-primary-700 hover:bg-gray-50"
+            className="flex w-full items-center justify-center rounded-lg px-4 py-3 text-base font-medium text-primary-500 min-h-[48px] transition-colors hover:text-primary-700 hover:bg-surface-muted"
           >
             Fechar
           </button>

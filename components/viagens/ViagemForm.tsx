@@ -192,7 +192,7 @@ export function ViagemForm({
       errors[fieldName]
         ? 'border-red-300 bg-red-50'
         : 'border-surface-border bg-surface-card',
-      disabled && 'bg-gray-100 text-gray-500 cursor-not-allowed',
+      disabled && 'bg-surface-muted text-text-muted cursor-not-allowed',
     );
 
   return (

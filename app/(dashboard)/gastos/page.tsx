@@ -95,7 +95,7 @@ export default async function GastosPage({ searchParams }: GastosPageProps) {
 
       {/* Filters */}
       <div className="mb-4">
-        <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-gray-100" />}>
+        <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-surface-muted" />}>
           <GastoFilters
             options={filterOptions}
             showMotoristaFilter={showMotoristaFilter}

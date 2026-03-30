@@ -69,7 +69,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
                   className={
                     motorista.status === 'ativo'
                       ? 'text-green-700 font-medium'
-                      : 'text-gray-500 font-medium'
+                      : 'text-text-muted font-medium'
                   }
                 >
                   {motorista.status === 'ativo' ? 'Ativo' : 'Inativo'}

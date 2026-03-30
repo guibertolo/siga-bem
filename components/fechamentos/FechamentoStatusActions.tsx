@@ -73,7 +73,7 @@ export function FechamentoStatusActions({
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm font-medium text-gray-700">O que deseja fazer:</span>
+        <span className="text-sm font-medium text-primary-700">O que deseja fazer:</span>
 
         {validTransitions.includes('fechado') && (
           <>
@@ -92,7 +92,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
+                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>
@@ -127,7 +127,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
+                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>
@@ -162,7 +162,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => setConfirmAction(null)}
                   disabled={isPending}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-surface-muted"
+                  className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
                   Cancelar
                 </button>

@@ -16,7 +16,7 @@ export function FechamentoSummaryCard({ count, totalCentavos }: FechamentoSummar
   return (
     <Link
       href="/fechamentos?status=aberto"
-      className="block rounded-card border border-slate-200 bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors"
+      className="block rounded-card border border-surface-border bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors"
     >
       <h3 className="text-lg font-semibold text-primary-900">Acertos Pendentes</h3>
       <p className="mt-2 text-3xl font-bold text-primary-700 tabular-nums">

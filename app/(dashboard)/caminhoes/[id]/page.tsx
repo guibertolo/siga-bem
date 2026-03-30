@@ -82,7 +82,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
                   className={
                     caminhao.ativo
                       ? 'text-green-700 font-medium'
-                      : 'text-gray-500 font-medium'
+                      : 'text-text-muted font-medium'
                   }
                 >
                   {caminhao.ativo ? 'Ativo' : 'Inativo'}
