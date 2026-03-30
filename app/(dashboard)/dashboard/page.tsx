@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Inicio',
 };
 
-import { GastoSummaryCard } from '@/components/dashboard/GastoSummaryCard';
+import { ReceitaMesCard } from '@/components/dashboard/ReceitaMesCard';
 import { ViagemSummaryCard } from '@/components/dashboard/ViagemSummaryCard';
 import { FechamentoSummaryCard } from '@/components/dashboard/FechamentoSummaryCard';
 import { ViagemAtivaCard } from '@/components/dashboard/ViagemAtivaCard';
@@ -77,7 +77,10 @@ export default async function DashboardPage() {
               />
             </Suspense>
             <Suspense fallback={<CardSkeleton />}>
-              <GastoSummaryCard total={dashboardData.gastos.total} />
+              <ReceitaMesCard
+                receitaCentavos={dashboardData.receitaCusto.receita}
+                custoCentavos={dashboardData.receitaCusto.custo}
+              />
             </Suspense>
             <Suspense fallback={<CardSkeleton />}>
               <FechamentoSummaryCard

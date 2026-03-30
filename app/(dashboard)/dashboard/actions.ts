@@ -63,6 +63,10 @@ export interface DashboardData {
     count: number;
     totalCentavos: number;
   };
+  receitaCusto: {
+    receita: number; // centavos
+    custo: number;   // centavos
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -120,18 +124,49 @@ async function getFechamentosPendentes(): Promise<{
   return { count, totalCentavos };
 }
 
+async function getReceitaCustoMes(): Promise<{
+  receita: number;
+  custo: number;
+}> {
+  const supabase = await createClient();
+  const now = new Date();
+  const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  const [viagensResult, gastosResult] = await Promise.all([
+    supabase
+      .from('viagem')
+      .select('valor_total')
+      .eq('status', 'concluida')
+      .gte('data_saida', inicioMes),
+    supabase
+      .from('gasto')
+      .select('valor')
+      .gte('data', inicioMes.split('T')[0]),
+  ]);
+
+  const receita = (viagensResult.data ?? []).reduce(
+    (sum: number, v: { valor_total: number }) => sum + v.valor_total, 0,
+  );
+  const custo = (gastosResult.data ?? []).reduce(
+    (sum: number, g: { valor: number }) => sum + g.valor, 0,
+  );
+
+  return { receita, custo };
+}
+
 /**
  * Fetch all dashboard summary data in parallel.
- * Consolidates 3 card queries into a single Promise.all().
+ * Consolidates card queries into a single Promise.all().
  */
 export async function getDashboardData(): Promise<DashboardData> {
-  const [viagens, gastos, fechamentos] = await Promise.all([
+  const [viagens, gastos, fechamentos, receitaCusto] = await Promise.all([
     getViagensEmAndamento(),
     getGastosMesAtual(),
     getFechamentosPendentes(),
+    getReceitaCustoMes(),
   ]);
 
-  return { viagens, gastos, fechamentos };
+  return { viagens, gastos, fechamentos, receitaCusto };
 }
 
 /**
