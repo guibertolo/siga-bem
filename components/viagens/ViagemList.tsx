@@ -124,8 +124,8 @@ export function ViagemList({
 
       {/* Active trips section */}
       {viagensAtivas.length > 0 && (
-        <div className="rounded-xl border border-warning/20 bg-alert-warning-bg p-4 dark:bg-amber-950/30 dark:border-amber-800">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-amber-800 mb-3 dark:text-amber-400">
+        <div className="rounded-xl border border-warning/20 bg-alert-warning-bg p-4">
+          <h3 className="text-sm font-bold uppercase tracking-wide text-warning mb-3">
             Em Andamento
           </h3>
 
@@ -175,18 +175,18 @@ export function ViagemList({
           <div className="hidden md:block overflow-x-auto rounded-lg border border-warning/20 bg-surface-card border-amber-800">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-warning/20 bg-amber-100/50 text-left dark:bg-amber-900/20 dark:border-amber-800">
-                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Origem/Destino</th>
-                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Motorista</th>
-                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Caminhao</th>
-                  <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Saida</th>
-                  <th className="px-4 py-3 text-base text-right font-medium text-amber-900 dark:text-amber-300">Valor</th>
-                  <th className="px-4 py-3 text-base text-right font-medium text-amber-900 dark:text-amber-300">Acoes</th>
+                <tr className="border-b border-warning/20 bg-alert-warning-bg text-left">
+                  <th className="px-4 py-3 text-base font-medium text-warning">Origem/Destino</th>
+                  <th className="px-4 py-3 text-base font-medium text-warning">Motorista</th>
+                  <th className="px-4 py-3 text-base font-medium text-warning">Caminhao</th>
+                  <th className="px-4 py-3 text-base font-medium text-warning">Saida</th>
+                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Valor</th>
+                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Acoes</th>
                 </tr>
               </thead>
               <tbody>
                 {viagensAtivas.map((v) => (
-                  <tr key={v.id} className="border-b border-amber-100 last:border-b-0 dark:border-amber-900">
+                  <tr key={v.id} className="border-b border-warning/20 last:border-b-0">
                     <td className="px-4 py-3">
                       <div className="text-base font-bold text-primary-900">{v.origem} &rarr; {v.destino}</div>
                     </td>

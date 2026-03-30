@@ -16,7 +16,7 @@ export function CaminhoesStatusCard({ caminhoes }: CaminhoesStatusCardProps) {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-primary-900">Caminhoes</h3>
-        <span className="text-sm font-medium text-primary-600 tabular-nums">
+        <span className="text-sm font-medium text-primary-500 tabular-nums">
           {rodando}/{total} rodando
         </span>
       </div>
@@ -30,22 +30,22 @@ export function CaminhoesStatusCard({ caminhoes }: CaminhoesStatusCardProps) {
           {caminhoes.map((c) => (
             <li
               key={c.id}
-              className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-white/60 px-4 py-3 dark:bg-white/5"
+              className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-3"
             >
               <div className="min-w-0 flex-1">
-                <span className="block truncate text-base font-bold text-primary-900 tabular-nums dark:text-primary-100">
+                <span className="block truncate text-base font-bold text-primary-900 tabular-nums">
                   {c.placa}
                 </span>
-                <span className="block truncate text-sm text-primary-600 dark:text-primary-400">
+                <span className="block truncate text-sm text-primary-500">
                   {c.modelo}
                 </span>
               </div>
               {c.situacao === 'rodando' ? (
-                <span className="shrink-0 inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                <span className="shrink-0 inline-flex items-center rounded-full bg-alert-success-bg px-3 py-1.5 text-sm font-semibold text-success">
                   Rodando
                 </span>
               ) : (
-                <span className="shrink-0 inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                <span className="shrink-0 inline-flex items-center rounded-full bg-surface-muted px-3 py-1.5 text-sm font-semibold text-text-muted">
                   Parado
                 </span>
               )}

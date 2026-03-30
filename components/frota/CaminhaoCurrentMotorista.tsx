@@ -35,7 +35,7 @@ export async function CaminhaoCurrentMotorista({ caminhaoId }: CaminhaoCurrentMo
           </p>
           <Link
             href={`/vinculos/historico?caminhao=${caminhaoId}`}
-            className="inline-block text-xs text-primary-600 transition-colors hover:text-primary-800"
+            className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
           >
             Ver historico completo &rarr;
           </Link>
@@ -45,7 +45,7 @@ export async function CaminhaoCurrentMotorista({ caminhaoId }: CaminhaoCurrentMo
           <p className="text-sm text-primary-500">Nenhum motorista vinculado.</p>
           <Link
             href="/vinculos/novo"
-            className="inline-block text-xs text-primary-600 transition-colors hover:text-primary-800"
+            className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
           >
             Criar vinculo &rarr;
           </Link>

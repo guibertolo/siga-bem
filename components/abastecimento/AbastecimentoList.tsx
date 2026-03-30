@@ -132,7 +132,7 @@ export function AbastecimentoList({ abastecimentos }: AbastecimentoListProps) {
                 </div>
 
                 {/* Row 3: Liters + Station/UF */}
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-600">
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-500">
                   <span className="tabular-nums">{formatLitros(item.litros)}</span>
                   {(item.posto_local || item.uf_abastecimento) && (
                     <span>

@@ -33,7 +33,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
       className={`
         relative rounded-2xl border-2 p-6 transition-all
         ${isCurrentlyActive
-          ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/20 shadow-md'
+          ? 'border-primary-500 bg-primary-100 shadow-md'
           : 'border-surface-border bg-surface-card hover:border-primary-300 hover:shadow-sm'}
         ${isInactive ? 'opacity-60' : ''}
       `}
@@ -41,7 +41,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
       {/* Badges */}
       <div className="flex flex-wrap gap-2 mb-4">
         {isCurrentlyActive && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 dark:bg-primary-900/30 px-3 py-1 text-sm font-semibold text-primary-700 dark:text-primary-300">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm font-semibold text-primary-700">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
             </svg>
@@ -49,27 +49,27 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
           </span>
         )}
         {isInactive && (
-          <span className="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-sm font-semibold text-danger dark:text-red-300">
+          <span className="inline-flex items-center rounded-full bg-alert-danger-bg px-3 py-1 text-sm font-semibold text-danger">
             Inativa
           </span>
         )}
-        <span className="inline-flex items-center rounded-full bg-surface-muted dark:bg-slate-800 px-3 py-1 text-sm font-medium text-text-muted dark:text-slate-300">
+        <span className="inline-flex items-center rounded-full bg-surface-muted px-3 py-1 text-sm font-medium text-text-muted">
           {ROLE_LABELS[empresa.role] ?? empresa.role}
         </span>
       </div>
 
       {/* Empresa info */}
-      <h2 className="text-xl font-bold text-primary-900 dark:text-white mb-1 leading-tight">
+      <h2 className="text-xl font-bold text-primary-900 mb-1 leading-tight">
         {empresa.razao_social}
       </h2>
 
       {empresa.nome_fantasia && (
-        <p className="text-base text-primary-700 dark:text-slate-300 mb-2">
+        <p className="text-base text-primary-700 mb-2">
           {empresa.nome_fantasia}
         </p>
       )}
 
-      <p className="text-base text-text-muted dark:text-text-subtle font-mono mb-6">
+      <p className="text-base text-text-muted font-mono mb-6">
         CNPJ: {formatCNPJ(empresa.cnpj)}
       </p>
 
@@ -82,9 +82,9 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
           flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl
           text-lg font-semibold transition-all
           ${isInactive
-            ? 'bg-surface-hover dark:bg-slate-700 text-text-subtle dark:text-text-muted cursor-not-allowed'
+            ? 'bg-surface-hover text-text-subtle cursor-not-allowed'
             : isPending
-              ? 'bg-primary-500 text-white cursor-wait'
+              ? 'bg-primary-1000 text-white cursor-wait'
               : 'bg-primary-700 text-white hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer'}
         `}
         aria-label={isInactive ? 'Empresa inativa' : `Entrar na empresa ${empresa.razao_social}`}

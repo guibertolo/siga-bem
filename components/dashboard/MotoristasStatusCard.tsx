@@ -16,7 +16,7 @@ export function MotoristasStatusCard({ motoristas }: MotoristasStatusCardProps) 
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-primary-900">Motoristas</h3>
-        <span className="text-sm font-medium text-primary-600 tabular-nums">
+        <span className="text-sm font-medium text-primary-500 tabular-nums">
           {emViagem}/{total} em viagem
         </span>
       </div>
@@ -30,17 +30,17 @@ export function MotoristasStatusCard({ motoristas }: MotoristasStatusCardProps) 
           {motoristas.map((m) => (
             <li
               key={m.id}
-              className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-white/60 px-4 py-3 dark:bg-white/5"
+              className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-3"
             >
-              <span className="min-w-0 truncate text-base font-medium text-primary-900 dark:text-primary-100">
+              <span className="min-w-0 truncate text-base font-medium text-primary-900">
                 {m.nome}
               </span>
               {m.situacao === 'em_viagem' ? (
-                <span className="shrink-0 inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                <span className="shrink-0 inline-flex items-center rounded-full bg-alert-success-bg px-3 py-1.5 text-sm font-semibold text-success">
                   Em Viagem
                 </span>
               ) : (
-                <span className="shrink-0 inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                <span className="shrink-0 inline-flex items-center rounded-full bg-surface-muted px-3 py-1.5 text-sm font-semibold text-text-muted">
                   Livre
                 </span>
               )}

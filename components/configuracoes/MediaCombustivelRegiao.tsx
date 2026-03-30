@@ -60,7 +60,7 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
                 <span className="text-lg font-bold text-primary-900">
                   {regiao.uf_abastecimento}
                 </span>
-                <span className="rounded-md bg-surface-muted px-2 py-0.5 text-sm text-primary-600">
+                <span className="rounded-md bg-surface-muted px-2 py-0.5 text-sm text-primary-500">
                   {regiao.tipo_combustivel}
                 </span>
               </div>

@@ -203,7 +203,7 @@ export function SimuladorViagem({
       {resultado && (
         <div className="mt-6 space-y-4">
           {/* Estimation card */}
-          <div className="rounded-lg border border-primary-200 bg-primary-50 p-4">
+          <div className="rounded-lg border border-primary-200 bg-primary-100 p-4">
             <h4 className="text-sm font-semibold text-primary-900 mb-3">
               Custo estimado para {kmEstimado} km —{' '}
               {COMBUSTIVEL_TIPO_LABELS[tipoCombustivel]}

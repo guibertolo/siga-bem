@@ -50,7 +50,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
   }
 
   const inputReadonlyClasses =
-    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-muted dark:bg-slate-800 cursor-not-allowed';
+    'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-muted cursor-not-allowed';
   const inputEditableClasses =
     'w-full h-12 rounded-default border border-surface-border px-4 text-base text-primary-900 bg-surface-input outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors';
 
@@ -109,7 +109,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
         {/* Role */}
         <div>
           <label className="block text-sm font-medium text-primary-700 mb-1">Funcao</label>
-          <span className="inline-block px-3 py-1.5 rounded-full text-sm font-semibold bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
+          <span className="inline-block px-3 py-1.5 rounded-full text-sm font-semibold bg-primary-100 text-primary-700">
             {roleLabel[role]}
           </span>
         </div>
@@ -128,8 +128,8 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
         <div
           className={`mt-4 rounded-default p-3 text-sm ${
             message.type === 'success'
-              ? 'bg-alert-success-bg text-success dark:bg-green-900/30 dark:text-green-300'
-              : 'bg-alert-danger-bg text-danger dark:bg-red-900/30 dark:text-red-300'
+              ? 'bg-alert-success-bg text-success'
+              : 'bg-alert-danger-bg text-danger'
           }`}
         >
           {message.text}

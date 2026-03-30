@@ -35,7 +35,7 @@ export function GastoSummary({
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-primary-600 transition-colors hover:text-primary-800"
+            className="text-sm text-primary-500 transition-colors hover:text-primary-800"
           >
             {isExpanded ? 'Esconder detalhes' : 'Ver por tipo de gasto'}
           </button>

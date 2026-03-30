@@ -58,7 +58,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
             type="button"
             onClick={handleClearAll}
             disabled={isPending}
-            className="text-xs text-primary-600 transition-colors hover:text-primary-800"
+            className="text-xs text-primary-500 transition-colors hover:text-primary-800"
           >
             Limpar busca
           </button>

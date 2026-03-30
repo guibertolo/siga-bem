@@ -107,7 +107,7 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
               <p className="text-base font-bold text-primary-900 truncate">
                 {v.origem} &rarr; {v.destino}
               </p>
-              <p className="text-sm text-primary-600 truncate dark:text-primary-400">
+              <p className="text-sm text-primary-500 truncate">
                 {v.motorista_nome} - {v.caminhao_placa}
               </p>
             </div>

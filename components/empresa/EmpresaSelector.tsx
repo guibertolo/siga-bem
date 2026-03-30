@@ -19,10 +19,10 @@ export function EmpresaSelector({ empresas }: EmpresaSelectorProps) {
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-primary-900 dark:text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-primary-900 mb-2">
             Selecionar Empresa
           </h1>
-          <p className="text-base text-primary-700 dark:text-slate-300">
+          <p className="text-base text-primary-700">
             Escolha a empresa que deseja acessar nesta sessao.
           </p>
         </div>
@@ -38,7 +38,7 @@ export function EmpresaSelector({ empresas }: EmpresaSelectorProps) {
         <div className="text-center">
           <Link
             href="/empresa/cadastro"
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-primary-300 dark:border-primary-700 bg-transparent px-6 min-h-[48px] text-lg font-semibold text-primary-700 dark:text-primary-300 no-underline hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:border-primary-500 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-primary-300 bg-transparent px-6 min-h-[48px] text-lg font-semibold text-primary-700 no-underline hover:bg-primary-100 hover:border-primary-500 transition-all"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />

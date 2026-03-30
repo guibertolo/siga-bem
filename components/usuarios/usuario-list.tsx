@@ -135,7 +135,7 @@ export default function UsuarioList({
                       className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${
                         usuario.ativo
                           ? 'bg-alert-success-bg text-success'
-                          : 'bg-red-100 text-red-800'
+                          : 'bg-alert-danger-bg text-red-800'
                       }`}
                     >
                       {usuario.ativo ? 'Ativo' : 'Inativo'}

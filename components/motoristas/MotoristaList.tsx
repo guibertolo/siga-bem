@@ -159,7 +159,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       className={cn(
                         'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.cnh_vencida
-                          ? 'bg-red-100 text-danger'
+                          ? 'bg-alert-danger-bg text-danger'
                           : m.cnh_vence_em_30_dias
                             ? 'bg-amber-100 text-warning'
                             : 'text-primary-700',

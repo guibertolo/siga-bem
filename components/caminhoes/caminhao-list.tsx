@@ -94,7 +94,7 @@ function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
         </div>
         <span className={cn(
           'inline-block rounded-full px-3 py-1 text-xs font-semibold',
-          caminhao.ativo ? 'bg-alert-success-bg text-success' : 'bg-red-100 text-red-800',
+          caminhao.ativo ? 'bg-alert-success-bg text-success' : 'bg-alert-danger-bg text-red-800',
         )}>
           {caminhao.ativo ? 'Ativo' : 'Inativo'}
         </span>
@@ -158,7 +158,7 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
           'inline-block rounded-full px-3 py-1 text-sm font-semibold',
           caminhao.ativo
             ? 'bg-alert-success-bg text-success'
-            : 'bg-red-100 text-red-800',
+            : 'bg-alert-danger-bg text-red-800',
         )}>
           {caminhao.ativo ? 'Ativo' : 'Inativo'}
         </span>

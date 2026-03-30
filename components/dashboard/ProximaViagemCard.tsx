@@ -55,7 +55,7 @@ export function ProximaViagemCard({ viagem }: ProximaViagemCardProps) {
           Frete: {formatBRL(viagem.valor_total)}
         </p>
       </div>
-      <p className="mt-3 text-sm font-medium text-primary-600">
+      <p className="mt-3 text-sm font-medium text-primary-500">
         Ver Detalhes &rarr;
       </p>
     </Link>

@@ -91,7 +91,7 @@ export function GastoTable({ gastos }: GastoTableProps) {
                 <button
                   type="button"
                   onClick={() => setReceiptGastoId(gasto.id)}
-                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-600 hover:bg-surface-hover transition-colors min-h-[40px]"
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
                 >
                   Comprovante
                 </button>
@@ -191,7 +191,7 @@ export function GastoTable({ gastos }: GastoTableProps) {
                     <button
                       type="button"
                       onClick={() => setReceiptGastoId(gasto.id)}
-                      className="inline-block cursor-pointer text-primary-600 transition-colors hover:text-primary-800"
+                      className="inline-block cursor-pointer text-primary-500 transition-colors hover:text-primary-800"
                       title="Ver comprovante"
                     >
                       <svg
