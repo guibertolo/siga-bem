@@ -53,7 +53,7 @@ export default async function EditarGastoPage({ params }: EditarGastoPageProps) 
         viagens={viagensResult.data ?? []}
         motoristaFixo={motoristaFixo}
         comprovantes={comprovantesResult.data ?? []}
-        empresaId={usuario.empresa_id}
+        empresaId={usuario.empresa_id ?? undefined}
       />
     </div>
   );

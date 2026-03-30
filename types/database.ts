@@ -35,11 +35,22 @@ export interface Empresa {
 export interface Usuario {
   id: string;
   auth_id: string;
-  empresa_id: string;
+  empresa_id: string | null;
   motorista_id: string | null;
   nome: string;
   email: string;
   telefone: string | null;
+  role: UsuarioRole;
+  ativo: boolean;
+  ultima_empresa_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UsuarioEmpresa {
+  id: string;
+  usuario_id: string;
+  empresa_id: string;
   role: UsuarioRole;
   ativo: boolean;
   created_at: string;

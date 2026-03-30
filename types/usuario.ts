@@ -8,13 +8,14 @@ export type UsuarioRole = 'dono' | 'motorista' | 'admin';
 export interface Usuario {
   id: string;
   auth_id: string;
-  empresa_id: string;
+  empresa_id: string | null;
   motorista_id: string | null;
   nome: string;
   email: string;
   telefone: string | null;
   role: UsuarioRole;
   ativo: boolean;
+  ultima_empresa_id: string | null;
   created_at: string;
   updated_at: string;
 }

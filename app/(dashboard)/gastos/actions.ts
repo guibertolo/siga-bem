@@ -494,7 +494,7 @@ export async function fetchFilterOptions(): Promise<{
 
   try {
     const options = await getGastoFilterOptions(
-      usuario.empresa_id,
+      usuario.empresa_id!,
       usuario.role,
       usuario.id,
     );
