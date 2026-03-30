@@ -152,13 +152,36 @@ export function VeiculosSection({
           <button
             type="button"
             onClick={() => {
-              setEditingVeiculo(null);
-              setShowForm(true);
+              if (showForm && !editingVeiculo) {
+                closeForm();
+              } else {
+                setEditingVeiculo(null);
+                setShowForm(true);
+              }
             }}
-            className="rounded-lg bg-primary-700 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-800 disabled:opacity-50"
+            className={cn(
+              'inline-flex items-center gap-2 rounded-lg px-4 py-3 text-base font-semibold min-h-[48px] transition-colors',
+              showForm && !editingVeiculo
+                ? 'border border-surface-border bg-surface-muted text-primary-700 hover:bg-surface-hover'
+                : 'bg-primary-700 text-white hover:bg-primary-800 disabled:opacity-50',
+            )}
             disabled={isPending}
           >
-            + Adicionar Veiculo
+            {showForm && !editingVeiculo ? (
+              <>
+                <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Fechar
+              </>
+            ) : (
+              <>
+                <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Adicionar Veiculo
+              </>
+            )}
           </button>
         )}
       </div>
@@ -260,13 +283,15 @@ export function VeiculosSection({
         </div>
       )}
 
-      {/* Add/Edit Modal */}
+      {/* Add/Edit inline form */}
       {showForm && (
-        <VeiculoForm
-          veiculo={editingVeiculo}
-          onSubmit={editingVeiculo ? handleUpdate : handleAdd}
-          onClose={closeForm}
-        />
+        <div className="mt-4 border-t border-surface-border pt-4">
+          <VeiculoForm
+            veiculo={editingVeiculo}
+            onSubmit={editingVeiculo ? handleUpdate : handleAdd}
+            onClose={closeForm}
+          />
+        </div>
       )}
     </div>
   );

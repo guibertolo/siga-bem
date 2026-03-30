@@ -51,15 +51,6 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
     }
   }, [watchedPlaca, setValue]);
 
-  // Close on Escape
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
   function onFormSubmit(values: ViagemVeiculoFormValues) {
     setServerError(null);
 
@@ -96,33 +87,23 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
   const isEdit = !!veiculo;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={isEdit ? 'Editar veiculo' : 'Adicionar veiculo'}
-    >
-      <div
-        className="w-full max-w-lg rounded-lg bg-surface-card p-6 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-primary-900">
-            {isEdit ? 'Editar Veiculo' : 'Adicionar Veiculo'}
-          </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-text-subtle transition-colors hover:text-text-muted"
-            aria-label="Fechar"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-bold text-primary-900">
+          {isEdit ? 'Editar Veiculo' : 'Adicionar Veiculo'}
+        </h3>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded p-1 text-text-subtle transition-colors hover:text-text-muted"
+          aria-label="Fechar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
 
         {serverError && (
           <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg px-4 py-3 text-base text-danger">
@@ -305,7 +286,6 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
             </button>
           </div>
         </form>
-      </div>
     </div>
   );
 }
