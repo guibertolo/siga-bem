@@ -37,6 +37,30 @@ function getClassificacaoLabel(
   }
 }
 
+function getMetodoLabel(metodo: BIEficienciaItem['metodo']): string {
+  switch (metodo) {
+    case 'viagem':
+      return 'Baseado nas viagens';
+    case 'estimativa':
+      return 'Dados insuficientes';
+    default:
+      return '';
+  }
+}
+
+function formatKmPorLitro(
+  kmPorLitro: number | null,
+  metodo: BIEficienciaItem['metodo'],
+): string {
+  if (kmPorLitro != null) {
+    return kmPorLitro.toFixed(2);
+  }
+  if (metodo === 'estimativa') {
+    return '---';
+  }
+  return '---';
+}
+
 export function BiEficienciaCombustivel({
   data,
 }: BiEficienciaCombustivelProps) {
@@ -99,10 +123,15 @@ export function BiEficienciaCombustivel({
                   {item.placa}
                 </td>
                 <td className="py-2.5 text-primary-700">{item.modelo}</td>
-                <td className="py-2.5 text-right font-semibold text-primary-900 tabular-nums">
-                  {item.kmPorLitro != null
-                    ? item.kmPorLitro.toFixed(2)
-                    : '---'}
+                <td className="py-2.5 text-right">
+                  <span className="font-semibold text-primary-900 tabular-nums">
+                    {formatKmPorLitro(item.kmPorLitro, item.metodo)}
+                  </span>
+                  {item.metodo && (
+                    <span className="block text-xs text-primary-400">
+                      {getMetodoLabel(item.metodo)}
+                    </span>
+                  )}
                 </td>
                 <td className="py-2.5 text-right text-primary-700 tabular-nums">
                   {item.totalLitros.toFixed(1)} L
@@ -145,10 +174,13 @@ export function BiEficienciaCombustivel({
               <div>
                 <span className="text-xs text-primary-500">km/L: </span>
                 <span className="text-sm font-bold text-primary-900 tabular-nums">
-                  {item.kmPorLitro != null
-                    ? item.kmPorLitro.toFixed(2)
-                    : '---'}
+                  {formatKmPorLitro(item.kmPorLitro, item.metodo)}
                 </span>
+                {item.metodo && (
+                  <span className="block text-xs text-primary-400">
+                    {getMetodoLabel(item.metodo)}
+                  </span>
+                )}
               </div>
               <div className="text-right">
                 <span className="text-sm font-bold text-primary-900 tabular-nums">

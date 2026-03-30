@@ -154,7 +154,7 @@ export interface BIHistoricoRotasResult {
 // ---------------------------------------------------------------------------
 
 /**
- * Fuel efficiency item per truck.
+ * Fuel efficiency item per truck or driver.
  * All monetary values in centavos (CON-003).
  */
 export interface BIEficienciaItem {
@@ -162,11 +162,30 @@ export interface BIEficienciaItem {
   placa: string;
   modelo: string;
   kmPorLitro: number | null;
+  kmTotal: number;
   totalLitros: number;
   totalGastoCentavos: number;
   totalAbastecimentos: number;
   /** 'bom' (> 2.5), 'medio' (2.0-2.5), 'ruim' (< 2.0), null if no data */
   classificacao: 'bom' | 'medio' | 'ruim' | null;
+  /** Calculation method: 'viagem' (from trip km data), 'estimativa' (fallback), null if no data */
+  metodo: 'viagem' | 'estimativa' | null;
+}
+
+/**
+ * Fuel efficiency item per driver.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIEficienciaMotoristaItem {
+  motoristaId: string;
+  nome: string;
+  kmPorLitro: number | null;
+  kmTotal: number;
+  totalLitros: number;
+  totalGastoCentavos: number;
+  totalAbastecimentos: number;
+  classificacao: 'bom' | 'medio' | 'ruim' | null;
+  metodo: 'viagem' | 'estimativa' | null;
 }
 
 // ---------------------------------------------------------------------------

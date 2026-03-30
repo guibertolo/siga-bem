@@ -16,6 +16,7 @@ import type {
   BIHistoricoRotasResult,
   BIHistoricoRotaItem,
   BIEficienciaItem,
+  BIEficienciaMotoristaItem,
   BIManutencaoTruckItem,
   BIManutencaoTipoItem,
 } from '@/types/bi';
@@ -518,17 +519,56 @@ export async function getEstimativaCustoViagem(
     let consumoKmL = CONSUMO_PADRAO_CEGONHEIRO;
     let fonteConsumo: BIEstimativaResult['fonteConsumo'] = 'padrao_cegonheiro';
 
-    // Try to get real consumption from truck history
+    // Try to get real consumption from truck trip history (hybrid calculation)
     if (params.caminhaoId) {
-      const { data: caminhaoView } = await supabase
-        .from('vw_custo_por_caminhao')
-        .select('km_por_litro_estimado')
-        .eq('caminhao_id', params.caminhaoId)
-        .single();
+      // Fetch concluded trips with km data (last 180 days)
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 180);
+      const cutoffStr = cutoff.toISOString().split('T')[0];
 
-      if (caminhaoView?.km_por_litro_estimado && caminhaoView.km_por_litro_estimado > 0) {
-        consumoKmL = Number(caminhaoView.km_por_litro_estimado);
-        fonteConsumo = 'historico_real';
+      const [tripRes, fuelRes] = await Promise.all([
+        supabase
+          .from('viagem')
+          .select('km_saida, km_chegada')
+          .eq('caminhao_id', params.caminhaoId)
+          .eq('status', 'concluida')
+          .not('km_saida', 'is', null)
+          .not('km_chegada', 'is', null)
+          .gte('data_saida', cutoffStr)
+          .order('data_saida', { ascending: true }),
+        supabase
+          .from('gasto')
+          .select('litros')
+          .eq('caminhao_id', params.caminhaoId)
+          .not('litros', 'is', null)
+          .not('tipo_combustivel', 'is', null)
+          .gte('data', cutoffStr),
+      ]);
+
+      const trips = tripRes.data ?? [];
+      const fuels = fuelRes.data ?? [];
+
+      if (trips.length > 0 && fuels.length > 0) {
+        let totalKm = 0;
+        for (let i = 0; i < trips.length; i++) {
+          const km = (trips[i].km_chegada ?? 0) - (trips[i].km_saida ?? 0);
+          if (km > 0) totalKm += km;
+          // Add gap km between consecutive trips
+          if (i > 0) {
+            const gap = (trips[i].km_saida ?? 0) - (trips[i - 1].km_chegada ?? 0);
+            if (gap > 0 && gap < 500) totalKm += gap;
+          }
+        }
+
+        const totalLitros = fuels.reduce((sum, f) => sum + (Number(f.litros) || 0), 0);
+
+        if (totalKm > 0 && totalLitros > 0) {
+          const calculated = totalKm / totalLitros;
+          if (calculated >= 1.0 && calculated <= 5.0) {
+            consumoKmL = Math.round(calculated * 100) / 100;
+            fonteConsumo = 'historico_real';
+          }
+        }
       }
     }
 
@@ -713,6 +753,19 @@ function classificarEficiencia(
   return 'ruim';
 }
 
+/**
+ * Hybrid km/L calculation per truck.
+ *
+ * Layer 1 (most precise): Calculate from concluded trips with km_saida & km_chegada.
+ *   - Sum km driven per trip: SUM(km_chegada - km_saida)
+ *   - Add "invisible km" gaps between consecutive trips (< 500km positive gaps only)
+ *   - Divide by total fuel litros for the truck in the period
+ *   - Sanity check: result must be between 1.0 and 5.0 km/L
+ *
+ * Layer 2 (fallback): Mark as 'estimativa' with null km/L ("Dados insuficientes")
+ *
+ * Research: docs/research/km-por-litro-metodologia.md
+ */
 export async function getBIEficienciaCombustivel(
   filtros: BIFiltros,
 ): Promise<{ data: BIEficienciaItem[] | null; error: string | null }> {
@@ -720,8 +773,26 @@ export async function getBIEficienciaCombustivel(
     await requireDono();
     const supabase = await createClient();
 
-    // Query fuel expenses grouped by truck within the period
-    let query = supabase
+    // 1. Fetch concluded trips with km data in the period, grouped by truck
+    let viagemQuery = supabase
+      .from('viagem')
+      .select('id, caminhao_id, km_saida, km_chegada, data_saida')
+      .eq('status', 'concluida')
+      .not('km_saida', 'is', null)
+      .not('km_chegada', 'is', null)
+      .gte('data_saida', filtros.periodoInicio)
+      .lte('data_saida', filtros.periodoFim)
+      .order('data_saida', { ascending: true });
+
+    if (filtros.caminhaoId) {
+      viagemQuery = viagemQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      viagemQuery = viagemQuery.eq('motorista_id', filtros.motoristaId);
+    }
+
+    // 2. Fetch fuel expenses in the period
+    let gastoQuery = supabase
       .from('gasto')
       .select(`
         valor,
@@ -739,32 +810,59 @@ export async function getBIEficienciaCombustivel(
       .not('tipo_combustivel', 'is', null);
 
     if (filtros.caminhaoId) {
-      query = query.eq('caminhao_id', filtros.caminhaoId);
+      gastoQuery = gastoQuery.eq('caminhao_id', filtros.caminhaoId);
     }
     if (filtros.motoristaId) {
-      query = query.eq('motorista_id', filtros.motoristaId);
+      gastoQuery = gastoQuery.eq('motorista_id', filtros.motoristaId);
     }
 
-    const { data: gastos, error } = await query;
-    if (error) throw new Error(error.message);
+    const [viagemRes, gastoRes] = await Promise.all([viagemQuery, gastoQuery]);
 
-    // Also fetch km_por_litro_estimado from the view for each truck
-    const { data: viewData } = await supabase
-      .from('vw_custo_por_caminhao')
-      .select('caminhao_id, km_por_litro_estimado');
+    if (viagemRes.error) throw new Error(viagemRes.error.message);
+    if (gastoRes.error) throw new Error(gastoRes.error.message);
 
-    const kmPorLitroMap = new Map<string, number>();
-    for (const row of viewData ?? []) {
-      if (row.km_por_litro_estimado && Number(row.km_por_litro_estimado) > 0) {
-        kmPorLitroMap.set(row.caminhao_id, Number(row.km_por_litro_estimado));
+    const viagens = viagemRes.data ?? [];
+    const gastos = gastoRes.data ?? [];
+
+    // 3. Group trips by truck and calculate km (trip + gap)
+    const tripsByTruck = new Map<string, Array<{ km_saida: number; km_chegada: number }>>();
+    for (const v of viagens) {
+      if (v.km_saida == null || v.km_chegada == null) continue;
+      if (v.km_chegada <= v.km_saida) continue;
+      const camId = v.caminhao_id;
+      if (!camId) continue;
+      const list = tripsByTruck.get(camId) ?? [];
+      list.push({ km_saida: v.km_saida, km_chegada: v.km_chegada });
+      tripsByTruck.set(camId, list);
+    }
+
+    // Calculate total real km per truck (trip km + invisible gap km)
+    const kmByTruck = new Map<string, number>();
+    for (const [camId, trips] of tripsByTruck) {
+      // trips already sorted by data_saida ASC from query
+      let tripKm = 0;
+      let gapKm = 0;
+
+      for (let i = 0; i < trips.length; i++) {
+        tripKm += trips[i].km_chegada - trips[i].km_saida;
+
+        // Calculate gap between consecutive trips
+        if (i > 0) {
+          const gap = trips[i].km_saida - trips[i - 1].km_chegada;
+          // Only count positive gaps < 500km (larger gaps = data error or different assignment)
+          if (gap > 0 && gap < 500) {
+            gapKm += gap;
+          }
+        }
       }
+
+      kmByTruck.set(camId, tripKm + gapKm);
     }
 
-    // Aggregate by truck
-    const byTruck = new Map<
+    // 4. Aggregate fuel data by truck
+    const fuelByTruck = new Map<
       string,
       {
-        caminhaoId: string;
         placa: string;
         modelo: string;
         totalLitros: number;
@@ -773,22 +871,21 @@ export async function getBIEficienciaCombustivel(
       }
     >();
 
-    for (const gasto of gastos ?? []) {
+    for (const gasto of gastos) {
       const cam = gasto.caminhao as unknown as {
         placa: string;
         modelo: string;
       } | null;
       const camId = gasto.caminhao_id!;
-      const existing = byTruck.get(camId);
       const litros = Number(gasto.litros) || 0;
+      const existing = fuelByTruck.get(camId);
 
       if (existing) {
         existing.totalLitros += litros;
         existing.totalGastoCentavos += gasto.valor;
         existing.totalAbastecimentos += 1;
       } else {
-        byTruck.set(camId, {
-          caminhaoId: camId,
+        fuelByTruck.set(camId, {
           placa: cam?.placa ?? '---',
           modelo: cam?.modelo ?? '---',
           totalLitros: litros,
@@ -798,16 +895,216 @@ export async function getBIEficienciaCombustivel(
       }
     }
 
-    const items: BIEficienciaItem[] = Array.from(byTruck.values())
-      .map((truck) => {
-        const kmPorLitro = kmPorLitroMap.get(truck.caminhaoId) ?? null;
-        return {
-          ...truck,
-          kmPorLitro,
-          classificacao: classificarEficiencia(kmPorLitro),
-        };
-      })
-      .sort((a, b) => (b.kmPorLitro ?? 0) - (a.kmPorLitro ?? 0));
+    // 5. Merge: all trucks that have fuel data
+    const allTruckIds = new Set([...fuelByTruck.keys()]);
+    const items: BIEficienciaItem[] = [];
+
+    for (const camId of allTruckIds) {
+      const fuel = fuelByTruck.get(camId)!;
+      const totalKm = kmByTruck.get(camId) ?? 0;
+
+      let kmPorLitro: number | null = null;
+      let metodo: BIEficienciaItem['metodo'] = null;
+
+      if (totalKm > 0 && fuel.totalLitros > 0) {
+        const raw = totalKm / fuel.totalLitros;
+        // Sanity check: cegonheiro between 1.0 and 5.0 km/L
+        if (raw >= 1.0 && raw <= 5.0) {
+          kmPorLitro = Math.round(raw * 100) / 100;
+          metodo = 'viagem';
+        } else {
+          // Outside sane range — mark as insufficient data
+          metodo = 'estimativa';
+        }
+      } else if (fuel.totalLitros > 0) {
+        // No trip km data but has fuel — cannot calculate
+        metodo = 'estimativa';
+      }
+
+      items.push({
+        caminhaoId: camId,
+        placa: fuel.placa,
+        modelo: fuel.modelo,
+        kmPorLitro,
+        kmTotal: totalKm,
+        totalLitros: fuel.totalLitros,
+        totalGastoCentavos: fuel.totalGastoCentavos,
+        totalAbastecimentos: fuel.totalAbastecimentos,
+        classificacao: classificarEficiencia(kmPorLitro),
+        metodo,
+      });
+    }
+
+    items.sort((a, b) => (b.kmPorLitro ?? 0) - (a.kmPorLitro ?? 0));
+
+    return { data: items, error: null };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Eficiencia de Combustivel — km/L per driver
+// ---------------------------------------------------------------------------
+
+/**
+ * Same hybrid km/L calculation but grouped by driver instead of truck.
+ */
+export async function getBIEficienciaMotoristas(
+  filtros: BIFiltros,
+): Promise<{ data: BIEficienciaMotoristaItem[] | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    // 1. Fetch concluded trips with km data, grouped by driver
+    let viagemQuery = supabase
+      .from('viagem')
+      .select('id, motorista_id, km_saida, km_chegada, data_saida')
+      .eq('status', 'concluida')
+      .not('km_saida', 'is', null)
+      .not('km_chegada', 'is', null)
+      .gte('data_saida', filtros.periodoInicio)
+      .lte('data_saida', filtros.periodoFim)
+      .order('data_saida', { ascending: true });
+
+    if (filtros.caminhaoId) {
+      viagemQuery = viagemQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      viagemQuery = viagemQuery.eq('motorista_id', filtros.motoristaId);
+    }
+
+    // 2. Fetch fuel expenses in the period
+    let gastoQuery = supabase
+      .from('gasto')
+      .select(`
+        valor,
+        litros,
+        motorista_id,
+        motorista (
+          nome
+        )
+      `)
+      .gte('data', filtros.periodoInicio)
+      .lte('data', filtros.periodoFim)
+      .not('motorista_id', 'is', null)
+      .not('litros', 'is', null)
+      .not('tipo_combustivel', 'is', null);
+
+    if (filtros.caminhaoId) {
+      gastoQuery = gastoQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      gastoQuery = gastoQuery.eq('motorista_id', filtros.motoristaId);
+    }
+
+    const [viagemRes, gastoRes] = await Promise.all([viagemQuery, gastoQuery]);
+
+    if (viagemRes.error) throw new Error(viagemRes.error.message);
+    if (gastoRes.error) throw new Error(gastoRes.error.message);
+
+    const viagens = viagemRes.data ?? [];
+    const gastos = gastoRes.data ?? [];
+
+    // 3. Group trips by driver and calculate km (trip + gap)
+    const tripsByDriver = new Map<string, Array<{ km_saida: number; km_chegada: number }>>();
+    for (const v of viagens) {
+      if (v.km_saida == null || v.km_chegada == null) continue;
+      if (v.km_chegada <= v.km_saida) continue;
+      const motId = v.motorista_id;
+      if (!motId) continue;
+      const list = tripsByDriver.get(motId) ?? [];
+      list.push({ km_saida: v.km_saida, km_chegada: v.km_chegada });
+      tripsByDriver.set(motId, list);
+    }
+
+    const kmByDriver = new Map<string, number>();
+    for (const [motId, trips] of tripsByDriver) {
+      let tripKm = 0;
+      let gapKm = 0;
+
+      for (let i = 0; i < trips.length; i++) {
+        tripKm += trips[i].km_chegada - trips[i].km_saida;
+
+        if (i > 0) {
+          const gap = trips[i].km_saida - trips[i - 1].km_chegada;
+          if (gap > 0 && gap < 500) {
+            gapKm += gap;
+          }
+        }
+      }
+
+      kmByDriver.set(motId, tripKm + gapKm);
+    }
+
+    // 4. Aggregate fuel data by driver
+    const fuelByDriver = new Map<
+      string,
+      {
+        nome: string;
+        totalLitros: number;
+        totalGastoCentavos: number;
+        totalAbastecimentos: number;
+      }
+    >();
+
+    for (const gasto of gastos) {
+      const mot = gasto.motorista as unknown as { nome: string } | null;
+      const motId = gasto.motorista_id!;
+      const litros = Number(gasto.litros) || 0;
+      const existing = fuelByDriver.get(motId);
+
+      if (existing) {
+        existing.totalLitros += litros;
+        existing.totalGastoCentavos += gasto.valor;
+        existing.totalAbastecimentos += 1;
+      } else {
+        fuelByDriver.set(motId, {
+          nome: mot?.nome ?? 'Desconhecido',
+          totalLitros: litros,
+          totalGastoCentavos: gasto.valor,
+          totalAbastecimentos: 1,
+        });
+      }
+    }
+
+    // 5. Merge
+    const items: BIEficienciaMotoristaItem[] = [];
+
+    for (const motId of fuelByDriver.keys()) {
+      const fuel = fuelByDriver.get(motId)!;
+      const totalKm = kmByDriver.get(motId) ?? 0;
+
+      let kmPorLitro: number | null = null;
+      let metodo: BIEficienciaMotoristaItem['metodo'] = null;
+
+      if (totalKm > 0 && fuel.totalLitros > 0) {
+        const raw = totalKm / fuel.totalLitros;
+        if (raw >= 1.0 && raw <= 5.0) {
+          kmPorLitro = Math.round(raw * 100) / 100;
+          metodo = 'viagem';
+        } else {
+          metodo = 'estimativa';
+        }
+      } else if (fuel.totalLitros > 0) {
+        metodo = 'estimativa';
+      }
+
+      items.push({
+        motoristaId: motId,
+        nome: fuel.nome,
+        kmPorLitro,
+        kmTotal: totalKm,
+        totalLitros: fuel.totalLitros,
+        totalGastoCentavos: fuel.totalGastoCentavos,
+        totalAbastecimentos: fuel.totalAbastecimentos,
+        classificacao: classificarEficiencia(kmPorLitro),
+        metodo,
+      });
+    }
+
+    items.sort((a, b) => (b.kmPorLitro ?? 0) - (a.kmPorLitro ?? 0));
 
     return { data: items, error: null };
   } catch (err) {
