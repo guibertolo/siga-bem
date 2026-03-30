@@ -1,60 +1,60 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
-import { listVinculos } from '@/app/(dashboard)/vinculos/actions';
+import { getDashboardVinculos, getActiveMotoristas } from '@/app/(dashboard)/vinculos/actions';
+import { VinculoSummaryBar } from '@/components/vinculos/VinculoSummaryBar';
+import { VinculoDashboard } from '@/components/vinculos/VinculoDashboard';
 
 export const metadata: Metadata = {
   title: 'Vinculos',
 };
-import { VinculoList } from '@/components/vinculos/VinculoList';
 
 export default async function VinculosPage() {
   const usuario = await getCurrentUsuario();
   if (!usuario) redirect('/login');
   if (usuario.role === 'motorista') redirect('/dashboard');
 
-  const result = await listVinculos();
+  const [dashboardResult, motoristasResult] = await Promise.all([
+    getDashboardVinculos(),
+    getActiveMotoristas(),
+  ]);
 
-  if (result.error === 'Nao autenticado') {
+  if (dashboardResult.error === 'Nao autenticado') {
     redirect('/login');
   }
 
   return (
     <div className="w-full max-w-5xl">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Vinculos Motorista-Caminhao</h2>
-          <p className="mt-1 text-base text-primary-500">
-            Gerencie a vinculacao entre motoristas e caminhoes.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/vinculos/historico"
-            className="inline-flex items-center gap-2 rounded-lg border border-surface-border px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
-          >
-            Historico
-          </Link>
-          <Link
-            href="/vinculos/novo"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-800 min-h-[48px]"
-          >
-            <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Novo Vinculo
-          </Link>
-        </div>
+      <div className="mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
+          Vinculos da Frota
+        </h2>
+        <p className="mt-1 text-base text-primary-500">
+          Visao geral de motoristas e caminhoes vinculados
+        </p>
       </div>
 
-      {result.error && (
-        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
-          {result.error}
+      {dashboardResult.error && (
+        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
+          {dashboardResult.error}
         </div>
       )}
 
-      <VinculoList vinculos={result.data ?? []} />
+      <div className="mb-6">
+        <VinculoSummaryBar
+          totalVinculados={dashboardResult.contadores.totalVinculados}
+          totalSemMotorista={dashboardResult.contadores.totalSemMotorista}
+          totalEncerrados={dashboardResult.contadores.totalEncerrados}
+        />
+      </div>
+
+      <VinculoDashboard
+        caminhoesCom={dashboardResult.caminhoesCom}
+        caminhoesSem={dashboardResult.caminhoesSem}
+        historico={dashboardResult.historico}
+        totalEncerrados={dashboardResult.contadores.totalEncerrados}
+        motoristas={motoristasResult.data ?? []}
+      />
     </div>
   );
 }

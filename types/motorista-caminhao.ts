@@ -79,3 +79,44 @@ export interface CaminhaoOption {
   placa: string;
   modelo: string;
 }
+
+/**
+ * Caminhao with its active motorista vinculos — used by the vinculos dashboard.
+ */
+export interface CaminhaoComMotorista {
+  caminhao_id: string;
+  caminhao_placa: string;
+  caminhao_modelo: string;
+  motoristas: {
+    vinculo_id: string;
+    motorista_id: string;
+    motorista_nome: string;
+    motorista_cpf: string;
+    data_inicio: string;
+    observacao: string | null;
+  }[];
+}
+
+/**
+ * Caminhao without any active vinculo — needs attention.
+ */
+export interface CaminhaoSemMotorista {
+  caminhao_id: string;
+  caminhao_placa: string;
+  caminhao_modelo: string;
+}
+
+/**
+ * Dashboard data for the vinculos page.
+ */
+export interface VinculosDashboardData {
+  caminhoesCom: CaminhaoComMotorista[];
+  caminhoesSem: CaminhaoSemMotorista[];
+  historico: VinculoListItem[];
+  contadores: {
+    totalVinculados: number;
+    totalSemMotorista: number;
+    totalEncerrados: number;
+  };
+  error: string | null;
+}
