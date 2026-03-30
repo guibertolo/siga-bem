@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/app/globals.css';
 
 const inter = Inter({
@@ -50,7 +52,6 @@ export const viewport: Viewport = {
   themeColor: '#1B3A4B',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -77,6 +78,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-surface-background font-sans text-primary-900 antialiased">
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
