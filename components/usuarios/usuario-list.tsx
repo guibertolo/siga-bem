@@ -69,7 +69,74 @@ export default function UsuarioList({
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      {/* Mobile card view */}
+      <div className="space-y-3 md:hidden">
+        {usuarios.map((usuario) => {
+          const isSelf = usuario.id === currentUsuarioId;
+          const isTargetDono = usuario.role === 'dono';
+
+          return (
+            <div key={usuario.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div className="min-w-0 flex-1">
+                  <div className="text-base font-medium text-primary-900 truncate">
+                    {usuario.nome}
+                    {isSelf && <span className="ml-1 text-sm text-primary-500">(voce)</span>}
+                  </div>
+                  <div className="text-sm text-primary-500 truncate">{usuario.email}</div>
+                </div>
+                <span
+                  className={`shrink-0 ml-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${
+                    usuario.ativo
+                      ? 'bg-alert-success-bg text-success'
+                      : 'bg-alert-danger-bg text-red-800'
+                  }`}
+                >
+                  {usuario.ativo ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                {isDono && !isSelf && !isTargetDono ? (
+                  <select
+                    value={usuario.role}
+                    onChange={(e) => handleRoleChange(usuario.id, e.target.value as UsuarioRole)}
+                    disabled={isPending}
+                    className="rounded-md border border-surface-border bg-surface-card px-3 py-2 text-base min-h-[48px]"
+                  >
+                    <option value="admin">Gestor</option>
+                    <option value="motorista">Motorista</option>
+                  </select>
+                ) : (
+                  <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${ROLE_COLORS[usuario.role]}`}>
+                    {ROLE_LABELS[usuario.role]}
+                  </span>
+                )}
+                <span className="text-sm text-primary-400">
+                  Desde {new Date(usuario.created_at).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+              {!isSelf && !isTargetDono && (
+                <div className="mt-2 pt-2 border-t border-surface-border">
+                  <button
+                    onClick={() => handleToggleAtivo(usuario.id, usuario.ativo)}
+                    disabled={isPending}
+                    className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[48px] ${
+                      usuario.ativo
+                        ? 'text-danger hover:bg-alert-danger-bg'
+                        : 'text-success hover:bg-alert-success-bg'
+                    } disabled:opacity-50`}
+                  >
+                    {usuario.ativo ? 'Desativar' : 'Reativar'}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-surface-border">

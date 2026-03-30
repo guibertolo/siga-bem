@@ -98,7 +98,44 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-surface-border">
+        <>
+        {/* Mobile card view */}
+        <div className="space-y-3 md:hidden">
+          {precos.map((preco) => (
+            <div key={preco.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="text-base font-medium text-primary-900">{preco.regiao}</div>
+                  <div className="text-sm text-primary-500">{COMBUSTIVEL_TIPO_LABELS[preco.tipo]}</div>
+                </div>
+                <span className="text-lg font-semibold tabular-nums text-primary-900">
+                  {formatBRL(preco.preco_centavos)}
+                </span>
+              </div>
+              <div className="text-sm text-primary-700">
+                <p>Ref: {formatDate(preco.data_referencia)} {preco.fonte ? `- ${preco.fonte}` : ''}</p>
+              </div>
+              <div className="mt-3 flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={() => handleEdit(preco)}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[48px]"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(preco.id)}
+                  disabled={isPending}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[48px] disabled:opacity-50"
+                >
+                  {deletingId === preco.id ? 'Confirmar?' : 'Excluir'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table view */}
+        <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border">
           <table className="w-full text-left">
             <thead className="border-b border-surface-border bg-surface-muted">
               <tr>
@@ -148,6 +185,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

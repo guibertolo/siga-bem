@@ -83,7 +83,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-surface-background font-sans text-primary-900 antialiased">
+      <body className="min-h-screen bg-surface-background font-sans text-primary-900 antialiased overflow-x-hidden">
         {children}
         <Analytics />
         <SpeedInsights />

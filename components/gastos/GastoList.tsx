@@ -67,7 +67,53 @@ export function GastoList({ gastos, isMotorista = false }: GastoListProps) {
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
+      {/* Mobile card view */}
+      <div className="space-y-3 md:hidden">
+        {gastos.map((gasto) => (
+          <div key={gasto.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <div className="text-base font-medium text-primary-900">{gasto.categoria_nome}</div>
+                <div className="text-sm text-primary-500">{gasto.motorista_nome}</div>
+              </div>
+              <span className="text-base font-semibold tabular-nums text-primary-900">
+                {formatBRL(gasto.valor)}
+              </span>
+            </div>
+            <div className="text-sm text-primary-700 space-y-0.5">
+              <p>{formatDate(gasto.data)} {gasto.caminhao_placa ? `- ${gasto.caminhao_placa}` : ''}</p>
+            </div>
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              <Link
+                href={`/gastos/${gasto.id}/editar`}
+                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+              >
+                Editar
+              </Link>
+              {!isMotorista && (
+                confirmId === gasto.id ? (
+                  <span className="flex items-center gap-1">
+                    <button type="button" onClick={() => handleConfirmDelete(gasto.id)} disabled={isPending} className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Confirmar</button>
+                    <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Cancelar</button>
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteClick(gasto.id)}
+                    disabled={isPending && deletingId === gasto.id}
+                    className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                  >
+                    {isPending && deletingId === gasto.id ? 'Excluindo...' : 'Excluir'}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
         <table className="w-full">
           <thead>
             <tr className="border-b border-surface-border bg-surface-muted text-left">

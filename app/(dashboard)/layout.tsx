@@ -166,8 +166,8 @@ export default async function DashboardLayout({
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-surface-card border-b border-surface-border px-4 md:px-8 py-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        <header className="bg-surface-card border-b border-surface-border px-3 sm:px-4 md:px-8 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Mobile back button (hidden on desktop and on /dashboard) */}
             <BackButton />
             {/* Mobile hamburger + drawer */}
@@ -179,7 +179,7 @@ export default async function DashboardLayout({
               empresas={empresas}
               viagensAtivasCount={viagensAtivasCount}
             />
-            <span className="text-sm text-primary-700 truncate">
+            <span className="text-sm text-primary-700 truncate hidden sm:inline">
               {currentUsuario.email}
             </span>
           </div>

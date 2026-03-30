@@ -141,8 +141,61 @@ export function HistoricoFechamentos({
         )}
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
+      {/* Mobile card view */}
+      <div className="space-y-3 md:hidden">
+        {fechamentos.map((f) => (
+          <div key={f.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div className="min-w-0 flex-1">
+                <div className="text-base font-medium text-primary-900 truncate">{f.motorista_nome}</div>
+                <div className="text-sm text-primary-500">
+                  {formatarPeriodoFechamento(f.periodo_inicio, f.periodo_fim, f.tipo)} - {FECHAMENTO_TIPO_LABELS[f.tipo]}
+                </div>
+              </div>
+              <span className={`shrink-0 ml-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${FECHAMENTO_STATUS_COLORS[f.status]}`}>
+                {FECHAMENTO_STATUS_LABELS[f.status]}
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mt-3 text-sm">
+              <div>
+                <div className="text-primary-400">Viagens</div>
+                <div className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_viagens)}</div>
+              </div>
+              <div>
+                <div className="text-primary-400">Gastos</div>
+                <div className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_gastos)}</div>
+              </div>
+              <div>
+                <div className="text-primary-400">Saldo</div>
+                <div className={`font-semibold tabular-nums ${f.saldo_motorista >= 0 ? 'text-success' : 'text-danger'}`}>
+                  {formatBRL(f.saldo_motorista)}
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 pt-2 border-t border-surface-border flex items-center gap-2 flex-wrap">
+              <Link
+                href={`/fechamentos/${f.id}`}
+                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[48px]"
+              >
+                Ver Detalhe
+              </Link>
+              {isAdmin && f.status === 'fechado' && (
+                <button
+                  type="button"
+                  onClick={() => handleReabrir(f.id)}
+                  disabled={reabrirId === f.id}
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-warning hover:bg-alert-warning-bg transition-colors min-h-[48px] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {reabrirId === f.id ? 'Reabrindo...' : 'Reabrir'}
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
         <table className="min-w-full divide-y divide-surface-border">
           <thead className="bg-surface-muted">
             <tr>
