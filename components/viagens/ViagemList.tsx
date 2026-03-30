@@ -267,24 +267,26 @@ export function ViagemList({
                     <td className="px-4 py-3 text-base text-primary-700">{v.caminhao_placa}</td>
                     <td className="px-4 py-3 text-base text-primary-700">{formatDateTime(v.data_saida)}</td>
                     <td className="px-4 py-3 text-base text-right tabular-nums text-primary-700">{formatBRL(v.valor_total)}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2 flex-wrap">
-                        <Link
-                          href={`/viagens/${v.id}`}
-                          className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
-                        >
-                          Ver
-                        </Link>
-                        <Link
-                          href={`/viagens/${v.id}/editar`}
-                          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
-                        >
-                          Editar
-                        </Link>
+                    <td className="px-4 py-3 text-right min-w-[140px]">
+                      <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-1">
+                          <Link
+                            href={`/viagens/${v.id}`}
+                            className="inline-flex items-center rounded-md bg-primary-700 px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-primary-800"
+                          >
+                            Ver
+                          </Link>
+                          <Link
+                            href={`/viagens/${v.id}/editar`}
+                            className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
+                          >
+                            Editar
+                          </Link>
+                        </div>
                         {!isMotorista && v.status !== 'cancelada' && (
                           <>
                             {invalidarId === v.id ? (
-                              <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
+                              <div className="w-full mt-1 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
                                 <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
                                 <input
                                   type="text"
@@ -317,7 +319,7 @@ export function ViagemList({
                                 type="button"
                                 onClick={() => handleInvalidarClick(v.id)}
                                 disabled={invalidandoId === v.id}
-                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
                               >
                                 Invalidar
                               </button>
@@ -504,40 +506,32 @@ export function ViagemList({
                         {VIAGEM_STATUS_LABELS[v.status]}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/viagens/${v.id}`}
-                          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
-                        >
-                          <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          Ver
-                        </Link>
-                        {(v.status === 'planejada' || v.status === 'em_andamento') && (
+                    <td className="px-4 py-3.5 text-right min-w-[140px]">
+                      <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-1">
                           <Link
-                            href={`/viagens/${v.id}/editar`}
-                            className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-700 hover:bg-surface-hover transition-colors min-h-[40px]"
+                            href={`/viagens/${v.id}`}
+                            className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
                           >
-                            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Editar
+                            Ver
                           </Link>
-                        )}
-                        {!isMotorista && v.status === 'concluida' && (
-                          <Link
-                            href={`/fechamentos/novo?motorista_id=${v.motorista_id}`}
-                            className="inline-flex items-center gap-1.5 rounded-md bg-success px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-success/90 min-h-[40px]"
-                          >
-                            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Acertar
-                          </Link>
-                        )}
+                          {(v.status === 'planejada' || v.status === 'em_andamento') && (
+                            <Link
+                              href={`/viagens/${v.id}/editar`}
+                              className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
+                            >
+                              Editar
+                            </Link>
+                          )}
+                          {!isMotorista && v.status === 'concluida' && (
+                            <Link
+                              href={`/fechamentos/novo?motorista_id=${v.motorista_id}`}
+                              className="inline-flex items-center rounded-md bg-success px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-success/90"
+                            >
+                              Acertar
+                            </Link>
+                          )}
+                        </div>
                         {!isMotorista && v.status === 'planejada' && (
                           <>
                             {confirmId === v.id ? (
@@ -565,11 +559,8 @@ export function ViagemList({
                               <button
                                 type="button"
                                 onClick={() => handleDeleteClick(v.id)}
-                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
                               >
-                                <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
                                 Excluir
                               </button>
                             )}
@@ -611,9 +602,9 @@ export function ViagemList({
                                 type="button"
                                 onClick={() => handleInvalidarClick(v.id)}
                                 disabled={invalidandoId === v.id}
-                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
                               >
-                                <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="h-3.5 w-3.5 mr-1" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                 </svg>
                                 Invalidar
