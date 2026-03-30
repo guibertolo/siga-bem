@@ -4,11 +4,12 @@ import { Suspense } from 'react';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 
 export const metadata: Metadata = {
-  title: 'Resumo dos Gastos',
+  title: 'Resultado da Frota',
 };
 import {
   getBIFilterOptions,
   getBIKpis,
+  getBIMargemMotoristas,
   getBICategoriasBreakdown,
   getBIRankingCaminhoes,
   getBIRankingMotoristas,
@@ -18,6 +19,7 @@ import {
 } from '@/app/(dashboard)/bi/actions';
 import { BiFiltros } from '@/components/bi/BiFiltros';
 import { BiKpiCards } from '@/components/bi/BiKpiCards';
+import { BiMargemMotoristas } from '@/components/bi/BiMargemMotoristas';
 import { BiBreakdownCategorias } from '@/components/bi/BiBreakdownCategorias';
 import { BiRankingCaminhoes } from '@/components/bi/BiRankingCaminhoes';
 import { BiRankingMotoristas } from '@/components/bi/BiRankingMotoristas';
@@ -75,6 +77,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
   const [
     filterOpts,
     kpis,
+    margemMotoristas,
     categorias,
     caminhoes,
     motoristas,
@@ -84,6 +87,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
   ] = await Promise.all([
     getBIFilterOptions(),
     getBIKpis(filtros),
+    getBIMargemMotoristas(filtros),
     getBICategoriasBreakdown(filtros),
     getBIRankingCaminhoes(filtros),
     getBIRankingMotoristas(filtros),
@@ -102,14 +106,14 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     <div className="w-full max-w-7xl">
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
-          Resumo dos Gastos
+          Resultado da Frota
         </h2>
         <p className="text-sm text-primary-500 mt-1">
-          Veja quanto a frota gastou e onde foi o dinheiro
+          Veja o resultado real do seu negocio
         </p>
       </div>
 
-      {/* Filters */}
+      {/* 1. Filtros */}
       <div className="mb-6">
         <Suspense
           fallback={
@@ -120,33 +124,38 @@ export default async function BiPage({ searchParams }: BiPageProps) {
         </Suspense>
       </div>
 
-      {/* 1. KPI Cards */}
+      {/* 2. Hero KPIs — profit-first cards */}
       <div className="mb-6">
         <BiKpiCards data={kpis.data} />
       </div>
 
-      {/* 2. Eficiencia de Combustivel (NEW) */}
+      {/* 3. Margem por Motorista */}
+      <div className="mb-6">
+        <BiMargemMotoristas data={margemMotoristas.data} />
+      </div>
+
+      {/* 4. Eficiencia de Combustivel */}
       <div className="mb-6">
         <BiEficienciaCombustivel data={eficiencia.data} />
       </div>
 
-      {/* 3. Manutencoes (NEW) */}
+      {/* 5. Manutencoes */}
       <div className="mb-6">
         <BiManutencoes data={manutencoes.data} />
       </div>
 
-      {/* 4. Monthly Trend */}
+      {/* 6. Tendencia Mensal */}
       <div className="mb-6">
         <BiTendenciaMensal data={tendencia.data} />
       </div>
 
-      {/* 5. Rankings side by side on desktop */}
+      {/* 7. Rankings side by side on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <BiRankingCaminhoes data={caminhoes.data} />
         <BiRankingMotoristas data={motoristas.data} />
       </div>
 
-      {/* 6. Category Breakdown */}
+      {/* 8. Category Breakdown */}
       <div className="mb-6">
         <BiBreakdownCategorias data={categorias.data} />
       </div>
@@ -154,7 +163,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       {/* Separator */}
       <div className="mb-6 border-t border-surface-border" />
 
-      {/* 7. Previsao e Margens */}
+      {/* 9. Simulador / Rotas */}
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
           Calcular Custo de Viagem

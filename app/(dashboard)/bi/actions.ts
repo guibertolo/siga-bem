@@ -19,6 +19,7 @@ import type {
   BIEficienciaMotoristaItem,
   BIManutencaoTruckItem,
   BIManutencaoTipoItem,
+  BIMargemMotoristaItem,
 } from '@/types/bi';
 
 // ---------------------------------------------------------------------------
@@ -80,7 +81,7 @@ export async function getBIFilterOptions(): Promise<{
 }
 
 // ---------------------------------------------------------------------------
-// KPIs
+// KPIs — Profit-first hero metrics
 // ---------------------------------------------------------------------------
 
 export async function getBIKpis(
@@ -90,7 +91,22 @@ export async function getBIKpis(
     await requireDono();
     const supabase = await createClient();
 
-    // Build gasto query
+    // 1. Fetch concluded viagens in the period (receita)
+    let viagemQuery = supabase
+      .from('viagem')
+      .select('id, valor_total')
+      .eq('status', 'concluida')
+      .gte('data_saida', filtros.periodoInicio)
+      .lte('data_saida', filtros.periodoFim);
+
+    if (filtros.caminhaoId) {
+      viagemQuery = viagemQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      viagemQuery = viagemQuery.eq('motorista_id', filtros.motoristaId);
+    }
+
+    // 2. Fetch all gastos in the period (custos)
     let gastoQuery = supabase
       .from('gasto')
       .select('valor, viagem_id')
@@ -107,56 +123,190 @@ export async function getBIKpis(
       gastoQuery = gastoQuery.eq('categoria_id', filtros.categoriaId);
     }
 
-    const { data: gastos, error: gastoError } = await gastoQuery;
-    if (gastoError) throw new Error(gastoError.message);
+    const [viagemRes, gastoRes] = await Promise.all([viagemQuery, gastoQuery]);
 
-    const totalGastos = (gastos ?? []).reduce((sum, g) => sum + g.valor, 0);
-    const totalLancamentos = gastos?.length ?? 0;
+    if (viagemRes.error) throw new Error(viagemRes.error.message);
+    if (gastoRes.error) throw new Error(gastoRes.error.message);
 
-    // Count distinct viagens
-    const viagemIds = new Set(
-      (gastos ?? []).map((g) => g.viagem_id).filter(Boolean),
-    );
-    const gastoMedioPorViagem =
-      viagemIds.size > 0 ? Math.round(totalGastos / viagemIds.size) : 0;
+    const viagens = viagemRes.data ?? [];
+    const gastos = gastoRes.data ?? [];
 
-    // Custo por km: fetch viagens with km data in the period
-    let custoPorKm: number | null = null;
-    let viagemKmQuery = supabase
-      .from('viagem')
-      .select('km_saida, km_chegada')
-      .gte('data_saida', filtros.periodoInicio)
-      .lte('data_saida', filtros.periodoFim)
-      .not('km_saida', 'is', null)
-      .not('km_chegada', 'is', null);
+    // Receita total (fretes concluidos)
+    const receitaFrete = viagens.reduce((sum, v) => sum + (v.valor_total ?? 0), 0);
+    const viagensConcluidas = viagens.length;
 
-    if (filtros.caminhaoId) {
-      viagemKmQuery = viagemKmQuery.eq('caminhao_id', filtros.caminhaoId);
-    }
-    if (filtros.motoristaId) {
-      viagemKmQuery = viagemKmQuery.eq('motorista_id', filtros.motoristaId);
-    }
+    // Custo total
+    const custoTotal = gastos.reduce((sum, g) => sum + g.valor, 0);
 
-    const { data: viagens } = await viagemKmQuery;
-    if (viagens && viagens.length > 0) {
-      const totalKm = viagens.reduce((sum, v) => {
-        const km = (v.km_chegada ?? 0) - (v.km_saida ?? 0);
-        return sum + (km > 0 ? km : 0);
-      }, 0);
-      if (totalKm > 0) {
-        custoPorKm = Math.round(totalGastos / totalKm);
+    // Lucro bruto
+    const lucroBruto = receitaFrete - custoTotal;
+    const margemPercentual = receitaFrete > 0
+      ? Math.round((lucroBruto / receitaFrete) * 10000) / 100
+      : 0;
+
+    // 3. Per-trip margin: for each concluded viagem, sum its linked gastos
+    const gastosPorViagem = new Map<string, number>();
+    for (const g of gastos) {
+      if (g.viagem_id) {
+        gastosPorViagem.set(
+          g.viagem_id,
+          (gastosPorViagem.get(g.viagem_id) ?? 0) + g.valor,
+        );
       }
     }
 
+    let somaMargens = 0;
+    let somaMargensPct = 0;
+    let viagensComMargem = 0;
+
+    for (const v of viagens) {
+      const frete = v.valor_total ?? 0;
+      const custo = gastosPorViagem.get(v.id) ?? 0;
+      const margem = frete - custo;
+      somaMargens += margem;
+      if (frete > 0) {
+        somaMargensPct += (margem / frete) * 100;
+      }
+      viagensComMargem += 1;
+    }
+
+    const margemMediaViagem = viagensComMargem > 0
+      ? Math.round(somaMargens / viagensComMargem)
+      : 0;
+    const margemMediaPercentual = viagensComMargem > 0
+      ? Math.round((somaMargensPct / viagensComMargem) * 100) / 100
+      : 0;
+
     return {
       data: {
-        totalGastos,
-        totalLancamentos,
-        gastoMedioPorViagem,
-        custoPorKm,
+        receitaFrete,
+        custoTotal,
+        lucroBruto,
+        margemPercentual,
+        viagensConcluidas,
+        margemMediaViagem,
+        margemMediaPercentual,
       },
       error: null,
     };
+  } catch (err) {
+    return { data: null, error: err instanceof Error ? err.message : 'Erro' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Margem por Motorista
+// ---------------------------------------------------------------------------
+
+export async function getBIMargemMotoristas(
+  filtros: BIFiltros,
+): Promise<{ data: BIMargemMotoristaItem[] | null; error: string | null }> {
+  try {
+    await requireDono();
+    const supabase = await createClient();
+
+    // 1. Fetch concluded viagens with motorista info
+    let viagemQuery = supabase
+      .from('viagem')
+      .select('id, valor_total, motorista_id, motorista:motorista_id (nome)')
+      .eq('status', 'concluida')
+      .not('motorista_id', 'is', null)
+      .gte('data_saida', filtros.periodoInicio)
+      .lte('data_saida', filtros.periodoFim);
+
+    if (filtros.caminhaoId) {
+      viagemQuery = viagemQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      viagemQuery = viagemQuery.eq('motorista_id', filtros.motoristaId);
+    }
+
+    // 2. Fetch all gastos linked to viagens
+    let gastoQuery = supabase
+      .from('gasto')
+      .select('valor, viagem_id')
+      .not('viagem_id', 'is', null)
+      .gte('data', filtros.periodoInicio)
+      .lte('data', filtros.periodoFim);
+
+    if (filtros.caminhaoId) {
+      gastoQuery = gastoQuery.eq('caminhao_id', filtros.caminhaoId);
+    }
+    if (filtros.motoristaId) {
+      gastoQuery = gastoQuery.eq('motorista_id', filtros.motoristaId);
+    }
+    if (filtros.categoriaId) {
+      gastoQuery = gastoQuery.eq('categoria_id', filtros.categoriaId);
+    }
+
+    const [viagemRes, gastoRes] = await Promise.all([viagemQuery, gastoQuery]);
+
+    if (viagemRes.error) throw new Error(viagemRes.error.message);
+    if (gastoRes.error) throw new Error(gastoRes.error.message);
+
+    const viagens = viagemRes.data ?? [];
+    const gastos = gastoRes.data ?? [];
+
+    // Aggregate gastos by viagem_id
+    const gastosPorViagem = new Map<string, number>();
+    for (const g of gastos) {
+      if (g.viagem_id) {
+        gastosPorViagem.set(
+          g.viagem_id,
+          (gastosPorViagem.get(g.viagem_id) ?? 0) + g.valor,
+        );
+      }
+    }
+
+    // Aggregate by motorista
+    const byMotorista = new Map<
+      string,
+      {
+        motoristaId: string;
+        nome: string;
+        viagensConcluidas: number;
+        receitaCentavos: number;
+        custoCentavos: number;
+      }
+    >();
+
+    for (const v of viagens) {
+      const motId = v.motorista_id!;
+      const mot = v.motorista as unknown as { nome: string } | null;
+      const frete = v.valor_total ?? 0;
+      const custo = gastosPorViagem.get(v.id) ?? 0;
+
+      const existing = byMotorista.get(motId);
+      if (existing) {
+        existing.viagensConcluidas += 1;
+        existing.receitaCentavos += frete;
+        existing.custoCentavos += custo;
+      } else {
+        byMotorista.set(motId, {
+          motoristaId: motId,
+          nome: mot?.nome ?? 'Desconhecido',
+          viagensConcluidas: 1,
+          receitaCentavos: frete,
+          custoCentavos: custo,
+        });
+      }
+    }
+
+    const items: BIMargemMotoristaItem[] = Array.from(byMotorista.values())
+      .map((m) => {
+        const margem = m.receitaCentavos - m.custoCentavos;
+        const pct = m.receitaCentavos > 0
+          ? Math.round((margem / m.receitaCentavos) * 10000) / 100
+          : 0;
+        return {
+          ...m,
+          margemCentavos: margem,
+          margemPercentual: pct,
+        };
+      })
+      .sort((a, b) => b.margemCentavos - a.margemCentavos);
+
+    return { data: items, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err.message : 'Erro' };
   }

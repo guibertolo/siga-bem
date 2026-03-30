@@ -17,13 +17,31 @@ export interface BIFiltros {
 }
 
 /**
- * KPI summary cards data.
+ * KPI summary cards data — profit-first metrics.
+ * Redesigned: hero cards show lucro/margem/receita/custos (not just gastos).
  */
 export interface BIKpis {
-  totalGastos: number;        // centavos
-  totalLancamentos: number;
-  gastoMedioPorViagem: number; // centavos
-  custoPorKm: number | null;  // centavos per km, null if no km data
+  receitaFrete: number;           // centavos — sum of concluded viagens valor_total
+  custoTotal: number;             // centavos — sum of all gastos
+  lucroBruto: number;             // centavos — receita - custo
+  margemPercentual: number;       // 0-100
+  viagensConcluidas: number;      // count
+  margemMediaViagem: number;      // centavos — average margin per trip
+  margemMediaPercentual: number;  // 0-100
+}
+
+/**
+ * Margin per driver item for the "Margem por Motorista" section.
+ * All monetary values in centavos (CON-003).
+ */
+export interface BIMargemMotoristaItem {
+  motoristaId: string;
+  nome: string;
+  viagensConcluidas: number;
+  receitaCentavos: number;
+  custoCentavos: number;
+  margemCentavos: number;
+  margemPercentual: number; // 0-100
 }
 
 /**
