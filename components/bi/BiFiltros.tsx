@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useTransition } from 'react';
+import { useCallback, useState, useEffect, useTransition } from 'react';
 import type { BIFilterOptions } from '@/types/bi';
 
 interface BiFiltrosProps {
@@ -13,15 +13,31 @@ export function BiFiltros({ options }: BiFiltrosProps) {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const currentPeriodo = searchParams.get('periodo') ?? '30';
-  const currentCaminhaoId = searchParams.get('caminhaoId') ?? '';
-  const currentMotoristaId = searchParams.get('motoristaId') ?? '';
-  const currentCategoriaId = searchParams.get('categoriaId') ?? '';
+  // Optimistic local state — updates immediately on user interaction
+  const [periodo, setPeriodo] = useState(searchParams.get('periodo') ?? '30');
+  const [caminhaoId, setCaminhaoId] = useState(searchParams.get('caminhaoId') ?? '');
+  const [motoristaId, setMotoristaId] = useState(searchParams.get('motoristaId') ?? '');
+  const [categoriaId, setCategoriaId] = useState(searchParams.get('categoriaId') ?? '');
+
+  // Sync local state when searchParams finish updating
+  useEffect(() => {
+    setPeriodo(searchParams.get('periodo') ?? '30');
+    setCaminhaoId(searchParams.get('caminhaoId') ?? '');
+    setMotoristaId(searchParams.get('motoristaId') ?? '');
+    setCategoriaId(searchParams.get('categoriaId') ?? '');
+  }, [searchParams]);
 
   const updateParams = useCallback(
     (updates: Record<string, string>) => {
-      const params = new URLSearchParams(searchParams.toString());
+      // Update local state immediately (optimistic)
+      for (const [key, value] of Object.entries(updates)) {
+        if (key === 'periodo') setPeriodo(value || '30');
+        if (key === 'caminhaoId') setCaminhaoId(value);
+        if (key === 'motoristaId') setMotoristaId(value);
+        if (key === 'categoriaId') setCategoriaId(value);
+      }
 
+      const params = new URLSearchParams(searchParams.toString());
       for (const [key, value] of Object.entries(updates)) {
         if (value) {
           params.set(key, value);
@@ -38,16 +54,20 @@ export function BiFiltros({ options }: BiFiltrosProps) {
   );
 
   function handleClearAll() {
+    setPeriodo('30');
+    setCaminhaoId('');
+    setMotoristaId('');
+    setCategoriaId('');
     startTransition(() => {
       router.push('/bi');
     });
   }
 
   const hasActiveFilters =
-    currentPeriodo !== '30' ||
-    currentCaminhaoId !== '' ||
-    currentMotoristaId !== '' ||
-    currentCategoriaId !== '';
+    periodo !== '30' ||
+    caminhaoId !== '' ||
+    motoristaId !== '' ||
+    categoriaId !== '';
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-4 shadow-sm">
@@ -76,7 +96,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
           </label>
           <select
             id="bi-periodo"
-            value={currentPeriodo}
+            value={periodo}
             onChange={(e) => updateParams({ periodo: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -97,7 +117,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
           </label>
           <select
             id="bi-caminhao"
-            value={currentCaminhaoId}
+            value={caminhaoId}
             onChange={(e) => updateParams({ caminhaoId: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -120,7 +140,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
           </label>
           <select
             id="bi-motorista"
-            value={currentMotoristaId}
+            value={motoristaId}
             onChange={(e) => updateParams({ motoristaId: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -143,7 +163,7 @@ export function BiFiltros({ options }: BiFiltrosProps) {
           </label>
           <select
             id="bi-categoria"
-            value={currentCategoriaId}
+            value={categoriaId}
             onChange={(e) => updateParams({ categoriaId: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
