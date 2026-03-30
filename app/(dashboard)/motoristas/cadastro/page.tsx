@@ -2,8 +2,9 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { MotoristaForm } from '@/components/motoristas/MotoristaForm';
-import { createMotorista } from '@/app/(dashboard)/motoristas/actions';
-import type { MotoristaFormData, MotoristaActionResult } from '@/types/motorista';
+import { createMotorista, createMotoristaComConta } from '@/app/(dashboard)/motoristas/actions';
+import { getEmpresa } from '@/app/(dashboard)/empresa/actions';
+import type { MotoristaFormData, MotoristaActionResult, MotoristaComContaFormData, MotoristaComContaActionResult } from '@/types/motorista';
 
 export default async function CadastroMotoristaPage() {
   const supabase = await createClient();
@@ -13,6 +14,15 @@ export default async function CadastroMotoristaPage() {
     redirect('/login');
   }
 
+  // Fetch empresa ativa for InfoBox (Story 8.2)
+  const empresaResult = await getEmpresa();
+  const empresaInfo = empresaResult.success && empresaResult.empresa
+    ? {
+        nome: empresaResult.empresa.nome_fantasia || empresaResult.empresa.razao_social,
+        cnpj: empresaResult.empresa.cnpj,
+      }
+    : null;
+
   async function handleCreate(data: MotoristaFormData): Promise<MotoristaActionResult> {
     'use server';
     const result = await createMotorista(data);
@@ -20,6 +30,11 @@ export default async function CadastroMotoristaPage() {
       redirect('/motoristas');
     }
     return result;
+  }
+
+  async function handleCreateComConta(data: MotoristaComContaFormData): Promise<MotoristaComContaActionResult> {
+    'use server';
+    return await createMotoristaComConta(data);
   }
 
   return (
@@ -41,7 +56,12 @@ export default async function CadastroMotoristaPage() {
       </div>
 
       <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
-        <MotoristaForm mode="create" onSubmit={handleCreate} />
+        <MotoristaForm
+          mode="create"
+          empresaInfo={empresaInfo}
+          onSubmit={handleCreate}
+          onSubmitComConta={handleCreateComConta}
+        />
       </div>
     </div>
   );
