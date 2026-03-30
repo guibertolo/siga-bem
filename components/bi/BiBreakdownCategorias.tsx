@@ -9,6 +9,25 @@ interface BiBreakdownCategoriasProps {
 
 const DEFAULT_COLOR = '#6B7280';
 
+const ICONE_MAP: Record<string, string> = {
+  toll: '🛣️',
+  fuel: '⛽',
+  tire: '🔧',
+  wrench: '🔩',
+  droplet: '💧',
+  parking: '🅿️',
+  utensils: '🍽️',
+  bed: '🛏️',
+  shield: '🛡️',
+  alert: '⚠️',
+  ellipsis: '📦',
+};
+
+function resolveIcone(icone?: string | null): string {
+  if (!icone) return '📋';
+  return ICONE_MAP[icone] ?? icone;
+}
+
 export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
   if (!data || data.length === 0) {
     return (
@@ -33,9 +52,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
           <div key={cat.categoriaId}>
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2">
-                {cat.categoriaIcone && (
-                  <span className="text-base">{cat.categoriaIcone}</span>
-                )}
+                <span className="text-base">{resolveIcone(cat.categoriaIcone)}</span>
                 <span className="text-sm font-medium text-primary-900">
                   {cat.categoriaNome}
                 </span>

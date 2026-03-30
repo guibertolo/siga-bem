@@ -57,19 +57,19 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-surface-border text-left">
-              <th className="pb-2 font-semibold text-primary-700">#</th>
-              <th className="pb-2 font-semibold text-primary-700">Placa</th>
-              <th className="pb-2 font-semibold text-primary-700">Modelo</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">
+              <th className="px-3 pb-2 font-semibold text-primary-700">#</th>
+              <th className="px-3 pb-2 font-semibold text-primary-700">Placa</th>
+              <th className="px-3 pb-2 font-semibold text-primary-700">Modelo</th>
+              <th className="px-3 pb-2 font-semibold text-primary-700 text-right">
                 Custo Total
               </th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">
+              <th className="px-3 pb-2 font-semibold text-primary-700 text-right">
                 Eventos
               </th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">
+              <th className="px-3 pb-2 font-semibold text-primary-700 text-right">
                 Ultima
               </th>
-              <th className="pb-2 font-semibold text-primary-700">
+              <th className="px-3 pb-2 font-semibold text-primary-700">
                 Detalhamento
               </th>
             </tr>
@@ -80,18 +80,18 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
                 key={item.caminhaoId}
                 className="border-b border-surface-border align-top"
               >
-                <td className="py-2.5 text-primary-500">{index + 1}</td>
-                <td className="py-2.5 font-medium text-primary-900">
+                <td className="px-3 py-2.5 text-primary-500">{index + 1}</td>
+                <td className="px-3 py-2.5 font-medium text-primary-900">
                   {item.placa}
                 </td>
-                <td className="py-2.5 text-primary-700">{item.modelo}</td>
-                <td className="py-2.5 text-right font-semibold text-primary-900 tabular-nums">
+                <td className="px-3 py-2.5 text-primary-700">{item.modelo}</td>
+                <td className="px-3 py-2.5 text-right font-semibold text-primary-900 tabular-nums">
                   {formatBRL(item.totalCustoCentavos)}
                 </td>
-                <td className="py-2.5 text-right text-primary-500 tabular-nums">
+                <td className="px-3 py-2.5 text-right text-primary-500 tabular-nums">
                   {item.totalEventos}
                 </td>
-                <td className="py-2.5 text-right text-primary-500 tabular-nums whitespace-nowrap">
+                <td className="px-3 py-2.5 text-right text-primary-500 tabular-nums whitespace-nowrap">
                   {formatDate(item.ultimaManutencao)}
                 </td>
                 <td className="py-2.5">
