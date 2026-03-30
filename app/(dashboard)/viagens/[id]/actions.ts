@@ -134,14 +134,7 @@ export async function createAbastecimento(
   // 6. For motorista role, enforce motorista_id from viagem
   // (motorista can only register on trips where they are the driver)
   if (usuario.role === 'motorista') {
-    const { data: motoristaRecord } = await supabase
-      .from('motorista')
-      .select('id')
-      .eq('usuario_id', usuario.id)
-      .eq('empresa_id', usuario.empresa_id)
-      .maybeSingle();
-
-    if (!motoristaRecord || viagem.motorista_id !== motoristaRecord.id) {
+    if (!usuario.motorista_id || viagem.motorista_id !== usuario.motorista_id) {
       return { success: false, error: 'Permissao insuficiente: voce nao e o motorista desta viagem' };
     }
   }
