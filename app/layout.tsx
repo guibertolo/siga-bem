@@ -66,7 +66,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                var theme = localStorage.getItem('frotaviva-theme') || localStorage.getItem('siga-bem-theme') || 'system';
+                var theme = localStorage.getItem('frotaviva-theme') || 'system';
+                // Migrate legacy key once
+                var legacy = localStorage.getItem('siga-bem-theme');
+                if (legacy && !localStorage.getItem('frotaviva-theme')) {
+                  localStorage.setItem('frotaviva-theme', legacy);
+                  localStorage.removeItem('siga-bem-theme');
+                  theme = legacy;
+                }
                 var isDark = theme === 'dark' ||
                   (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 if (isDark) document.documentElement.classList.add('dark');

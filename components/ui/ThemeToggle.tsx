@@ -8,7 +8,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('frotaviva-theme') || localStorage.getItem('siga-bem-theme');
+    const saved = localStorage.getItem('frotaviva-theme');
     if (saved === 'dark') {
       setIsDark(true);
     } else if (saved === 'light') {

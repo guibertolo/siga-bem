@@ -726,14 +726,14 @@ async function seed() {
   console.log('-----------------------------------------');
   console.log('CONTAS DE ACESSO:');
   console.log('');
-  console.log('  DONOS:');
-  console.log('  1. teste@sigabem.com.br / SigaBem2026!');
+  console.log('  DONOS (senha: Teste2026!):');
+  console.log('  1. dono1@frotaviva.com.br (Carlos Bertolo)');
   console.log('     -> Transportadora Teste Ltda (11.222.333/0001-81)');
   console.log('     -> Cegonha Express (22.333.444/0001-55)');
-  console.log('  2. dono2@frotaviva.com.br / Dono2026!');
+  console.log('  2. dono2@frotaviva.com.br (Ricardo Mendes)');
   console.log('     -> RM Cegonhas (33.444.555/0001-66)');
   console.log('     -> Auto Carrier (44.555.666/0001-77)');
-  console.log('  3. dono3@frotaviva.com.br / Dono2026!');
+  console.log('  3. dono3@frotaviva.com.br (Fernanda Oliveira)');
   console.log('     -> Oliveira Cegonhas (55.666.777/0001-88)');
   console.log('     -> Sul Cegonha (66.777.888/0001-99)');
   console.log('');

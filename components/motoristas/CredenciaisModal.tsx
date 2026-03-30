@@ -44,7 +44,7 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
 
   const handleEnviarWhatsApp = useCallback(() => {
     const mensagem = encodeURIComponent(
-      `Ola! Suas credenciais do FrotaViva:\nEmail: ${email}\nSenha: ${senha}\nAcesse: https://siga-bem-rosy.vercel.app/login`
+      `Ola! Suas credenciais do FrotaViva:\nEmail: ${email}\nSenha: ${senha}\nAcesse: ${window.location.origin}/login`
     );
     window.open(`https://wa.me/?text=${mensagem}`, '_blank', 'noopener,noreferrer');
   }, [email, senha]);
