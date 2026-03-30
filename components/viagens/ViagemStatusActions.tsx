@@ -89,7 +89,7 @@ export function ViagemStatusActions({
   return (
     <div className="space-y-4">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {error}
         </div>
       )}
@@ -105,7 +105,7 @@ export function ViagemStatusActions({
               disabled={isPending}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 novoStatus === 'cancelada'
-                  ? 'border border-red-300 text-red-700 hover:bg-red-50'
+                  ? 'border border-red-300 text-danger hover:bg-alert-danger-bg'
                   : 'bg-primary-700 text-white hover:bg-primary-800'
               }`}
             >

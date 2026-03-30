@@ -164,7 +164,7 @@ export function VeiculosSection({
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg px-4 py-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -211,7 +211,7 @@ export function VeiculosSection({
                     <td className="py-3 text-right">
                       {confirmDeleteId === v.id ? (
                         <span className="inline-flex items-center gap-2">
-                          <span className="text-xs text-red-600">Confirmar?</span>
+                          <span className="text-xs text-danger">Confirmar?</span>
                           <button
                             type="button"
                             onClick={(e) => {
@@ -241,7 +241,7 @@ export function VeiculosSection({
                             e.stopPropagation();
                             setConfirmDeleteId(v.id);
                           }}
-                          className="rounded p-1 text-text-subtle transition-colors hover:text-red-600"
+                          className="rounded p-1 text-text-subtle transition-colors hover:text-danger"
                           aria-label={`Remover veiculo ${v.modelo}`}
                           disabled={isPending}
                         >

@@ -190,7 +190,7 @@ export function ViagemForm({
       'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
-        ? 'border-red-300 bg-red-50'
+        ? 'border-red-300 bg-alert-danger-bg'
         : 'border-surface-border bg-surface-card',
       disabled && 'bg-surface-muted text-text-muted cursor-not-allowed',
     );
@@ -198,19 +198,19 @@ export function ViagemForm({
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
 
       {camposLocked && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-base text-amber-800">
+        <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-amber-800">
           Campos definidos pelo proprietario -- origem, destino e valor nao podem ser alterados.
         </div>
       )}
 
       {noCaminhaoMessage && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {noCaminhaoMessage}
         </div>
       )}
@@ -233,7 +233,7 @@ export function ViagemForm({
               ))}
             </select>
             {errors.motorista_id && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.motorista_id.message}</p>
             )}
           </div>
         )}
@@ -257,7 +257,7 @@ export function ViagemForm({
             ))}
           </select>
           {errors.caminhao_id && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.caminhao_id.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.caminhao_id.message}</p>
           )}
         </div>
 
@@ -276,7 +276,7 @@ export function ViagemForm({
             className={inputClasses('origem', camposLocked)}
           />
           {errors.origem && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.origem.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.origem.message}</p>
           )}
         </div>
 
@@ -295,7 +295,7 @@ export function ViagemForm({
             className={inputClasses('destino', camposLocked)}
           />
           {errors.destino && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.destino.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.destino.message}</p>
           )}
         </div>
 
@@ -311,7 +311,7 @@ export function ViagemForm({
             className={inputClasses('data_saida')}
           />
           {errors.data_saida && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_saida.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.data_saida.message}</p>
           )}
         </div>
 
@@ -327,7 +327,7 @@ export function ViagemForm({
             className={inputClasses('data_chegada_prevista')}
           />
           {errors.data_chegada_prevista && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_chegada_prevista.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.data_chegada_prevista.message}</p>
           )}
         </div>
 
@@ -345,7 +345,7 @@ export function ViagemForm({
             className={inputClasses('valor_total', camposLocked)}
           />
           {errors.valor_total && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.valor_total.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.valor_total.message}</p>
           )}
         </div>
 
@@ -362,10 +362,10 @@ export function ViagemForm({
             className={inputClasses('percentual_pagamento')}
           />
           {errors.percentual_pagamento && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.percentual_pagamento.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.percentual_pagamento.message}</p>
           )}
           {valorMotorista && (
-            <p className="mt-1.5 text-sm text-green-700 font-medium">
+            <p className="mt-1.5 text-sm text-success font-medium">
               Motorista recebera: {valorMotorista}
             </p>
           )}
@@ -385,7 +385,7 @@ export function ViagemForm({
             className={inputClasses('km_estimado')}
           />
           {errors.km_estimado && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_estimado.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_estimado.message}</p>
           )}
         </div>
 
@@ -403,7 +403,7 @@ export function ViagemForm({
             className={inputClasses('km_saida')}
           />
           {errors.km_saida && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_saida.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_saida.message}</p>
           )}
         </div>
       </div>
@@ -428,7 +428,7 @@ export function ViagemForm({
           className={inputClasses('observacao')}
         />
         {errors.observacao && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>
         )}
       </div>
 

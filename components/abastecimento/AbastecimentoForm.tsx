@@ -48,7 +48,7 @@ function todayISO(): string {
 const inputClass =
   'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 min-h-[48px]';
 const labelClass = 'mb-2 block text-base font-medium text-primary-900';
-const errorClass = 'mt-1.5 text-sm text-red-600 font-medium';
+const errorClass = 'mt-1.5 text-sm text-danger font-medium';
 
 // ---------------------------------------------------------------------------
 // Component
@@ -169,7 +169,7 @@ export function AbastecimentoForm({
     return (
       <div className="space-y-6">
         {/* Success message */}
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-base font-medium text-green-700">
+        <div className="rounded-lg border border-success/20 bg-alert-success-bg p-4 text-base font-medium text-success">
           {successMessage}
         </div>
 
@@ -212,7 +212,7 @@ export function AbastecimentoForm({
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {/* Server error banner (AC 11) */}
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -244,7 +244,7 @@ export function AbastecimentoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="litros" className={labelClass}>
-            Litros <span className="text-red-500">*</span>
+            Litros <span className="text-danger">*</span>
           </label>
           <input
             id="litros"
@@ -260,7 +260,7 @@ export function AbastecimentoForm({
 
         <div>
           <label htmlFor="valor_total" className={labelClass}>
-            Valor Total (R$) <span className="text-red-500">*</span>
+            Valor Total (R$) <span className="text-danger">*</span>
           </label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-primary-500">R$</span>
@@ -292,7 +292,7 @@ export function AbastecimentoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="uf_abastecimento" className={labelClass}>
-            UF do Abastecimento <span className="text-red-500">*</span>
+            UF do Abastecimento <span className="text-danger">*</span>
           </label>
           <select
             id="uf_abastecimento"
@@ -345,7 +345,7 @@ export function AbastecimentoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="data" className={labelClass}>
-            Data <span className="text-red-500">*</span>
+            Data <span className="text-danger">*</span>
           </label>
           <input
             id="data"

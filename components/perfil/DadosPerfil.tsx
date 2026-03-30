@@ -128,8 +128,8 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
         <div
           className={`mt-4 rounded-default p-3 text-sm ${
             message.type === 'success'
-              ? 'bg-green-50 text-success dark:bg-green-900/30 dark:text-green-300'
-              : 'bg-red-50 text-danger dark:bg-red-900/30 dark:text-red-300'
+              ? 'bg-alert-success-bg text-success dark:bg-green-900/30 dark:text-green-300'
+              : 'bg-alert-danger-bg text-danger dark:bg-red-900/30 dark:text-red-300'
           }`}
         >
           {message.text}

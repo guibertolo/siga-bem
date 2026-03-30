@@ -206,7 +206,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         )}
 
         {serverError && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+          <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
             {serverError}
           </div>
         )}
@@ -214,7 +214,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         {/* Nome */}
         <div>
           <label htmlFor="nome" className="mb-2 block text-base font-medium text-primary-900">
-            Nome Completo <span className="text-red-500">*</span>
+            Nome Completo <span className="text-danger">*</span>
           </label>
           <input
             id="nome"
@@ -228,14 +228,14 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             )}
           />
           {errors.nome && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.nome.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.nome.message}</p>
           )}
         </div>
 
         {/* CPF */}
         <div>
           <label htmlFor="cpf" className="mb-2 block text-base font-medium text-primary-900">
-            CPF <span className="text-red-500">*</span>
+            CPF <span className="text-danger">*</span>
           </label>
           <input
             id="cpf"
@@ -253,7 +253,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             )}
           />
           {errors.cpf && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cpf.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.cpf.message}</p>
           )}
         </div>
 
@@ -261,7 +261,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="cnh_numero" className="mb-2 block text-base font-medium text-primary-900">
-              Numero da CNH <span className="text-red-500">*</span>
+              Numero da CNH <span className="text-danger">*</span>
             </label>
             <input
               id="cnh_numero"
@@ -275,13 +275,13 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
               )}
             />
             {errors.cnh_numero && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_numero.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.cnh_numero.message}</p>
             )}
           </div>
 
           <div>
             <label htmlFor="cnh_categoria" className="mb-2 block text-base font-medium text-primary-900">
-              Categoria <span className="text-red-500">*</span>
+              Categoria <span className="text-danger">*</span>
             </label>
             <select
               id="cnh_categoria"
@@ -297,7 +297,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
               ))}
             </select>
             {errors.cnh_categoria && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_categoria.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.cnh_categoria.message}</p>
             )}
           </div>
         </div>
@@ -305,7 +305,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         {/* CNH Validade */}
         <div>
           <label htmlFor="cnh_validade" className="mb-2 block text-base font-medium text-primary-900">
-            Validade da CNH <span className="text-red-500">*</span>
+            Validade da CNH <span className="text-danger">*</span>
           </label>
           <input
             id="cnh_validade"
@@ -318,7 +318,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             )}
           />
           {errors.cnh_validade && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnh_validade.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.cnh_validade.message}</p>
           )}
         </div>
 
@@ -355,7 +355,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             )}
           />
           {errors.observacao && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>
           )}
         </div>
 
@@ -398,7 +398,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             {criarConta && (
               <div className="mt-4">
                 <label htmlFor="email" className="mb-2 block text-base font-medium text-primary-900">
-                  Email <span className="text-red-500">*</span>
+                  Email <span className="text-danger">*</span>
                 </label>
                 <input
                   id="email"
@@ -412,7 +412,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
                   )}
                 />
                 {emailError && (
-                  <p className="mt-1.5 text-sm text-red-600 font-medium">{emailError}</p>
+                  <p className="mt-1.5 text-sm text-danger font-medium">{emailError}</p>
                 )}
               </div>
             )}

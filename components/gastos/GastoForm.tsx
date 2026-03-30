@@ -160,7 +160,7 @@ export function GastoForm({
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -196,7 +196,7 @@ export function GastoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="categoria_id" className="mb-2 block text-base font-medium text-primary-900">
-            Tipo de Gasto <span className="text-red-500">*</span>
+            Tipo de Gasto <span className="text-danger">*</span>
           </label>
           <select
             id="categoria_id"
@@ -209,13 +209,13 @@ export function GastoForm({
             ))}
           </select>
           {errors.categoria_id && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.categoria_id.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.categoria_id.message}</p>
           )}
         </div>
 
         <div>
           <label htmlFor="data" className="mb-2 block text-base font-medium text-primary-900">
-            Data <span className="text-red-500">*</span>
+            Data <span className="text-danger">*</span>
           </label>
           <input
             id="data"
@@ -224,7 +224,7 @@ export function GastoForm({
             className={cn(inputClass, errors.data ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.data && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.data.message}</p>
           )}
         </div>
       </div>
@@ -232,7 +232,7 @@ export function GastoForm({
       {/* Valor */}
       <div>
         <label htmlFor="valor" className="mb-2 block text-base font-medium text-primary-900">
-          Valor (R$) <span className="text-red-500">*</span>
+          Valor (R$) <span className="text-danger">*</span>
         </label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-primary-500">R$</span>
@@ -246,7 +246,7 @@ export function GastoForm({
           />
         </div>
         {errors.valor && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.valor.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.valor.message}</p>
         )}
       </div>
 
@@ -254,7 +254,7 @@ export function GastoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="motorista_id" className="mb-2 block text-base font-medium text-primary-900">
-            Motorista <span className="text-red-500">*</span>
+            Motorista <span className="text-danger">*</span>
           </label>
           <select
             id="motorista_id"
@@ -272,7 +272,7 @@ export function GastoForm({
             ))}
           </select>
           {errors.motorista_id && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.motorista_id.message}</p>
           )}
         </div>
 

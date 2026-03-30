@@ -35,7 +35,7 @@ export function HistoricoRotas({
       )}
 
       {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-md bg-alert-danger-bg p-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -136,8 +136,8 @@ export function HistoricoRotas({
                     <p
                       className={`text-sm font-semibold tabular-nums ${
                         v.lucroCentavos >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
+                          ? 'text-success'
+                          : 'text-danger'
                       }`}
                     >
                       {formatBRL(v.lucroCentavos)}

@@ -53,7 +53,7 @@ export default async function GastosPage({ searchParams }: GastosPageProps) {
   if (resultGastos.error) {
     return (
       <div className="w-full max-w-6xl">
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {resultGastos.error}
         </div>
       </div>

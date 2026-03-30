@@ -125,7 +125,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -134,7 +134,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="placa" className="mb-2 block text-base font-medium text-primary-900">
-            Placa <span className="text-red-500">*</span>
+            Placa <span className="text-danger">*</span>
           </label>
           <input
             id="placa"
@@ -147,13 +147,13 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.placa ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.placa && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.placa.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.placa.message}</p>
           )}
         </div>
 
         <div>
           <label htmlFor="tipo_cegonha" className="mb-2 block text-base font-medium text-primary-900">
-            Tipo Cegonha <span className="text-red-500">*</span>
+            Tipo Cegonha <span className="text-danger">*</span>
           </label>
           <select
             id="tipo_cegonha"
@@ -165,7 +165,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             ))}
           </select>
           {errors.tipo_cegonha && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.tipo_cegonha.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.tipo_cegonha.message}</p>
           )}
         </div>
       </div>
@@ -174,7 +174,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="modelo" className="mb-2 block text-base font-medium text-primary-900">
-            Modelo <span className="text-red-500">*</span>
+            Modelo <span className="text-danger">*</span>
           </label>
           <input
             id="modelo"
@@ -184,7 +184,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.modelo ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.modelo && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.modelo.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.modelo.message}</p>
           )}
         </div>
 
@@ -218,7 +218,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.ano ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.ano && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.ano.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.ano.message}</p>
           )}
         </div>
 
@@ -235,7 +235,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.renavam ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.renavam && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.renavam.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.renavam.message}</p>
           )}
         </div>
       </div>
@@ -244,7 +244,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="capacidade_veiculos" className="mb-2 block text-base font-medium text-primary-900">
-            Capacidade (veiculos) <span className="text-red-500">*</span>
+            Capacidade (veiculos) <span className="text-danger">*</span>
           </label>
           <input
             id="capacidade_veiculos"
@@ -255,7 +255,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.capacidade_veiculos ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.capacidade_veiculos && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.capacidade_veiculos.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.capacidade_veiculos.message}</p>
           )}
         </div>
 
@@ -271,7 +271,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             className={cn(inputClass, errors.km_atual ? 'border-red-500' : 'border-surface-border')}
           />
           {errors.km_atual && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.km_atual.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_atual.message}</p>
           )}
         </div>
       </div>

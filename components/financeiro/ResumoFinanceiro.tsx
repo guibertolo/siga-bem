@@ -13,7 +13,7 @@ export function ResumoFinanceiro({ resumo }: ResumoFinanceiroProps) {
         <p className="text-xs font-medium uppercase tracking-wide text-primary-500">
           Pago no Mes
         </p>
-        <p className="mt-1 text-2xl font-bold text-green-700">
+        <p className="mt-1 text-2xl font-bold text-success">
           {formatBRL(resumo.totalPagoMesCentavos)}
         </p>
       </div>

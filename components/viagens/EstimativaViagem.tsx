@@ -110,7 +110,7 @@ export function EstimativaViagem({
             {estimativa.consumo_medio_km_l.toFixed(1).replace('.', ',')} km/l
           </p>
           {estimativa.consumo_fonte === 'padrao' && (
-            <p className="text-xs text-amber-600">Dados insuficientes</p>
+            <p className="text-xs text-warning">Dados insuficientes</p>
           )}
         </div>
 
@@ -128,7 +128,7 @@ export function EstimativaViagem({
 
         <div>
           <p className="text-xs text-primary-500">Custo estimado combustivel</p>
-          <p className="text-sm font-bold tabular-nums text-red-700">
+          <p className="text-sm font-bold tabular-nums text-danger">
             {formatBRL(estimativa.custo_combustivel_centavos)}
           </p>
         </div>
@@ -137,14 +137,14 @@ export function EstimativaViagem({
           <>
             <div>
               <p className="text-xs text-primary-500">Margem bruta estimada</p>
-              <p className={`text-sm font-bold tabular-nums ${margemNegativa ? 'text-red-700' : 'text-green-700'}`}>
+              <p className={`text-sm font-bold tabular-nums ${margemNegativa ? 'text-danger' : 'text-success'}`}>
                 {formatBRL(estimativa.margem_bruta_centavos)}
               </p>
             </div>
 
             <div>
               <p className="text-xs text-primary-500">Percentual de margem</p>
-              <p className={`text-sm font-bold tabular-nums ${margemNegativa ? 'text-red-700' : 'text-green-700'}`}>
+              <p className={`text-sm font-bold tabular-nums ${margemNegativa ? 'text-danger' : 'text-success'}`}>
                 {estimativa.margem_percentual.toFixed(1).replace('.', ',')}%
               </p>
             </div>

@@ -135,7 +135,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {error}
         </div>
       )}
@@ -163,7 +163,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               ))}
             </select>
             {fieldErrors.motorista_id && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{fieldErrors.motorista_id}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{fieldErrors.motorista_id}</p>
             )}
           </div>
 
@@ -284,7 +284,7 @@ export function FechamentoForm({ motoristas }: FechamentoFormProps) {
               <p className="text-sm text-primary-500">Saldo Liquido</p>
               <p
                 className={`mt-1 text-xl font-bold tabular-nums ${
-                  preview.totais.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'
+                  preview.totais.saldo_motorista >= 0 ? 'text-success' : 'text-danger'
                 }`}
               >
                 {formatBRL(preview.totais.saldo_motorista)}

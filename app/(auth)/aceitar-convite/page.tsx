@@ -69,11 +69,11 @@ export default function AceitarConvitePage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-background">
-      <div className="w-full max-w-md rounded-[--radius-card] border border-red-200 bg-red-50 p-6 text-center">
+      <div className="w-full max-w-md rounded-[--radius-card] border border-danger/20 bg-alert-danger-bg p-6 text-center">
         <h2 className="text-lg font-semibold text-red-800">
           Erro no convite
         </h2>
-        <p className="mt-2 text-sm text-red-700">
+        <p className="mt-2 text-sm text-danger">
           {errorMessage}
         </p>
         <a

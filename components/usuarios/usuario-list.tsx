@@ -22,7 +22,7 @@ const ROLE_LABELS: Record<UsuarioRole, string> = {
 const ROLE_COLORS: Record<UsuarioRole, string> = {
   dono: 'bg-amber-100 text-amber-800',
   admin: 'bg-info/20 text-info',
-  motorista: 'bg-green-100 text-green-800',
+  motorista: 'bg-alert-success-bg text-success',
 };
 
 export default function UsuarioList({
@@ -64,7 +64,7 @@ export default function UsuarioList({
   return (
     <div>
       {error && (
-        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mb-4 rounded-md border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -134,7 +134,7 @@ export default function UsuarioList({
                     <span
                       className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${
                         usuario.ativo
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-alert-success-bg text-success'
                           : 'bg-red-100 text-red-800'
                       }`}
                     >
@@ -153,8 +153,8 @@ export default function UsuarioList({
                         disabled={isPending}
                         className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px] ${
                           usuario.ativo
-                            ? 'text-red-600 hover:bg-red-50'
-                            : 'text-green-600 hover:bg-green-50'
+                            ? 'text-danger hover:bg-alert-danger-bg'
+                            : 'text-success hover:bg-alert-success-bg'
                         } disabled:opacity-50`}
                       >
                         {usuario.ativo && (

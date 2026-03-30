@@ -49,7 +49,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
           </span>
         )}
         {isInactive && (
-          <span className="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-sm font-semibold text-red-700 dark:text-red-300">
+          <span className="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-sm font-semibold text-danger dark:text-red-300">
             Inativa
           </span>
         )}

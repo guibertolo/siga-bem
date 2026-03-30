@@ -33,7 +33,7 @@ export default function UsuariosClientPage({
       </div>
 
       {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-md border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {error}
         </div>
       )}

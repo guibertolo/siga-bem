@@ -243,14 +243,14 @@ export function ComprovantesUpload({
 
       {/* Success message */}
       {successMessage && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+        <div className="rounded-lg border border-success/20 bg-alert-success-bg p-3 text-sm text-success">
           {successMessage}
         </div>
       )}
 
       {/* Error message */}
       {errorMessage && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
           {errorMessage}
         </div>
       )}
@@ -297,7 +297,7 @@ export function ComprovantesUpload({
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="text-red-500"
+                      className="text-danger"
                     >
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                       <polyline points="14 2 14 8 20 8" />
@@ -337,7 +337,7 @@ export function ComprovantesUpload({
                   <button
                     type="button"
                     onClick={() => setConfirmDeleteId(comp.id)}
-                    className="absolute -right-1 -top-1 hidden rounded-full bg-red-500 p-1 text-white shadow-sm group-hover:block"
+                    className="absolute -right-1 -top-1 hidden rounded-full bg-alert-danger-bg0 p-1 text-white shadow-sm group-hover:block"
                     title="Remover comprovante"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

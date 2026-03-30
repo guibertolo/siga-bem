@@ -75,7 +75,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {error}
         </div>
       )}
@@ -119,7 +119,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
             <p className="text-xs text-primary-500">Saldo Liquido</p>
             <p
               className={`text-lg font-bold tabular-nums ${
-                fechamento.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'
+                fechamento.saldo_motorista >= 0 ? 'text-success' : 'text-danger'
               }`}
             >
               {formatBRL(fechamento.saldo_motorista)}
@@ -169,7 +169,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                       {formatarData(item.data)}
                     </td>
                     <td className="px-4 py-2 text-primary-900">{item.descricao}</td>
-                    <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums font-medium text-green-700">
+                    <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums font-medium text-success">
                       {formatBRL(item.valor)}
                     </td>
                   </tr>
@@ -204,7 +204,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                       {formatarData(item.data)}
                     </td>
                     <td className="px-4 py-2 text-primary-900">{item.descricao}</td>
-                    <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums font-medium text-red-700">
+                    <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums font-medium text-danger">
                       {formatBRL(item.valor)}
                     </td>
                   </tr>
@@ -290,7 +290,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
             <>
               {confirmAction === 'excluir' ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-red-600">Excluir acerto?</span>
+                  <span className="text-sm text-danger">Excluir acerto?</span>
                   <button
                     type="button"
                     onClick={handleExcluir}
@@ -312,7 +312,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   type="button"
                   onClick={() => setConfirmAction('excluir')}
                   disabled={isPending}
-                  className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                  className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg disabled:opacity-50"
                 >
                   Excluir
                 </button>

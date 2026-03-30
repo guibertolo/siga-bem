@@ -44,7 +44,7 @@ export function AbastecimentoResumo({ abastecimentos }: AbastecimentoResumoProps
         <p className="text-xs font-medium uppercase tracking-wide text-primary-500">
           Custo Total
         </p>
-        <p className="mt-1 text-lg font-bold tabular-nums text-red-700">
+        <p className="mt-1 text-lg font-bold tabular-nums text-danger">
           {formatBRL(totalValorCentavos)}
         </p>
         <p className="mt-0.5 text-xs tabular-nums text-primary-500">

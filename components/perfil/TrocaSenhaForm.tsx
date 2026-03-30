@@ -141,7 +141,7 @@ export function TrocaSenhaForm() {
 
         {/* Client validation error */}
         {clientError && (
-          <div className="bg-red-50 rounded-default p-3 text-sm text-danger dark:bg-red-900/30 dark:text-red-300">
+          <div className="bg-alert-danger-bg rounded-default p-3 text-sm text-danger dark:bg-red-900/30 dark:text-red-300">
             {clientError}
           </div>
         )}
@@ -151,8 +151,8 @@ export function TrocaSenhaForm() {
           <div
             className={`rounded-default p-3 text-sm ${
               message.type === 'success'
-                ? 'bg-green-50 text-success dark:bg-green-900/30 dark:text-green-300'
-                : 'bg-red-50 text-danger dark:bg-red-900/30 dark:text-red-300'
+                ? 'bg-alert-success-bg text-success dark:bg-green-900/30 dark:text-green-300'
+                : 'bg-alert-danger-bg text-danger dark:bg-red-900/30 dark:text-red-300'
             }`}
           >
             {message.text}

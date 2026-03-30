@@ -72,8 +72,8 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
       <div className="w-full max-w-lg rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl sm:p-8">
         {/* Header */}
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-            <svg className="h-7 w-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-alert-success-bg">
+            <svg className="h-7 w-7 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -86,9 +86,9 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
         </div>
 
         {/* Warning */}
-        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-4">
+        <div className="mb-6 rounded-lg border border-amber-300 bg-alert-warning-bg p-4">
           <div className="flex items-start gap-3">
-            <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
             <p className="text-base font-semibold text-amber-800">

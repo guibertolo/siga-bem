@@ -13,7 +13,7 @@ export default async function HistoricoVinculosPage() {
   if (result.error === 'Permissao insuficiente') {
     return (
       <div className="w-full max-w-4xl">
-        <p className="text-sm text-red-600">Voce nao tem permissao para acessar esta pagina.</p>
+        <p className="text-sm text-danger">Voce nao tem permissao para acessar esta pagina.</p>
       </div>
     );
   }
@@ -34,7 +34,7 @@ export default async function HistoricoVinculosPage() {
       </div>
 
       {result.error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {result.error}
         </div>
       )}

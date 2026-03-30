@@ -142,8 +142,8 @@ export default async function FechamentoDetalhePage({
               {formatBRL(fechamento.total_viagens)}
             </p>
           </div>
-          <div className="rounded-lg bg-red-50 p-4">
-            <p className="text-sm text-red-600">Total Gastos</p>
+          <div className="rounded-lg bg-alert-danger-bg p-4">
+            <p className="text-sm text-danger">Total Gastos</p>
             <p className="text-xl font-bold text-red-900">
               {formatBRL(fechamento.total_gastos)}
             </p>
@@ -151,15 +151,15 @@ export default async function FechamentoDetalhePage({
           <div
             className={`rounded-lg p-4 ${
               fechamento.saldo_motorista >= 0
-                ? 'bg-green-50'
-                : 'bg-red-50'
+                ? 'bg-alert-success-bg'
+                : 'bg-alert-danger-bg'
             }`}
           >
             <p
               className={`text-sm ${
                 fechamento.saldo_motorista >= 0
-                  ? 'text-green-600'
-                  : 'text-red-600'
+                  ? 'text-success'
+                  : 'text-danger'
               }`}
             >
               Saldo Liquido

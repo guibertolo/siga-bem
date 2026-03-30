@@ -52,7 +52,7 @@ export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps
       </div>
 
       {categoriasResult.error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           Erro ao carregar categorias: {categoriasResult.error}
         </div>
       )}

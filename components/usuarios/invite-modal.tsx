@@ -48,13 +48,13 @@ export default function InviteModal({ isOpen, onClose }: InviteModalProps) {
         </p>
 
         {error && (
-          <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mt-3 rounded-md border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mt-3 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+          <div className="mt-3 rounded-md border border-success/20 bg-alert-success-bg p-3 text-sm text-success">
             Convite enviado com sucesso!
           </div>
         )}

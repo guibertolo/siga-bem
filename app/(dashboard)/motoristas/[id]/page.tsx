@@ -68,7 +68,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
                 <span
                   className={
                     motorista.status === 'ativo'
-                      ? 'text-green-700 font-medium'
+                      ? 'text-success font-medium'
                       : 'text-text-muted font-medium'
                   }
                 >

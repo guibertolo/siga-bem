@@ -114,14 +114,14 @@ export function ViagemList({
       />
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {error}
         </div>
       )}
 
       {/* Active trips section */}
       {viagensAtivas.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:bg-amber-950/30 dark:border-amber-800">
+        <div className="rounded-xl border border-warning/20 bg-alert-warning-bg p-4 dark:bg-amber-950/30 dark:border-amber-800">
           <h3 className="text-sm font-bold uppercase tracking-wide text-amber-800 mb-3 dark:text-amber-400">
             Em Andamento
           </h3>
@@ -169,10 +169,10 @@ export function ViagemList({
           </div>
 
           {/* Desktop active table */}
-          <div className="hidden md:block overflow-x-auto rounded-lg border border-amber-200 bg-surface-card border-amber-800">
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-warning/20 bg-surface-card border-amber-800">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-amber-200 bg-amber-100/50 text-left dark:bg-amber-900/20 dark:border-amber-800">
+                <tr className="border-b border-warning/20 bg-amber-100/50 text-left dark:bg-amber-900/20 dark:border-amber-800">
                   <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Origem/Destino</th>
                   <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Motorista</th>
                   <th className="px-4 py-3 text-base font-medium text-amber-900 dark:text-amber-300">Caminhao</th>
@@ -282,11 +282,11 @@ export function ViagemList({
                   {v.status === 'planejada' && (
                     confirmId === v.id ? (
                       <span className="flex items-center gap-1">
-                        <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]">Confirmar</button>
+                        <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Confirmar</button>
                         <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Nao</button>
                       </span>
                     ) : (
-                      <button type="button" onClick={() => handleDeleteClick(v.id)} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]">Excluir</button>
+                      <button type="button" onClick={() => handleDeleteClick(v.id)} className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Excluir</button>
                     )
                   )}
                 </div>
@@ -364,7 +364,7 @@ export function ViagemList({
                                   type="button"
                                   onClick={() => handleConfirmDelete(v.id)}
                                   disabled={deletingId === v.id}
-                                  className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
+                                  className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
                                 >
                                   Confirmar
                                 </button>
@@ -380,7 +380,7 @@ export function ViagemList({
                               <button
                                 type="button"
                                 onClick={() => handleDeleteClick(v.id)}
-                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px]"
+                                className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
                               >
                                 <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

@@ -26,7 +26,7 @@ export async function CaminhaoCurrentMotorista({ caminhaoId }: CaminhaoCurrentMo
               </p>
               <p className="text-xs text-primary-500">{vinculo.motorista_cpf}</p>
             </div>
-            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+            <span className="inline-flex items-center rounded-full bg-alert-success-bg px-2.5 py-0.5 text-xs font-medium text-success">
               Ativo
             </span>
           </div>

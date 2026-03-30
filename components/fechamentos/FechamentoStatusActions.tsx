@@ -67,7 +67,7 @@ export function FechamentoStatusActions({
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4 shadow-sm">
       {error && (
-        <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mb-3 rounded-lg border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -149,7 +149,7 @@ export function FechamentoStatusActions({
           <>
             {confirmAction === 'excluir' ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-red-600">Excluir acerto?</span>
+                <span className="text-sm text-danger">Excluir acerto?</span>
                 <button
                   type="button"
                   onClick={() => handleAction('excluir')}
@@ -172,7 +172,7 @@ export function FechamentoStatusActions({
                 type="button"
                 onClick={() => setConfirmAction('excluir')}
                 disabled={isPending}
-                className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg disabled:opacity-50"
               >
                 Excluir
               </button>

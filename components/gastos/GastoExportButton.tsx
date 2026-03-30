@@ -39,7 +39,7 @@ export function GastoExportButton({ filters }: GastoExportButtonProps) {
         {isPending ? 'Preparando planilha...' : 'Baixar Planilha'}
       </button>
       {error && (
-        <p className="mt-1 text-xs text-red-600">{error}</p>
+        <p className="mt-1 text-xs text-danger">{error}</p>
       )}
     </div>
   );

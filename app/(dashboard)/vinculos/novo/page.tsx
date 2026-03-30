@@ -16,7 +16,7 @@ export default async function NovoVinculoPage() {
   if (motoristasResult.error === 'Permissao insuficiente' || caminhoesResult.error === 'Permissao insuficiente') {
     return (
       <div className="w-full max-w-4xl">
-        <p className="text-sm text-red-600">Voce nao tem permissao para acessar esta pagina.</p>
+        <p className="text-sm text-danger">Voce nao tem permissao para acessar esta pagina.</p>
       </div>
     );
   }

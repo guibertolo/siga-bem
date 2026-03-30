@@ -98,7 +98,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -106,7 +106,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
       {/* CNPJ */}
       <div>
         <label htmlFor="cnpj" className="mb-2 block text-base font-medium text-primary-900">
-          CNPJ <span className="text-red-500">*</span>
+          CNPJ <span className="text-danger">*</span>
         </label>
         <input
           id="cnpj"
@@ -124,14 +124,14 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           )}
         />
         {errors.cnpj && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cnpj.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.cnpj.message}</p>
         )}
       </div>
 
       {/* Razao Social */}
       <div>
         <label htmlFor="razao_social" className="mb-2 block text-base font-medium text-primary-900">
-          Razao Social <span className="text-red-500">*</span>
+          Razao Social <span className="text-danger">*</span>
         </label>
         <input
           id="razao_social"
@@ -145,7 +145,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           )}
         />
         {errors.razao_social && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.razao_social.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.razao_social.message}</p>
         )}
       </div>
 
@@ -166,7 +166,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           )}
         />
         {errors.nome_fantasia && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.nome_fantasia.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.nome_fantasia.message}</p>
         )}
       </div>
 
@@ -268,7 +268,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             )}
           />
           {errors.email && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.email.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.email.message}</p>
           )}
         </div>
       </div>

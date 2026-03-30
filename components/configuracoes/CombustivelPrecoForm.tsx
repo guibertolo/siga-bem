@@ -96,14 +96,14 @@ export function CombustivelPrecoForm({
       'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
-        ? 'border-red-300 bg-red-50'
+        ? 'border-red-300 bg-alert-danger-bg'
         : 'border-surface-border bg-surface-card',
     );
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -121,7 +121,7 @@ export function CombustivelPrecoForm({
             className={inputClasses('regiao')}
           />
           {errors.regiao && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.regiao.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.regiao.message}</p>
           )}
         </div>
 
@@ -139,7 +139,7 @@ export function CombustivelPrecoForm({
             ))}
           </select>
           {errors.tipo && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.tipo.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.tipo.message}</p>
           )}
         </div>
 
@@ -155,7 +155,7 @@ export function CombustivelPrecoForm({
             className={inputClasses('preco')}
           />
           {errors.preco && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.preco.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.preco.message}</p>
           )}
         </div>
 
@@ -170,7 +170,7 @@ export function CombustivelPrecoForm({
             className={inputClasses('data_referencia')}
           />
           {errors.data_referencia && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_referencia.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.data_referencia.message}</p>
           )}
         </div>
 
@@ -186,7 +186,7 @@ export function CombustivelPrecoForm({
             className={inputClasses('fonte')}
           />
           {errors.fonte && (
-            <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.fonte.message}</p>
+            <p className="mt-1.5 text-sm text-danger font-medium">{errors.fonte.message}</p>
           )}
         </div>
       </div>

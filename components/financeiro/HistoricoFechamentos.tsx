@@ -108,7 +108,7 @@ export function HistoricoFechamentos({
     <div className="space-y-4">
       {/* Error banner */}
       {reabrirError && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-md border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
           {reabrirError}
         </div>
       )}
@@ -191,7 +191,7 @@ export function HistoricoFechamentos({
                   {formatBRL(f.total_gastos)}
                 </td>
                 <td className={`whitespace-nowrap px-4 py-3.5 text-base text-right font-semibold ${
-                  f.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'
+                  f.saldo_motorista >= 0 ? 'text-success' : 'text-danger'
                 }`}>
                   {formatBRL(f.saldo_motorista)}
                 </td>

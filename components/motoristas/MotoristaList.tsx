@@ -37,13 +37,13 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
     <div className="space-y-4">
       {/* CNH Alert Banner */}
       {cnhAlerts.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4">
           <p className="text-sm font-medium text-amber-800">
             Atencao: {cnhAlerts.length} motorista(s) com CNH vencida ou proxima do vencimento
           </p>
           <ul className="mt-2 space-y-1">
             {cnhAlerts.map((m) => (
-              <li key={m.id} className="text-sm text-amber-700">
+              <li key={m.id} className="text-sm text-warning">
                 {m.nome} &mdash;{' '}
                 {m.cnh_vencida
                   ? 'CNH vencida'
@@ -94,7 +94,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                 <span
                   className={cn(
                     'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
-                    m.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-surface-muted text-text-muted',
+                    m.status === 'ativo' ? 'bg-alert-success-bg text-success' : 'bg-surface-muted text-text-muted',
                   )}
                 >
                   {m.status === 'ativo' ? 'Ativo' : 'Inativo'}
@@ -106,7 +106,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                   Validade:{' '}
                   <span
                     className={cn(
-                      m.cnh_vencida ? 'text-red-700 font-semibold' : m.cnh_vence_em_30_dias ? 'text-amber-700 font-semibold' : '',
+                      m.cnh_vencida ? 'text-danger font-semibold' : m.cnh_vence_em_30_dias ? 'text-warning font-semibold' : '',
                     )}
                   >
                     {m.cnh_validade}
@@ -121,7 +121,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                   onClick={() => handleToggleStatus(m.id, m.status)}
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
-                    m.status === 'ativo' ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50',
+                    m.status === 'ativo' ? 'text-danger hover:bg-alert-danger-bg' : 'text-success hover:bg-alert-success-bg',
                     isPending && 'cursor-not-allowed opacity-50',
                   )}
                 >
@@ -159,9 +159,9 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       className={cn(
                         'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.cnh_vencida
-                          ? 'bg-red-100 text-red-700'
+                          ? 'bg-red-100 text-danger'
                           : m.cnh_vence_em_30_dias
-                            ? 'bg-amber-100 text-amber-700'
+                            ? 'bg-amber-100 text-warning'
                             : 'text-primary-700',
                       )}
                     >
@@ -174,7 +174,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       className={cn(
                         'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                         m.status === 'ativo'
-                          ? 'bg-green-100 text-green-700'
+                          ? 'bg-alert-success-bg text-success'
                           : 'bg-surface-muted text-text-muted',
                       )}
                     >
@@ -189,8 +189,8 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                       className={cn(
                         'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
                         m.status === 'ativo'
-                          ? 'text-red-600 hover:bg-red-50'
-                          : 'text-green-600 hover:bg-green-50',
+                          ? 'text-danger hover:bg-alert-danger-bg'
+                          : 'text-success hover:bg-alert-success-bg',
                         isPending && 'cursor-not-allowed opacity-50',
                       )}
                     >

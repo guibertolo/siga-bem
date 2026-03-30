@@ -194,7 +194,7 @@ export function SimuladorViagem({
       </div>
 
       {error && (
-        <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <div className="mt-4 rounded-md bg-alert-danger-bg p-3 text-sm text-danger">
           {error}
         </div>
       )}
@@ -242,7 +242,7 @@ export function SimuladorViagem({
               </div>
             )}
             {resultado.fonteConsumo === 'historico_real' && (
-              <p className="mt-2 text-xs text-green-700">
+              <p className="mt-2 text-xs text-success">
                 Fonte: Historico real do caminhao selecionado
               </p>
             )}
@@ -296,8 +296,8 @@ export function SimuladorViagem({
                   <p
                     className={`text-lg font-bold tabular-nums ${
                       margemCentavos >= 0
-                        ? 'text-green-600'
-                        : 'text-red-600'
+                        ? 'text-success'
+                        : 'text-danger'
                     }`}
                   >
                     {formatBRL(margemCentavos)} ({margemPercent.toFixed(1)}%)

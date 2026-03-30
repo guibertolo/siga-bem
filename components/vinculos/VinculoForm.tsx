@@ -76,7 +76,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
       {serverError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700">
+        <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
         </div>
       )}
@@ -92,7 +92,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.motorista_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+            errors.motorista_id ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -104,7 +104,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           ))}
         </select>
         {errors.motorista_id && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.motorista_id.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.motorista_id.message}</p>
         )}
       </div>
 
@@ -119,7 +119,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.caminhao_id ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+            errors.caminhao_id ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -131,7 +131,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           ))}
         </select>
         {errors.caminhao_id && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.caminhao_id.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.caminhao_id.message}</p>
         )}
       </div>
 
@@ -147,12 +147,12 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.data_inicio ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+            errors.data_inicio ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         />
         {errors.data_inicio && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.data_inicio.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.data_inicio.message}</p>
         )}
       </div>
 
@@ -168,13 +168,13 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+            errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
           placeholder="Observacoes sobre este vinculo (opcional)"
         />
         {errors.observacao && (
-          <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
+          <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>
         )}
       </div>
 

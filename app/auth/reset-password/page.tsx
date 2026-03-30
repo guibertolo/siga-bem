@@ -140,11 +140,11 @@ export default function ResetPasswordPage() {
         </div>
 
         {!tokenValid ? (
-          <div className="bg-red-50 rounded-default p-4 text-center text-sm text-danger">
+          <div className="bg-alert-danger-bg rounded-default p-4 text-center text-sm text-danger">
             Link de recuperacao invalido ou expirado. Solicite um novo.
           </div>
         ) : success ? (
-          <div className="bg-green-50 rounded-default p-4 text-center text-sm text-success">
+          <div className="bg-alert-success-bg rounded-default p-4 text-center text-sm text-success">
             Senha redefinida com sucesso! Redirecionando para o login...
           </div>
         ) : (
@@ -188,7 +188,7 @@ export default function ResetPasswordPage() {
             </div>
 
             {error && (
-              <div className="bg-red-50 rounded-default p-3 text-sm text-danger">
+              <div className="bg-alert-danger-bg rounded-default p-3 text-sm text-danger">
                 {error}
               </div>
             )}

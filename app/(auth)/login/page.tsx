@@ -71,7 +71,7 @@ export default function LoginPage() {
         </div>
 
         {success ? (
-          <div className="bg-green-50 rounded-default p-4 text-center text-sm text-success">
+          <div className="bg-alert-success-bg rounded-default p-4 text-center text-sm text-success">
             {mode === 'recuperar'
               ? 'Se este email estiver cadastrado, voce recebera um link de recuperacao em breve.'
               : 'Link de acesso enviado! Verifique sua caixa de entrada.'}
@@ -136,7 +136,7 @@ export default function LoginPage() {
             )}
 
             {error && (
-              <div className="bg-red-50 rounded-default p-3 text-sm text-danger mb-4">
+              <div className="bg-alert-danger-bg rounded-default p-3 text-sm text-danger mb-4">
                 {error}
               </div>
             )}

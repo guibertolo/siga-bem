@@ -41,7 +41,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
             </div>
             <div>
               <p className="text-primary-500">Saldo</p>
-              <p className={`font-medium tabular-nums ${f.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+              <p className={`font-medium tabular-nums ${f.saldo_motorista >= 0 ? 'text-success' : 'text-danger'}`}>
                 {formatBRL(f.saldo_motorista)}
               </p>
             </div>
@@ -94,7 +94,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
               </td>
               <td
                 className={`whitespace-nowrap px-4 py-3.5 text-base text-right tabular-nums font-medium ${
-                  f.saldo_motorista >= 0 ? 'text-green-700' : 'text-red-700'
+                  f.saldo_motorista >= 0 ? 'text-success' : 'text-danger'
                 }`}
               >
                 {formatBRL(f.saldo_motorista)}

@@ -94,7 +94,7 @@ function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
         </div>
         <span className={cn(
           'inline-block rounded-full px-3 py-1 text-xs font-semibold',
-          caminhao.ativo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+          caminhao.ativo ? 'bg-alert-success-bg text-success' : 'bg-red-100 text-red-800',
         )}>
           {caminhao.ativo ? 'Ativo' : 'Inativo'}
         </span>
@@ -116,7 +116,7 @@ function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
           disabled={isPending}
           className={cn(
             'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
-            caminhao.ativo ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50',
+            caminhao.ativo ? 'text-danger hover:bg-alert-danger-bg' : 'text-success hover:bg-alert-success-bg',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >
@@ -157,7 +157,7 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
         <span className={cn(
           'inline-block rounded-full px-3 py-1 text-sm font-semibold',
           caminhao.ativo
-            ? 'bg-green-100 text-green-800'
+            ? 'bg-alert-success-bg text-success'
             : 'bg-red-100 text-red-800',
         )}>
           {caminhao.ativo ? 'Ativo' : 'Inativo'}
@@ -181,8 +181,8 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
             className={cn(
               'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
               caminhao.ativo
-                ? 'text-red-600 hover:bg-red-50'
-                : 'text-green-600 hover:bg-green-50',
+                ? 'text-danger hover:bg-alert-danger-bg'
+                : 'text-success hover:bg-alert-success-bg',
               isPending && 'cursor-not-allowed opacity-50',
             )}
           >

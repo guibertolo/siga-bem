@@ -125,7 +125,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
         </div>
 
         {serverError && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-base text-red-700">
+          <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg px-4 py-3 text-base text-danger">
             {serverError}
           </div>
         )}
@@ -134,7 +134,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
           {/* Modelo (required) */}
           <div>
             <label htmlFor="vf-modelo" className="mb-2 block text-base font-medium text-primary-700">
-              Modelo <span className="text-red-500">*</span>
+              Modelo <span className="text-danger">*</span>
             </label>
             <input
               id="vf-modelo"
@@ -142,13 +142,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={100}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.modelo ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                errors.modelo ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Onix, HB20, Corolla"
               {...register('modelo')}
             />
             {errors.modelo && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.modelo.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.modelo.message}</p>
             )}
           </div>
 
@@ -163,13 +163,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={50}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.marca ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                errors.marca ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Chevrolet, Hyundai, Toyota"
               {...register('marca')}
             />
             {errors.marca && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.marca.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.marca.message}</p>
             )}
           </div>
 
@@ -185,13 +185,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={8}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.placa ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                  errors.placa ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="ABC-1234 ou ABC1D23"
                 {...register('placa')}
               />
               {errors.placa && (
-                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.placa.message}</p>
+                <p className="mt-1.5 text-sm text-danger font-medium">{errors.placa.message}</p>
               )}
             </div>
 
@@ -205,13 +205,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={20}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.chassi ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                  errors.chassi ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Chassi do veiculo"
                 {...register('chassi')}
               />
               {errors.chassi && (
-                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.chassi.message}</p>
+                <p className="mt-1.5 text-sm text-danger font-medium">{errors.chassi.message}</p>
               )}
             </div>
           </div>
@@ -228,13 +228,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={30}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.cor ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                  errors.cor ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Ex: Branco, Prata, Preto"
                 {...register('cor')}
               />
               {errors.cor && (
-                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.cor.message}</p>
+                <p className="mt-1.5 text-sm text-danger font-medium">{errors.cor.message}</p>
               )}
             </div>
 
@@ -249,7 +249,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 max={15}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.posicao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                  errors.posicao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="1 a 15"
                 {...register('posicao', {
@@ -257,7 +257,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 })}
               />
               {errors.posicao && (
-                <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.posicao.message}</p>
+                <p className="mt-1.5 text-sm text-danger font-medium">{errors.posicao.message}</p>
               )}
             </div>
           </div>
@@ -273,13 +273,13 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               rows={2}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.observacao ? 'border-red-300 bg-red-50' : 'border-surface-border bg-surface-card',
+                errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Observacoes sobre o veiculo"
               {...register('observacao')}
             />
             {errors.observacao && (
-              <p className="mt-1.5 text-sm text-red-600 font-medium">{errors.observacao.message}</p>
+              <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>
             )}
           </div>
 

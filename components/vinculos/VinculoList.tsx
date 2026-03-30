@@ -47,7 +47,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
   return (
     <div>
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">
           {error}
         </div>
       )}
@@ -64,7 +64,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
               <span
                 className={cn(
                   'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
-                  v.ativo ? 'bg-green-100 text-green-800' : 'bg-surface-muted text-text-muted',
+                  v.ativo ? 'bg-alert-success-bg text-success' : 'bg-surface-muted text-text-muted',
                 )}
               >
                 {v.ativo ? 'Ativo' : 'Encerrado'}
@@ -80,7 +80,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                   type="button"
                   onClick={() => handleEncerrar(v.id)}
                   disabled={isPending && encerrandoId === v.id}
-                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px] disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px] disabled:opacity-50"
                 >
                   {isPending && encerrandoId === v.id ? 'Encerrando...' : 'Encerrar'}
                 </button>
@@ -132,7 +132,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                     className={cn(
                       'inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold',
                       v.ativo
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-alert-success-bg text-success'
                         : 'bg-surface-muted text-text-muted',
                     )}
                   >
@@ -145,7 +145,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                       type="button"
                       onClick={() => handleEncerrar(v.id)}
                       disabled={isPending && encerrandoId === v.id}
-                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors min-h-[40px] disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px] disabled:opacity-50"
                     >
                       <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
