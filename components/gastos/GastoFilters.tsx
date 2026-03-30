@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import type { GastoFilterOptions } from '@/types/gasto';
 
 interface GastoFiltersProps {
@@ -17,14 +17,33 @@ export function GastoFilters({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const currentMotoristaIds = searchParams.get('motoristaIds')?.split(',').filter(Boolean) ?? [];
-  const currentCaminhaoIds = searchParams.get('caminhaoIds')?.split(',').filter(Boolean) ?? [];
-  const currentCategoriaIds = searchParams.get('categoriaIds')?.split(',').filter(Boolean) ?? [];
-  const currentStartDate = searchParams.get('startDate') ?? '';
-  const currentEndDate = searchParams.get('endDate') ?? '';
+  // Optimistic local state — updates immediately on user interaction
+  const [motoristaIds, setMotoristaIds] = useState(searchParams.get('motoristaIds')?.split(',').filter(Boolean) ?? []);
+  const [caminhaoIds, setCaminhaoIds] = useState(searchParams.get('caminhaoIds')?.split(',').filter(Boolean) ?? []);
+  const [categoriaIds, setCategoriaIds] = useState(searchParams.get('categoriaIds')?.split(',').filter(Boolean) ?? []);
+  const [startDate, setStartDate] = useState(searchParams.get('startDate') ?? '');
+  const [endDate, setEndDate] = useState(searchParams.get('endDate') ?? '');
+
+  // Sync local state when searchParams finish updating
+  useEffect(() => {
+    setMotoristaIds(searchParams.get('motoristaIds')?.split(',').filter(Boolean) ?? []);
+    setCaminhaoIds(searchParams.get('caminhaoIds')?.split(',').filter(Boolean) ?? []);
+    setCategoriaIds(searchParams.get('categoriaIds')?.split(',').filter(Boolean) ?? []);
+    setStartDate(searchParams.get('startDate') ?? '');
+    setEndDate(searchParams.get('endDate') ?? '');
+  }, [searchParams]);
 
   const updateParams = useCallback(
     (updates: Record<string, string>) => {
+      // Update local state immediately (optimistic)
+      for (const [key, value] of Object.entries(updates)) {
+        if (key === 'motoristaIds') setMotoristaIds(value ? value.split(',').filter(Boolean) : []);
+        if (key === 'caminhaoIds') setCaminhaoIds(value ? value.split(',').filter(Boolean) : []);
+        if (key === 'categoriaIds') setCategoriaIds(value ? value.split(',').filter(Boolean) : []);
+        if (key === 'startDate') setStartDate(value);
+        if (key === 'endDate') setEndDate(value);
+      }
+
       const params = new URLSearchParams(searchParams.toString());
 
       for (const [key, value] of Object.entries(updates)) {
@@ -58,17 +77,22 @@ export function GastoFilters({
   }
 
   function handleClearAll() {
+    setMotoristaIds([]);
+    setCaminhaoIds([]);
+    setCategoriaIds([]);
+    setStartDate('');
+    setEndDate('');
     startTransition(() => {
       router.push('/gastos');
     });
   }
 
   const hasActiveFilters =
-    currentMotoristaIds.length > 0 ||
-    currentCaminhaoIds.length > 0 ||
-    currentCategoriaIds.length > 0 ||
-    currentStartDate !== '' ||
-    currentEndDate !== '';
+    motoristaIds.length > 0 ||
+    caminhaoIds.length > 0 ||
+    categoriaIds.length > 0 ||
+    startDate !== '' ||
+    endDate !== '';
 
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
@@ -98,7 +122,7 @@ export function GastoFilters({
           <input
             id="startDate"
             type="date"
-            value={currentStartDate}
+            value={startDate}
             onChange={(e) => updateParams({ startDate: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
@@ -115,7 +139,7 @@ export function GastoFilters({
           <input
             id="endDate"
             type="date"
-            value={currentEndDate}
+            value={endDate}
             onChange={(e) => updateParams({ endDate: e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
@@ -132,10 +156,10 @@ export function GastoFilters({
                 value: m.id,
                 label: m.nome,
               }))}
-              selected={currentMotoristaIds}
+              selected={motoristaIds}
               placeholder="Todos"
               onToggle={(value) =>
-                handleMultiSelect('motoristaIds', currentMotoristaIds, value)
+                handleMultiSelect('motoristaIds', motoristaIds, value)
               }
             />
           </div>
@@ -151,10 +175,10 @@ export function GastoFilters({
               value: c.id,
               label: `${c.placa} - ${c.modelo}`,
             }))}
-            selected={currentCaminhaoIds}
+            selected={caminhaoIds}
             placeholder="Todos"
             onToggle={(value) =>
-              handleMultiSelect('caminhaoIds', currentCaminhaoIds, value)
+              handleMultiSelect('caminhaoIds', caminhaoIds, value)
             }
           />
         </div>
@@ -169,10 +193,10 @@ export function GastoFilters({
               value: c.id,
               label: c.nome,
             }))}
-            selected={currentCategoriaIds}
+            selected={categoriaIds}
             placeholder="Todas"
             onToggle={(value) =>
-              handleMultiSelect('categoriaIds', currentCategoriaIds, value)
+              handleMultiSelect('categoriaIds', categoriaIds, value)
             }
           />
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
 interface FechamentoFiltersProps {
   motoristas: Array<{ id: string; nome: string }>;
@@ -14,9 +14,27 @@ export function FechamentoFilters({
 }: FechamentoFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+
+  // Optimistic local state — updates immediately on user interaction
+  const [motoristaId, setMotoristaId] = useState(searchParams.get('motorista_id') ?? '');
+  const [status, setStatus] = useState(searchParams.get('status') ?? '');
+  const [tipo, setTipo] = useState(searchParams.get('tipo') ?? '');
+
+  // Sync local state when searchParams finish updating
+  useEffect(() => {
+    setMotoristaId(searchParams.get('motorista_id') ?? '');
+    setStatus(searchParams.get('status') ?? '');
+    setTipo(searchParams.get('tipo') ?? '');
+  }, [searchParams]);
 
   const updateParam = useCallback(
     (key: string, value: string) => {
+      // Update local state immediately (optimistic)
+      if (key === 'motorista_id') setMotoristaId(value);
+      if (key === 'status') setStatus(value);
+      if (key === 'tipo') setTipo(value);
+
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
         params.set(key, value);
@@ -25,18 +43,25 @@ export function FechamentoFilters({
       }
       // Reset to page 1 when filters change
       params.delete('page');
-      router.push(`/fechamentos?${params.toString()}`);
+      startTransition(() => {
+        router.push(`/fechamentos?${params.toString()}`);
+      });
     },
-    [router, searchParams],
+    [router, searchParams, startTransition],
   );
 
   const hasFilters =
-    searchParams.has('motorista_id') ||
-    searchParams.has('status') ||
-    searchParams.has('tipo');
+    motoristaId !== '' ||
+    status !== '' ||
+    tipo !== '';
 
   function handleClear() {
-    router.push('/fechamentos');
+    setMotoristaId('');
+    setStatus('');
+    setTipo('');
+    startTransition(() => {
+      router.push('/fechamentos');
+    });
   }
 
   return (
@@ -57,7 +82,7 @@ export function FechamentoFilters({
             </label>
             <select
               id="filter-motorista"
-              value={searchParams.get('motorista_id') ?? ''}
+              value={motoristaId}
               onChange={(e) => updateParam('motorista_id', e.target.value)}
               className="block w-full min-h-[48px] rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
@@ -81,7 +106,7 @@ export function FechamentoFilters({
           </label>
           <select
             id="filter-status"
-            value={searchParams.get('status') ?? ''}
+            value={status}
             onChange={(e) => updateParam('status', e.target.value)}
             className="block w-full min-h-[48px] rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -102,7 +127,7 @@ export function FechamentoFilters({
           </label>
           <select
             id="filter-tipo"
-            value={searchParams.get('tipo') ?? ''}
+            value={tipo}
             onChange={(e) => updateParam('tipo', e.target.value)}
             className="block w-full min-h-[48px] rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -117,10 +142,15 @@ export function FechamentoFilters({
         <button
           type="button"
           onClick={handleClear}
+          disabled={isPending}
           className="text-xs text-primary-500 transition-colors hover:text-primary-700"
         >
           Limpar filtros
         </button>
+      )}
+
+      {isPending && (
+        <div className="mt-2 text-xs text-primary-500">Buscando...</div>
       )}
     </div>
   );

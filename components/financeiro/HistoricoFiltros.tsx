@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import type { FechamentoHistoricoFiltros, FechamentoFilterOptions } from '@/types/fechamento';
+import type { FechamentoTipo, FechamentoStatus } from '@/types/database';
 
 interface HistoricoFiltrosProps {
   showMotoristaFilter: boolean;
@@ -21,8 +22,31 @@ export function HistoricoFiltros({
   const [buscaLocal, setBuscaLocal] = useState(currentFiltros.busca ?? '');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Optimistic local state for selects — updates immediately on user interaction
+  const [tipoLocal, setTipoLocal] = useState<FechamentoTipo | 'todos'>(currentFiltros.tipo ?? 'todos');
+  const [statusLocal, setStatusLocal] = useState<FechamentoStatus | 'todos'>(currentFiltros.status ?? 'todos');
+  const [periodoInicioLocal, setPeriodoInicioLocal] = useState(currentFiltros.periodo_inicio ?? '');
+  const [periodoFimLocal, setPeriodoFimLocal] = useState(currentFiltros.periodo_fim ?? '');
+
+  // Sync local state when props/searchParams finish updating
+  useEffect(() => {
+    setTipoLocal(currentFiltros.tipo ?? 'todos');
+    setStatusLocal(currentFiltros.status ?? 'todos');
+    setPeriodoInicioLocal(currentFiltros.periodo_inicio ?? '');
+    setPeriodoFimLocal(currentFiltros.periodo_fim ?? '');
+    setBuscaLocal(currentFiltros.busca ?? '');
+  }, [currentFiltros]);
+
   const updateParams = useCallback(
     (updates: Record<string, string>) => {
+      // Update local state immediately (optimistic)
+      for (const [key, value] of Object.entries(updates)) {
+        if (key === 'tipo') setTipoLocal((value || 'todos') as FechamentoTipo | 'todos');
+        if (key === 'status') setStatusLocal((value || 'todos') as FechamentoStatus | 'todos');
+        if (key === 'periodoInicio') setPeriodoInicioLocal(value);
+        if (key === 'periodoFim') setPeriodoFimLocal(value);
+      }
+
       const params = new URLSearchParams(searchParams.toString());
 
       for (const [key, value] of Object.entries(updates)) {
@@ -71,6 +95,10 @@ export function HistoricoFiltros({
 
   function handleClearAll() {
     setBuscaLocal('');
+    setTipoLocal('todos');
+    setStatusLocal('todos');
+    setPeriodoInicioLocal('');
+    setPeriodoFimLocal('');
     startTransition(() => {
       router.push('/financeiro/historico');
     });
@@ -151,7 +179,7 @@ export function HistoricoFiltros({
           </label>
           <select
             id="tipo"
-            value={currentFiltros.tipo ?? 'todos'}
+            value={tipoLocal}
             onChange={(e) => updateParams({ tipo: e.target.value === 'todos' ? '' : e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -171,7 +199,7 @@ export function HistoricoFiltros({
           </label>
           <select
             id="status"
-            value={currentFiltros.status ?? 'todos'}
+            value={statusLocal}
             onChange={(e) => updateParams({ status: e.target.value === 'todos' ? '' : e.target.value })}
             className="w-full rounded-md border border-surface-border bg-surface-card px-3 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
@@ -194,7 +222,7 @@ export function HistoricoFiltros({
             <input
               id="periodoInicio"
               type="date"
-              value={currentFiltros.periodo_inicio ?? ''}
+              value={periodoInicioLocal}
               onChange={(e) => updateParams({ periodoInicio: e.target.value })}
               className="w-full rounded-md border border-surface-border bg-surface-card px-2 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
@@ -209,7 +237,7 @@ export function HistoricoFiltros({
             <input
               id="periodoFim"
               type="date"
-              value={currentFiltros.periodo_fim ?? ''}
+              value={periodoFimLocal}
               onChange={(e) => updateParams({ periodoFim: e.target.value })}
               className="w-full rounded-md border border-surface-border bg-surface-card px-2 py-2 text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
