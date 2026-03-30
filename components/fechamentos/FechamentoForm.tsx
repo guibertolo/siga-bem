@@ -16,17 +16,19 @@ import type { FechamentoTipo } from '@/types/database';
 interface FechamentoFormProps {
   motoristas: Array<{ id: string; nome: string }>;
   initialMotoristaId?: string;
+  initialDataInicio?: string;
+  initialDataFim?: string;
 }
 
-export function FechamentoForm({ motoristas, initialMotoristaId }: FechamentoFormProps) {
+export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInicio, initialDataFim }: FechamentoFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   // Step 1: params
   const [motoristaId, setMotoristaId] = useState(initialMotoristaId ?? '');
   const [tipo, setTipo] = useState<FechamentoTipo>('mensal');
-  const [periodoInicio, setPeriodoInicio] = useState('');
-  const [periodoFim, setPeriodoFim] = useState('');
+  const [periodoInicio, setPeriodoInicio] = useState(initialDataInicio ?? '');
+  const [periodoFim, setPeriodoFim] = useState(initialDataFim ?? '');
   const [observacao, setObservacao] = useState('');
 
   // Month selector for mensal

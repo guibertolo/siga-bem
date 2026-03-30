@@ -7,7 +7,7 @@ import { FechamentoForm } from '@/components/fechamentos/FechamentoForm';
 export default async function NovoFechamentoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ motorista_id?: string }>;
+  searchParams: Promise<{ motorista_id?: string; data_inicio?: string; data_fim?: string }>;
 }) {
   const usuario = await getCurrentUsuario();
 
@@ -20,7 +20,7 @@ export default async function NovoFechamentoPage({
     redirect('/fechamentos');
   }
 
-  const { motorista_id: motoristaIdParam } = await searchParams;
+  const { motorista_id: motoristaIdParam, data_inicio, data_fim } = await searchParams;
   const motoristasResult = await listMotoristasParaFechamento();
 
   return (
@@ -44,7 +44,7 @@ export default async function NovoFechamentoPage({
         </div>
       )}
 
-      <FechamentoForm motoristas={motoristasResult.data ?? []} initialMotoristaId={motoristaIdParam} />
+      <FechamentoForm motoristas={motoristasResult.data ?? []} initialMotoristaId={motoristaIdParam} initialDataInicio={data_inicio} initialDataFim={data_fim} />
     </div>
   );
 }

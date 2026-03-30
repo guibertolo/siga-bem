@@ -108,6 +108,13 @@ function MotoristaCard({ group }: { group: MotoristaGroup }) {
                     <span>Ganho ({v.percentual_pagamento}%): <span className="font-medium tabular-nums text-success">{formatBRL(v.valor_motorista)}</span></span>
                   </div>
                 </div>
+                <Link
+                  href={`/fechamentos/novo?motorista_id=${v.motorista_id}&data_inicio=${v.data_saida.split('T')[0]}&data_fim=${v.data_saida.split('T')[0]}`}
+                  className="shrink-0 inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                  title="Acertar esta viagem"
+                >
+                  Acertar
+                </Link>
               </div>
             ))}
           </div>
