@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { listVinculos } from '@/app/(dashboard)/vinculos/actions';
 
 export const metadata: Metadata = {
@@ -9,18 +10,14 @@ export const metadata: Metadata = {
 import { VinculoList } from '@/components/vinculos/VinculoList';
 
 export default async function VinculosPage() {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) redirect('/login');
+  if (usuario.role === 'motorista') redirect('/dashboard');
+
   const result = await listVinculos();
 
   if (result.error === 'Nao autenticado') {
     redirect('/login');
-  }
-
-  if (result.error === 'Permissao insuficiente') {
-    return (
-      <div className="w-full max-w-4xl">
-        <p className="text-sm text-danger">Voce nao tem permissao para acessar esta pagina.</p>
-      </div>
-    );
   }
 
   return (

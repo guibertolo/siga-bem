@@ -32,9 +32,9 @@ export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps
 
   // Determine if motorista role -> pre-fill and lock motorista_id
   const isMotorista = usuario.role === 'motorista';
-  const motoristaFixo = isMotorista && motoristasResult.data?.length === 1
-    ? motoristasResult.data[0].id
-    : null;
+  const motoristaFixo = isMotorista
+    ? (motoristasResult.data?.[0]?.id ?? null)
+    : (motoristasResult.data?.length === 1 ? motoristasResult.data[0].id : null);
 
   return (
     <div className="w-full max-w-3xl">

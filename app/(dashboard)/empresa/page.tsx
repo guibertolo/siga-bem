@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getEmpresa } from '@/app/(dashboard)/empresa/actions';
 
 export const metadata: Metadata = {
@@ -8,6 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EmpresaPage() {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) redirect('/login');
+  if (usuario.role === 'motorista') redirect('/dashboard');
+
   const result = await getEmpresa();
 
   if (!result.success) {

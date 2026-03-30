@@ -8,9 +8,13 @@ export const metadata: Metadata = {
 };
 import { CombustivelPrecoList } from '@/components/configuracoes/CombustivelPrecoList';
 import { MediaCombustivelRegiao } from '@/components/configuracoes/MediaCombustivelRegiao';
-import { getUserRole } from '@/lib/auth/get-user-role';
+import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 
 export default async function CombustivelConfigPage() {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) redirect('/login');
+  if (usuario.role === 'motorista') redirect('/dashboard');
+
   const result = await listCombustivelPrecos();
 
   if (result.error === 'Nao autenticado') {
@@ -19,7 +23,7 @@ export default async function CombustivelConfigPage() {
 
   const precos = result.data ?? [];
 
-  const role = await getUserRole();
+  const role = usuario.role;
   const isDono = role === 'dono';
 
   let mediaData: Awaited<ReturnType<typeof getMediaPorRegiao>>['data'] = null;

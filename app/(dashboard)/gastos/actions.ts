@@ -121,6 +121,7 @@ export async function listMotoristasAtivos(): Promise<{
 
 /**
  * List caminhoes ativos for select.
+ * Motorista role: only caminhoes linked via active vinculos.
  */
 export async function listCaminhoesAtivos(): Promise<{
   data: Array<{ id: string; placa: string; modelo: string }> | null;
@@ -132,6 +133,46 @@ export async function listCaminhoesAtivos(): Promise<{
   }
 
   const supabase = await createClient();
+
+  if (usuario.role === 'motorista') {
+    // Get motorista record for this user
+    const { data: motoristaRecord } = await supabase
+      .from('motorista')
+      .select('id')
+      .eq('usuario_id', usuario.id)
+      .eq('empresa_id', usuario.empresa_id)
+      .maybeSingle();
+
+    if (!motoristaRecord) {
+      return { data: [], error: null };
+    }
+
+    // Get caminhoes linked via active vinculos
+    const { data: vinculos, error: vincError } = await supabase
+      .from('motorista_caminhao')
+      .select('caminhao_id')
+      .eq('motorista_id', motoristaRecord.id)
+      .eq('ativo', true);
+
+    if (vincError) return { data: null, error: vincError.message };
+
+    const caminhaoIds = (vinculos ?? []).map((v) => v.caminhao_id);
+    if (caminhaoIds.length === 0) {
+      return { data: [], error: null };
+    }
+
+    const { data, error } = await supabase
+      .from('caminhao')
+      .select('id, placa, modelo')
+      .in('id', caminhaoIds)
+      .eq('ativo', true)
+      .order('placa');
+
+    if (error) return { data: null, error: error.message };
+    return { data, error: null };
+  }
+
+  // Dono/admin sees all active caminhoes
   const { data, error } = await supabase
     .from('caminhao')
     .select('id, placa, modelo')
