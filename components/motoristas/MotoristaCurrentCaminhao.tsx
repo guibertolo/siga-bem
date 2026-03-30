@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { getVinculoAtivoByMotorista } from '@/app/(dashboard)/vinculos/actions';
+import { getVinculoAtivoByMotorista, getActiveCaminhoes } from '@/app/(dashboard)/vinculos/actions';
+import { getUserRole } from '@/lib/auth/get-user-role';
+import { VincularCaminhaoInlineForm } from '@/components/vinculos/VincularCaminhaoInlineForm';
 
 interface MotoristaCurrentCaminhaoProps {
   motoristaId: string;
@@ -11,7 +13,18 @@ function formatDate(dateStr: string): string {
 }
 
 export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrentCaminhaoProps) {
-  const { data: vinculos } = await getVinculoAtivoByMotorista(motoristaId);
+  const [{ data: vinculos }, role] = await Promise.all([
+    getVinculoAtivoByMotorista(motoristaId),
+    getUserRole(),
+  ]);
+
+  const canManageVinculos = role === 'dono' || role === 'admin';
+
+  let caminhoes: { id: string; placa: string; modelo: string }[] = [];
+  if (canManageVinculos) {
+    const result = await getActiveCaminhoes();
+    caminhoes = result.data ?? [];
+  }
 
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
@@ -49,13 +62,22 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
       ) : (
         <div className="space-y-2">
           <p className="text-sm text-primary-500">Nenhum caminhao vinculado.</p>
-          <Link
-            href="/vinculos/novo"
-            className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
-          >
-            Criar vinculo &rarr;
-          </Link>
+          {!canManageVinculos && (
+            <Link
+              href="/vinculos/novo"
+              className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
+            >
+              Criar vinculo &rarr;
+            </Link>
+          )}
         </div>
+      )}
+
+      {canManageVinculos && (
+        <VincularCaminhaoInlineForm
+          motoristaId={motoristaId}
+          caminhoes={caminhoes}
+        />
       )}
     </div>
   );

@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { getVinculoAtivoByCaminhao } from '@/app/(dashboard)/vinculos/actions';
+import { getVinculoAtivoByCaminhao, getActiveMotoristas } from '@/app/(dashboard)/vinculos/actions';
+import { getUserRole } from '@/lib/auth/get-user-role';
+import { VincularMotoristaInlineForm } from '@/components/vinculos/VincularMotoristaInlineForm';
 
 interface CaminhaoCurrentMotoristaProps {
   caminhaoId: string;
@@ -11,7 +13,18 @@ function formatDate(dateStr: string): string {
 }
 
 export async function CaminhaoCurrentMotorista({ caminhaoId }: CaminhaoCurrentMotoristaProps) {
-  const { data: vinculos } = await getVinculoAtivoByCaminhao(caminhaoId);
+  const [{ data: vinculos }, role] = await Promise.all([
+    getVinculoAtivoByCaminhao(caminhaoId),
+    getUserRole(),
+  ]);
+
+  const canManageVinculos = role === 'dono' || role === 'admin';
+
+  let motoristas: { id: string; nome: string; cpf: string }[] = [];
+  if (canManageVinculos) {
+    const result = await getActiveMotoristas();
+    motoristas = result.data ?? [];
+  }
 
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
@@ -49,13 +62,22 @@ export async function CaminhaoCurrentMotorista({ caminhaoId }: CaminhaoCurrentMo
       ) : (
         <div className="space-y-2">
           <p className="text-sm text-primary-500">Nenhum motorista vinculado.</p>
-          <Link
-            href="/vinculos/novo"
-            className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
-          >
-            Criar vinculo &rarr;
-          </Link>
+          {!canManageVinculos && (
+            <Link
+              href="/vinculos/novo"
+              className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
+            >
+              Criar vinculo &rarr;
+            </Link>
+          )}
         </div>
+      )}
+
+      {canManageVinculos && (
+        <VincularMotoristaInlineForm
+          caminhaoId={caminhaoId}
+          motoristas={motoristas}
+        />
       )}
     </div>
   );
