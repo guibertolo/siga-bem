@@ -268,7 +268,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
         <textarea
           id="observacao"
           rows={3}
-          placeholder="Observacoes adicionais (opcional)"
+          placeholder="Observações adicionais (opcional)"
           {...register('observacao')}
           className={cn(inputClass, 'border-surface-border')}
         />

@@ -385,7 +385,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
           <textarea
             id="observacao"
             rows={3}
-            placeholder="Observacoes sobre o motorista (opcional)"
+            placeholder="Observações sobre o motorista (opcional)"
             {...register('observacao')}
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',

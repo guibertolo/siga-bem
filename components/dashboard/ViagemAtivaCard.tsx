@@ -99,9 +99,9 @@ function DonoView({ viagens, count, isMultiEmpresa }: { viagens: ViagemAtivaItem
       </div>
 
       <div className="space-y-3">
-        {displayViagens.map((v, idx) => (
+        {displayViagens.map((v) => (
           <div
-            key={`${v.id}-${idx}`}
+            key={v.id}
             className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card p-3"
           >
             <div className="min-w-0 flex-1">

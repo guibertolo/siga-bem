@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { AbastecimentoForm } from '@/components/abastecimento/AbastecimentoForm';
+import { useState, lazy, Suspense } from 'react';
+
+const AbastecimentoForm = lazy(() =>
+  import('@/components/abastecimento/AbastecimentoForm').then((m) => ({ default: m.AbastecimentoForm })),
+);
 import { cn } from '@/lib/utils/cn';
 
 interface AbastecimentoSectionProps {
@@ -68,16 +71,18 @@ export function AbastecimentoSection({
 
       {expanded && (
         <div className="mt-6 border-t border-surface-border pt-6">
-          <AbastecimentoForm
-            viagemId={viagemId}
-            empresaId={empresaId}
-            origem={origem}
-            destino={destino}
-            motoristaNome={motoristaNome}
-            caminhaoPlaca={caminhaoPlaca}
-            kmSaida={kmSaida}
-            onSuccess={() => setExpanded(false)}
-          />
+          <Suspense fallback={<div className="h-32 animate-pulse rounded-lg bg-surface-muted" />}>
+            <AbastecimentoForm
+              viagemId={viagemId}
+              empresaId={empresaId}
+              origem={origem}
+              destino={destino}
+              motoristaNome={motoristaNome}
+              caminhaoPlaca={caminhaoPlaca}
+              kmSaida={kmSaida}
+              onSuccess={() => setExpanded(false)}
+            />
+          </Suspense>
         </div>
       )}
     </div>

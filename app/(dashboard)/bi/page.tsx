@@ -45,7 +45,7 @@ import { BiPrevisaoMargens } from '@/components/bi/BiPrevisaoMargens';
 import { BiEficienciaCombustivel } from '@/components/bi/BiEficienciaCombustivel';
 import { BiManutencoes } from '@/components/bi/BiManutencoes';
 import { BiBenchmarkSetor } from '@/components/bi/BiBenchmarkSetor';
-import type { BIFiltros, BIKpis } from '@/types/bi';
+import type { BIFiltros, BIKpis, BITendenciaMensalItem, BICategoriaItem } from '@/types/bi';
 
 interface BiPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -101,6 +101,46 @@ function aggregateKpis(
     margemMediaViagem,
     margemMediaPercentual: margemPercentual,
   };
+}
+
+/**
+ * Aggregate tendencia items by mesAno — sum totals for same month across empresas.
+ */
+function aggregateTendencia(items: BITendenciaMensalItem[]): BITendenciaMensalItem[] {
+  const map = new Map<string, BITendenciaMensalItem>();
+  for (const item of items) {
+    const existing = map.get(item.mesAno);
+    if (existing) {
+      existing.total += item.total;
+    } else {
+      map.set(item.mesAno, { ...item });
+    }
+  }
+  return Array.from(map.values());
+}
+
+/**
+ * Aggregate categoria items by categoriaId — sum totals for same category across empresas.
+ */
+function aggregateCategorias(items: BICategoriaItem[]): BICategoriaItem[] {
+  const map = new Map<string, BICategoriaItem>();
+  let grandTotal = 0;
+  for (const item of items) {
+    grandTotal += item.total;
+    const existing = map.get(item.categoriaId);
+    if (existing) {
+      existing.total += item.total;
+      existing.qtdLancamentos += item.qtdLancamentos;
+    } else {
+      map.set(item.categoriaId, { ...item });
+    }
+  }
+  // Recalculate percentages
+  const result = Array.from(map.values());
+  for (const cat of result) {
+    cat.porcentagem = grandTotal > 0 ? (cat.total / grandTotal) * 100 : 0;
+  }
+  return result;
 }
 
 export default async function BiPage({ searchParams }: BiPageProps) {
@@ -197,10 +237,18 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     };
     kpis = { data: aggregateKpis(multiKpis), error: null };
     margemMotoristas = { data: multiMargem.flatMap((r) => r.data.data ?? []), error: null };
-    categorias = { data: multiCategorias.flatMap((r) => r.data.data ?? []), error: null };
+    // Aggregate categorias by categoriaId (same category across empresas should be summed)
+    categorias = {
+      data: aggregateCategorias(multiCategorias.flatMap((r) => r.data.data ?? [])),
+      error: null,
+    };
     caminhoes = { data: multiCaminhoes.flatMap((r) => r.data.data ?? []), error: null };
     motoristas = { data: multiMotoristas.flatMap((r) => r.data.data ?? []), error: null };
-    tendencia = { data: multiTendencia.flatMap((r) => r.data.data ?? []), error: null };
+    // Aggregate tendencia by mesAno (same month across empresas must be summed, not duplicated)
+    tendencia = {
+      data: aggregateTendencia(multiTendencia.flatMap((r) => r.data.data ?? [])),
+      error: null,
+    };
     eficiencia = { data: multiEficiencia.flatMap((r) => r.data.data ?? []), error: null };
     manutencoes = { data: multiManutencoes.flatMap((r) => r.data.data ?? []), error: null };
     benchmark = multiBenchmark[0]?.data ?? { data: null };
@@ -248,7 +296,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
         <p className="text-sm text-primary-500 mt-1">
           {multiCtx.isMultiEmpresa
             ? `Dados consolidados de ${multiCtx.empresaIds.length} empresas`
-            : 'Veja o resultado real do seu negocio'}
+            : 'Veja o resultado real do seu negócio'}
         </p>
       </div>
 

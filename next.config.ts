@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  experimental: {
+    optimizePackageImports: [
+      '@supabase/supabase-js',
+      'react-hook-form',
+      'zod',
+    ],
+  },
   webpack: (config) => {
     // @react-pdf/renderer uses canvas and other Node modules — exclude from server bundle
     config.resolve.alias.canvas = false;

@@ -232,7 +232,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
             errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
-          placeholder="Observacoes sobre este vinculo (opcional)"
+          placeholder="Observações sobre este vínculo (opcional)"
         />
         {errors.observacao && (
           <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>

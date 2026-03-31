@@ -90,7 +90,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-bold text-primary-900">
-          {isEdit ? 'Editar Veiculo' : 'Adicionar Veiculo'}
+          {isEdit ? 'Editar Veículo' : 'Adicionar Veículo'}
         </h3>
         <button
           type="button"
@@ -188,7 +188,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                   errors.chassi ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
-                placeholder="Chassi do veiculo"
+                placeholder="Chassi do veículo"
                 {...register('chassi')}
               />
               {errors.chassi && (
@@ -255,7 +255,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
                 errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
-              placeholder="Observacoes sobre o veiculo"
+              placeholder="Observações sobre o veículo"
               {...register('observacao')}
             />
             {errors.observacao && (

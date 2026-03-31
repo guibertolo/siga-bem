@@ -33,12 +33,12 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     },
     // Step 1: Caminhões list — show "+ Novo Caminhão" button
     {
-      page: '/caminhões',
+      page: '/caminhoes',
       title: 'Seus Caminhões',
       description: 'Comece cadastrando seus caminhões.',
       highlights: [
         {
-          element: 'a[href="/caminhões/cadastro"]',
+          element: 'a[href="/caminhoes/cadastro"]',
           popover: {
             title: 'Cadastrar Caminhão',
             description:
@@ -51,7 +51,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     },
     // Step 2: Caminhões cadastro — highlight form fields
     {
-      page: '/caminhões/cadastro',
+      page: '/caminhoes/cadastro',
       title: 'Formulário do Caminhão',
       description: 'Preencha os dados do caminhão.',
       highlights: [
@@ -233,7 +233,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     {
       page: '/fechamentos',
       title: 'Acerto de Contas',
-      description: 'Faca o acerto com seus motoristas.',
+      description: 'Faça o acerto com seus motoristas.',
       highlights: [
         {
           element: 'h2',
@@ -268,7 +268,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Resultado da Frota',
             description:
-              'Esses numeros mostram o resultado real da sua frota. Receita, gastos e margem. Conforme suas viagens forem registradas, esses numeros vao sendo preenchidos.',
+              'Esses números mostram o resultado real da sua frota. Receita, gastos e margem. Conforme suas viagens forem registradas, esses números vão sendo preenchidos.',
             side: 'bottom',
             align: 'center',
           },
@@ -278,8 +278,8 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     // Step 9: Conclusion overlay
     {
       page: '/dashboard',
-      title: 'Parabens!',
-      description: 'Sua frota esta configurada.',
+      title: 'Parabéns!',
+      description: 'Sua frota está configurada.',
       overlay: true,
       highlights: [],
     },
@@ -296,7 +296,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
     {
       page: '/dashboard',
       title: 'Bem-vindo ao FrotaViva!',
-      description: 'Voce e fundamental para a frota.',
+      description: 'Você é fundamental para a frota.',
       overlay: true,
       highlights: [],
     },
@@ -311,7 +311,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Lista de Viagens',
             description:
-              'Aqui aparecem todas as suas viagens. As viagens em andamento ficam no topo. Os status sao: Planejada, Em Andamento e Concluida.',
+              'Aqui aparecem todas as suas viagens. As viagens em andamento ficam no topo. Os status são: Planejada, Em Andamento e Concluída.',
             side: 'bottom',
             align: 'center',
           },
@@ -329,7 +329,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Ver Viagem',
             description:
-              'Clique em "Ver" para abrir os detalhes da viagem. La dentro você registra abastecimentos e despesas.',
+              'Clique em "Ver" para abrir os detalhes da viagem. Lá dentro você registra abastecimentos e despesas.',
             side: 'bottom',
             align: 'center',
           },
@@ -346,7 +346,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Registrar Abastecimento',
             description:
-              'Dentro da viagem, use o botao "Registrar Abastecimento" toda vez que abastecer. Informe litros, posto, valor e km do painel.',
+              'Dentro da viagem, use o botão "Registrar Abastecimento" toda vez que abastecer. Informe litros, posto, valor e km do painel.',
           },
         },
       ],
@@ -355,13 +355,13 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
     {
       page: '/viagens',
       title: 'Registrar Despesa',
-      description: 'Registre pedagio, alimentacao e outros gastos.',
+      description: 'Registre pedágio, alimentação e outros gastos.',
       highlights: [
         {
           popover: {
             title: 'Registrar Despesa',
             description:
-              'Use "Registrar Despesa" para pedagio, alimentacao, borracheiro e outros gastos da viagem.',
+              'Use "Registrar Despesa" para pedágio, alimentação, borracheiro e outros gastos da viagem.',
           },
         },
       ],
@@ -376,7 +376,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Anexar Comprovante',
             description:
-              'Apos registrar um gasto, anexe o comprovante (foto da nota). Isso e importante para a prestacao de contas com o patrao.',
+              'Após registrar um gasto, anexe o comprovante (foto da nota). Isso é importante para a prestação de contas com o patrão.',
           },
         },
       ],

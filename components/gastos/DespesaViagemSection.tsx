@@ -1,9 +1,12 @@
 'use client';
 
-import { useState, useTransition, useRef, useEffect } from 'react';
+import { useState, useTransition, useRef, useEffect, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { createGasto } from '@/app/(dashboard)/gastos/actions';
-import { ComprovantesUpload } from '@/components/gastos/ComprovantesUpload';
+
+const ComprovantesUpload = lazy(() =>
+  import('@/components/gastos/ComprovantesUpload').then((m) => ({ default: m.ComprovantesUpload })),
+);
 import { cn } from '@/lib/utils/cn';
 import { maskCurrency } from '@/lib/utils/mask-currency';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
@@ -168,11 +171,13 @@ export function DespesaViagemSection({
                 {successMsg}
               </div>
 
-              <ComprovantesUpload
-                gastoId={createdGastoId}
-                empresaId={empresaId}
-                comprovantes={[]}
-              />
+              <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-surface-muted" />}>
+                <ComprovantesUpload
+                  gastoId={createdGastoId}
+                  empresaId={empresaId}
+                  comprovantes={[]}
+                />
+              </Suspense>
 
               <div className="flex justify-end">
                 <button

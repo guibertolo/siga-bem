@@ -73,7 +73,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
           {formatBRL(Math.abs(lucro))}
         </p>
         <p className={`text-sm mt-1 ${lucroTextColor} font-medium`}>
-          {lucroPositivo ? '+' : '-'}{margemGeral.toFixed(1)}% de margem
+          {lucroPositivo ? 'Operação no lucro' : 'Operação no prejuízo'}
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
           {formatBRL(receita)}
         </p>
         <p className="text-sm text-primary-500 mt-1">
-          {viagensConcluidas} {viagensConcluidas === 1 ? 'viagem concluida' : 'viagens concluidas'}
+          {viagensConcluidas} {viagensConcluidas === 1 ? 'viagem concluída' : 'viagens concluídas'}
         </p>
       </div>
 

@@ -27,9 +27,9 @@ export function CaminhoesStatusCard({ caminhoes }: CaminhoesStatusCardProps) {
         </p>
       ) : (
         <ul className="space-y-2" role="list">
-          {caminhoes.map((c, idx) => (
+          {caminhoes.map((c) => (
             <li
-              key={`cam-${idx}-${c.id}`}
+              key={c.id}
               className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-3"
             >
               <div className="min-w-0 flex-1">

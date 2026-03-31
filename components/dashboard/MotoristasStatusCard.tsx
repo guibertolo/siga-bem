@@ -27,9 +27,9 @@ export function MotoristasStatusCard({ motoristas }: MotoristasStatusCardProps) 
         </p>
       ) : (
         <ul className="space-y-2" role="list">
-          {motoristas.map((m, idx) => (
+          {motoristas.map((m) => (
             <li
-              key={`mot-${idx}-${m.id}`}
+              key={m.id}
               className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card px-4 py-3"
             >
               <span className="min-w-0 truncate text-base font-medium text-primary-900">

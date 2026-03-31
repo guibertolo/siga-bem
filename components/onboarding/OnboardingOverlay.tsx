@@ -33,21 +33,21 @@ export function OnboardingOverlay({
     ? 'Bem-vindo ao FrotaViva!'
     : isMotorista
       ? 'Pronto! Bom trabalho na estrada.'
-      : 'Parabens! Sua frota esta configurada.';
+      : 'Parabéns! Sua frota está configurada.';
 
   const description = isWelcome
     ? isMotorista
-      ? 'Voce e fundamental para o funcionamento da frota. Vamos te ensinar a usar o sistema.'
-      : 'Vamos configurar sua frota passo a passo. Sao passos rapidos e simples.'
+      ? 'Você é fundamental para o funcionamento da frota. Vamos te ensinar a usar o sistema.'
+      : 'Vamos configurar sua frota passo a passo. São passos rápidos e simples.'
     : isMotorista
-      ? 'Lembre: registre abastecimentos e despesas durante cada viagem. Assim o acerto sai certinho. Voce pode refazer o tutorial em "Meu Perfil".'
-      : 'Voce pode refazer este tutorial a qualquer momento em "Meu Perfil". Bom trabalho!';
+      ? 'Lembre: registre abastecimentos e despesas durante cada viagem. Assim o acerto sai certinho. Você pode refazer o tutorial em "Meu Perfil".'
+      : 'Você pode refazer este tutorial a qualquer momento em "Meu Perfil". Bom trabalho!';
 
-  const buttonText = isWelcome ? 'Comecar' : 'Comecar a Usar';
+  const buttonText = isWelcome ? 'Começar' : 'Começar a Usar';
 
   // Dono welcome: show what they'll learn
   const donoWelcomeSteps = [
-    'Cadastrar caminhao',
+    'Cadastrar caminhão',
     'Cadastrar motorista',
     'Criar viagem',
     'Fazer acerto de contas',

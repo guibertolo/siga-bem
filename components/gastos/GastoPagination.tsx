@@ -84,7 +84,7 @@ export function GastoPagination({
           disabled={currentPage >= totalPages || isPending}
           className="rounded-md border border-surface-border px-3 py-1 text-sm text-primary-700 transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Proximo
+          Próximo
         </button>
       </div>
     </div>

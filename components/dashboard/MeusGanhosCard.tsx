@@ -19,8 +19,8 @@ export function MeusGanhosCard({ totalCentavos }: MeusGanhosCardProps) {
       role="region"
       aria-label={
         hasEarnings
-          ? `Meus ganhos do mes: ${formatBRL(totalCentavos)}`
-          : 'Meus ganhos do mes: nenhuma viagem concluida'
+          ? `Meus ganhos do mês: ${formatBRL(totalCentavos)}`
+          : 'Meus ganhos do mês: nenhuma viagem concluída'
       }
     >
       <h3 className="text-lg font-semibold text-primary-900">Meus Ganhos</h3>

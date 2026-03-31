@@ -161,7 +161,7 @@ export function CombustivelPrecoForm({
 
         <div>
           <label htmlFor="data_referencia" className="mb-2 block text-base font-medium text-primary-700">
-            Data de Referencia *
+            Data de Referência *
           </label>
           <input
             id="data_referencia"

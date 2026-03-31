@@ -2,8 +2,7 @@
 
 import { useEffect, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { driver, type Driver } from 'driver.js';
-import 'driver.js/dist/driver.css';
+import type { Driver } from 'driver.js';
 import { getStepDefs, getTotalSteps } from '@/components/onboarding/onboarding-steps';
 import {
   avancarOnboarding,
@@ -66,14 +65,20 @@ export function OnboardingTutorial({ role, currentStep }: OnboardingTutorialProp
     if (highlights.length === 0) return;
 
     // Delay to ensure page elements are rendered
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       // Destroy previous driver instance if any
       if (driverRef.current) {
         driverRef.current.destroy();
         driverRef.current = null;
       }
 
-      const driverObj = driver({
+      // Dynamic import — driver.js + CSS only loaded when highlights are needed
+      const [{ driver: createDriver }] = await Promise.all([
+        import('driver.js'),
+        import('driver.js/dist/driver.css'),
+      ]);
+
+      const driverObj = createDriver({
         showProgress: false,
         showButtons: ['next', 'close'],
         doneBtnText: 'Entendi',

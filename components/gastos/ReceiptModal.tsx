@@ -139,7 +139,7 @@ export function ReceiptModal({ gastoId, onClose }: ReceiptModalProps) {
                   onClick={() => setActiveIndex((i) => Math.min(comprovantes.length - 1, i + 1))}
                   disabled={activeIndex === comprovantes.length - 1}
                   className="rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/40 disabled:opacity-30"
-                  aria-label="Proximo"
+                  aria-label="Próximo"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6" />

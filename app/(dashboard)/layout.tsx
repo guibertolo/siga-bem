@@ -6,12 +6,21 @@ import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 import { createClient } from '@/lib/supabase/server';
 import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { BackButton } from '@/components/ui/BackButton';
-import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 import { MultiEmpresaBanner } from '@/components/empresa/MultiEmpresaBanner';
 import { checkMustChangePassword } from '@/lib/auth/check-must-change-password';
-import { OnboardingTutorial } from '@/components/onboarding/OnboardingTutorial';
+import dynamic from 'next/dynamic';
+
+// Dynamic imports — code-split heavy client components out of the layout chunk
+const MobileSidebar = dynamic(
+  () => import('@/components/ui/MobileSidebar').then((m) => m.MobileSidebar),
+);
+const EmpresaSwitcher = dynamic(
+  () => import('@/components/empresa/EmpresaSwitcher').then((m) => m.EmpresaSwitcher),
+);
+const OnboardingTutorial = dynamic(
+  () => import('@/components/onboarding/OnboardingTutorial').then((m) => m.OnboardingTutorial),
+);
 
 // Motorista: menu ultra simplificado (só o essencial)
 const motoristaLinks = [

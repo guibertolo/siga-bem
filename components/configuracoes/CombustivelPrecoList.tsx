@@ -139,10 +139,10 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
           <table className="w-full text-left">
             <thead className="border-b border-surface-border bg-surface-muted">
               <tr>
-                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Regiao</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Região</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Tipo</th>
-                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Preco/l</th>
-                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Referencia</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Preço/l</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Referência</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Fonte</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Ações</th>
               </tr>

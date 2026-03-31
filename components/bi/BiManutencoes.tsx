@@ -91,7 +91,7 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
-          Manutencoes por Caminhao
+          Manutenções por Caminhão
           <InfoTooltip text="Gastos com manutenção e troca de pneu agrupados por caminhão. Clique na linha para ver detalhes." />
         </h3>
         <p className="text-xs text-text-muted mb-4">
@@ -112,7 +112,7 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
-        Manutencoes por Caminhao
+        Manutenções por Caminhão
         <InfoTooltip text="Gastos com manutenção e troca de pneu agrupados por caminhão. Clique na linha para ver detalhes." />
       </h3>
       <div className="flex flex-wrap items-center gap-4 mb-4">

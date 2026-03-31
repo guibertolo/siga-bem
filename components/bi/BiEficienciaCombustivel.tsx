@@ -69,11 +69,11 @@ export function BiEficienciaCombustivel({
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
-          Eficiencia de Combustivel
+          Eficiência de Combustível
           <InfoTooltip text="Mostra quantos km cada caminhão faz com 1 litro de diesel. Quanto maior, melhor. Valores abaixo de 2,0 merecem atenção." />
         </h3>
         <p className="text-xs text-text-muted mb-4">
-          Referencia cegonheiro: ~2,5 km/L
+          Referência cegonheiro: ~2,5 km/L
         </p>
         <p className="text-sm text-text-muted">
           Nenhum dado de abastecimento no período selecionado.
@@ -85,11 +85,11 @@ export function BiEficienciaCombustivel({
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
-        Eficiencia de Combustivel
+        Eficiência de Combustível
         <InfoTooltip text="Mostra quantos km cada caminhão faz com 1 litro de diesel. Quanto maior, melhor. Valores abaixo de 2,0 merecem atenção." />
       </h3>
       <p className="text-xs text-text-muted mb-4">
-        Referencia cegonheiro: ~2,5 km/L | Verde {'>'} 2,5 | Amarelo 2,0-2,5 |
+        Referência cegonheiro: ~2,5 km/L | Verde {'>'} 2,5 | Amarelo 2,0-2,5 |
         Vermelho {'<'} 2,0
       </p>
 

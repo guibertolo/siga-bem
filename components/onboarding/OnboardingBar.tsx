@@ -123,7 +123,7 @@ export function OnboardingBar({
             disabled={isPending}
             className="flex items-center justify-center gap-1 min-h-[40px] px-3 rounded-lg bg-green-500 text-white text-sm font-bold transition-colors hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLastContentStep ? 'Concluir' : 'Proximo'}
+            {isLastContentStep ? 'Concluir' : 'Próximo'}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -139,13 +139,12 @@ export function OnboardingBar({
             </svg>
           </button>
 
-          {/* Skip link — right-aligned */}
+          {/* Skip button — secondary outline, WCAG AA accessible for 60+ */}
           <button
             type="button"
             onClick={handleSkip}
             disabled={isPending}
-            className="ml-auto min-h-[36px] sm:min-h-[44px] px-3 sm:px-5 rounded-lg border text-xs sm:text-base font-medium bg-transparent cursor-pointer transition-colors disabled:opacity-50 whitespace-nowrap"
-            style={{ color: 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.15)' }}
+            className="ml-auto mr-2 min-h-[48px] px-4 sm:px-5 rounded-lg border-2 border-white/60 text-white/80 text-sm sm:text-base font-medium bg-transparent cursor-pointer transition-colors hover:bg-white/10 hover:border-white/80 hover:text-white disabled:opacity-50 whitespace-nowrap"
           >
             Pular Tutorial
           </button>

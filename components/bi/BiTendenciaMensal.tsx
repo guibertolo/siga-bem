@@ -17,7 +17,7 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
           <InfoTooltip text="Gastos totais de cada mês. As barras mostram a proporção entre os meses." />
         </h3>
         <p className="text-sm text-text-muted">
-          Nao tem gastos registrados nesse periodo.
+          Não tem gastos registrados nesse período.
         </p>
       </div>
     );

@@ -49,7 +49,7 @@ export function MultiEmpresaBanner({ count }: MultiEmpresaBannerProps) {
         disabled={isPending}
         className="shrink-0 rounded-md bg-info/20 px-3 py-1.5 text-xs font-semibold text-info hover:bg-info/30 transition-colors disabled:opacity-50 min-h-[36px]"
       >
-        {isPending ? 'Saindo...' : 'Voltar para empresa unica'}
+        {isPending ? 'Saindo...' : 'Voltar para empresa única'}
       </button>
     </div>
   );
