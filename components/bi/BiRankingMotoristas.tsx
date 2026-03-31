@@ -1,5 +1,6 @@
 'use client';
 
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIEficienciaMotoristaItem } from '@/types/bi';
 
 interface BiRankingMotoristasProps {
@@ -17,8 +18,9 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-4">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
           Consumo por Motorista (km/L)
+          <InfoTooltip text="Eficiência de combustível de cada motorista. Inclui km entre viagens (deslocamento)." />
         </h3>
         <p className="text-sm text-text-muted">
           Nenhum dado de consumo no período selecionado.
@@ -29,8 +31,9 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-1">
+      <h3 className="text-lg font-semibold text-primary-900 mb-1 flex items-center gap-2">
         Consumo por Motorista (km/L)
+        <InfoTooltip text="Eficiência de combustível de cada motorista. Inclui km entre viagens (deslocamento)." />
       </h3>
       <p className="text-sm text-text-muted mb-4">
         Eficiência de combustível de cada motorista

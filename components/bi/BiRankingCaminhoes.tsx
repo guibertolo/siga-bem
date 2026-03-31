@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIRankingCaminhaoItem } from '@/types/bi';
 
 interface BiRankingCaminhoesProps {
@@ -11,8 +12,9 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-4">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
           Gastos com Manutenção por Caminhão
+          <InfoTooltip text="Total gasto com manutenção e pneu por caminhão no período selecionado." />
         </h3>
         <p className="text-sm text-text-muted">
           Nenhum gasto com caminhão no período selecionado.

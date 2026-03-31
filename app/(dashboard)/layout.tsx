@@ -8,28 +8,30 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { BackButton } from '@/components/ui/BackButton';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
+import { checkMustChangePassword } from '@/lib/auth/check-must-change-password';
+import { OnboardingTutorial } from '@/components/onboarding/OnboardingTutorial';
 
 // Motorista: menu ultra simplificado (só o essencial)
 const motoristaLinks = [
-  { href: '/dashboard', label: 'Início' },
-  { href: '/viagens', label: 'Minhas Viagens' },
+  { href: '/dashboard', label: 'Início', onboardingId: 'dashboard' },
+  { href: '/viagens', label: 'Minhas Viagens', onboardingId: 'viagens' },
 ];
 
 // Dono/Admin: menu completo com acertos unificado
 const donoLinks = [
-  { href: '/dashboard', label: 'Início' },
-  { href: '/empresa', label: 'Empresa' },
-  { href: '/viagens', label: 'Viagens' },
-  { href: '/gastos', label: 'Gastos' },
-  { href: '/fechamentos', label: 'Acertos' },
+  { href: '/dashboard', label: 'Início', onboardingId: 'dashboard' },
+  { href: '/empresa', label: 'Empresa', onboardingId: 'empresa' },
+  { href: '/viagens', label: 'Viagens', onboardingId: 'viagens' },
+  { href: '/gastos', label: 'Gastos', onboardingId: 'gastos' },
+  { href: '/fechamentos', label: 'Acertos', onboardingId: 'fechamentos' },
 ];
 
 const adminLinks = [
-  { href: '/motoristas', label: 'Motoristas' },
-  { href: '/caminhoes', label: 'Caminhões' },
-  { href: '/vinculos', label: 'Vínculos Mot./Cam.' },
-  { href: '/usuarios', label: 'Usuários' },
-  { href: '/configuracoes/combustivel', label: 'Preço Combustível' },
+  { href: '/motoristas', label: 'Motoristas', onboardingId: 'motoristas' },
+  { href: '/caminhoes', label: 'Caminhões', onboardingId: 'caminhoes' },
+  { href: '/vinculos', label: 'Vínculos Mot./Cam.', onboardingId: 'vinculos' },
+  { href: '/usuarios', label: 'Usuários', onboardingId: 'usuarios' },
+  { href: '/configuracoes/combustivel', label: 'Preço Combustível', onboardingId: 'combustivel' },
 ];
 
 export default async function DashboardLayout({
@@ -45,6 +47,9 @@ export default async function DashboardLayout({
   if (!currentUsuario) {
     redirect('/login');
   }
+
+  // Story 8.6 — Force password change on first login (skip test accounts)
+  await checkMustChangePassword();
 
   // Fetch empresas and viagem count in parallel (after auth check)
   const [empresas, viagensEmAndamento] = await Promise.all([
@@ -77,6 +82,20 @@ export default async function DashboardLayout({
   const viagensAtivasCount = viagensEmAndamento.count;
   const navLinks = isMotorista ? motoristaLinks : donoLinks;
 
+  // Onboarding tutorial — persistent, resumes from where user left off
+  const supabaseForOnboarding = await createClient();
+  const { data: { user: authUser } } = await supabaseForOnboarding.auth.getUser();
+  const isTestAccount = authUser?.email?.endsWith('@frotaviva.com.br') ?? false;
+  const onboardingCompleted = authUser?.user_metadata?.onboarding_completed === true;
+  const onboardingRedo = authUser?.user_metadata?.onboarding_redo === true;
+  const onboardingStep = typeof authUser?.user_metadata?.onboarding_step === 'number'
+    ? authUser.user_metadata.onboarding_step
+    : 0;
+  const showOnboarding = onboardingRedo || (!isTestAccount && !onboardingCompleted);
+  const onboardingRole = isMotorista ? 'motorista' as const : 'dono' as const;
+
+  // Tutorial renderiza inline via OnboardingTutorial component
+
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
@@ -105,6 +124,7 @@ export default async function DashboardLayout({
               key={link.href}
               href={link.href}
               prefetch={true}
+              data-onboarding-id={link.onboardingId}
               className="flex items-center px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               {link.label}
@@ -120,6 +140,7 @@ export default async function DashboardLayout({
             <Link
               href="/bi"
               prefetch={true}
+              data-onboarding-id="bi"
               className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               Resumo dos Gastos
@@ -136,6 +157,7 @@ export default async function DashboardLayout({
                   key={link.href}
                   href={link.href}
                   prefetch={true}
+                  data-onboarding-id={link.onboardingId}
                   className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
                 >
                   {link.label}
@@ -185,10 +207,15 @@ export default async function DashboardLayout({
           </div>
           <ThemeToggle />
         </header>
-        <main className="flex-1 bg-surface-background p-4 md:p-8 overflow-auto">
+        <main className={`flex-1 bg-surface-background p-4 md:p-8 overflow-auto ${showOnboarding && onboardingStep > 0 ? 'pt-24' : ''}`}>
           {children}
         </main>
       </div>
+
+      {/* Onboarding tutorial — persistent, resumes from last step */}
+      {showOnboarding && (
+        <OnboardingTutorial role={onboardingRole} currentStep={onboardingStep} />
+      )}
     </div>
   );
 }

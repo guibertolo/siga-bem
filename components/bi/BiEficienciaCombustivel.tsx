@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIEficienciaItem } from '@/types/bi';
 
 interface BiEficienciaCombustivelProps {
@@ -67,8 +68,9 @@ export function BiEficienciaCombustivel({
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-2">
+        <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
           Eficiencia de Combustivel
+          <InfoTooltip text="Mostra quantos km cada caminhão faz com 1 litro de diesel. Quanto maior, melhor. Valores abaixo de 2,0 merecem atenção." />
         </h3>
         <p className="text-xs text-text-muted mb-4">
           Referencia cegonheiro: ~2,5 km/L
@@ -82,8 +84,9 @@ export function BiEficienciaCombustivel({
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-2">
+      <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
         Eficiencia de Combustivel
+        <InfoTooltip text="Mostra quantos km cada caminhão faz com 1 litro de diesel. Quanto maior, melhor. Valores abaixo de 2,0 merecem atenção." />
       </h3>
       <p className="text-xs text-text-muted mb-4">
         Referencia cegonheiro: ~2,5 km/L | Verde {'>'} 2,5 | Amarelo 2,0-2,5 |

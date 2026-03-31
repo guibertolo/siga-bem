@@ -46,13 +46,23 @@ export async function signInWithPassword(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     return { error: error.message };
+  }
+
+  // Story 8.6 — Redirect to forced password change if flag is set
+  // Skip test accounts (@frotaviva.com.br)
+  const user = data.user;
+  if (
+    user?.user_metadata?.must_change_password === true &&
+    !user.email?.endsWith('@frotaviva.com.br')
+  ) {
+    redirect('/trocar-senha');
   }
 
   redirect('/dashboard');

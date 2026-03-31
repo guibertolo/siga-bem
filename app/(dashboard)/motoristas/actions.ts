@@ -209,6 +209,7 @@ export async function createMotoristaComConta(
     email: data.email,
     password: senhaGerada,
     email_confirm: true,
+    user_metadata: { nome: data.nome, must_change_password: true },
   });
 
   if (authError || !authData.user) {

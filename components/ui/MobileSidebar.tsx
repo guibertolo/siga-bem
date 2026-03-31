@@ -9,6 +9,7 @@ import type { UserEmpresa } from '@/types/empresa-multi';
 interface NavLink {
   href: string;
   label: string;
+  onboardingId?: string;
 }
 
 interface MobileSidebarProps {
@@ -133,6 +134,7 @@ export function MobileSidebar({
               href={link.href}
               prefetch={true}
               onClick={() => setOpen(false)}
+              data-onboarding-id={link.onboardingId}
               className={`flex items-center px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === link.href || pathname.startsWith(link.href + '/')
                   ? 'bg-white/20 text-white'
@@ -153,6 +155,7 @@ export function MobileSidebar({
               href="/bi"
               prefetch={true}
               onClick={() => setOpen(false)}
+              data-onboarding-id="bi"
               className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === '/bi'
                   ? 'bg-white/20 text-white'
@@ -174,6 +177,7 @@ export function MobileSidebar({
                   href={link.href}
                   prefetch={true}
                   onClick={() => setOpen(false)}
+                  data-onboarding-id={link.onboardingId}
                   className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                     pathname === link.href || pathname.startsWith(link.href + '/')
                       ? 'bg-white/20 text-white'

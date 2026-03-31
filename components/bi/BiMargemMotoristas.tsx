@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIMargemMotoristaItem } from '@/types/bi';
 
 interface BiMargemMotoristasProps {
@@ -28,8 +29,9 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-4">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
           Lucro por Motorista
+          <InfoTooltip text="Receita dos fretes menos os custos de cada motorista. Margem verde acima de 40% é saudável." />
         </h3>
         <p className="text-base text-text-muted">
           Nenhuma viagem concluída com motorista no período selecionado.
@@ -40,8 +42,9 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-1">
+      <h3 className="text-lg font-semibold text-primary-900 mb-1 flex items-center gap-2">
         Lucro por Motorista
+        <InfoTooltip text="Receita dos fretes menos os custos de cada motorista. Margem verde acima de 40% é saudável." />
       </h3>
       <p className="text-sm text-primary-500 mb-4">
         Lucro de cada motorista nas viagens concluidas

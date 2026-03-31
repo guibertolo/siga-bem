@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIManutencaoTruckItem } from '@/types/bi';
 
 interface BiManutencoesProps {
@@ -89,8 +90,9 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-2">
+        <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
           Manutencoes por Caminhao
+          <InfoTooltip text="Gastos com manutenção e troca de pneu agrupados por caminhão. Clique na linha para ver detalhes." />
         </h3>
         <p className="text-xs text-text-muted mb-4">
           Gastos com Manutenção e Pneu agrupados por veículo
@@ -109,8 +111,9 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-2">
+      <h3 className="text-lg font-semibold text-primary-900 mb-2 flex items-center gap-2">
         Manutencoes por Caminhao
+        <InfoTooltip text="Gastos com manutenção e troca de pneu agrupados por caminhão. Clique na linha para ver detalhes." />
       </h3>
       <div className="flex flex-wrap items-center gap-4 mb-4">
         <p className="text-xs text-text-muted">

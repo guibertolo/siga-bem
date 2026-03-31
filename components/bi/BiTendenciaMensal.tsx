@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BITendenciaMensalItem } from '@/types/bi';
 
 interface BiTendenciaMensalProps {
@@ -11,8 +12,9 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
   if (!data || data.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-primary-900 mb-4">
+        <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
           Resultado Mensal
+          <InfoTooltip text="Gastos totais de cada mês. As barras mostram a proporção entre os meses." />
         </h3>
         <p className="text-sm text-text-muted">
           Nao tem gastos registrados nesse periodo.

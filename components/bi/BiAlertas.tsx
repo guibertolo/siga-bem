@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { dispensarAlerta } from '@/app/(dashboard)/bi/actions';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIAlerta } from '@/types/bi';
 
 interface BiAlertasProps {
@@ -26,8 +27,9 @@ export function BiAlertas({ data, verificados = [] }: BiAlertasProps) {
             &#x2705;
           </span>
           <div>
-            <p className="text-base font-bold text-success">
+            <p className="text-base font-bold text-success flex items-center gap-2">
               Nenhum alerta
+              <InfoTooltip text="O sistema detecta automaticamente quando algum caminhão ou motorista está fora do padrão da sua frota." />
             </p>
             <p className="text-sm text-primary-600 dark:text-primary-400">
               Operacao dentro do esperado no periodo selecionado
@@ -44,8 +46,9 @@ export function BiAlertas({ data, verificados = [] }: BiAlertasProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <h3 className="text-lg font-bold text-primary-900">
+        <h3 className="text-lg font-bold text-primary-900 flex items-center gap-2">
           Alertas da Frota
+          <InfoTooltip text="O sistema detecta automaticamente quando algum caminhão ou motorista está fora do padrão da sua frota." />
         </h3>
         <span className="inline-flex items-center rounded-full bg-danger/10 px-2.5 py-0.5 text-sm font-semibold text-danger">
           {alertas.length}

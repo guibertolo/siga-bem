@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIBenchmarkSetor, BIBenchmarkProprio } from '@/types/bi';
 
 /** Minimum empresas required for k-anonymity (LGPD Art. 12) */
@@ -174,8 +175,9 @@ export function BiBenchmarkSetor({ setor, proprio }: BiBenchmarkSetorProps) {
   if (tiposComDados.length === 0) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-        <h3 className="text-lg font-bold text-primary-900 mb-2">
+        <h3 className="text-lg font-bold text-primary-900 mb-2 flex items-center gap-2">
           Comparativo com o Setor
+          <InfoTooltip text="Compara sua frota com a média de outras empresas do setor. Dados anônimos conforme LGPD." />
         </h3>
         <div className="flex items-center gap-3 rounded-lg bg-surface-muted/50 p-4">
           <svg
@@ -209,8 +211,9 @@ export function BiBenchmarkSetor({ setor, proprio }: BiBenchmarkSetorProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-primary-900">
+        <h3 className="text-lg font-bold text-primary-900 flex items-center gap-2">
           Comparativo com o Setor
+          <InfoTooltip text="Compara sua frota com a média de outras empresas do setor. Dados anônimos conforme LGPD." />
         </h3>
         <p className="text-sm text-primary-500 mt-0.5">
           Veja como sua frota se compara com outras empresas do setor

@@ -4,6 +4,7 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { createClient } from '@/lib/supabase/server';
 import { DadosPerfil } from '@/components/perfil/DadosPerfil';
 import { TrocaSenhaForm } from '@/components/perfil/TrocaSenhaForm';
+import { RefazerTutorialButton } from '@/components/onboarding/RefazerTutorialButton';
 
 export const metadata: Metadata = {
   title: 'Meu Perfil',
@@ -42,6 +43,15 @@ export default async function PerfilPage() {
       />
 
       <TrocaSenhaForm />
+
+      {/* Tutorial */}
+      <div className="bg-surface-card rounded-card p-6 shadow-sm">
+        <h2 className="text-lg font-bold text-primary-900 mb-3">Tutorial</h2>
+        <p className="text-sm text-text-secondary mb-4">
+          Reveja o tutorial de como usar o FrotaViva.
+        </p>
+        <RefazerTutorialButton />
+      </div>
     </div>
   );
 }
