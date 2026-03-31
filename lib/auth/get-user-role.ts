@@ -42,7 +42,7 @@ export const getCurrentUsuario = cache(async (): Promise<Usuario | null> => {
 
   const { data } = await supabase
     .from('usuario')
-    .select('id, auth_id, empresa_id, motorista_id, nome, email, telefone, role, ativo, created_at, updated_at')
+    .select('id, auth_id, empresa_id, motorista_id, nome, email, telefone, role, ativo, selected_empresas, created_at, updated_at')
     .eq('auth_id', user.id)
     .single();
 

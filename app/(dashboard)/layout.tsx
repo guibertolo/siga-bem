@@ -2,12 +2,14 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getUserEmpresas } from '@/lib/queries/empresas';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 import { createClient } from '@/lib/supabase/server';
 import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileSidebar } from '@/components/ui/MobileSidebar';
 import { BackButton } from '@/components/ui/BackButton';
 import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
+import { MultiEmpresaBanner } from '@/components/empresa/MultiEmpresaBanner';
 import { checkMustChangePassword } from '@/lib/auth/check-must-change-password';
 import { OnboardingTutorial } from '@/components/onboarding/OnboardingTutorial';
 
@@ -51,10 +53,11 @@ export default async function DashboardLayout({
   // Story 8.6 — Force password change on first login (skip test accounts)
   await checkMustChangePassword();
 
-  // Fetch empresas and viagem count in parallel (after auth check)
-  const [empresas, viagensEmAndamento] = await Promise.all([
+  // Fetch empresas, viagem count, and multi-empresa context in parallel (after auth check)
+  const [empresas, viagensEmAndamento, multiCtx] = await Promise.all([
     getUserEmpresas(),
     getViagensEmAndamento(),
+    getMultiEmpresaContext(),
   ]);
 
   // AC:1/AC:2 — If user has no active empresa, either auto-switch (1 empresa)
@@ -116,7 +119,7 @@ export default async function DashboardLayout({
           </Link>
         </div>
 
-        <EmpresaSwitcher empresas={empresas} />
+        <EmpresaSwitcher empresas={empresas} selectedEmpresaIds={multiCtx.isMultiEmpresa ? multiCtx.empresaIds : undefined} />
 
         <nav className="flex-1 p-3 flex flex-col gap-0.5">
           {navLinks.map((link) => (
@@ -200,6 +203,7 @@ export default async function DashboardLayout({
               showBILink={showBILink}
               empresas={empresas}
               viagensAtivasCount={viagensAtivasCount}
+              selectedEmpresaIds={multiCtx.isMultiEmpresa ? multiCtx.empresaIds : undefined}
             />
             <span className="text-sm text-primary-700 truncate hidden sm:inline">
               {currentUsuario.email}
@@ -207,6 +211,9 @@ export default async function DashboardLayout({
           </div>
           <ThemeToggle />
         </header>
+        {multiCtx.isMultiEmpresa && (
+          <MultiEmpresaBanner count={multiCtx.empresaIds.length} />
+        )}
         <main className={`flex-1 bg-surface-background p-4 md:p-8 overflow-auto ${showOnboarding && onboardingStep > 0 ? 'pt-24' : ''}`}>
           {children}
         </main>

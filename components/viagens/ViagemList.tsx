@@ -18,6 +18,7 @@ interface ViagemListProps {
   motoristas: Array<{ id: string; nome: string }>;
   initialPage: number;
   isMotorista?: boolean;
+  isMultiEmpresa?: boolean;
 }
 
 function formatDateTime(isoString: string): string {
@@ -32,6 +33,7 @@ export function ViagemList({
   motoristas,
   initialPage,
   isMotorista = false,
+  isMultiEmpresa = false,
 }: ViagemListProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -277,11 +279,20 @@ export function ViagemList({
         <>
           {/* Mobile card view */}
           <div className="space-y-3 md:hidden">
-            {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => (
+            {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => {
+              const empresaNome = (v as ViagemListItem & { empresa_nome?: string }).empresa_nome;
+              return (
               <div
                 key={v.id}
                 className="rounded-lg border border-surface-border bg-surface-card p-4"
               >
+                {isMultiEmpresa && empresaNome && (
+                  <div className="mb-2">
+                    <span className="inline-block rounded-full bg-info/10 px-2.5 py-0.5 text-xs font-semibold text-info">
+                      {empresaNome}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-1">
                   <div>
                     <div className="text-base font-medium text-primary-900">{v.origem}</div>
@@ -349,7 +360,8 @@ export function ViagemList({
                   )}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Desktop table view */}
@@ -357,22 +369,32 @@ export function ViagemList({
             <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-border bg-surface-muted text-left">
+                  {isMultiEmpresa && (
+                    <th className="px-4 py-3.5 text-base font-medium text-primary-700">Empresa</th>
+                  )}
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhão</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhao</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saida</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
                 </tr>
               </thead>
               <tbody>
-                {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => (
+                {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => {
+                  const empresaNome = (v as ViagemListItem & { empresa_nome?: string }).empresa_nome;
+                  return (
                   <tr
                     key={v.id}
                     className="border-b border-surface-border last:border-b-0 hover:bg-surface-muted"
                   >
+                    {isMultiEmpresa && (
+                      <td className="px-4 py-3.5 text-sm font-medium text-primary-700">
+                        {empresaNome ?? '-'}
+                      </td>
+                    )}
                     <td className="px-4 py-3.5">
                       <div className="text-base font-medium text-primary-900">{v.origem}</div>
                       <div className="text-sm text-primary-500">{v.destino}</div>
@@ -444,7 +466,8 @@ export function ViagemList({
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -8,14 +8,17 @@ import type { ViagemPendenteAcerto } from '@/app/(dashboard)/fechamentos/actions
 
 interface ViagensPendentesAcertoProps {
   viagens: ViagemPendenteAcerto[];
+  isMultiEmpresa?: boolean;
 }
 
 interface MotoristaGroup {
   motorista_id: string;
   motorista_nome: string;
+  empresa_nome?: string;
   viagens: ViagemPendenteAcerto[];
   totalFrete: number;
   totalGanho: number;
+  totalDespesas: number;
 }
 
 function formatarData(iso: string): string {
@@ -27,22 +30,30 @@ function formatarData(iso: string): string {
   });
 }
 
-function agruparPorMotorista(viagens: ViagemPendenteAcerto[]): MotoristaGroup[] {
+function agruparPorMotorista(viagens: ViagemPendenteAcerto[], isMultiEmpresa?: boolean): MotoristaGroup[] {
   const map = new Map<string, MotoristaGroup>();
 
   for (const v of viagens) {
-    const existing = map.get(v.motorista_id);
+    const empresaNome = (v as ViagemPendenteAcerto & { empresa_nome?: string }).empresa_nome;
+    // In multi-empresa mode, group by motorista+empresa to keep them separate
+    const key = isMultiEmpresa && empresaNome
+      ? `${v.motorista_id}::${empresaNome}`
+      : v.motorista_id;
+    const existing = map.get(key);
     if (existing) {
       existing.viagens.push(v);
       existing.totalFrete += v.valor_total;
       existing.totalGanho += v.valor_motorista;
+      existing.totalDespesas += v.totalDespesas;
     } else {
-      map.set(v.motorista_id, {
+      map.set(key, {
         motorista_id: v.motorista_id,
         motorista_nome: v.motorista_nome,
+        empresa_nome: empresaNome,
         viagens: [v],
         totalFrete: v.valor_total,
         totalGanho: v.valor_motorista,
+        totalDespesas: v.totalDespesas,
       });
     }
   }
@@ -50,7 +61,7 @@ function agruparPorMotorista(viagens: ViagemPendenteAcerto[]): MotoristaGroup[] 
   return Array.from(map.values()).sort((a, b) => b.viagens.length - a.viagens.length);
 }
 
-function MotoristaCard({ group }: { group: MotoristaGroup }) {
+function MotoristaCard({ group, isMultiEmpresa }: { group: MotoristaGroup; isMultiEmpresa?: boolean }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -62,10 +73,15 @@ function MotoristaCard({ group }: { group: MotoristaGroup }) {
         className="flex w-full items-center justify-between gap-4 p-4 text-left min-h-[64px] transition-colors hover:bg-surface-hover"
       >
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-lg font-bold text-primary-900 truncate">
               {group.motorista_nome}
             </span>
+            {isMultiEmpresa && group.empresa_nome && (
+              <span className="inline-flex items-center rounded-full bg-info/10 px-2 py-0.5 text-xs font-medium text-info shrink-0">
+                {group.empresa_nome}
+              </span>
+            )}
             <span className="inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-semibold text-amber-800 shrink-0">
               {group.viagens.length} {group.viagens.length === 1 ? 'viagem' : 'viagens'}
             </span>
@@ -96,27 +112,65 @@ function MotoristaCard({ group }: { group: MotoristaGroup }) {
       {expanded && (
         <div className="border-t border-surface-border">
           <div className="divide-y divide-surface-border">
-            {group.viagens.map((v) => (
-              <div key={v.id} className="flex items-center gap-4 px-4 py-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-base font-medium text-primary-900">
-                    {v.origem} &rarr; {v.destino}
-                  </p>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-primary-500">
-                    <span>{formatarData(v.data_saida)}</span>
-                    <span>Frete: <span className="font-medium tabular-nums text-primary-700">{formatBRL(v.valor_total)}</span></span>
-                    <span>Ganho ({v.percentual_pagamento}%): <span className="font-medium tabular-nums text-success">{formatBRL(v.valor_motorista)}</span></span>
+            {group.viagens.map((v) => {
+              const lucroViagem = v.valor_total - v.totalDespesas;
+              return (
+                <div key={v.id} className="px-4 py-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-base font-medium text-primary-900">
+                        {v.origem} &rarr; {v.destino}
+                      </p>
+                      <p className="mt-1 text-sm text-primary-500">
+                        {formatarData(v.data_saida)}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/fechamentos/novo?motorista_id=${v.motorista_id}&data_inicio=${v.data_saida.split('T')[0]}&data_fim=${v.data_saida.split('T')[0]}`}
+                      className="shrink-0 inline-flex items-center gap-1.5 rounded-md bg-btn-primary px-3 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px]"
+                      title="Acertar esta viagem"
+                    >
+                      Acertar
+                    </Link>
+                  </div>
+
+                  {/* Detalhamento financeiro da viagem */}
+                  <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 rounded-md bg-surface-muted p-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-primary-500">Valor do Frete:</span>
+                      <span className="font-medium tabular-nums text-primary-900">{formatBRL(v.valor_total)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-primary-500">Parte do Motorista ({v.percentual_pagamento}%):</span>
+                      <span className="font-medium tabular-nums text-success">{formatBRL(v.valor_motorista)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-primary-500">Total de Despesas:</span>
+                      <span className="font-medium tabular-nums text-danger">{formatBRL(v.totalDespesas)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-primary-500">Lucro da Viagem:</span>
+                      <span className={`font-bold tabular-nums ${lucroViagem >= 0 ? 'text-success' : 'text-danger'}`}>
+                        {formatBRL(lucroViagem)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Link para ver comprovantes de despesas */}
+                  <div className="mt-2">
+                    <Link
+                      href={`/viagens/${v.id}`}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-900 min-h-[40px]"
+                    >
+                      <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Ver Despesas e Comprovantes
+                    </Link>
                   </div>
                 </div>
-                <Link
-                  href={`/fechamentos/novo?motorista_id=${v.motorista_id}&data_inicio=${v.data_saida.split('T')[0]}&data_fim=${v.data_saida.split('T')[0]}`}
-                  className="shrink-0 inline-flex items-center gap-1.5 rounded-md bg-btn-primary px-3 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px]"
-                  title="Acertar esta viagem"
-                >
-                  Acertar
-                </Link>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Action */}
@@ -137,7 +191,7 @@ function MotoristaCard({ group }: { group: MotoristaGroup }) {
   );
 }
 
-export function ViagensPendentesAcerto({ viagens }: ViagensPendentesAcertoProps) {
+export function ViagensPendentesAcerto({ viagens, isMultiEmpresa }: ViagensPendentesAcertoProps) {
   if (viagens.length === 0) {
     return (
       <div className="rounded-lg border border-success/30 bg-success/5 p-4">
@@ -148,7 +202,7 @@ export function ViagensPendentesAcerto({ viagens }: ViagensPendentesAcertoProps)
     );
   }
 
-  const grupos = agruparPorMotorista(viagens);
+  const grupos = agruparPorMotorista(viagens, isMultiEmpresa);
 
   return (
     <div>
@@ -161,7 +215,11 @@ export function ViagensPendentesAcerto({ viagens }: ViagensPendentesAcertoProps)
 
       <div className="grid gap-3">
         {grupos.map((group) => (
-          <MotoristaCard key={group.motorista_id} group={group} />
+          <MotoristaCard
+            key={isMultiEmpresa ? `${group.motorista_id}::${group.empresa_nome}` : group.motorista_id}
+            group={group}
+            isMultiEmpresa={isMultiEmpresa}
+          />
         ))}
       </div>
     </div>

@@ -1,19 +1,27 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { getUserEmpresas } from '@/lib/queries/empresas';
 import { listMotoristasParaFechamento } from '@/app/(dashboard)/fechamentos/actions';
 import { FechamentoForm } from '@/components/fechamentos/FechamentoForm';
+import { EmpresaSelectForCreate } from '@/components/empresa/EmpresaSelectForCreate';
 
 export default async function NovoFechamentoPage({
   searchParams,
 }: {
   searchParams: Promise<{ motorista_id?: string; data_inicio?: string; data_fim?: string }>;
 }) {
-  const usuario = await getCurrentUsuario();
+  const [usuario, multiCtx] = await Promise.all([
+    getCurrentUsuario(),
+    getMultiEmpresaContext(),
+  ]);
 
   if (!usuario) {
     redirect('/login');
   }
+
+  const empresas = multiCtx.isMultiEmpresa ? await getUserEmpresas() : [];
 
   // Only dono/admin can create fechamentos
   if (usuario.role === 'motorista') {
@@ -37,6 +45,13 @@ export default async function NovoFechamentoPage({
         </Link>
         <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Acerto de Contas</h2>
       </div>
+
+      {multiCtx.isMultiEmpresa && multiCtx.activeEmpresaId && (
+        <EmpresaSelectForCreate
+          empresas={empresas}
+          activeEmpresaId={multiCtx.activeEmpresaId}
+        />
+      )}
 
       {motoristasResult.error && (
         <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">

@@ -27,6 +27,7 @@ export interface ViagemAtivaItem {
   motorista_nome: string;
   caminhao_placa: string;
   caminhao_modelo: string;
+  empresa_nome?: string;
 }
 
 export interface ViagemAtivaData {

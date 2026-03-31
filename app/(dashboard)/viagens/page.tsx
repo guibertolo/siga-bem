@@ -3,27 +3,63 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listViagens, listMotoristasAtivos } from '@/app/(dashboard)/viagens/actions';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { queryMultiEmpresa, flattenMultiResults } from '@/lib/queries/multi-empresa-query';
+import { listViagensForEmpresa } from '@/app/(dashboard)/viagens/multi-actions';
 import { ViagemList } from '@/components/viagens/ViagemList';
+import type { ViagemListItem } from '@/types/viagem';
 
 export const metadata: Metadata = {
   title: 'Viagens',
 };
 
 export default async function ViagensPage() {
-  const [viagensResult, motoristasResult, currentUsuario] = await Promise.all([
-    listViagens({ page: 1, pageSize: 20 }),
-    listMotoristasAtivos(),
+  const [currentUsuario, multiCtx] = await Promise.all([
     getCurrentUsuario(),
+    getMultiEmpresaContext(),
   ]);
 
-  if (viagensResult.error === 'Não autenticado' || motoristasResult.error === 'Não autenticado') {
-    redirect('/login');
+  const isMultiEmpresa = multiCtx.isMultiEmpresa;
+  const isMotorista = currentUsuario?.role === 'motorista';
+
+  let viagens: ViagemListItem[] = [];
+  let total = 0;
+
+  if (isMultiEmpresa) {
+    // Multi-empresa: use admin client with explicit empresa_id filter
+    const results = await queryMultiEmpresa((admin, eid) =>
+      listViagensForEmpresa(admin, eid),
+    );
+
+    const flattened = flattenMultiResults(
+      results.map((r) => ({
+        empresaId: r.empresaId,
+        empresaName: r.empresaName,
+        data: r.data.data,
+      })),
+    );
+
+    // Sort by data_saida descending
+    flattened.sort((a, b) =>
+      new Date(b.data_saida).getTime() - new Date(a.data_saida).getTime(),
+    );
+
+    viagens = flattened;
+    total = flattened.length;
+  } else {
+    const viagensResult = await listViagens({ page: 1, pageSize: 20 });
+    if (viagensResult.error === 'Nao autenticado') {
+      redirect('/login');
+    }
+    viagens = viagensResult.data ?? [];
+    total = viagensResult.total;
   }
 
-  const viagens = viagensResult.data ?? [];
-  const total = viagensResult.total;
+  const motoristasResult = await listMotoristasAtivos();
+  if (motoristasResult.error === 'Nao autenticado') {
+    redirect('/login');
+  }
   const motoristas = motoristasResult.data ?? [];
-  const isMotorista = currentUsuario?.role === 'motorista';
 
   return (
     <div className="w-full max-w-6xl">
@@ -33,7 +69,11 @@ export default async function ViagensPage() {
             {isMotorista ? 'Minhas Viagens' : 'Viagens'}
           </h2>
           <p className="mt-1 text-base text-primary-500">
-            {isMotorista ? 'Veja suas viagens e registre gastos.' : 'Gerencie as viagens da sua frota.'}
+            {isMotorista
+              ? 'Veja suas viagens e registre gastos.'
+              : isMultiEmpresa
+                ? `Visualizando viagens de ${multiCtx.empresaIds.length} empresas.`
+                : 'Gerencie as viagens da sua frota.'}
           </p>
         </div>
         <Link
@@ -53,6 +93,7 @@ export default async function ViagensPage() {
         motoristas={motoristas}
         initialPage={1}
         isMotorista={isMotorista}
+        isMultiEmpresa={isMultiEmpresa}
       />
     </div>
   );

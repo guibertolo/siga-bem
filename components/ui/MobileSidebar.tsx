@@ -19,6 +19,7 @@ interface MobileSidebarProps {
   showBILink: boolean;
   empresas: UserEmpresa[];
   viagensAtivasCount?: number;
+  selectedEmpresaIds?: string[];
 }
 
 export function MobileSidebar({
@@ -28,6 +29,7 @@ export function MobileSidebar({
   showBILink,
   empresas,
   viagensAtivasCount = 0,
+  selectedEmpresaIds,
 }: MobileSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -125,7 +127,7 @@ export function MobileSidebar({
           </button>
         </div>
 
-        <EmpresaSwitcher empresas={empresas} />
+        <EmpresaSwitcher empresas={empresas} selectedEmpresaIds={selectedEmpresaIds} />
 
         <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-230px)]">
           {navLinks.map((link) => (

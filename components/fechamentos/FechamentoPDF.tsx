@@ -299,7 +299,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
 
         {/* === IDENTIFICATION === */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Fechamento Financeiro</Text>
+          <Text style={styles.sectionTitle}>Acerto de Contas</Text>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Motorista:</Text>
             <Text style={styles.infoValue}>{motorista.nome}</Text>
@@ -346,7 +346,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
               </Text>
             </View>
             <View style={styles.summaryTotal}>
-              <Text style={styles.saldoLabel}>Saldo Liquido</Text>
+              <Text style={styles.saldoLabel}>Valor a Pagar ao Motorista</Text>
               <Text
                 style={
                   totais.saldo >= 0
@@ -377,7 +377,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
                 Valor Total
               </Text>
               <Text style={[styles.tableHeaderCell, styles.colViagemPerc]}>
-                % Pgto
+                % do Motorista
               </Text>
               <Text
                 style={[styles.tableHeaderCell, styles.colViagemMotorista]}
@@ -551,7 +551,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
               <Text style={styles.signatureName}>
                 {empresa.razao_social}
               </Text>
-              <Text style={styles.signatureRole}>Responsavel</Text>
+              <Text style={styles.signatureRole}>Empresa</Text>
             </View>
           </View>
         </View>

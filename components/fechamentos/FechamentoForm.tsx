@@ -145,7 +145,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
 
       {step === 1 && (
         <div className="space-y-4 rounded-lg border border-surface-border bg-surface-card p-6">
-          <h3 className="text-lg font-semibold text-primary-900">Parametros do Acerto</h3>
+          <h3 className="text-lg font-semibold text-primary-900">Dados do Acerto</h3>
 
           {/* Motorista */}
           <div>
@@ -261,7 +261,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
             disabled={isPending}
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-btn-primary px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
           >
-            {isPending ? 'Calculando...' : 'Calcular Preview'}
+            {isPending ? 'Calculando...' : 'Ver Resumo do Acerto'}
           </button>
         </div>
       )}
@@ -283,7 +283,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
               </p>
             </div>
             <div className="rounded-lg border border-surface-border bg-surface-card p-4 text-center">
-              <p className="text-sm text-primary-500">Saldo Liquido</p>
+              <p className="text-sm text-primary-500">Valor a Pagar</p>
               <p
                 className={`mt-1 text-xl font-bold tabular-nums ${
                   preview.totais.saldo_motorista >= 0 ? 'text-success' : 'text-danger'

@@ -6,6 +6,7 @@ interface ViagemAtivaCardProps {
   viagens: ViagemAtivaItem[];
   count: number;
   isMotorista: boolean;
+  isMultiEmpresa?: boolean;
 }
 
 function formatDateTime(isoString: string): string {
@@ -81,7 +82,7 @@ function MotoristaView({ viagem }: { viagem: ViagemAtivaItem }) {
   );
 }
 
-function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: number }) {
+function DonoView({ viagens, count, isMultiEmpresa }: { viagens: ViagemAtivaItem[]; count: number; isMultiEmpresa?: boolean }) {
   const displayViagens = viagens.slice(0, 3);
   const hasMore = count > 3;
 
@@ -98,12 +99,17 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
       </div>
 
       <div className="space-y-3">
-        {displayViagens.map((v) => (
+        {displayViagens.map((v, idx) => (
           <div
-            key={v.id}
+            key={`${v.id}-${idx}`}
             className="flex items-center justify-between gap-3 rounded-lg border border-surface-border bg-surface-card p-3"
           >
             <div className="min-w-0 flex-1">
+              {isMultiEmpresa && v.empresa_nome && (
+                <span className="inline-flex items-center rounded-full bg-info/10 px-2 py-0.5 text-xs font-medium text-info mb-1">
+                  {v.empresa_nome}
+                </span>
+              )}
               <p className="text-base font-bold text-primary-900 truncate">
                 {v.origem} &rarr; {v.destino}
               </p>
@@ -133,7 +139,7 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
   );
 }
 
-export function ViagemAtivaCard({ viagens, count, isMotorista }: ViagemAtivaCardProps) {
+export function ViagemAtivaCard({ viagens, count, isMotorista, isMultiEmpresa }: ViagemAtivaCardProps) {
   if (count === 0 || viagens.length === 0) {
     return <EmptyState />;
   }
@@ -142,5 +148,5 @@ export function ViagemAtivaCard({ viagens, count, isMotorista }: ViagemAtivaCard
     return <MotoristaView viagem={viagens[0]} />;
   }
 
-  return <DonoView viagens={viagens} count={count} />;
+  return <DonoView viagens={viagens} count={count} isMultiEmpresa={isMultiEmpresa} />;
 }

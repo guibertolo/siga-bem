@@ -1,39 +1,62 @@
 'use client';
 
 import { useState, useRef, useEffect, useTransition } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { formatCNPJ } from '@/lib/utils/validate-cnpj';
 import { switchEmpresa } from '@/app/(dashboard)/empresa/switch/actions';
+import { setSelectedEmpresas, clearSelectedEmpresas } from '@/app/(dashboard)/empresa/multi-select-actions';
 import { ROLE_LABELS } from '@/types/empresa-multi';
 import type { UserEmpresa } from '@/types/empresa-multi';
 
 interface EmpresaSwitcherProps {
   empresas: UserEmpresa[];
+  selectedEmpresaIds?: string[];
 }
 
 /**
- * Sidebar empresa switcher component (Story 7.3).
+ * Sidebar empresa switcher component with multi-select support.
  *
- * Displays the active empresa name below the logo.
- * If user has >1 empresa, shows a dropdown to switch.
- * If user has 1 empresa, shows a static label.
+ * Single empresa: static label.
+ * Multiple empresas: dropdown with checkboxes for multi-select.
+ * - "Todas as Empresas" checkbox at top (selects/deselects all)
+ * - When multiple selected: calls setSelectedEmpresas(ids)
+ * - When single selected: calls switchEmpresa(id) + clearSelectedEmpresas()
+ * - Shows count "Visualizando X de Y empresas"
+ * - Active empresa is always checked (cannot uncheck)
  */
-export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
+export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(null);
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(() => {
+    if (selectedEmpresaIds && selectedEmpresaIds.length >= 2) {
+      return new Set(selectedEmpresaIds);
+    }
+    const active = empresas.find((e) => e.is_active);
+    return active ? new Set([active.empresa_id]) : new Set();
+  });
+  const [multiMode, setMultiMode] = useState(
+    () => (selectedEmpresaIds?.length ?? 0) >= 2,
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   const activeEmpresa = optimisticActiveId
     ? empresas.find((e) => e.empresa_id === optimisticActiveId)
     : empresas.find((e) => e.is_active);
   const hasMultiple = empresas.length > 1;
 
-  const displayName = activeEmpresa
-    ? (activeEmpresa.nome_fantasia ?? activeEmpresa.razao_social)
-    : 'Sem empresa';
+  const isMultiActive = multiMode && checkedIds.size >= 2;
+  const allChecked = checkedIds.size === empresas.length;
+  const someChecked = checkedIds.size > 0 && checkedIds.size < empresas.length;
+
+  const displayName = isMultiActive
+    ? `${checkedIds.size} de ${empresas.length} empresas`
+    : activeEmpresa
+      ? (activeEmpresa.nome_fantasia ?? activeEmpresa.razao_social)
+      : 'Sem empresa';
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -48,13 +71,71 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
-  function handleSwitch(empresaId: string) {
+  // Sync checked state when selectedEmpresaIds prop changes
+  useEffect(() => {
+    if (selectedEmpresaIds && selectedEmpresaIds.length >= 2) {
+      setCheckedIds(new Set(selectedEmpresaIds));
+      setMultiMode(true);
+    }
+  }, [selectedEmpresaIds]);
+
+  function handleSingleSwitch(empresaId: string) {
     if (isPending) return;
     setOptimisticActiveId(empresaId);
     setOpen(false);
+    // Clear multi-select and switch — use window.location for clean reload
     startTransition(async () => {
-      await switchEmpresa(empresaId, pathname);
-      setOptimisticActiveId(null);
+      try { await clearSelectedEmpresas(); } catch { /* ok */ }
+      try { await switchEmpresa(empresaId); } catch { /* redirect throws */ }
+      // Force full page reload to ensure clean state
+      window.location.href = pathname;
+    });
+  }
+
+  function handleCheckboxToggle(empresaId: string) {
+    const activeId = activeEmpresa?.empresa_id;
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(empresaId)) {
+        next.delete(empresaId);
+      } else {
+        next.add(empresaId);
+      }
+      return next;
+    });
+    setMultiMode(true);
+  }
+
+  function handleToggleAll() {
+    if (allChecked) {
+      // Deselect all except active
+      const activeId = activeEmpresa?.empresa_id;
+      setCheckedIds(activeId ? new Set([activeId]) : new Set());
+    } else {
+      // Select all
+      setCheckedIds(new Set(empresas.map((e) => e.empresa_id)));
+    }
+    setMultiMode(true);
+  }
+
+  function handleApply() {
+    if (isPending) return;
+    const ids = Array.from(checkedIds);
+
+    if (ids.length <= 1) {
+      // Single mode — switch to that empresa
+      const targetId = ids[0] ?? activeEmpresa?.empresa_id;
+      if (targetId) {
+        handleSingleSwitch(targetId);
+      }
+      return;
+    }
+
+    // Multi mode
+    setOpen(false);
+    startTransition(async () => {
+      await setSelectedEmpresas(ids);
+      router.refresh();
     });
   }
 
@@ -69,7 +150,7 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
     );
   }
 
-  // Multiple empresas: dropdown switcher
+  // Multiple empresas: dropdown with checkboxes
   return (
     <div className="relative px-5 py-3 border-b border-white/10" ref={dropdownRef}>
       <button
@@ -83,7 +164,7 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
         `}
         aria-expanded={open}
         aria-haspopup="listbox"
-        aria-label="Trocar empresa"
+        aria-label="Selecionar empresas"
       >
         <span className="truncate font-medium">{displayName}</span>
         <svg
@@ -100,10 +181,11 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
       {/* Dropdown list */}
       {open && (
         <div
-          className="absolute left-0 right-0 top-full z-50 mx-2 mt-1 rounded-lg bg-[#0F2A38] border border-white/10 shadow-xl max-h-80 overflow-y-auto"
+          className="absolute left-0 right-0 top-full z-50 mx-2 mt-1 rounded-lg bg-[#0F2A38] border border-white/10 shadow-xl max-h-96 overflow-y-auto"
           role="listbox"
           aria-label="Lista de empresas"
         >
+          {/* Lista de empresas — clique para trocar */}
           {empresas.map((empresa) => {
             const isActive = optimisticActiveId
               ? empresa.empresa_id === optimisticActiveId
@@ -113,18 +195,12 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
               <button
                 key={empresa.empresa_id}
                 type="button"
-                role="option"
-                aria-selected={isActive}
-                onClick={() => {
-                  if (!isActive) handleSwitch(empresa.empresa_id);
-                }}
+                onClick={() => { if (!isActive) handleSingleSwitch(empresa.empresa_id); }}
                 disabled={isActive || isPending}
                 className={`
                   flex flex-col w-full px-4 py-3 text-left border-b border-white/5
                   transition-colors bg-transparent border-none cursor-pointer
-                  ${isActive
-                    ? 'bg-white/10 cursor-default'
-                    : 'hover:bg-white/10'}
+                  ${isActive ? 'bg-white/10 cursor-default' : 'hover:bg-white/10'}
                 `}
               >
                 <div className="flex items-center gap-2">
@@ -137,17 +213,91 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
                     {name}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 mt-1 ml-0">
-                  <span className="text-xs text-white/50 font-mono">
-                    {formatCNPJ(empresa.cnpj)}
-                  </span>
-                  <span className="text-xs text-white/40">
-                    {ROLE_LABELS[empresa.role] ?? empresa.role}
-                  </span>
+                <div className="flex items-center gap-3 mt-0.5 ml-0">
+                  <span className="text-xs text-white/50 font-mono">{formatCNPJ(empresa.cnpj)}</span>
+                  <span className="text-xs text-white/40">{ROLE_LABELS[empresa.role] ?? empresa.role}</span>
                 </div>
               </button>
             );
           })}
+
+          {/* Comparar empresas — modo multi */}
+          {empresas.length >= 2 && (
+            <div className="border-t border-white/10 p-3 space-y-2">
+              {!multiMode ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      const allIds = empresas.map(e => e.empresa_id);
+                      startTransition(async () => {
+                        await setSelectedEmpresas(allIds);
+                        router.refresh();
+                      });
+                    }}
+                    disabled={isPending}
+                    className="w-full rounded-lg border border-white/20 px-4 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 min-h-[44px]"
+                  >
+                    📊 Ver Todas as Empresas
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMultiMode(true);
+                      setCheckedIds(new Set(empresas.map(e => e.empresa_id)));
+                    }}
+                    className="w-full rounded-lg px-4 py-2 text-xs text-white/50 transition-colors hover:text-white/70"
+                  >
+                    Escolher quais visualizar
+                  </button>
+                </>
+              ) : (
+                <>
+                  {/* Checkboxes para selecionar quais */}
+                  <p className="text-xs text-white/60 mb-2">Selecione as empresas:</p>
+                  {empresas.map((emp) => {
+                    const checked = checkedIds.has(emp.empresa_id);
+                    const empName = emp.nome_fantasia ?? emp.razao_social;
+                    return (
+                      <button
+                        key={emp.empresa_id}
+                        type="button"
+                        onClick={() => handleCheckboxToggle(emp.empresa_id)}
+                        className="flex items-center gap-2 w-full px-2 py-1.5 text-left bg-transparent border-none cursor-pointer hover:bg-white/10 rounded transition-colors"
+                      >
+                        <span className={`flex items-center justify-center h-5 w-5 rounded border-2 shrink-0 transition-colors ${checked ? 'bg-green-500 border-green-500' : 'border-white/40'}`}>
+                          {checked && (
+                            <svg className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </span>
+                        <span className="text-sm text-white/80 truncate">{empName}</span>
+                      </button>
+                    );
+                  })}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={handleApply}
+                      disabled={isPending || checkedIds.size < 2}
+                      className="flex-1 rounded-lg bg-btn-primary px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-btn-primary-hover disabled:opacity-50 min-h-[40px]"
+                    >
+                      {isPending ? 'Aplicando...' : `Visualizar ${checkedIds.size} Empresas`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMultiMode(false)}
+                      className="rounded-lg px-3 py-2 text-sm text-white/60 hover:text-white/80 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Divider + Nova Empresa link */}
           <div className="border-t border-white/10">

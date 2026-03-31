@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { getUserEmpresas } from '@/lib/queries/empresas';
 import {
   listCategorias,
   listMotoristasAtivos,
@@ -9,18 +11,23 @@ import {
   createGasto,
 } from '@/app/(dashboard)/gastos/actions';
 import { GastoForm } from '@/components/gastos/GastoForm';
+import { EmpresaSelectForCreate } from '@/components/empresa/EmpresaSelectForCreate';
 
 interface NovoGastoPageProps {
   searchParams: Promise<{ viagemId?: string }>;
 }
 
 export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps) {
-  const usuario = await getCurrentUsuario();
+  const [usuario, multiCtx] = await Promise.all([
+    getCurrentUsuario(),
+    getMultiEmpresaContext(),
+  ]);
 
   if (!usuario) {
     redirect('/login');
   }
 
+  const empresas = multiCtx.isMultiEmpresa ? await getUserEmpresas() : [];
   const { viagemId } = await searchParams;
 
   const [categoriasResult, motoristasResult, caminhoesResult, viagensResult] = await Promise.all([
@@ -50,6 +57,13 @@ export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps
         </Link>
         <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Gasto</h2>
       </div>
+
+      {multiCtx.isMultiEmpresa && multiCtx.activeEmpresaId && (
+        <EmpresaSelectForCreate
+          empresas={empresas}
+          activeEmpresaId={multiCtx.activeEmpresaId}
+        />
+      )}
 
       {categoriasResult.error && (
         <div className="mb-4 rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-sm text-danger">

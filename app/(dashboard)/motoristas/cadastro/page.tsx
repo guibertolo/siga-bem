@@ -4,15 +4,24 @@ import { createClient } from '@/lib/supabase/server';
 import { MotoristaForm } from '@/components/motoristas/MotoristaForm';
 import { createMotorista, createMotoristaComConta } from '@/app/(dashboard)/motoristas/actions';
 import { getEmpresa } from '@/app/(dashboard)/empresa/actions';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { getUserEmpresas } from '@/lib/queries/empresas';
+import { EmpresaSelectForCreate } from '@/components/empresa/EmpresaSelectForCreate';
 import type { MotoristaFormData, MotoristaActionResult, MotoristaComContaFormData, MotoristaComContaActionResult } from '@/types/motorista';
 
 export default async function CadastroMotoristaPage() {
-  const supabase = await createClient();
+  const [supabaseClient, multiCtx] = await Promise.all([
+    createClient(),
+    getMultiEmpresaContext(),
+  ]);
+  const supabase = supabaseClient;
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     redirect('/login');
   }
+
+  const empresas = multiCtx.isMultiEmpresa ? await getUserEmpresas() : [];
 
   // Fetch empresa ativa for InfoBox (Story 8.2)
   const empresaResult = await getEmpresa();
@@ -54,6 +63,13 @@ export default async function CadastroMotoristaPage() {
           Preencha os dados do motorista para cadastra-lo na plataforma.
         </p>
       </div>
+
+      {multiCtx.isMultiEmpresa && multiCtx.activeEmpresaId && (
+        <EmpresaSelectForCreate
+          empresas={empresas}
+          activeEmpresaId={multiCtx.activeEmpresaId}
+        />
+      )}
 
       <div className="rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm">
         <MotoristaForm

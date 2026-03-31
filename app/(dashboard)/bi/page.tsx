@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { queryMultiEmpresa } from '@/lib/queries/multi-empresa-query';
 
 export const metadata: Metadata = {
   title: 'Resultado da Frota',
@@ -19,6 +21,18 @@ import {
   getBIAlertas,
   getBenchmarkSetor,
 } from '@/app/(dashboard)/bi/actions';
+import {
+  getBIFilterOptionsForEmpresa,
+  getBIKpisForEmpresa,
+  getBIMargemMotoristasForEmpresa,
+  getBICategoriasBreakdownForEmpresa,
+  getBIRankingCaminhoesForEmpresa,
+  getBIEficienciaMotoristasForEmpresa,
+  getBITendenciaMensalForEmpresa,
+  getBIEficienciaCombustivelForEmpresa,
+  getBIManutencoesForEmpresa,
+  getBIAlertasForEmpresa,
+} from '@/app/(dashboard)/bi/multi-actions';
 import { BiFiltros } from '@/components/bi/BiFiltros';
 import { BiAlertas } from '@/components/bi/BiAlertas';
 import { BiKpiCards } from '@/components/bi/BiKpiCards';
@@ -31,7 +45,7 @@ import { BiPrevisaoMargens } from '@/components/bi/BiPrevisaoMargens';
 import { BiEficienciaCombustivel } from '@/components/bi/BiEficienciaCombustivel';
 import { BiManutencoes } from '@/components/bi/BiManutencoes';
 import { BiBenchmarkSetor } from '@/components/bi/BiBenchmarkSetor';
-import type { BIFiltros } from '@/types/bi';
+import type { BIFiltros, BIKpis } from '@/types/bi';
 
 interface BiPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -52,6 +66,43 @@ function parseOptionalString(
   return str || undefined;
 }
 
+/**
+ * Aggregate KPIs from multiple empresas by summing numeric fields.
+ */
+function aggregateKpis(
+  results: Array<{ data: { data: BIKpis | null; error: string | null } }>,
+): BIKpis | null {
+  const allData = results.map((r) => r.data.data).filter(Boolean) as BIKpis[];
+  if (allData.length === 0) return null;
+
+  const summed = allData.reduce(
+    (acc, d) => ({
+      receitaFrete: acc.receitaFrete + d.receitaFrete,
+      custoTotal: acc.custoTotal + d.custoTotal,
+      lucroBruto: acc.lucroBruto + d.lucroBruto,
+      viagensConcluidas: acc.viagensConcluidas + d.viagensConcluidas,
+    }),
+    { receitaFrete: 0, custoTotal: 0, lucroBruto: 0, viagensConcluidas: 0 },
+  );
+
+  const margemPercentual = summed.receitaFrete > 0
+    ? Math.round((summed.lucroBruto / summed.receitaFrete) * 100)
+    : 0;
+  const margemMediaViagem = summed.viagensConcluidas > 0
+    ? Math.round(summed.lucroBruto / summed.viagensConcluidas)
+    : 0;
+
+  return {
+    receitaFrete: summed.receitaFrete,
+    custoTotal: summed.custoTotal,
+    lucroBruto: summed.lucroBruto,
+    margemPercentual,
+    viagensConcluidas: summed.viagensConcluidas,
+    margemMediaViagem,
+    margemMediaPercentual: margemPercentual,
+  };
+}
+
 export default async function BiPage({ searchParams }: BiPageProps) {
   // Access control: ONLY dono
   const usuario = await getCurrentUsuario();
@@ -59,6 +110,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     redirect('/dashboard');
   }
 
+  const multiCtx = await getMultiEmpresaContext();
   const params = await searchParams;
 
   // Build date range from periodo
@@ -77,32 +129,109 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     categoriaId: parseOptionalString(params.categoriaId),
   };
 
-  // Fetch all data in parallel
-  const [
-    filterOpts,
-    alertas,
-    kpis,
-    margemMotoristas,
-    categorias,
-    caminhoes,
-    motoristas,
-    tendencia,
-    eficiencia,
-    manutencoes,
-    benchmark,
-  ] = await Promise.all([
-    getBIFilterOptions(),
-    getBIAlertas(filtros),
-    getBIKpis(filtros),
-    getBIMargemMotoristas(filtros),
-    getBICategoriasBreakdown(filtros),
-    getBIRankingCaminhoes(filtros),
-    getBIEficienciaMotoristas(filtros),
-    getBITendenciaMensal(filtros),
-    getBIEficienciaCombustivel(filtros),
-    getBIManutencoes(filtros),
-    getBenchmarkSetor(),
-  ]);
+  let filterOpts: Awaited<ReturnType<typeof getBIFilterOptions>>;
+  let alertas: Awaited<ReturnType<typeof getBIAlertas>>;
+  let kpis: { data: BIKpis | null; error?: string | null };
+  let margemMotoristas: Awaited<ReturnType<typeof getBIMargemMotoristas>>;
+  let categorias: Awaited<ReturnType<typeof getBICategoriasBreakdown>>;
+  let caminhoes: Awaited<ReturnType<typeof getBIRankingCaminhoes>>;
+  let motoristas: Awaited<ReturnType<typeof getBIEficienciaMotoristas>>;
+  let tendencia: Awaited<ReturnType<typeof getBITendenciaMensal>>;
+  let eficiencia: Awaited<ReturnType<typeof getBIEficienciaCombustivel>>;
+  let manutencoes: Awaited<ReturnType<typeof getBIManutencoes>>;
+  let benchmark: Awaited<ReturnType<typeof getBenchmarkSetor>>;
+
+  if (multiCtx.isMultiEmpresa) {
+    // Multi-empresa: use admin client with explicit empresa_id filter
+    // Each query runs against the admin client, no fn_switch_empresa needed
+    const [
+      multiFilterOpts,
+      multiAlertas,
+      multiKpis,
+      multiMargem,
+      multiCategorias,
+      multiCaminhoes,
+      multiMotoristas,
+      multiTendencia,
+      multiEficiencia,
+      multiManutencoes,
+      multiBenchmark,
+    ] = await Promise.all([
+      queryMultiEmpresa((admin, eid) => getBIFilterOptionsForEmpresa(admin, eid)),
+      queryMultiEmpresa((admin, eid) => getBIAlertasForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIKpisForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIMargemMotoristasForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBICategoriasBreakdownForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIRankingCaminhoesForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIEficienciaMotoristasForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBITendenciaMensalForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIEficienciaCombustivelForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => getBIManutencoesForEmpresa(admin, eid, filtros)),
+      queryMultiEmpresa((admin, eid) => {
+        // Benchmark is global, just return first empresa's view
+        void eid;
+        return getBenchmarkSetor();
+      }),
+    ]);
+
+    // For filter options, merge all and deduplicate by id
+    function dedup<T extends { id: string }>(items: T[]): T[] {
+      const seen = new Set<string>();
+      return items.filter(item => {
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      });
+    }
+    const mergedFilterOpts = {
+      caminhoes: dedup(multiFilterOpts.flatMap((r) => r.data.data?.caminhoes ?? [])),
+      motoristas: dedup(multiFilterOpts.flatMap((r) => r.data.data?.motoristas ?? [])),
+      categorias: dedup(multiFilterOpts.flatMap((r) => r.data.data?.categorias ?? [])),
+    };
+
+    filterOpts = { data: mergedFilterOpts, error: null };
+    alertas = {
+      data: multiAlertas.flatMap((r) => r.data.data ?? []),
+      verificados: multiAlertas.flatMap((r) => r.data.verificados ?? []),
+      error: null,
+    };
+    kpis = { data: aggregateKpis(multiKpis), error: null };
+    margemMotoristas = { data: multiMargem.flatMap((r) => r.data.data ?? []), error: null };
+    categorias = { data: multiCategorias.flatMap((r) => r.data.data ?? []), error: null };
+    caminhoes = { data: multiCaminhoes.flatMap((r) => r.data.data ?? []), error: null };
+    motoristas = { data: multiMotoristas.flatMap((r) => r.data.data ?? []), error: null };
+    tendencia = { data: multiTendencia.flatMap((r) => r.data.data ?? []), error: null };
+    eficiencia = { data: multiEficiencia.flatMap((r) => r.data.data ?? []), error: null };
+    manutencoes = { data: multiManutencoes.flatMap((r) => r.data.data ?? []), error: null };
+    benchmark = multiBenchmark[0]?.data ?? { data: null };
+  } else {
+    // Single empresa: original behavior
+    const results = await Promise.all([
+      getBIFilterOptions(),
+      getBIAlertas(filtros),
+      getBIKpis(filtros),
+      getBIMargemMotoristas(filtros),
+      getBICategoriasBreakdown(filtros),
+      getBIRankingCaminhoes(filtros),
+      getBIEficienciaMotoristas(filtros),
+      getBITendenciaMensal(filtros),
+      getBIEficienciaCombustivel(filtros),
+      getBIManutencoes(filtros),
+      getBenchmarkSetor(),
+    ]);
+
+    filterOpts = results[0];
+    alertas = results[1];
+    kpis = results[2];
+    margemMotoristas = results[3];
+    categorias = results[4];
+    caminhoes = results[5];
+    motoristas = results[6];
+    tendencia = results[7];
+    eficiencia = results[8];
+    manutencoes = results[9];
+    benchmark = results[10];
+  }
 
   const options = filterOpts.data ?? {
     caminhoes: [],
@@ -117,7 +246,9 @@ export default async function BiPage({ searchParams }: BiPageProps) {
           Resultado da Frota
         </h2>
         <p className="text-sm text-primary-500 mt-1">
-          Veja o resultado real do seu negocio
+          {multiCtx.isMultiEmpresa
+            ? `Dados consolidados de ${multiCtx.empresaIds.length} empresas`
+            : 'Veja o resultado real do seu negocio'}
         </p>
       </div>
 

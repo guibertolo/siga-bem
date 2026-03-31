@@ -130,79 +130,88 @@ export default async function FechamentoDetalhePage({
         </div>
       )}
 
-      {/* Financial Summary */}
+      {/* Resumo Financeiro — linguagem simples para o dono */}
       <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
-          Resumo Financeiro
+          Resumo do Acerto
         </h3>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="rounded-lg bg-alert-info-bg p-4">
-            <p className="text-sm text-blue-600">Total Viagens</p>
-            <p className="text-xl font-bold text-blue-900">
+
+        {/* Explicacao linha a linha */}
+        <div className="space-y-3 text-base">
+          <div className="flex items-center justify-between rounded-lg bg-alert-info-bg p-4">
+            <span className="text-primary-700">
+              Valor total dos fretes ({viagemItens.length} {viagemItens.length === 1 ? 'viagem' : 'viagens'})
+            </span>
+            <span className="text-xl font-bold tabular-nums text-blue-900">
               {formatBRL(fechamento.total_viagens)}
-            </p>
+            </span>
           </div>
-          <div className="rounded-lg bg-alert-danger-bg p-4">
-            <p className="text-sm text-danger">Total Gastos</p>
-            <p className="text-xl font-bold text-red-900">
-              {formatBRL(fechamento.total_gastos)}
-            </p>
+          <div className="flex items-center justify-between rounded-lg bg-alert-danger-bg p-4">
+            <span className="text-primary-700">
+              Despesas descontadas ({gastoItens.length} {gastoItens.length === 1 ? 'gasto' : 'gastos'})
+            </span>
+            <span className="text-xl font-bold tabular-nums text-red-900">
+              - {formatBRL(fechamento.total_gastos)}
+            </span>
           </div>
           <div
-            className={`rounded-lg p-4 ${
+            className={`flex items-center justify-between rounded-lg p-4 border-2 ${
               fechamento.saldo_motorista >= 0
-                ? 'bg-alert-success-bg'
-                : 'bg-alert-danger-bg'
+                ? 'border-success bg-alert-success-bg'
+                : 'border-danger bg-alert-danger-bg'
             }`}
           >
-            <p
-              className={`text-sm ${
-                fechamento.saldo_motorista >= 0
-                  ? 'text-success'
-                  : 'text-danger'
-              }`}
-            >
-              Saldo Liquido
-            </p>
-            <p
-              className={`text-xl font-bold ${
+            <span className="text-lg font-semibold text-primary-900">
+              Valor a pagar ao motorista
+            </span>
+            <span
+              className={`text-2xl font-bold tabular-nums ${
                 fechamento.saldo_motorista >= 0
                   ? 'text-green-900'
                   : 'text-red-900'
               }`}
             >
               {formatBRL(fechamento.saldo_motorista)}
-            </p>
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Viagens Table */}
+      {/* Viagens do Acerto */}
       <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
-          Viagens ({viagemItens.length})
+          Viagens deste Acerto ({viagemItens.length})
         </h3>
         {viagemItens.length === 0 ? (
-          <p className="text-sm italic text-text-subtle">
-            Nenhuma viagem neste acerto
+          <p className="text-base text-text-subtle">
+            Nenhuma viagem neste acerto.
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-base">
               <thead>
                 <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
-                  <th className="pb-2 font-medium">Descrição</th>
-                  <th className="pb-2 text-right font-medium">Valor</th>
+                  <th className="pb-2 font-medium">Rota</th>
+                  <th className="pb-2 text-right font-medium">Valor do Motorista</th>
+                  <th className="pb-2 text-right font-medium"></th>
                 </tr>
               </thead>
               <tbody>
                 {viagemItens.map((item) => (
                   <tr key={item.id} className="border-b border-surface-border">
-                    <td className="py-2">{formatarData(item.data)}</td>
-                    <td className="py-2">{item.descricao}</td>
-                    <td className="py-2 text-right font-medium">
+                    <td className="py-3 tabular-nums">{formatarData(item.data)}</td>
+                    <td className="py-3">{item.descricao}</td>
+                    <td className="py-3 text-right font-medium tabular-nums text-success">
                       {formatBRL(item.valor)}
+                    </td>
+                    <td className="py-3 text-right">
+                      <Link
+                        href={`/viagens/${item.referencia_id}`}
+                        className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 transition-colors hover:text-primary-900 min-h-[40px]"
+                      >
+                        Ver Viagem
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -212,31 +221,31 @@ export default async function FechamentoDetalhePage({
         )}
       </div>
 
-      {/* Gastos Table */}
+      {/* Despesas do Acerto */}
       <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-primary-900">
-          Gastos ({gastoItens.length})
+          Despesas deste Acerto ({gastoItens.length})
         </h3>
         {gastoItens.length === 0 ? (
-          <p className="text-sm italic text-text-subtle">
-            Nenhum gasto neste acerto
+          <p className="text-base text-text-subtle">
+            Nenhuma despesa neste acerto.
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-base">
               <thead>
                 <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
-                  <th className="pb-2 font-medium">Descrição</th>
+                  <th className="pb-2 font-medium">O que foi gasto</th>
                   <th className="pb-2 text-right font-medium">Valor</th>
                 </tr>
               </thead>
               <tbody>
                 {gastoItens.map((item) => (
                   <tr key={item.id} className="border-b border-surface-border">
-                    <td className="py-2">{formatarData(item.data)}</td>
-                    <td className="py-2">{item.descricao}</td>
-                    <td className="py-2 text-right font-medium">
+                    <td className="py-3 tabular-nums">{formatarData(item.data)}</td>
+                    <td className="py-3">{item.descricao}</td>
+                    <td className="py-3 text-right font-medium tabular-nums text-danger">
                       {formatBRL(item.valor)}
                     </td>
                   </tr>
@@ -247,13 +256,13 @@ export default async function FechamentoDetalhePage({
         )}
       </div>
 
-      {/* Observation */}
+      {/* Anotacao */}
       {fechamento.observacao && (
         <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
           <h3 className="mb-2 text-lg font-semibold text-primary-900">
-            Observação
+            Anotacao
           </h3>
-          <p className="text-sm text-text-muted">{fechamento.observacao}</p>
+          <p className="text-base text-text-muted">{fechamento.observacao}</p>
         </div>
       )}
     </div>

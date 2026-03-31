@@ -3,11 +3,15 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { queryMultiEmpresa, flattenMultiResults } from '@/lib/queries/multi-empresa-query';
 import {
   listFechamentos,
   listMotoristasParaFechamento,
   getViagensPendentesAcerto,
 } from '@/app/(dashboard)/fechamentos/actions';
+import { getViagensPendentesAcertoForEmpresa } from '@/app/(dashboard)/fechamentos/multi-actions';
+import type { ViagemPendenteAcerto } from '@/app/(dashboard)/fechamentos/actions';
 
 export const metadata: Metadata = {
   title: 'Acerto de Contas',
@@ -38,12 +42,32 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
 
   const canCreate = usuario.role === 'dono' || usuario.role === 'admin';
   const showMotoristaFilter = usuario.role !== 'motorista';
+  const multiCtx = await getMultiEmpresaContext();
+  const isDono = usuario.role === 'dono' || usuario.role === 'admin';
+
+  let pendentesData: ViagemPendenteAcerto[] = [];
 
   const [result, motoristasResult, pendentesResult] = await Promise.all([
     listFechamentos({ motorista_id: motoristaId, status, page, pageSize: PAGE_SIZE }),
     canCreate ? listMotoristasParaFechamento() : Promise.resolve({ data: [], error: null }),
-    canCreate ? getViagensPendentesAcerto() : Promise.resolve({ data: [], error: null }),
+    canCreate && !multiCtx.isMultiEmpresa
+      ? getViagensPendentesAcerto()
+      : Promise.resolve({ data: [] as ViagemPendenteAcerto[], error: null }),
   ]);
+
+  if (canCreate && multiCtx.isMultiEmpresa && isDono) {
+    const multiPendentes = await queryMultiEmpresa((admin, eid) =>
+      getViagensPendentesAcertoForEmpresa(admin, eid),
+    );
+    pendentesData = flattenMultiResults(
+      multiPendentes.map((r) => ({
+        ...r,
+        data: r.data.data ?? [],
+      })),
+    );
+  } else {
+    pendentesData = pendentesResult.data ?? [];
+  }
 
   if (result.error) {
     return (
@@ -79,7 +103,10 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
       {/* Viagens Pendentes de Acerto */}
       {canCreate && (
         <div className="mb-6">
-          <ViagensPendentesAcerto viagens={pendentesResult.data ?? []} />
+          <ViagensPendentesAcerto
+            viagens={pendentesData}
+            isMultiEmpresa={multiCtx.isMultiEmpresa}
+          />
         </div>
       )}
 
@@ -132,7 +159,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
                   href={buildUrl(params, page + 1)}
                   className="rounded-lg border border-surface-border px-3 py-1.5 text-sm text-primary-700 hover:bg-surface-muted"
                 >
-                  Proxima
+                  Seguinte
                 </Link>
               )}
             </div>

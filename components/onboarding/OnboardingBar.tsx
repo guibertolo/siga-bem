@@ -77,30 +77,28 @@ export function OnboardingBar({
         />
       </div>
 
-      <div className="px-4 py-2">
-        {/* Single row: info + buttons */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Step info */}
-          <div className="flex-1 min-w-0">
-            <span className="text-base font-bold text-white">
-              Passo {currentStep + 1}/{totalSteps}
-            </span>
-            <span className="text-base font-semibold text-white/90 ml-2">
-              {stepTitle}
-            </span>
-            <span className="text-base text-white/60 ml-2 hidden sm:inline">
-              — {stepDescription}
-            </span>
-          </div>
+      <div className="px-3 py-2">
+        {/* Info row */}
+        <div className="mb-1.5">
+          <span className="text-sm font-bold text-white">
+            Passo {currentStep + 1}/{totalSteps}
+          </span>
+          <span className="text-sm font-semibold text-white/90 ml-1.5">
+            {stepTitle}
+          </span>
+          <span className="text-sm text-white/60 ml-1.5 hidden sm:inline">
+            — {stepDescription}
+          </span>
+        </div>
 
-          {/* Buttons */}
-          <div className="flex items-center gap-2 shrink-0">
+        {/* Buttons row */}
+        <div className="flex items-center gap-1.5 flex-wrap">
           {/* Back button */}
           <button
             type="button"
             onClick={handleBack}
             disabled={disableBack || isPending}
-            className="flex items-center justify-center gap-1 min-h-[48px] px-4 rounded-lg bg-white/10 text-white text-base font-semibold transition-colors hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-1 min-h-[40px] px-3 rounded-lg bg-white/10 text-white text-sm font-semibold transition-colors hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +121,7 @@ export function OnboardingBar({
             type="button"
             onClick={handleNext}
             disabled={isPending}
-            className="flex items-center justify-center gap-1 min-h-[48px] px-6 rounded-lg bg-green-500 text-white text-base font-bold transition-colors hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
+            className="flex items-center justify-center gap-1 min-h-[40px] px-3 rounded-lg bg-green-500 text-white text-sm font-bold transition-colors hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLastContentStep ? 'Concluir' : 'Proximo'}
             <svg
@@ -146,12 +144,11 @@ export function OnboardingBar({
             type="button"
             onClick={handleSkip}
             disabled={isPending}
-            className="ml-auto min-h-[48px] px-4 rounded-lg border text-sm font-medium bg-transparent cursor-pointer transition-colors disabled:opacity-50 whitespace-nowrap"
+            className="ml-auto min-h-[36px] sm:min-h-[44px] px-3 sm:px-5 rounded-lg border text-xs sm:text-base font-medium bg-transparent cursor-pointer transition-colors disabled:opacity-50 whitespace-nowrap"
             style={{ color: 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.15)' }}
           >
-            Pular Tutorial Completo
+            Pular Tutorial
           </button>
-          </div>
         </div>
       </div>
     </div>

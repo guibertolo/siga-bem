@@ -31,14 +31,14 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
       overlay: true,
       highlights: [],
     },
-    // Step 1: Caminhoes list — show "+ Novo Caminhao" button
+    // Step 1: Caminhões list — show "+ Novo Caminhão" button
     {
-      page: '/caminhoes',
-      title: 'Seus Caminhoes',
-      description: 'Comece cadastrando seus caminhoes.',
+      page: '/caminhões',
+      title: 'Seus Caminhões',
+      description: 'Comece cadastrando seus caminhões.',
       highlights: [
         {
-          element: 'a[href="/caminhoes/cadastro"]',
+          element: 'a[href="/caminhões/cadastro"]',
           popover: {
             title: 'Cadastrar Caminhão',
             description:
@@ -49,18 +49,18 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
         },
       ],
     },
-    // Step 2: Caminhoes cadastro — highlight form fields
+    // Step 2: Caminhões cadastro — highlight form fields
     {
-      page: '/caminhoes/cadastro',
-      title: 'Formulario do Caminhao',
-      description: 'Preencha os dados do caminhao.',
+      page: '/caminhões/cadastro',
+      title: 'Formulário do Caminhão',
+      description: 'Preencha os dados do caminhão.',
       highlights: [
         {
           element: 'h2',
           popover: {
-            title: 'Cadastro de Caminhao',
+            title: 'Cadastro de Caminhão',
             description:
-              'Aqui voce cadastra caminhoes. Vamos preencher o primeiro juntos.',
+              'Aqui você cadastra caminhões. Vamos preencher o primeiro juntos.',
             side: 'bottom',
             align: 'start',
           },
@@ -69,7 +69,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           element: 'input[name="placa"], [data-onboarding="placa"]',
           popover: {
             title: 'Placa',
-            description: 'Digite a placa do caminhao. Exemplo: ABC1D23',
+            description: 'Digite a placa do caminhão. Exemplo: ABC1D23',
             side: 'bottom',
             align: 'start',
           },
@@ -84,7 +84,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           },
         },
         {
-          element: 'button[type="submit"]',
+          element: 'main button[type="submit"]',
           popover: {
             title: 'Salvar',
             description: 'Quando preencher tudo, clique aqui para salvar.',
@@ -115,7 +115,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     // Step 4: Motoristas cadastro — highlight form fields
     {
       page: '/motoristas/cadastro',
-      title: 'Formulario do Motorista',
+      title: 'Formulário do Motorista',
       description: 'Preencha os dados do motorista.',
       highlights: [
         {
@@ -141,13 +141,13 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           element: 'input[name="cpf"], [data-onboarding="cpf"]',
           popover: {
             title: 'CPF',
-            description: 'CPF do motorista. So numeros.',
+            description: 'CPF do motorista. Só números.',
             side: 'bottom',
             align: 'start',
           },
         },
         {
-          element: 'button[type="submit"]',
+          element: 'main button[type="submit"]',
           popover: {
             title: 'Salvar',
             description: 'Salve para cadastrar o motorista.',
@@ -178,7 +178,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
     // Step 6: Viagens nova — highlight form fields
     {
       page: '/viagens/nova',
-      title: 'Formulario da Viagem',
+      title: 'Formulário da Viagem',
       description: 'Preencha os dados da viagem.',
       highlights: [
         {
@@ -195,7 +195,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           element: '[data-onboarding="origem"], input[name="origem"]',
           popover: {
             title: 'Origem',
-            description: 'De onde o caminhao sai. Comece a digitar a cidade.',
+            description: 'De onde o caminhão sai. Comece a digitar a cidade.',
             side: 'bottom',
             align: 'start',
           },
@@ -219,7 +219,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           },
         },
         {
-          element: 'button[type="submit"]',
+          element: 'main button[type="submit"]',
           popover: {
             title: 'Salvar',
             description: 'Salve para criar a viagem.',
@@ -240,7 +240,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Acerto de Contas',
             description:
-              'Aqui voce faz o acerto de contas com cada motorista apos as viagens.',
+              'Aqui você faz o acerto de contas com cada motorista após as viagens.',
             side: 'bottom',
             align: 'start',
           },
@@ -250,7 +250,7 @@ export function getDonoStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Viagens Prontas para Acerto',
             description:
-              'Quando as viagens forem concluidas, voce faz o acerto financeiro aqui.',
+              'Quando as viagens forem concluídas, você faz o acerto financeiro aqui.',
             side: 'bottom',
             align: 'center',
           },
@@ -329,7 +329,7 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
           popover: {
             title: 'Ver Viagem',
             description:
-              'Clique em "Ver" para abrir os detalhes da viagem. La dentro voce registra abastecimentos e despesas.',
+              'Clique em "Ver" para abrir os detalhes da viagem. La dentro você registra abastecimentos e despesas.',
             side: 'bottom',
             align: 'center',
           },
@@ -385,14 +385,14 @@ export function getMotoristaStepDefs(): OnboardingStepDef[] {
     {
       page: '/dashboard',
       title: 'Seus Ganhos',
-      description: 'Veja quanto voce ganhou no mes.',
+      description: 'Veja quanto você ganhou no mês.',
       highlights: [
         {
           element: '[data-onboarding="ganhos"], .grid, main > div > div:first-child',
           popover: {
             title: 'Seus Ganhos',
             description:
-              'Aqui voce acompanha seus ganhos do mes. O valor atualiza conforme as viagens sao concluidas e os acertos feitos.',
+              'Aqui você acompanha seus ganhos do mês. O valor atualiza conforme as viagens são concluídas e os acertos feitos.',
             side: 'bottom',
             align: 'center',
           },

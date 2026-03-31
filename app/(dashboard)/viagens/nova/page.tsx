@@ -2,13 +2,21 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { listMotoristasAtivos, listCaminhoesPorMotorista, createViagem, listCidadesUsadas } from '@/app/(dashboard)/viagens/actions';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { getUserEmpresas } from '@/lib/queries/empresas';
 import { ViagemForm } from '@/components/viagens/ViagemForm';
+import { EmpresaSelectForCreate } from '@/components/empresa/EmpresaSelectForCreate';
 
 export default async function NovaViagemPage() {
-  const usuario = await getCurrentUsuario();
+  const [usuario, multiCtx] = await Promise.all([
+    getCurrentUsuario(),
+    getMultiEmpresaContext(),
+  ]);
   if (!usuario) {
     redirect('/login');
   }
+
+  const empresas = multiCtx.isMultiEmpresa ? await getUserEmpresas() : [];
 
   const isMotorista = usuario.role === 'motorista';
 
@@ -51,6 +59,13 @@ export default async function NovaViagemPage() {
             : 'Cadastre uma nova viagem para sua frota.'}
         </p>
       </div>
+
+      {multiCtx.isMultiEmpresa && multiCtx.activeEmpresaId && (
+        <EmpresaSelectForCreate
+          empresas={empresas}
+          activeEmpresaId={multiCtx.activeEmpresaId}
+        />
+      )}
 
       <div className="rounded-lg border border-surface-border bg-surface-card p-6">
         <ViagemForm

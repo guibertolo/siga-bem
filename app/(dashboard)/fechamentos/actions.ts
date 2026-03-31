@@ -249,6 +249,7 @@ export interface ViagemPendenteAcerto {
   valor_total: number;             // centavos
   percentual_pagamento: number;
   valor_motorista: number;         // centavos
+  totalDespesas: number;           // centavos — sum of gastos linked to this viagem
 }
 
 /**
@@ -301,22 +302,43 @@ export async function getViagensPendentesAcerto(): Promise<{
   const idsComAcerto = new Set((itensExistentes ?? []).map((i) => i.referencia_id));
 
   // 3. Filter out viagens that already have an acerto
-  const pendentes: ViagemPendenteAcerto[] = viagens
-    .filter((v) => !idsComAcerto.has(v.id))
-    .map((v) => {
-      const mot = v.motorista as unknown as { nome: string } | null;
-      return {
-        id: v.id,
-        motorista_id: v.motorista_id,
-        motorista_nome: mot?.nome ?? 'Desconhecido',
-        origem: v.origem,
-        destino: v.destino,
-        data_saida: v.data_saida,
-        valor_total: v.valor_total,
-        percentual_pagamento: v.percentual_pagamento,
-        valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
-      };
-    });
+  const pendenteViagens = viagens.filter((v) => !idsComAcerto.has(v.id));
+
+  // 4. Query total despesas (gastos) per viagem in a single query
+  const pendenteIds = pendenteViagens.map((v) => v.id);
+  let despesasPorViagem = new Map<string, number>();
+
+  if (pendenteIds.length > 0) {
+    const { data: gastosData } = await supabase
+      .from('gasto')
+      .select('viagem_id, valor')
+      .in('viagem_id', pendenteIds);
+
+    if (gastosData) {
+      for (const g of gastosData) {
+        if (g.viagem_id) {
+          const current = despesasPorViagem.get(g.viagem_id) ?? 0;
+          despesasPorViagem.set(g.viagem_id, current + g.valor);
+        }
+      }
+    }
+  }
+
+  const pendentes: ViagemPendenteAcerto[] = pendenteViagens.map((v) => {
+    const mot = v.motorista as unknown as { nome: string } | null;
+    return {
+      id: v.id,
+      motorista_id: v.motorista_id,
+      motorista_nome: mot?.nome ?? 'Desconhecido',
+      origem: v.origem,
+      destino: v.destino,
+      data_saida: v.data_saida,
+      valor_total: v.valor_total,
+      percentual_pagamento: v.percentual_pagamento,
+      valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+      totalDespesas: despesasPorViagem.get(v.id) ?? 0,
+    };
+  });
 
   return { data: pendentes, error: null };
 }

@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createVinculo, getActiveMotoristas, getActiveCaminhoes } from '@/app/(dashboard)/vinculos/actions';
+import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
+import { getUserEmpresas } from '@/lib/queries/empresas';
 import { VinculoForm } from '@/components/vinculos/VinculoForm';
+import { EmpresaSelectForCreate } from '@/components/empresa/EmpresaSelectForCreate';
 
 export default async function NovoVinculoPage() {
-  const [motoristasResult, caminhoesResult] = await Promise.all([
+  const [motoristasResult, caminhoesResult, multiCtx] = await Promise.all([
     getActiveMotoristas(),
     getActiveCaminhoes(),
+    getMultiEmpresaContext(),
   ]);
+
+  const empresas = multiCtx.isMultiEmpresa ? await getUserEmpresas() : [];
 
   if (motoristasResult.error === 'Não autenticado' || caminhoesResult.error === 'Não autenticado') {
     redirect('/login');
@@ -39,6 +45,13 @@ export default async function NovoVinculoPage() {
           vinculado (turnos, revezamento).
         </p>
       </div>
+
+      {multiCtx.isMultiEmpresa && multiCtx.activeEmpresaId && (
+        <EmpresaSelectForCreate
+          empresas={empresas}
+          activeEmpresaId={multiCtx.activeEmpresaId}
+        />
+      )}
 
       <div className="rounded-lg border border-surface-border bg-surface-card p-6">
         <VinculoForm

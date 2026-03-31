@@ -110,13 +110,13 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
             </p>
           </div>
           <div className="rounded-lg bg-surface-muted p-3 text-center">
-            <p className="text-xs text-primary-500">Gastos ({gastoItems.length})</p>
+            <p className="text-xs text-primary-500">Despesas ({gastoItems.length})</p>
             <p className="text-lg font-bold tabular-nums text-primary-900">
               {formatBRL(fechamento.total_gastos)}
             </p>
           </div>
           <div className="rounded-lg bg-surface-muted p-3 text-center">
-            <p className="text-xs text-primary-500">Saldo Liquido</p>
+            <p className="text-xs text-primary-500">Valor a Pagar</p>
             <p
               className={`text-lg font-bold tabular-nums ${
                 fechamento.saldo_motorista >= 0 ? 'text-success' : 'text-danger'
