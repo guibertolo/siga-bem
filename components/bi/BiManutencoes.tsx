@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { formatBRL } from '@/lib/utils/currency';
 import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import type { BIManutencaoTruckItem } from '@/types/bi';

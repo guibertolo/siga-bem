@@ -20,7 +20,6 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
   const margemMediaPct = data?.margemMediaPercentual ?? 0;
   const receita = data?.receitaFrete ?? 0;
   const custo = data?.custoTotal ?? 0;
-  const margemGeral = data?.margemPercentual ?? 0;
   const viagensConcluidas = data?.viagensConcluidas ?? 0;
 
   // Custo como % da receita
