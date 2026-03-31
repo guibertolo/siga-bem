@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       '@supabase/supabase-js',
       'react-hook-form',
+      '@hookform/resolvers',
+      '@react-pdf/renderer',
       'zod',
     ],
   },

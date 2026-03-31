@@ -68,6 +68,12 @@ export default function RootLayout({
           as="image"
           type="image/svg+xml"
         />
+        <link
+          rel="preload"
+          href="/logos/frotaviva-logo-icon.svg"
+          as="image"
+          type="image/svg+xml"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

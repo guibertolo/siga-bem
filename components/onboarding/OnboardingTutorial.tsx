@@ -3,6 +3,7 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import type { Driver } from 'driver.js';
+import '@/components/onboarding/onboarding.css';
 import { getStepDefs, getTotalSteps } from '@/components/onboarding/onboarding-steps';
 import {
   avancarOnboarding,
