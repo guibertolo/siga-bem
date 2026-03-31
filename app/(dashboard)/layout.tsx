@@ -108,9 +108,9 @@ export default async function DashboardLayout({
             <img
               src="/logos/frotaviva-logo-icon.svg"
               alt=""
-              width={36}
-              height={36}
-              className="h-9 w-9"
+              width={48}
+              height={48}
+              className="h-12 w-12"
             />
             <span className="text-2xl font-extrabold text-white">FrotaViva</span>
           </Link>

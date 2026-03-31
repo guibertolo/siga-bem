@@ -30,8 +30,9 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-4">
+      <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
         Resultado Mensal
+        <InfoTooltip text="Gastos totais de cada mês. As barras mostram a proporção entre os meses." />
       </h3>
 
       {/* Bar chart — CSS only */}

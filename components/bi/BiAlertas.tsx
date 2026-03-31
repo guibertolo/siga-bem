@@ -55,7 +55,7 @@ export function BiAlertas({ data, verificados = [] }: BiAlertasProps) {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-2">
         {visibleAlertas.map((alerta, index) => (
           <AlertaCard key={`${alerta.tipo}-${alerta.entidade}-${index}`} alerta={alerta} />
         ))}
@@ -158,11 +158,11 @@ function AlertaCard({ alerta }: { alerta: BIAlerta }) {
 
   return (
     <div
-      className={`rounded-lg border-l-4 ${borderColor} ${bgColor} p-4`}
+      className={`rounded-lg border-l-4 ${borderColor} ${bgColor} px-3 py-2`}
       role="alert"
     >
-      <div className="flex items-start gap-3">
-        <span className="mt-0.5 text-xl" aria-hidden="true">
+      <div className="flex items-start gap-2">
+        <span className="mt-0.5 text-base" aria-hidden="true">
           {iconLabel}
         </span>
         <div className="flex-1 min-w-0">

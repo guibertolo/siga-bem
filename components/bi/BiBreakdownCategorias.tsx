@@ -28,8 +28,9 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-4">
+      <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
         Gastos por Tipo
+        <InfoTooltip text="Divisão dos gastos por categoria: combustível, pedágio, alimentação, manutenção, etc." />
       </h3>
       <div className="space-y-4">
         {data.map((cat) => (

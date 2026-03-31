@@ -97,9 +97,9 @@ export function MobileSidebar({
             <img
               src="/logos/frotaviva-logo-icon.svg"
               alt=""
-              width={36}
-              height={36}
-              className="h-9 w-9"
+              width={44}
+              height={44}
+              className="h-11 w-11"
             />
             <span className="text-xl font-extrabold text-white">FrotaViva</span>
           </Link>

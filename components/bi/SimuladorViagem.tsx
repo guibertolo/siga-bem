@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { formatBRL } from '@/lib/utils/currency';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import { getEstimativaCustoViagem } from '@/app/(dashboard)/bi/actions';
 import type { BIEstimativaResult, BIFilterOptions } from '@/types/bi';
 import { COMBUSTIVEL_TIPO_LABELS } from '@/types/precificacao';
@@ -71,8 +72,9 @@ export function SimuladorViagem({
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-4">
+      <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
         Calcular Custo da Viagem
+        <InfoTooltip text="Estime o custo de combustível para uma viagem antes de sair. Usa o consumo real dos seus caminhões." />
       </h3>
 
       {/* Form */}

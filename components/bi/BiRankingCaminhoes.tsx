@@ -25,8 +25,9 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-primary-900 mb-4">
+      <h3 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
         Gastos com Manutenção por Caminhão
+        <InfoTooltip text="Total gasto com manutenção e pneu por caminhão no período selecionado." />
       </h3>
 
       {/* Desktop table */}
