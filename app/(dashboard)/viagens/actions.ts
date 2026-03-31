@@ -81,7 +81,7 @@ function extractFieldErrors(
  * List motoristas ativos for select (dono/admin see all, motorista sees self).
  */
 export async function listMotoristasAtivos(): Promise<{
-  data: Array<{ id: string; nome: string }> | null;
+  data: Array<{ id: string; nome: string; percentual_pagamento?: number | null }> | null;
   error: string | null;
 }> {
   const usuario = await getCurrentUsuario();
@@ -94,7 +94,7 @@ export async function listMotoristasAtivos(): Promise<{
   if (usuario.role === 'motorista') {
     const { data, error } = await supabase
       .from('motorista')
-      .select('id, nome')
+      .select('id, nome, percentual_pagamento')
       .eq('empresa_id', usuario.empresa_id)
       .eq('usuario_id', usuario.id)
       .eq('status', 'ativo');
@@ -105,7 +105,7 @@ export async function listMotoristasAtivos(): Promise<{
 
   const { data, error } = await supabase
     .from('motorista')
-    .select('id, nome')
+    .select('id, nome, percentual_pagamento')
     .eq('empresa_id', usuario.empresa_id)
     .eq('status', 'ativo')
     .order('nome');

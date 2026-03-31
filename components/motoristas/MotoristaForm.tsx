@@ -421,7 +421,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
                 }}
                 className={cn(
                   'relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                  criarConta ? 'bg-primary-700' : 'bg-surface-border',
+                  criarConta ? 'bg-btn-primary' : 'bg-surface-border',
                 )}
               >
                 <span
@@ -465,8 +465,8 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             type="submit"
             disabled={isPending}
             className={cn(
-              'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
-              'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+              'inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
+              'hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
               isPending && 'cursor-not-allowed opacity-50',
             )}
           >

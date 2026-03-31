@@ -52,6 +52,7 @@ export function EditarGastoClient({
         caminhoes={caminhoes}
         viagens={viagens}
         motoristaFixo={motoristaFixo}
+        viagemIdInicial={gasto.viagem_id ?? undefined}
         onSubmit={handleSubmit}
       />
 

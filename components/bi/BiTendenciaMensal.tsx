@@ -12,9 +12,9 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Gastos Mes a Mes
+          Resultado Mensal
         </h3>
-        <p className="text-sm text-primary-400">
+        <p className="text-sm text-text-muted">
           Nao tem gastos registrados nesse periodo.
         </p>
       </div>
@@ -22,31 +22,36 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
   }
 
   const maxTotal = Math.max(...data.map((d) => d.total));
+  const minTotal = Math.min(...data.map((d) => d.total));
+  // Scale from 30% (min) to 100% (max) for visible difference
+  const range = maxTotal - minTotal;
 
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Gastos Mes a Mes
+        Resultado Mensal
       </h3>
 
       {/* Bar chart — CSS only */}
-      <div className="flex items-end gap-2 h-48">
+      <div className="flex items-end gap-3 h-48">
         {data.map((item) => {
-          const heightPct = maxTotal > 0 ? (item.total / maxTotal) * 100 : 0;
+          const heightPct = range > 0
+            ? 30 + ((item.total - minTotal) / range) * 70
+            : 80;
           return (
             <div
               key={item.mesAno}
               className="flex-1 flex flex-col items-center justify-end h-full"
             >
-              <span className="text-xs font-semibold text-primary-900 tabular-nums mb-1 hidden sm:block">
+              <span className="text-sm font-bold text-primary-900 tabular-nums mb-1">
                 {formatBRL(item.total)}
               </span>
               <div
-                className="w-full rounded-t bg-primary-600 transition-all duration-300 min-h-[4px]"
-                style={{ height: `${Math.max(heightPct, 2)}%` }}
+                className="w-full rounded-t bg-btn-primary transition-all duration-300"
+                style={{ height: `${heightPct}%` }}
                 title={`${item.mesAnoLabel}: ${formatBRL(item.total)}`}
               />
-              <span className="mt-2 text-xs text-primary-500 whitespace-nowrap">
+              <span className="mt-2 text-sm font-medium text-primary-500 whitespace-nowrap">
                 {item.mesAnoLabel}
               </span>
             </div>

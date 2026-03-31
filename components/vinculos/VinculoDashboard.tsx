@@ -31,7 +31,7 @@ export function VinculoDashboard({
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
         <p className="text-base text-primary-500">Nenhum vinculo ou caminhao encontrado.</p>
-        <p className="mt-1 text-base text-primary-400">
+        <p className="mt-1 text-base text-text-muted">
           Cadastre caminhoes e motoristas para comecar a gerenciar vinculos.
         </p>
       </div>

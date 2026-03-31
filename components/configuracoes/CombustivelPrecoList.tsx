@@ -81,7 +81,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="rounded-lg bg-primary-700 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+          className="rounded-lg bg-btn-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
         >
           + Novo Preco
         </button>
@@ -93,7 +93,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
           <p className="text-base text-primary-500">
             Nenhum preco de combustivel cadastrado.
           </p>
-          <p className="mt-1 text-sm text-primary-400">
+          <p className="mt-1 text-sm text-text-muted">
             O sistema usara o valor padrao de R$ 6,50/l para estimativas.
           </p>
         </div>

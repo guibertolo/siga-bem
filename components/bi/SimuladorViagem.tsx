@@ -186,7 +186,7 @@ export function SimuladorViagem({
             type="button"
             onClick={handleSimular}
             disabled={isPending}
-            className="w-full min-h-[48px] rounded-md bg-primary-600 px-4 py-2 text-base font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
+            className="w-full min-h-[48px] rounded-md bg-btn-primary px-4 py-2 text-base font-medium text-white transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
           >
             {isPending ? 'Calculando...' : 'Simular'}
           </button>
@@ -305,7 +305,7 @@ export function SimuladorViagem({
                 </div>
               </div>
             ) : (
-              <p className="mt-3 text-sm text-primary-400">
+              <p className="mt-3 text-sm text-text-muted">
                 Preencha o valor do frete para calcular a margem.
               </p>
             )}

@@ -48,10 +48,10 @@ export function GastoList({ gastos, isMotorista = false }: GastoListProps) {
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
         <p className="text-base text-primary-500">Nenhum gasto registrado.</p>
-        <p className="mt-1 text-sm text-primary-400">Registre gastos de combustivel, manutencao e outros.</p>
+        <p className="mt-1 text-sm text-text-muted">Registre gastos de combustivel, manutencao e outros.</p>
         <Link
           href="/gastos/novo"
-          className="mt-4 inline-block rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+          className="mt-4 inline-block rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
         >
           Registrar Primeiro Gasto
         </Link>

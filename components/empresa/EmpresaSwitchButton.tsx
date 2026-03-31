@@ -22,7 +22,7 @@ export function EmpresaSwitchButton({ empresaId, label = 'Acessar' }: EmpresaSwi
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      className="inline-flex items-center gap-1.5 rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-800 disabled:opacity-50 min-h-[44px]"
+      className="inline-flex items-center gap-1.5 rounded-lg bg-btn-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-btn-primary-hover disabled:opacity-50 min-h-[44px]"
     >
       <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />

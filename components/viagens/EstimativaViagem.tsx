@@ -102,7 +102,7 @@ export function EstimativaViagem({
         <div>
           <p className="text-xs text-primary-500">
             Consumo medio
-            <span className="ml-1 text-xs text-primary-400">
+            <span className="ml-1 text-xs text-text-muted">
               ({estimativa.consumo_fonte === 'historico' ? 'historico' : 'padrao'})
             </span>
           </p>
@@ -117,7 +117,7 @@ export function EstimativaViagem({
         <div>
           <p className="text-xs text-primary-500">
             Preco diesel
-            <span className="ml-1 text-xs text-primary-400">
+            <span className="ml-1 text-xs text-text-muted">
               ({estimativa.preco_diesel_fonte === 'tabela' ? 'tabela' : 'padrao'})
             </span>
           </p>

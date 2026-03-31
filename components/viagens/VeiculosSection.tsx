@@ -163,7 +163,7 @@ export function VeiculosSection({
               'inline-flex items-center gap-2 rounded-lg px-4 py-3 text-base font-semibold min-h-[48px] transition-colors',
               showForm && !editingVeiculo
                 ? 'border border-surface-border bg-surface-muted text-primary-700 hover:bg-surface-hover'
-                : 'bg-primary-700 text-white hover:bg-primary-800 disabled:opacity-50',
+                : 'bg-btn-primary text-white hover:bg-btn-primary-hover disabled:opacity-50',
             )}
             disabled={isPending}
           >

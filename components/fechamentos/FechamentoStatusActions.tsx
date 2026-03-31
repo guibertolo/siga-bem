@@ -84,7 +84,7 @@ export function FechamentoStatusActions({
                   type="button"
                   onClick={() => handleAction('fechar')}
                   disabled={isPending}
-                  className="rounded-lg bg-primary-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-900 disabled:opacity-50"
+                  className="rounded-lg bg-btn-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-btn-primary-hover disabled:opacity-50"
                 >
                   {isPending ? 'Processando...' : 'Sim, Fechar'}
                 </button>
@@ -102,7 +102,7 @@ export function FechamentoStatusActions({
                 type="button"
                 onClick={() => setConfirmAction('fechar')}
                 disabled={isPending}
-                className="rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-900 disabled:opacity-50"
+                className="rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-white hover:bg-btn-primary-hover disabled:opacity-50"
               >
                 Fechar
               </button>

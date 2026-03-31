@@ -106,7 +106,7 @@ export function ViagemStatusActions({
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 novoStatus === 'cancelada'
                   ? 'border border-red-300 text-danger hover:bg-alert-danger-bg'
-                  : 'bg-primary-700 text-white hover:bg-primary-800'
+                  : 'bg-btn-primary text-white hover:bg-btn-primary-hover'
               }`}
             >
               {novoStatus === 'em_andamento' && 'Iniciar Viagem'}
@@ -195,7 +195,7 @@ export function ViagemStatusActions({
                   type="button"
                   onClick={handleSaveObs}
                   disabled={isPending}
-                  className="rounded-lg bg-primary-700 px-4 py-1 text-sm font-medium text-white hover:bg-primary-800 disabled:opacity-50"
+                  className="rounded-lg bg-btn-primary px-4 py-1 text-sm font-medium text-white hover:bg-btn-primary-hover disabled:opacity-50"
                 >
                   Salvar
                 </button>

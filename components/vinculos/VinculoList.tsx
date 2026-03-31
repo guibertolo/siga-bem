@@ -68,7 +68,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
         <p className="text-base text-primary-500">Nenhum vinculo encontrado.</p>
-        <p className="mt-1 text-sm text-primary-400">Vincule motoristas a caminhoes para gerenciar a frota.</p>
+        <p className="mt-1 text-sm text-text-muted">Vincule motoristas a caminhoes para gerenciar a frota.</p>
       </div>
     );
   }

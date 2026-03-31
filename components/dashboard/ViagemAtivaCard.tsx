@@ -20,7 +20,7 @@ function EmptyState() {
       <p className="text-base font-medium text-primary-500">
         Nenhuma viagem em andamento
       </p>
-      <p className="mt-1 text-sm text-primary-400">
+      <p className="mt-1 text-sm text-text-muted">
         Quando voce iniciar uma viagem, ela aparecera aqui.
       </p>
     </div>
@@ -57,7 +57,7 @@ function MotoristaView({ viagem }: { viagem: ViagemAtivaItem }) {
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <Link
           href={`/viagens/${viagem.id}`}
-          className="flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-4 text-lg font-bold text-white no-underline transition-colors hover:bg-primary-800 min-h-[56px] w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-4 text-lg font-bold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[56px] w-full sm:w-auto"
         >
           Ir para Viagem
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -113,7 +113,7 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
             </div>
             <Link
               href={`/viagens/${v.id}`}
-              className="shrink-0 rounded-lg bg-primary-700 px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px] flex items-center"
+              className="shrink-0 rounded-lg bg-btn-primary px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px] flex items-center"
             >
               Ver
             </Link>
@@ -124,7 +124,7 @@ function DonoView({ viagens, count }: { viagens: ViagemAtivaItem[]; count: numbe
       {hasMore && (
         <Link
           href="/viagens?status=em_andamento"
-          className="mt-4 flex items-center justify-center rounded-lg bg-primary-700 px-6 py-4 text-lg font-bold text-white no-underline transition-colors hover:bg-primary-800 min-h-[56px] w-full"
+          className="mt-4 flex items-center justify-center rounded-lg bg-btn-primary px-6 py-4 text-lg font-bold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[56px] w-full"
         >
           Ver Todas as Viagens
         </Link>

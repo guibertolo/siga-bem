@@ -127,7 +127,7 @@ export function CredenciaisModal({ email, senha, nomeMotorista, onClose }: Crede
               'flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-base font-semibold min-h-[48px] transition-colors',
               copiado
                 ? 'bg-green-600 text-white'
-                : 'bg-primary-700 text-white hover:bg-primary-800',
+                : 'bg-btn-primary text-white hover:bg-btn-primary-hover',
             )}
           >
             {copiado ? (

@@ -146,7 +146,7 @@ export function VincularCaminhaoInlineForm({
           type="button"
           onClick={handleSubmit}
           disabled={isPending || !selectedCaminhaoId}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-btn-primary px-4 py-2.5 text-sm font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
         >
           <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

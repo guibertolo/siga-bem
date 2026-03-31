@@ -31,7 +31,7 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Margem por Motorista
         </h3>
-        <p className="text-base text-primary-400">
+        <p className="text-base text-text-muted">
           Nenhuma viagem concluida com motorista no periodo selecionado.
         </p>
       </div>
@@ -106,25 +106,25 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm mt-2">
               <div>
-                <p className="text-xs text-primary-400">Receita</p>
+                <p className="text-xs text-text-muted">Receita</p>
                 <p className="font-medium text-primary-700 tabular-nums">
                   {formatBRL(item.receitaCentavos)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-400">Custos</p>
+                <p className="text-xs text-text-muted">Custos</p>
                 <p className="font-medium text-primary-500 tabular-nums">
                   {formatBRL(item.custoCentavos)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-400">Margem</p>
+                <p className="text-xs text-text-muted">Margem</p>
                 <p className={`font-bold tabular-nums ${margemColorClass(item.margemPercentual)}`}>
                   {formatBRL(item.margemCentavos)}
                 </p>
               </div>
             </div>
-            <p className="text-xs text-primary-400 mt-1">
+            <p className="text-xs text-text-muted mt-1">
               {item.viagensConcluidas} {item.viagensConcluidas === 1 ? 'viagem' : 'viagens'}
             </p>
           </div>

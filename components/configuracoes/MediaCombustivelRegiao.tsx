@@ -35,7 +35,7 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
         <p className="text-base text-primary-500">
           Nenhum abastecimento registrado ainda.
         </p>
-        <p className="mt-2 text-sm text-primary-400">
+        <p className="mt-2 text-sm text-text-muted">
           Os dados aparecerao conforme os motoristas registrarem abastecimentos
           nas viagens.
         </p>
@@ -111,7 +111,7 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
 
             {/* Ultima data */}
             <div className="mt-3 border-t border-surface-border pt-3">
-              <p className="text-xs text-primary-400">
+              <p className="text-xs text-text-muted">
                 Ultimo abastecimento: {formatDate(regiao.ultima_data)}
               </p>
             </div>

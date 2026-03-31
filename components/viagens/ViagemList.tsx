@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useTransition, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
-import { deleteViagem, invalidarViagem, listViagens } from '@/app/(dashboard)/viagens/actions';
+import { deleteViagem, listViagens } from '@/app/(dashboard)/viagens/actions';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import { ViagemFilters } from '@/components/viagens/ViagemFilters';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
+import type { OverflowMenuItem } from '@/components/ui/OverflowMenu';
 import type { ViagemFilterValues } from '@/components/viagens/ViagemFilters';
 import type { ViagemListItem } from '@/types/viagem';
 
@@ -30,15 +33,13 @@ export function ViagemList({
   initialPage,
   isMotorista = false,
 }: ViagemListProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [viagens, setViagens] = useState(initialViagens);
   const [total, setTotal] = useState(initialTotal);
   const [page, setPage] = useState(initialPage);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [invalidarId, setInvalidarId] = useState<string | null>(null);
-  const [invalidarMotivo, setInvalidarMotivo] = useState('');
-  const [invalidandoId, setInvalidandoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ViagemFilterValues>({
     status: [],
@@ -107,32 +108,7 @@ export function ViagemList({
   }
 
   function handleInvalidarClick(viagemId: string) {
-    setInvalidarId(viagemId);
-    setInvalidarMotivo('');
-  }
-
-  function handleCancelInvalidar() {
-    setInvalidarId(null);
-    setInvalidarMotivo('');
-  }
-
-  function handleConfirmInvalidar(viagemId: string) {
-    if (invalidarMotivo.trim().length < 10) return;
-
-    setError(null);
-    setInvalidandoId(viagemId);
-    setInvalidarId(null);
-
-    startTransition(async () => {
-      const result = await invalidarViagem(viagemId, invalidarMotivo.trim());
-      setInvalidandoId(null);
-      setInvalidarMotivo('');
-      if (!result.success) {
-        setError(result.error ?? 'Erro ao invalidar viagem');
-      } else {
-        fetchViagens(filters, page);
-      }
-    });
+    router.push(`/viagens/${viagemId}`);
   }
 
   // Separate em_andamento trips from others
@@ -188,7 +164,7 @@ export function ViagemList({
                 <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <Link
                     href={`/viagens/${v.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-btn-primary px-4 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px]"
                   >
                     Ver Viagem
                   </Link>
@@ -199,45 +175,14 @@ export function ViagemList({
                     Editar
                   </Link>
                   {!isMotorista && v.status !== 'cancelada' && (
-                    invalidarId === v.id ? (
-                      <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
-                        <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
-                        <input
-                          type="text"
-                          value={invalidarMotivo}
-                          onChange={(e) => setInvalidarMotivo(e.target.value)}
-                          placeholder="Descreva o motivo da invalidacao"
-                          className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
-                          minLength={10}
-                        />
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleConfirmInvalidar(v.id)}
-                            disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
-                            className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
-                          >
-                            Confirmar Invalidacao
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleCancelInvalidar}
-                            className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInvalidarClick(v.id)}
-                        disabled={invalidandoId === v.id}
-                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                      >
-                        Invalidar
-                      </button>
-                    )
+                    <button
+                      type="button"
+                      onClick={() => handleInvalidarClick(v.id)}
+                      disabled={isPending}
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                    >
+                      Invalidar
+                    </button>
                   )}
                 </div>
               </div>
@@ -267,64 +212,35 @@ export function ViagemList({
                     <td className="px-4 py-3 text-base text-primary-700">{v.caminhao_placa}</td>
                     <td className="px-4 py-3 text-base text-primary-700">{formatDateTime(v.data_saida)}</td>
                     <td className="px-4 py-3 text-base text-right tabular-nums text-primary-700">{formatBRL(v.valor_total)}</td>
-                    <td className="px-4 py-3 text-right min-w-[140px]">
-                      <div className="flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-1">
-                          <Link
-                            href={`/viagens/${v.id}`}
-                            className="inline-flex items-center rounded-md bg-primary-700 px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-primary-800"
-                          >
-                            Ver
-                          </Link>
-                          <Link
-                            href={`/viagens/${v.id}/editar`}
-                            className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
-                          >
-                            Editar
-                          </Link>
-                        </div>
-                        {!isMotorista && v.status !== 'cancelada' && (
-                          <>
-                            {invalidarId === v.id ? (
-                              <div className="w-full mt-1 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
-                                <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
-                                <input
-                                  type="text"
-                                  value={invalidarMotivo}
-                                  onChange={(e) => setInvalidarMotivo(e.target.value)}
-                                  placeholder="Descreva o motivo da invalidacao"
-                                  className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
-                                  minLength={10}
-                                />
-                                <div className="flex items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleConfirmInvalidar(v.id)}
-                                    disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
-                                    className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
-                                  >
-                                    Confirmar Invalidacao
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={handleCancelInvalidar}
-                                    className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
-                                  >
-                                    Cancelar
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleInvalidarClick(v.id)}
-                                disabled={invalidandoId === v.id}
-                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
-                              >
-                                Invalidar
-                              </button>
-                            )}
-                          </>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Link
+                          href={`/viagens/${v.id}`}
+                          className="inline-flex items-center rounded-md bg-btn-primary px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-btn-primary-hover"
+                        >
+                          Ver
+                        </Link>
+                        <Link
+                          href={`/viagens/${v.id}/editar`}
+                          className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
+                        >
+                          Editar
+                        </Link>
+                        {!isMotorista && (
+                          <OverflowMenu
+                            items={[
+                              {
+                                label: 'Invalidar',
+                                variant: 'danger',
+                                onClick: () => handleInvalidarClick(v.id),
+                                icon: (
+                                  <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                  </svg>
+                                ),
+                              },
+                            ]}
+                          />
                         )}
                       </div>
                     </td>
@@ -346,10 +262,10 @@ export function ViagemList({
       {viagens.length === 0 ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
           <p className="text-base text-primary-500">Nenhuma viagem por aqui.</p>
-          <p className="mt-1 text-sm text-primary-400">Crie uma nova viagem para comecar.</p>
+          <p className="mt-1 text-sm text-text-muted">Crie uma nova viagem para comecar.</p>
           <Link
             href="/viagens/nova"
-            className="mt-4 inline-block rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+            className="mt-4 inline-block rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
           >
             Registrar Primeira Viagem
           </Link>
@@ -422,45 +338,14 @@ export function ViagemList({
                     )
                   )}
                   {!isMotorista && v.status !== 'cancelada' && (
-                    invalidarId === v.id ? (
-                      <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2">
-                        <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
-                        <input
-                          type="text"
-                          value={invalidarMotivo}
-                          onChange={(e) => setInvalidarMotivo(e.target.value)}
-                          placeholder="Descreva o motivo da invalidacao"
-                          className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
-                          minLength={10}
-                        />
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleConfirmInvalidar(v.id)}
-                            disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
-                            className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
-                          >
-                            Confirmar Invalidacao
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleCancelInvalidar}
-                            className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInvalidarClick(v.id)}
-                        disabled={invalidandoId === v.id}
-                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                      >
-                        Invalidar
-                      </button>
-                    )
+                    <button
+                      type="button"
+                      onClick={() => handleInvalidarClick(v.id)}
+                      disabled={isPending}
+                      className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
+                    >
+                      Invalidar
+                    </button>
                   )}
                 </div>
               </div>
@@ -506,112 +391,56 @@ export function ViagemList({
                         {VIAGEM_STATUS_LABELS[v.status]}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-right min-w-[140px]">
-                      <div className="flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-1">
+                    <td className="px-4 py-3.5 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Link
+                          href={`/viagens/${v.id}`}
+                          className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
+                        >
+                          Ver
+                        </Link>
+                        {(v.status === 'planejada' || v.status === 'em_andamento') && (
                           <Link
-                            href={`/viagens/${v.id}`}
+                            href={`/viagens/${v.id}/editar`}
                             className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
                           >
-                            Ver
+                            Editar
                           </Link>
-                          {(v.status === 'planejada' || v.status === 'em_andamento') && (
-                            <Link
-                              href={`/viagens/${v.id}/editar`}
-                              className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-primary-700 hover:bg-surface-hover transition-colors"
-                            >
-                              Editar
-                            </Link>
-                          )}
-                          {!isMotorista && v.status === 'concluida' && (
-                            <Link
-                              href={`/fechamentos/novo?motorista_id=${v.motorista_id}`}
-                              className="inline-flex items-center rounded-md bg-success px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-success/90"
-                            >
-                              Acertar
-                            </Link>
-                          )}
-                        </div>
-                        {!isMotorista && v.status === 'planejada' && (
-                          <>
-                            {confirmId === v.id ? (
-                              <span className="flex flex-col items-end gap-1">
-                                <span className="text-xs text-danger max-w-[240px] text-right">Tem certeza que deseja excluir esta viagem? Esta acao nao pode ser desfeita.</span>
-                                <span className="flex items-center gap-1">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleConfirmDelete(v.id)}
-                                    disabled={deletingId === v.id}
-                                    className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                                  >
-                                    Confirmar
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={handleCancelDelete}
-                                    className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
-                                  >
-                                    Cancelar
-                                  </button>
-                                </span>
-                              </span>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteClick(v.id)}
-                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
-                              >
-                                Excluir
-                              </button>
-                            )}
-                          </>
                         )}
-                        {!isMotorista && v.status !== 'cancelada' && (
-                          <>
-                            {invalidarId === v.id ? (
-                              <div className="w-full mt-2 rounded-lg border border-danger/30 bg-alert-danger-bg p-3 space-y-2 text-left">
-                                <p className="text-sm font-bold text-danger">Esta acao vai invalidar a viagem. Digite o motivo:</p>
-                                <input
-                                  type="text"
-                                  value={invalidarMotivo}
-                                  onChange={(e) => setInvalidarMotivo(e.target.value)}
-                                  placeholder="Descreva o motivo da invalidacao"
-                                  className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
-                                  minLength={10}
-                                />
-                                <div className="flex items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleConfirmInvalidar(v.id)}
-                                    disabled={invalidarMotivo.trim().length < 10 || invalidandoId === v.id}
-                                    className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
-                                  >
-                                    Confirmar Invalidacao
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={handleCancelInvalidar}
-                                    className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
-                                  >
-                                    Cancelar
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleInvalidarClick(v.id)}
-                                disabled={invalidandoId === v.id}
-                                className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-alert-danger-bg transition-colors"
-                              >
-                                <svg className="h-3.5 w-3.5 mr-1" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        {!isMotorista && v.status === 'concluida' && (
+                          <Link
+                            href={`/fechamentos/novo?motorista_id=${v.motorista_id}`}
+                            className="inline-flex items-center rounded-md bg-success px-2.5 py-1.5 text-xs font-semibold text-white no-underline transition-colors hover:bg-success/90"
+                          >
+                            Acertar
+                          </Link>
+                        )}
+                        {!isMotorista && v.status !== 'cancelada' && (() => {
+                          const overflowItems: OverflowMenuItem[] = [];
+                          if (v.status === 'planejada') {
+                            overflowItems.push({
+                              label: 'Excluir',
+                              variant: 'danger',
+                              onClick: () => handleDeleteClick(v.id),
+                              icon: (
+                                <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                                Invalidar
-                              </button>
-                            )}
-                          </>
-                        )}
+                              ),
+                            });
+                          }
+                          overflowItems.push({
+                            label: 'Invalidar',
+                            variant: 'danger',
+                            onClick: () => handleInvalidarClick(v.id),
+                            icon: (
+                              <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                              </svg>
+                            ),
+                          });
+                          return <OverflowMenu items={overflowItems} />;
+                        })()}
                       </div>
                     </td>
                   </tr>
@@ -654,6 +483,37 @@ export function ViagemList({
 
       {isPending && (
         <div className="text-center text-sm text-primary-500">Carregando...</div>
+      )}
+
+      {/* Modal de Invalidar removido daqui — usa o modal fixo global abaixo */}
+
+      {/* Excluir confirmation modal (desktop) */}
+      {confirmId && (
+        <div className="hidden md:block">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="mx-4 w-full max-w-sm rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl space-y-4">
+              <p className="text-base font-bold text-danger">Tem certeza que deseja excluir esta viagem?</p>
+              <p className="text-sm text-primary-500">Esta acao nao pode ser desfeita.</p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleConfirmDelete(confirmId)}
+                  disabled={deletingId === confirmId}
+                  className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                >
+                  Confirmar Exclusao
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelDelete}
+                  className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

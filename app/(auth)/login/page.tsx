@@ -38,11 +38,11 @@ export default function LoginPage() {
         const result = await signInWithPassword(formData);
         if (result?.error) {
           setError(result.error);
-        } else {
-          router.push('/dashboard');
         }
       }
-    } catch {
+    } catch (err: unknown) {
+      // redirect() throws NEXT_REDIRECT — ignore it
+      if (err instanceof Error && err.message?.includes('NEXT_REDIRECT')) return;
       setError('Ocorreu um erro. Tente novamente.');
     } finally {
       setLoading(false);
@@ -144,7 +144,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center justify-center w-full h-14 rounded-default bg-primary-700 text-white text-base font-semibold border-none cursor-pointer hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-surface-border disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-full h-14 rounded-default bg-btn-primary text-white text-base font-semibold border-none cursor-pointer hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:bg-surface-border disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading
                 ? (mode === 'recuperar' ? 'Enviando...' : 'Entrando...')

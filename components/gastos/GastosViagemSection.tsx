@@ -7,10 +7,10 @@ import type { GastoViagemItem } from '@/app/(dashboard)/viagens/[id]/actions';
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDate(isoDate: string): string {
-  const date = new Date(isoDate + 'T00:00:00');
+function formatDateTime(iso: string): string {
+  const date = new Date(iso);
   const pad = (n: number) => n.toString().padStart(2, '0');
-  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 /**
@@ -52,6 +52,7 @@ function CategoryIcon({
 interface GastosViagemSectionProps {
   gastos: GastoViagemItem[];
   totalCentavos: number;
+  isDono?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -65,6 +66,7 @@ interface GastosViagemSectionProps {
 export function GastosViagemSection({
   gastos,
   totalCentavos,
+  isDono = false,
 }: GastosViagemSectionProps) {
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-6">
@@ -76,7 +78,7 @@ export function GastosViagemSection({
       {gastos.length === 0 && (
         <div className="flex flex-col items-center justify-center py-10 text-center">
           <svg
-            className="mb-3 h-12 w-12 text-primary-300"
+            className="mb-3 h-12 w-12 text-text-subtle"
             aria-hidden="true"
             fill="none"
             stroke="currentColor"
@@ -115,7 +117,7 @@ export function GastosViagemSection({
                     {gasto.categoria_nome}
                   </span>
                   <span className="text-xs text-primary-500">
-                    {formatDate(gasto.data)}
+                    {formatDateTime(gasto.created_at)}
                   </span>
                 </div>
 
@@ -127,17 +129,39 @@ export function GastosViagemSection({
                 )}
               </div>
 
-              {/* Value */}
+              {/* Value + Actions */}
               <div className="flex flex-col items-end gap-1">
                 <span className="text-base font-bold tabular-nums text-primary-900">
                   {formatBRL(gasto.valor)}
                 </span>
-                <Link
-                  href={`/gastos/${gasto.id}/editar`}
-                  className="text-xs text-primary-500 transition-colors hover:text-primary-700"
-                >
-                  Editar
-                </Link>
+                <div className="flex items-center gap-2">
+                  {gasto.foto_url ? (
+                    <span className="inline-flex items-center gap-1 text-xs text-success">
+                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Comprovante
+                    </span>
+                  ) : (
+                    <Link
+                      href={`/gastos/${gasto.id}/editar`}
+                      className="inline-flex items-center gap-1 text-xs text-primary-500 transition-colors hover:text-primary-700"
+                    >
+                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                      </svg>
+                      Anexar
+                    </Link>
+                  )}
+                  {isDono && (
+                    <Link
+                      href={`/gastos/${gasto.id}/editar`}
+                      className="text-xs text-primary-500 transition-colors hover:text-primary-700"
+                    >
+                      Editar
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           ))}

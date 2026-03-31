@@ -111,7 +111,7 @@ export default function UsuarioList({
                     {ROLE_LABELS[usuario.role]}
                   </span>
                 )}
-                <span className="text-sm text-primary-400">
+                <span className="text-sm text-text-muted">
                   Desde {new Date(usuario.created_at).toLocaleDateString('pt-BR')}
                 </span>
               </div>
@@ -245,7 +245,7 @@ export default function UsuarioList({
           <p className="text-base text-primary-500">
             Nenhum usuario encontrado.
           </p>
-          <p className="mt-1 text-sm text-primary-400">
+          <p className="mt-1 text-sm text-text-muted">
             Convide usuarios para gerenciar o sistema.
           </p>
         </div>

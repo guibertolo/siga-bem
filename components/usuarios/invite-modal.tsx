@@ -74,7 +74,7 @@ export default function InviteModal({ isOpen, onClose, currentRole }: InviteModa
               name="nome"
               type="text"
               required
-              className="mt-1 w-full rounded-md border border-surface-border bg-surface-background px-3 py-2 text-sm text-primary-900 placeholder:text-primary-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 w-full rounded-md border border-surface-border bg-surface-background px-3 py-2 text-sm text-primary-900 placeholder:text-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="Nome completo"
             />
           </div>
@@ -91,7 +91,7 @@ export default function InviteModal({ isOpen, onClose, currentRole }: InviteModa
               name="email"
               type="email"
               required
-              className="mt-1 w-full rounded-md border border-surface-border bg-surface-background px-3 py-2 text-sm text-primary-900 placeholder:text-primary-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="mt-1 w-full rounded-md border border-surface-border bg-surface-background px-3 py-2 text-sm text-primary-900 placeholder:text-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="email@exemplo.com"
             />
           </div>
@@ -127,7 +127,7 @@ export default function InviteModal({ isOpen, onClose, currentRole }: InviteModa
             <button
               type="submit"
               disabled={isPending}
-              className="rounded-md bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800 disabled:opacity-50"
+              className="rounded-md bg-btn-primary px-4 py-2 text-sm font-medium text-white hover:bg-btn-primary-hover disabled:opacity-50"
             >
               {isPending ? 'Enviando...' : 'Enviar Convite'}
             </button>

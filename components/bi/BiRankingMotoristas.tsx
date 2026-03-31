@@ -14,7 +14,7 @@ export function BiRankingMotoristas({ data }: BiRankingMotoristasProps) {
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Motoristas que Mais Gastaram
         </h3>
-        <p className="text-sm text-primary-400">
+        <p className="text-sm text-text-muted">
           Nenhum gasto com motorista no periodo selecionado.
         </p>
       </div>

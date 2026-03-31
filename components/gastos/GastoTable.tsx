@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
 import { deleteGasto } from '@/app/(dashboard)/gastos/actions';
 import { ReceiptModal } from '@/components/gastos/ReceiptModal';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
 import type { GastoListItemWithFoto } from '@/types/gasto';
 
 interface GastoTableProps {
@@ -215,11 +216,11 @@ export function GastoTable({ gastos, isMotorista = false, isDono = false }: Gast
                       </svg>
                     </button>
                   ) : (
-                    <span className="text-primary-300">-</span>
+                    <span className="text-text-subtle">-</span>
                   )}
                 </td>
                 <td className="px-4 py-3.5 text-right">
-                  <div className="flex items-center justify-end gap-2">
+                  <div className="flex items-center justify-end gap-1">
                     {isDono && (
                       <Link
                         href={`/gastos/${gasto.id}/editar`}
@@ -231,41 +232,40 @@ export function GastoTable({ gastos, isMotorista = false, isDono = false }: Gast
                         Editar
                       </Link>
                     )}
-
+                    {gasto.foto_url && !isDono && (
+                      <button
+                        type="button"
+                        onClick={() => setReceiptGastoId(gasto.id)}
+                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
+                      >
+                        Comprovante
+                      </button>
+                    )}
                     {isDono && (
-                      confirmId === gasto.id ? (
-                        <span className="flex items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={() => handleConfirmDelete(gasto.id)}
-                            disabled={isPending}
-                            className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                          >
-                            Confirmar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleCancelDelete}
-                            className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
-                          >
-                            Cancelar
-                          </button>
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteClick(gasto.id)}
-                          disabled={isPending && deletingId === gasto.id}
-                          className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]"
-                        >
-                          <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                          {isPending && deletingId === gasto.id
-                            ? 'Excluindo...'
-                            : 'Excluir'}
-                        </button>
-                      )
+                      <OverflowMenu
+                        items={[
+                          ...(gasto.foto_url ? [{
+                            label: 'Comprovante',
+                            variant: 'default' as const,
+                            onClick: () => setReceiptGastoId(gasto.id),
+                            icon: (
+                              <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                              </svg>
+                            ),
+                          }] : []),
+                          {
+                            label: 'Excluir',
+                            variant: 'danger',
+                            onClick: () => handleDeleteClick(gasto.id),
+                            icon: (
+                              <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            ),
+                          },
+                        ]}
+                      />
                     )}
                   </div>
                 </td>
@@ -274,6 +274,35 @@ export function GastoTable({ gastos, isMotorista = false, isDono = false }: Gast
           </tbody>
         </table>
       </div>
+
+      {/* Excluir confirmation modal (desktop) */}
+      {confirmId && (
+        <div className="hidden md:block">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="mx-4 w-full max-w-sm rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl space-y-4">
+              <p className="text-base font-bold text-danger">Tem certeza que deseja excluir este gasto?</p>
+              <p className="text-sm text-primary-500">Esta acao nao pode ser desfeita.</p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleConfirmDelete(confirmId)}
+                  disabled={isPending}
+                  className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
+                >
+                  Confirmar Exclusao
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelDelete}
+                  className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {receiptGastoId && (
         <ReceiptModal

@@ -51,6 +51,13 @@
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
 
+  /* Button Colors — stable across light/dark for white-text CTAs */
+  --color-btn-primary: #2C5F7C;
+  --color-btn-primary-hover: #1B3A4B;
+
+  /* Secondary text — used for descriptions, hints, empty-state text */
+  --color-text-secondary: #475569;
+
   /* Border Radius */
   --radius-default: 8px;
   --radius-card: 12px;
@@ -104,6 +111,10 @@ select option {
     --color-text-subtle: #64748B;
     --color-text-label: #CBD5E1;
 
+    --color-btn-primary: #2C6E99;
+    --color-btn-primary-hover: #1B5A80;
+    --color-text-secondary: #94A3B8;
+
     --color-alert-success-bg: #052E16;
     --color-alert-danger-bg: #450A0A;
     --color-alert-warning-bg: #451A03;
@@ -135,6 +146,10 @@ select option {
   --color-text-muted: #94A3B8;
   --color-text-subtle: #64748B;
   --color-text-label: #CBD5E1;
+
+  --color-btn-primary: #2C6E99;
+  --color-btn-primary-hover: #1B5A80;
+  --color-text-secondary: #94A3B8;
 
   --color-alert-success-bg: #052E16;
   --color-alert-danger-bg: #450A0A;

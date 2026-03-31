@@ -26,7 +26,7 @@ export function GastoSummary({
           <p className="text-2xl font-bold text-primary-900">
             {formatBRL(totalValueCentavos)}
           </p>
-          <p className="text-xs text-primary-400">
+          <p className="text-xs text-text-muted">
             {totalCount} registro{totalCount !== 1 ? 's' : ''}
           </p>
         </div>
@@ -58,7 +58,7 @@ export function GastoSummary({
                   />
                 )}
                 <span className="text-primary-700">{sub.categoria_nome}</span>
-                <span className="text-xs text-primary-400">
+                <span className="text-xs text-text-muted">
                   ({sub.qtd_gastos})
                 </span>
               </div>

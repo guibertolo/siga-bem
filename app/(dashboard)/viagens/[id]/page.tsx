@@ -321,12 +321,13 @@ export default async function ViagemDetalhePage({
         )}
 
         {/* Abastecimento List — Story 5.3 (visible for ALL statuses, including concluida) */}
-        <AbastecimentoList abastecimentos={abastecimentos} />
+        <AbastecimentoList abastecimentos={abastecimentos} isDono={usuario.role === 'dono'} />
 
         {/* Despesas desta Viagem — non-fuel gastos linked to this trip */}
         <GastosViagemSection
           gastos={gastosViagem}
           totalCentavos={gastosTotalCentavos}
+          isDono={usuario.role === 'dono'}
         />
 
         {/* Status actions */}

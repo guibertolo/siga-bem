@@ -260,7 +260,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
             type="button"
             onClick={handleCalcular}
             disabled={isPending}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-btn-primary px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
           >
             {isPending ? 'Calculando...' : 'Calcular Preview'}
           </button>
@@ -419,7 +419,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
               type="button"
               onClick={handleConfirmar}
               disabled={isPending}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-primary-800 disabled:opacity-50"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-btn-primary px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
             >
               <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

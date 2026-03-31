@@ -97,7 +97,7 @@ export function HistoricoFechamentos({
         <p className="text-base text-primary-500">
           Nenhum acerto encontrado com os filtros selecionados.
         </p>
-        <p className="mt-1 text-sm text-primary-400">
+        <p className="mt-1 text-sm text-text-muted">
           Tente ajustar os filtros ou o periodo de busca.
         </p>
       </div>
@@ -158,15 +158,15 @@ export function HistoricoFechamentos({
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3 text-sm">
               <div>
-                <div className="text-primary-400">Viagens</div>
+                <div className="text-text-muted">Viagens</div>
                 <div className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_viagens)}</div>
               </div>
               <div>
-                <div className="text-primary-400">Gastos</div>
+                <div className="text-text-muted">Gastos</div>
                 <div className="font-medium tabular-nums text-primary-900">{formatBRL(f.total_gastos)}</div>
               </div>
               <div>
-                <div className="text-primary-400">Saldo</div>
+                <div className="text-text-muted">Saldo</div>
                 <div className={`font-semibold tabular-nums ${f.saldo_motorista >= 0 ? 'text-success' : 'text-danger'}`}>
                   {formatBRL(f.saldo_motorista)}
                 </div>
@@ -306,7 +306,7 @@ export function HistoricoFechamentos({
 
             {generatePageNumbers(currentPage, totalPages).map((pageNum, idx) =>
               pageNum === null ? (
-                <span key={`ellipsis-${idx}`} className="px-1 text-primary-400">
+                <span key={`ellipsis-${idx}`} className="px-1 text-text-muted">
                   ...
                 </span>
               ) : (
@@ -317,7 +317,7 @@ export function HistoricoFechamentos({
                   disabled={isPending}
                   className={`rounded-md px-3 py-1 text-sm transition-colors ${
                     pageNum === currentPage
-                      ? 'bg-primary-700 text-white'
+                      ? 'bg-btn-primary text-white'
                       : 'border border-surface-border text-primary-700 hover:bg-surface-muted'
                   }`}
                 >

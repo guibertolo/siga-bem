@@ -70,10 +70,10 @@ export function BiEficienciaCombustivel({
         <h3 className="text-lg font-semibold text-primary-900 mb-2">
           Eficiencia de Combustivel
         </h3>
-        <p className="text-xs text-primary-400 mb-4">
+        <p className="text-xs text-text-muted mb-4">
           Referencia cegonheiro: ~2,5 km/L
         </p>
-        <p className="text-sm text-primary-400">
+        <p className="text-sm text-text-muted">
           Nenhum dado de abastecimento no periodo selecionado.
         </p>
       </div>
@@ -85,7 +85,7 @@ export function BiEficienciaCombustivel({
       <h3 className="text-lg font-semibold text-primary-900 mb-2">
         Eficiencia de Combustivel
       </h3>
-      <p className="text-xs text-primary-400 mb-4">
+      <p className="text-xs text-text-muted mb-4">
         Referencia cegonheiro: ~2,5 km/L | Verde {'>'} 2,5 | Amarelo 2,0-2,5 |
         Vermelho {'<'} 2,0
       </p>
@@ -128,7 +128,7 @@ export function BiEficienciaCombustivel({
                     {formatKmPorLitro(item.kmPorLitro, item.metodo)}
                   </span>
                   {item.metodo && (
-                    <span className="block text-xs text-primary-400">
+                    <span className="block text-xs text-text-muted">
                       {getMetodoLabel(item.metodo)}
                     </span>
                   )}
@@ -177,7 +177,7 @@ export function BiEficienciaCombustivel({
                   {formatKmPorLitro(item.kmPorLitro, item.metodo)}
                 </span>
                 {item.metodo && (
-                  <span className="block text-xs text-primary-400">
+                  <span className="block text-xs text-text-muted">
                     {getMetodoLabel(item.metodo)}
                   </span>
                 )}

@@ -240,11 +240,11 @@ function MultiSelectDropdown({
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between rounded-md border border-surface-border bg-surface-card px-3 py-2 text-left text-sm text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       >
-        <span className={selected.length === 0 ? 'text-primary-400' : ''}>
+        <span className={selected.length === 0 ? 'text-text-muted' : ''}>
           {displayText}
         </span>
         <svg
-          className={`h-4 w-4 text-primary-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -267,7 +267,7 @@ function MultiSelectDropdown({
           />
           <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-surface-border bg-surface-card py-1 shadow-lg">
             {options.length === 0 ? (
-              <div className="px-3 py-2 text-sm text-primary-400">
+              <div className="px-3 py-2 text-sm text-text-muted">
                 Nada encontrado
               </div>
             ) : (
@@ -281,7 +281,7 @@ function MultiSelectDropdown({
                   <span
                     className={`flex h-4 w-4 items-center justify-center rounded border ${
                       selected.includes(option.value)
-                        ? 'border-primary-600 bg-primary-600 text-white'
+                        ? 'border-btn-primary bg-btn-primary text-white'
                         : 'border-surface-border'
                     }`}
                   >

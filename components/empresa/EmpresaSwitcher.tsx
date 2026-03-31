@@ -154,7 +154,7 @@ export function EmpresaSwitcher({ empresas }: EmpresaSwitcherProps) {
             <Link
               href="/empresa/nova"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-primary-400 hover:bg-white/10 transition-colors no-underline min-h-[48px]"
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-text-muted hover:bg-white/10 transition-colors no-underline min-h-[48px]"
             >
               <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />

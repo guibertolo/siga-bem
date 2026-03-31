@@ -14,6 +14,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 export interface AbastecimentoItem {
   id: string;
   data: string;
+  created_at: string;
   valor: number; // centavos
   litros: number;
   tipo_combustivel: string | null;
@@ -51,6 +52,7 @@ export async function getAbastecimentosPorViagem(
     .select(`
       id,
       data,
+      created_at,
       valor,
       litros,
       tipo_combustivel,
@@ -77,6 +79,7 @@ export async function getAbastecimentosPorViagem(
     return {
       id: row.id as string,
       data: row.data as string,
+      created_at: row.created_at as string,
       valor: row.valor as number,
       litros: row.litros as number,
       tipo_combustivel: row.tipo_combustivel as string | null,

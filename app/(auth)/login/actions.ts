@@ -1,5 +1,6 @@
 'use server';
 
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 
 export async function sendMagicLink(formData: FormData) {
@@ -54,5 +55,5 @@ export async function signInWithPassword(formData: FormData) {
     return { error: error.message };
   }
 
-  return { success: true };
+  redirect('/dashboard');
 }

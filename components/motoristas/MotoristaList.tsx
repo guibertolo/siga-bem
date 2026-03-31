@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { MotoristaListItem } from '@/types/motorista';
 import { softDeleteMotorista, reactivateMotorista } from '@/app/(dashboard)/motoristas/actions';
 import { cn } from '@/lib/utils/cn';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
 
 interface MotoristaListProps {
   motoristas: MotoristaListItem[];
@@ -66,7 +67,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
             className={cn(
               'rounded-full border px-4 py-2 text-sm font-medium transition-colors min-h-[40px]',
               filter === option
-                ? 'border-primary-700 bg-primary-700 text-white'
+                ? 'border-primary-700 bg-btn-primary text-white'
                 : 'border-surface-border bg-surface-card text-primary-700 hover:bg-surface-hover',
             )}
           >
@@ -79,7 +80,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-surface-border bg-surface-card p-8 text-center">
           <p className="text-base text-primary-500">Nenhum motorista encontrado.</p>
-          <p className="mt-1 text-sm text-primary-400">Cadastre um motorista para comecar.</p>
+          <p className="mt-1 text-sm text-text-muted">Cadastre um motorista para comecar.</p>
         </div>
       ) : (
         <>
@@ -118,7 +119,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
               <div className="mt-3 flex items-center gap-2">
                 <Link
                   href={`/motoristas/${m.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-btn-primary px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px]"
                 >
                   Ver Detalhes
                 </Link>
@@ -189,36 +190,27 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-right">
-                    <div className="inline-flex items-center gap-2">
+                    <div className="flex items-center justify-end gap-1">
                       <Link
                         href={`/motoristas/${m.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-primary-800 min-h-[40px]"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-btn-primary px-3 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-btn-primary-hover min-h-[40px]"
                       >
                         Ver
                       </Link>
-                      <button
-                        type="button"
-                        disabled={isPending}
-                        onClick={() => handleToggleStatus(m.id, m.status)}
-                        className={cn(
-                          'inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors min-h-[40px]',
-                          m.status === 'ativo'
-                            ? 'text-danger hover:bg-alert-danger-bg'
-                            : 'text-success hover:bg-alert-success-bg',
-                          isPending && 'cursor-not-allowed opacity-50',
-                        )}
-                      >
-                        {m.status === 'ativo' ? (
-                          <>
-                            <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Inativar
-                          </>
-                        ) : (
-                          'Reativar'
-                        )}
-                      </button>
+                      <OverflowMenu
+                        items={[
+                          {
+                            label: m.status === 'ativo' ? 'Inativar' : 'Reativar',
+                            variant: m.status === 'ativo' ? 'danger' : 'default',
+                            onClick: () => handleToggleStatus(m.id, m.status),
+                            icon: m.status === 'ativo' ? (
+                              <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            ) : undefined,
+                          },
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>

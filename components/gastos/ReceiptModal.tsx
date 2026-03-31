@@ -110,7 +110,7 @@ export function ReceiptModal({ gastoId, onClose }: ReceiptModalProps) {
                   href={activeComprovante.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+                  className="rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
                 >
                   Abrir PDF
                 </a>

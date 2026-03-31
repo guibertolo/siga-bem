@@ -76,7 +76,7 @@ export default async function HistoricoPage({ searchParams }: HistoricoPageProps
           {isAdmin && (
             <Link
               href="/fechamentos/novo"
-              className="rounded-md bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800"
+              className="rounded-md bg-btn-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
             >
               Novo Acerto
             </Link>

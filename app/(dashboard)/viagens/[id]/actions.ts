@@ -205,8 +205,10 @@ export async function getAbastecimentosForViagem(
 export interface GastoViagemItem {
   id: string;
   data: string;
+  created_at: string;
   valor: number; // centavos
   descricao: string | null;
+  foto_url: string | null;
   categoria_nome: string;
   categoria_icone: string | null;
   categoria_cor: string | null;
@@ -237,8 +239,10 @@ export async function getGastosPorViagem(
     .select(`
       id,
       data,
+      created_at,
       valor,
       descricao,
+      foto_url,
       categoria_gasto ( nome, icone, cor )
     `)
     .eq('viagem_id', viagemId)
@@ -265,8 +269,10 @@ export async function getGastosPorViagem(
       return {
         id: row.id,
         data: row.data,
+        created_at: row.created_at,
         valor: row.valor,
         descricao: row.descricao,
+        foto_url: row.foto_url ?? null,
         categoria_nome: cat?.nome ?? 'Sem categoria',
         categoria_icone: cat?.icone ?? null,
         categoria_cor: cat?.cor ?? null,

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createGasto } from '@/app/(dashboard)/gastos/actions';
+import { ComprovantesUpload } from '@/components/gastos/ComprovantesUpload';
 import { cn } from '@/lib/utils/cn';
 import { maskCurrency } from '@/lib/utils/mask-currency';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
@@ -27,7 +28,7 @@ function todayISO(): string {
  */
 export function DespesaViagemSection({
   viagemId,
-  empresaId: _empresaId,
+  empresaId,
   motoristaId,
   caminhaoId,
   categorias,
@@ -37,6 +38,15 @@ export function DespesaViagemSection({
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [createdGastoId, setCreatedGastoId] = useState<string | null>(null);
+  const uploadRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to upload section when gasto is created
+  useEffect(() => {
+    if (createdGastoId && uploadRef.current) {
+      uploadRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [createdGastoId]);
 
   // Form state
   const [categoriaId, setCategoriaId] = useState('');
@@ -98,13 +108,12 @@ export function DespesaViagemSection({
         return;
       }
 
-      setSuccessMsg('Despesa registrada!');
+      const gastoId = result.gasto?.id ?? null;
+      setSuccessMsg('Despesa registrada! Anexe o comprovante se desejar.');
+      setCreatedGastoId(gastoId);
       resetForm();
-      setTimeout(() => {
-        setExpanded(false);
-        setSuccessMsg(null);
-        router.refresh();
-      }, 800);
+      // NÃO chamar router.refresh() aqui — resetaria o state do createdGastoId
+      // O refresh acontece quando o usuário clica "Concluir"
     });
   }
 
@@ -129,7 +138,7 @@ export function DespesaViagemSection({
             'inline-flex items-center gap-2 rounded-lg px-4 py-3 text-base font-semibold min-h-[48px] transition-colors',
             expanded
               ? 'border border-surface-border bg-surface-muted text-primary-700 hover:bg-surface-hover'
-              : 'bg-primary-700 text-white hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+              : 'bg-btn-primary text-white hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
           )}
         >
           {expanded ? (
@@ -152,16 +161,42 @@ export function DespesaViagemSection({
 
       {expanded && (
         <div className="mt-6 border-t border-surface-border pt-6">
+          {/* Post-creation: show upload + concluir */}
+          {createdGastoId ? (
+            <div ref={uploadRef} className="space-y-4">
+              <div className="rounded-lg border border-success/20 bg-success/5 p-3 text-sm font-medium text-success">
+                {successMsg}
+              </div>
+
+              <ComprovantesUpload
+                gastoId={createdGastoId}
+                empresaId={empresaId}
+                comprovantes={[]}
+              />
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreatedGastoId(null);
+                    setSuccessMsg(null);
+                    setExpanded(false);
+                    router.refresh();
+                  }}
+                  className={cn(
+                    'inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
+                    'hover:bg-btn-primary-hover',
+                  )}
+                >
+                  Concluir
+                </button>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {serverError && (
               <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-3 text-sm text-danger">
                 {serverError}
-              </div>
-            )}
-
-            {successMsg && (
-              <div className="rounded-lg border border-success/20 bg-emerald-50 p-3 text-sm font-medium text-success dark:bg-emerald-900/20">
-                {successMsg}
               </div>
             )}
 
@@ -239,8 +274,8 @@ export function DespesaViagemSection({
                 type="submit"
                 disabled={isPending}
                 className={cn(
-                  'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
-                  'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                  'inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
+                  'hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
                   isPending && 'cursor-not-allowed opacity-50',
                 )}
               >
@@ -251,6 +286,7 @@ export function DespesaViagemSection({
               </button>
             </div>
           </form>
+          )}
         </div>
       )}
     </div>

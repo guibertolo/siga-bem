@@ -85,7 +85,7 @@ export function EmpresaCard({ empresa }: EmpresaCardProps) {
             ? 'bg-surface-hover text-text-subtle cursor-not-allowed'
             : isPending
               ? 'bg-primary-1000 text-white cursor-wait'
-              : 'bg-primary-700 text-white hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer'}
+              : 'bg-btn-primary text-white hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer'}
         `}
         aria-label={isInactive ? 'Empresa inativa' : `Entrar na empresa ${empresa.razao_social}`}
       >

@@ -83,11 +83,11 @@ export function MobileSidebar({
 
       {/* Sidebar drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#1B3A4B] text-white transform transition-transform duration-200 ease-in-out md:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-56 bg-[#1B3A4B] text-white transform transition-transform duration-200 ease-in-out md:hidden ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
           <Link
             href="/dashboard"
             className="flex items-center gap-3 no-underline"
@@ -100,7 +100,7 @@ export function MobileSidebar({
               height={36}
               className="h-9 w-9"
             />
-            <span className="text-2xl font-extrabold text-white">FrotaViva</span>
+            <span className="text-xl font-extrabold text-white">FrotaViva</span>
           </Link>
           <button
             type="button"
@@ -133,7 +133,7 @@ export function MobileSidebar({
               href={link.href}
               prefetch={true}
               onClick={() => setOpen(false)}
-              className={`flex items-center px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+              className={`flex items-center px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === link.href || pathname.startsWith(link.href + '/')
                   ? 'bg-white/20 text-white'
                   : 'text-slate-200 hover:bg-white/15'
@@ -153,7 +153,7 @@ export function MobileSidebar({
               href="/bi"
               prefetch={true}
               onClick={() => setOpen(false)}
-              className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+              className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === '/bi'
                   ? 'bg-white/20 text-white'
                   : 'text-slate-200 hover:bg-white/15'
@@ -174,7 +174,7 @@ export function MobileSidebar({
                   href={link.href}
                   prefetch={true}
                   onClick={() => setOpen(false)}
-                  className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+                  className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                     pathname === link.href || pathname.startsWith(link.href + '/')
                       ? 'bg-white/20 text-white'
                       : 'text-slate-200 hover:bg-white/15'
@@ -192,7 +192,7 @@ export function MobileSidebar({
             href="/perfil"
             prefetch={true}
             onClick={() => setOpen(false)}
-            className={`block px-4 py-3.5 text-base font-semibold no-underline rounded-lg transition-colors ${
+            className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors ${
               pathname === '/perfil'
                 ? 'bg-white/20 text-white'
                 : 'text-slate-200 hover:bg-white/15'
@@ -203,7 +203,7 @@ export function MobileSidebar({
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="w-full px-4 py-3.5 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-alert-danger-bg0/20 hover:text-red-300 transition-colors"
+              className="w-full px-4 py-3 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-alert-danger-bg0/20 hover:text-red-300 transition-colors"
             >
               Sair
             </button>

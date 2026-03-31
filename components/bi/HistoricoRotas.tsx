@@ -41,7 +41,7 @@ export function HistoricoRotas({
       )}
 
       {!isLoading && !searched && (
-        <p className="text-sm text-primary-400">
+        <p className="text-sm text-text-muted">
           Preencha origem e destino no simulador e clique em Simular para
           buscar viagens similares.
         </p>
@@ -49,7 +49,7 @@ export function HistoricoRotas({
 
       {searched && !isLoading && data && data.viagens.length === 0 && (
         <div className="rounded-md bg-surface-muted p-4 text-center">
-          <p className="text-sm text-primary-400">
+          <p className="text-sm text-text-muted">
             Nenhuma viagem concluida encontrada para esta rota.
           </p>
         </div>
@@ -143,7 +143,7 @@ export function HistoricoRotas({
                       {formatBRL(v.lucroCentavos)}
                     </p>
                   ) : (
-                    <p className="text-sm text-primary-400">--</p>
+                    <p className="text-sm text-text-muted">--</p>
                   )}
                 </div>
               </div>

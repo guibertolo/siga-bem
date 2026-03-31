@@ -62,6 +62,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <head>
+        <link
+          rel="preload"
+          href="/logos/frotaviva-logo-full.svg"
+          as="image"
+          type="image/svg+xml"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

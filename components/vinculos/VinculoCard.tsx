@@ -132,7 +132,7 @@ export function VinculoCard({ caminhao }: VinculoCardProps) {
           <div key={m.vinculo_id} className="px-4 py-3">
             <div className="flex items-start gap-3">
               <svg
-                className="mt-0.5 h-5 w-5 shrink-0 text-primary-400"
+                className="mt-0.5 h-5 w-5 shrink-0 text-text-muted"
                 aria-hidden="true"
                 fill="none"
                 stroke="currentColor"

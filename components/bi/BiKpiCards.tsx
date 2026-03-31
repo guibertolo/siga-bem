@@ -112,13 +112,13 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
 
       {/* Card 4: Custos Totais — muted, second plane */}
       <div className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm">
-        <p className="text-base font-medium text-primary-400 mb-1">
+        <p className="text-base font-medium text-text-muted mb-1">
           Custos Totais
         </p>
         <p className="text-2xl sm:text-3xl tabular-nums text-primary-500">
           {formatBRL(custo)}
         </p>
-        <p className="text-sm text-primary-400 mt-1">
+        <p className="text-sm text-text-muted mt-1">
           {custoPctReceita.toFixed(1)}% da receita
         </p>
       </div>

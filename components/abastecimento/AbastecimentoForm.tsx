@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo, useCallback } from 'react';
+import { useState, useTransition, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createAbastecimento } from '@/app/(dashboard)/viagens/[id]/actions';
 import type { AbastecimentoInput } from '@/app/(dashboard)/viagens/[id]/actions';
@@ -37,6 +37,7 @@ interface AbastecimentoFormProps {
   motoristaNome: string;
   caminhaoPlaca: string;
   kmSaida: number | null;
+  onSuccess?: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -64,6 +65,7 @@ export function AbastecimentoForm({
   motoristaNome,
   caminhaoPlaca,
   kmSaida,
+  onSuccess,
 }: AbastecimentoFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -80,6 +82,14 @@ export function AbastecimentoForm({
 
   // Post-submit state
   const [savedGastoId, setSavedGastoId] = useState<string | null>(null);
+  const uploadRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to upload section when abastecimento is saved
+  useEffect(() => {
+    if (savedGastoId && uploadRef.current) {
+      uploadRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [savedGastoId]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<string, string>>>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -176,7 +186,7 @@ export function AbastecimentoForm({
         </div>
 
         {/* Upload comprovante */}
-        <div className="rounded-lg border border-surface-border bg-surface-card p-6">
+        <div ref={uploadRef} className="rounded-lg border border-surface-border bg-surface-card p-6">
           <h3 className="mb-4 text-base font-medium text-primary-900">
             Foto do Comprovante (opcional)
           </h3>
@@ -195,12 +205,16 @@ export function AbastecimentoForm({
           <button
             type="button"
             onClick={() => {
-              router.push(`/viagens/${viagemId}`);
+              if (onSuccess) {
+                onSuccess();
+              } else {
+                router.push(`/viagens/${viagemId}`);
+              }
               router.refresh();
             }}
             className={cn(
-              'inline-flex items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
-              'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+              'inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
+              'hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             )}
           >
             Voltar para a Viagem
@@ -398,8 +412,8 @@ export function AbastecimentoForm({
           type="submit"
           disabled={isPending}
           className={cn(
-            'inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white min-h-[56px] transition-colors sm:w-auto',
-            'hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+            'inline-flex w-full items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[56px] transition-colors sm:w-auto',
+            'hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
             isPending && 'cursor-not-allowed opacity-50',
           )}
         >

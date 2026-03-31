@@ -17,7 +17,7 @@ export function BiBreakdownCategorias({ data }: BiBreakdownCategoriasProps) {
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Gastos por Tipo
         </h3>
-        <p className="text-sm text-primary-400">
+        <p className="text-sm text-text-muted">
           Nenhum gasto encontrado no periodo selecionado.
         </p>
       </div>

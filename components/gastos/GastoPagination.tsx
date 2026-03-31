@@ -58,7 +58,7 @@ export function GastoPagination({
 
         {generatePageNumbers(currentPage, totalPages).map((pageNum, idx) =>
           pageNum === null ? (
-            <span key={`ellipsis-${idx}`} className="px-1 text-primary-400">
+            <span key={`ellipsis-${idx}`} className="px-1 text-text-muted">
               ...
             </span>
           ) : (
@@ -69,7 +69,7 @@ export function GastoPagination({
               disabled={isPending}
               className={`rounded-md px-3 py-1 text-sm transition-colors ${
                 pageNum === currentPage
-                  ? 'bg-primary-700 text-white'
+                  ? 'bg-btn-primary text-white'
                   : 'border border-surface-border text-primary-700 hover:bg-surface-muted'
               }`}
             >

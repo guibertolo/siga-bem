@@ -53,7 +53,7 @@ export function ViagemInvalidarButton({ viagemId }: ViagemInvalidarButtonProps) 
             value={motivo}
             onChange={(e) => setMotivo(e.target.value)}
             placeholder="Descreva o motivo da invalidacao"
-            className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-primary-400 min-h-[48px]"
+            className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-text-muted min-h-[48px]"
             minLength={10}
           />
           {motivo.length > 0 && motivo.trim().length < 10 && (

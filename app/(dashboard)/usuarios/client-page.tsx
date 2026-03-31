@@ -26,7 +26,7 @@ export default function UsuariosClientPage({
         <h2 className="text-2xl font-bold text-primary-900">Usuarios</h2>
         <button
           onClick={() => setIsInviteOpen(true)}
-          className="rounded-md bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800"
+          className="rounded-md bg-btn-primary px-4 py-2 text-sm font-medium text-white hover:bg-btn-primary-hover"
         >
           Convidar Usuario
         </button>
