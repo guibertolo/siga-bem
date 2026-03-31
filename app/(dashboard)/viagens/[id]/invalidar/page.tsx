@@ -59,7 +59,7 @@ export default async function InvalidarViagemPage({ params }: InvalidarPageProps
           <span>Valor: <span className="font-medium text-primary-700">{formatBRL(viagem.valor_total)}</span></span>
         </div>
         <p className="mt-2 text-sm text-danger font-medium">
-          Situacao atual: {viagem.status}
+          Situação atual: {viagem.status}
         </p>
       </div>
 

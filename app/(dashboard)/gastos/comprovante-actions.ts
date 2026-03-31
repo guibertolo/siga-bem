@@ -20,7 +20,7 @@ export async function uploadComprovante(
 ): Promise<ComprovanteActionResult> {
   const usuario = await getCurrentUsuario()
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' }
+    return { success: false, error: 'Não autenticado' }
   }
 
   const file = formData.get('file') as File | null
@@ -41,11 +41,11 @@ export async function uploadComprovante(
     .single()
 
   if (gastoError || !gasto) {
-    return { success: false, error: 'Gasto nao encontrado' }
+    return { success: false, error: 'Gasto não encontrado' }
   }
 
   if (gasto.empresa_id !== usuario.empresa_id) {
-    return { success: false, error: 'Permissao insuficiente' }
+    return { success: false, error: 'Permissão insuficiente' }
   }
 
   // Build storage path: {empresa_id}/{gasto_id}/{timestamp}.{ext}
@@ -109,7 +109,7 @@ export async function deleteComprovante(
 ): Promise<ComprovanteActionResult> {
   const usuario = await getCurrentUsuario()
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' }
+    return { success: false, error: 'Não autenticado' }
   }
 
   const supabase = await createClient()
@@ -122,11 +122,11 @@ export async function deleteComprovante(
     .single()
 
   if (fetchError || !comprovante) {
-    return { success: false, error: 'Comprovante nao encontrado' }
+    return { success: false, error: 'Comprovante não encontrado' }
   }
 
   if (comprovante.empresa_id !== usuario.empresa_id) {
-    return { success: false, error: 'Permissao insuficiente' }
+    return { success: false, error: 'Permissão insuficiente' }
   }
 
   // Delete from Storage
@@ -183,7 +183,7 @@ export async function listComprovantes(
 ): Promise<ComprovantesListResult> {
   const usuario = await getCurrentUsuario()
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' }
+    return { success: false, error: 'Não autenticado' }
   }
 
   const supabase = await createClient()

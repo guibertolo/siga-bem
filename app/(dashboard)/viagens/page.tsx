@@ -16,7 +16,7 @@ export default async function ViagensPage() {
     getCurrentUsuario(),
   ]);
 
-  if (viagensResult.error === 'Nao autenticado' || motoristasResult.error === 'Nao autenticado') {
+  if (viagensResult.error === 'Não autenticado' || motoristasResult.error === 'Não autenticado') {
     redirect('/login');
   }
 

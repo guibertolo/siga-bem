@@ -30,7 +30,7 @@ export default async function EditarViagemPage({
   }
 
   if (!viagemResult.success) {
-    if (viagemResult.error === 'Nao autenticado') {
+    if (viagemResult.error === 'Não autenticado') {
       redirect('/login');
     }
     notFound();

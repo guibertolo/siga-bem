@@ -18,23 +18,23 @@ import type { Viagem, ViagemFormData, ViagemActionResult } from '@/types/viagem'
 
 const viagemFormSchema = z.object({
   motorista_id: z.string().min(1, 'Selecione um motorista'),
-  caminhao_id: z.string().min(1, 'Selecione um caminhao'),
+  caminhao_id: z.string().min(1, 'Selecione um caminhão'),
   origem: z.string()
-    .min(1, 'Origem e obrigatoria')
-    .max(200, 'Origem deve ter no maximo 200 caracteres'),
+    .min(1, 'Origem é obrigatória')
+    .max(200, 'Origem deve ter no máximo 200 caracteres'),
   destino: z.string()
-    .min(1, 'Destino e obrigatorio')
-    .max(200, 'Destino deve ter no maximo 200 caracteres'),
-  data_saida: z.string().min(1, 'Data de saida e obrigatoria'),
+    .min(1, 'Destino é obrigatório')
+    .max(200, 'Destino deve ter no máximo 200 caracteres'),
+  data_saida: z.string().min(1, 'Data de saída é obrigatória'),
   data_chegada_prevista: z.string(),
   valor_total: z.string()
-    .min(1, 'Valor total e obrigatorio')
+    .min(1, 'Valor total é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
     }, 'Valor deve ser maior que zero'),
   percentual_pagamento: z.string()
-    .min(1, 'Percentual e obrigatorio')
+    .min(1, 'Percentual é obrigatório')
     .refine((val) => {
       const num = parseFloat(val.replace(',', '.'));
       return !isNaN(num) && num >= 0 && num <= 100;
@@ -49,7 +49,7 @@ const viagemFormSchema = z.object({
       'Distancia estimada deve ser maior que zero',
     ),
   km_saida: z.string(),
-  observacao: z.string().max(1000, 'Maximo 1000 caracteres'),
+  observacao: z.string().max(1000, 'Máximo 1000 caracteres'),
 });
 
 type FormValues = z.infer<typeof viagemFormSchema>;
@@ -254,7 +254,7 @@ export function ViagemForm({
 
       {camposLocked && (
         <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-amber-800">
-          Campos definidos pelo proprietario -- origem, destino e valor nao podem ser alterados.
+          Campos definidos pelo proprietário -- origem, destino e valor não podem ser alterados.
         </div>
       )}
 
@@ -290,7 +290,7 @@ export function ViagemForm({
         {/* Caminhao */}
         <div>
           <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-700">
-            Caminhao *
+            Caminhão *
           </label>
           <select
             id="caminhao_id"
@@ -299,7 +299,7 @@ export function ViagemForm({
             disabled={loadingCaminhoes}
           >
             <option value="">
-              {loadingCaminhoes ? 'Carregando...' : 'Selecione um caminhao'}
+              {loadingCaminhoes ? 'Carregando...' : 'Selecione um caminhão'}
             </option>
             {caminhoes.map((c) => (
               <option key={c.id} value={c.id}>{c.placa} - {c.modelo}</option>
@@ -484,8 +484,7 @@ export function ViagemForm({
       {/* Observacao */}
       <div>
         <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
-          Observacao
-        </label>
+          Observação        </label>
         <textarea
           id="observacao"
           rows={3}
@@ -510,7 +509,7 @@ export function ViagemForm({
           </svg>
           {isPending
             ? 'Salvando...'
-            : mode === 'create' ? 'Cadastrar Viagem' : 'Salvar Alteracoes'}
+            : mode === 'create' ? 'Cadastrar Viagem' : 'Salvar Alterações'}
         </button>
         <button
           type="button"

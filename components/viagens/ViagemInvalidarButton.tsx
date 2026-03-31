@@ -46,13 +46,13 @@ export function ViagemInvalidarButton({ viagemId }: ViagemInvalidarButtonProps) 
       {showConfirm ? (
         <div className="rounded-lg border border-danger/30 bg-alert-danger-bg p-4 space-y-3">
           <p className="text-sm font-bold text-danger">
-            Esta acao vai invalidar a viagem. Digite o motivo:
+            Esta ação vai invalidar a viagem. Digite o motivo:
           </p>
           <input
             type="text"
             value={motivo}
             onChange={(e) => setMotivo(e.target.value)}
-            placeholder="Descreva o motivo da invalidacao"
+            placeholder="Descreva o motivo da invalidação"
             className="w-full rounded-md border border-danger/30 bg-surface-card px-3 py-2.5 text-sm text-primary-900 placeholder:text-text-muted min-h-[48px]"
             minLength={10}
           />
@@ -66,7 +66,7 @@ export function ViagemInvalidarButton({ viagemId }: ViagemInvalidarButtonProps) 
               disabled={isPending || motivo.trim().length < 10}
               className="rounded-lg bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
             >
-              {isPending ? 'Invalidando...' : 'Confirmar Invalidacao'}
+              {isPending ? 'Invalidando...' : 'Confirmar Invalidação'}
             </button>
             <button
               type="button"

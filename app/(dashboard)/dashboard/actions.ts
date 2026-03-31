@@ -185,7 +185,7 @@ export async function getDashboardData(): Promise<DashboardData> {
 export async function getViagemAtiva(): Promise<ViagemAtivaData> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { viagens: [], count: 0, error: 'Nao autenticado' };
+    return { viagens: [], count: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();

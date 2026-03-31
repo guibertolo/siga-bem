@@ -80,7 +80,7 @@ export function VinculoHistoricoSection({
                     Caminhao
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
-                    Periodo
+                    Período
                   </th>
                 </tr>
               </thead>

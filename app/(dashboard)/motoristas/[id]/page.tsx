@@ -18,7 +18,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
   const result = await getMotorista(id);
 
   if (!result.success) {
-    if (result.error === 'Usuario nao autenticado') {
+    if (result.error === 'Usuário não autenticado') {
       redirect('/login');
     }
     notFound();
@@ -63,7 +63,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
             </div>
             <div>
               <dt className="text-primary-500">Telefone</dt>
-              <dd className="font-medium text-primary-900">{motorista.telefone ?? 'Nao informado'}</dd>
+              <dd className="font-medium text-primary-900">{motorista.telefone ?? 'Não informado'}</dd>
             </div>
             <div>
               <dt className="text-primary-500">CNH</dt>
@@ -91,7 +91,7 @@ export default async function MotoristaDetailPage({ params }: MotoristaDetailPag
             </div>
             {motorista.observacao && (
               <div>
-                <dt className="text-primary-500">Observacao</dt>
+                <dt className="text-primary-500">Observação</dt>
                 <dd className="text-primary-700">{motorista.observacao}</dd>
               </div>
             )}

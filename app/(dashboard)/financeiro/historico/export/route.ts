@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
-    return NextResponse.json({ error: 'Nao autenticado' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);

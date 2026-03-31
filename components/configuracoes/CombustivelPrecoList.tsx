@@ -70,7 +70,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
       {showForm ? (
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">
           <h3 className="mb-4 text-lg font-medium text-primary-900">
-            {editingPreco ? 'Editar Preco' : 'Novo Preco de Combustivel'}
+            {editingPreco ? 'Editar Preço' : 'Novo Preço de Combustível'}
           </h3>
           <CombustivelPrecoForm
             preco={editingPreco}
@@ -91,7 +91,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
       {precos.length === 0 ? (
         <div className="rounded-lg border border-dashed border-surface-border bg-surface-muted p-8 text-center">
           <p className="text-base text-primary-500">
-            Nenhum preco de combustivel cadastrado.
+            Nenhum preço de combustível cadastrado.
           </p>
           <p className="mt-1 text-sm text-text-muted">
             O sistema usara o valor padrao de R$ 6,50/l para estimativas.
@@ -144,7 +144,7 @@ export function CombustivelPrecoList({ precos }: CombustivelPrecoListProps) {
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Preco/l</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Referencia</th>
                 <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Fonte</th>
-                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Acoes</th>
+                <th className="px-4 py-3.5 text-sm font-medium uppercase tracking-wide text-primary-500">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border bg-surface-card">

@@ -30,7 +30,7 @@ export async function getFechamentoCompleto(
 ): Promise<FechamentoCompletoResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -95,7 +95,7 @@ export async function getFechamentoCompleto(
   ]);
 
   if (fechamentoResult.error || !fechamentoResult.data) {
-    return { success: false, error: 'Fechamento nao encontrado' };
+    return { success: false, error: 'Fechamento não encontrado' };
   }
 
   const row = fechamentoResult.data;
@@ -107,7 +107,7 @@ export async function getFechamentoCompleto(
   } | null;
 
   if (!mot || !emp) {
-    return { success: false, error: 'Dados de motorista ou empresa nao encontrados' };
+    return { success: false, error: 'Dados de motorista ou empresa não encontrados' };
   }
 
   const viagens: FechamentoViagemItem[] = (viagensResult.data ?? []).map(

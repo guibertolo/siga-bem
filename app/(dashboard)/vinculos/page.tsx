@@ -6,7 +6,7 @@ import { VinculoSummaryBar } from '@/components/vinculos/VinculoSummaryBar';
 import { VinculoDashboard } from '@/components/vinculos/VinculoDashboard';
 
 export const metadata: Metadata = {
-  title: 'Vinculos',
+  title: 'Vínculos',
 };
 
 export default async function VinculosPage() {
@@ -19,7 +19,7 @@ export default async function VinculosPage() {
     getActiveMotoristas(),
   ]);
 
-  if (dashboardResult.error === 'Nao autenticado') {
+  if (dashboardResult.error === 'Não autenticado') {
     redirect('/login');
   }
 
@@ -27,10 +27,10 @@ export default async function VinculosPage() {
     <div className="w-full max-w-5xl">
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">
-          Vinculos da Frota
+          Vínculos da Frota
         </h2>
         <p className="mt-1 text-base text-primary-500">
-          Visao geral de motoristas e caminhoes vinculados
+          Visão geral de motoristas e caminhões vinculados
         </p>
       </div>
 

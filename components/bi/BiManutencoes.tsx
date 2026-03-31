@@ -17,7 +17,7 @@ function formatDate(dateStr: string | null): string {
 // Ordem fixa de exibição dos tipos de manutenção
 const TIPO_ORDER: Record<string, number> = {
   'Pneu': 1,
-  'Manutencao': 2,
+  'Manutenção': 2,
   'Pedagio': 3,
   'Combustivel': 4,
   'Alimentacao': 5,
@@ -39,10 +39,10 @@ function ManutencaoTable({ data }: { data: BIManutencaoTruckItem[] }) {
       <thead>
         <tr className="border-b border-surface-border text-left">
           <th className="px-3 pb-2 font-semibold text-primary-700">#</th>
-          <th className="px-3 pb-2 font-semibold text-primary-700">Caminhao</th>
+          <th className="px-3 pb-2 font-semibold text-primary-700">Caminhão</th>
           <th className="px-3 pb-2 font-semibold text-primary-700 text-right">Custo Total</th>
           <th className="px-3 pb-2 font-semibold text-primary-700 text-center">Eventos</th>
-          <th className="px-3 pb-2 font-semibold text-primary-700 text-right">Ultima</th>
+          <th className="px-3 pb-2 font-semibold text-primary-700 text-right">Última</th>
         </tr>
       </thead>
       <tbody>
@@ -93,10 +93,10 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
           Manutencoes por Caminhao
         </h3>
         <p className="text-xs text-text-muted mb-4">
-          Gastos com Manutencao e Pneu agrupados por veiculo
+          Gastos com Manutenção e Pneu agrupados por veículo
         </p>
         <p className="text-sm text-text-muted">
-          Nenhuma manutencao registrada no periodo selecionado.
+          Nenhuma manutenção registrada no período selecionado.
         </p>
       </div>
     );
@@ -114,7 +114,7 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
       </h3>
       <div className="flex flex-wrap items-center gap-4 mb-4">
         <p className="text-xs text-text-muted">
-          Gastos com Manutencao e Pneu agrupados por veiculo
+          Gastos com Manutenção e Pneu agrupados por veículo
         </p>
         <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-primary-500">Total no periodo:</span>
@@ -150,7 +150,7 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
                 {formatBRL(item.totalCustoCentavos)}
               </span>
               <span className="text-xs text-primary-500">
-                Ultima: {formatDate(item.ultimaManutencao)}
+                Última: {formatDate(item.ultimaManutencao)}
               </span>
             </div>
             {item.tipos.length > 0 && (

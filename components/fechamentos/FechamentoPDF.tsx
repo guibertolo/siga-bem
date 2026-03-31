@@ -309,7 +309,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
             <Text style={styles.infoValue}>{cpfMascarado}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Periodo:</Text>
+            <Text style={styles.infoLabel}>Período:</Text>
             <Text style={styles.infoValue}>
               {formatarData(fechamento.periodo_inicio)} a{' '}
               {formatarData(fechamento.periodo_fim)}
@@ -473,7 +473,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
               <Text
                 style={[styles.tableHeaderCell, styles.colGastoDescricao]}
               >
-                Descricao
+                Descrição
               </Text>
               <Text style={[styles.tableHeaderCell, styles.colGastoValor]}>
                 Valor
@@ -482,7 +482,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
             {gastos.length === 0 ? (
               <View style={styles.emptyRow}>
                 <Text style={styles.emptyText}>
-                  Nenhum gasto no periodo
+                  Nenhum gasto no período
                 </Text>
               </View>
             ) : (

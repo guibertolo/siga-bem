@@ -11,11 +11,11 @@ import { cn } from '@/lib/utils/cn';
 
 const empresaFormSchema = z.object({
   cnpj: z.string()
-    .min(1, 'CNPJ e obrigatorio')
-    .refine((val) => validateCNPJ(val), 'CNPJ invalido'),
+    .min(1, 'CNPJ é obrigatório')
+    .refine((val) => validateCNPJ(val), 'CNPJ inválido'),
   razao_social: z.string()
-    .min(1, 'Razao Social e obrigatoria')
-    .max(255, 'Razao Social deve ter no maximo 255 caracteres'),
+    .min(1, 'Razão Social é obrigatória')
+    .max(255, 'Razão Social deve ter no máximo 255 caracteres'),
   nome_fantasia: z.string().max(255),
   endereco: z.string(),
   cidade: z.string(),
@@ -24,7 +24,7 @@ const empresaFormSchema = z.object({
   telefone: z.string().max(20),
   email: z.string().refine(
     (val) => val === '' || z.string().email().safeParse(val).success,
-    'Email invalido',
+    'Email inválido',
   ),
 });
 
@@ -287,7 +287,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Cadastrar Empresa'}
+          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Cadastrar Empresa'}
         </button>
       </div>
     </form>

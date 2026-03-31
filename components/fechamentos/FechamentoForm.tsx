@@ -173,7 +173,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
           {/* Tipo */}
           <div>
             <label className="mb-2 block text-base font-medium text-primary-700">
-              Tipo de Periodo *
+              Tipo de Período *
             </label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2 text-base text-primary-900">
@@ -243,8 +243,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
           {/* Observacao */}
           <div>
             <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
-              Observacao
-            </label>
+              Observação            </label>
             <textarea
               id="observacao"
               value={observacao}
@@ -252,7 +251,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
               rows={2}
               maxLength={1000}
               className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              placeholder="Observacao opcional..."
+              placeholder="Observação opcional..."
             />
           </div>
 
@@ -315,7 +314,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
             {viagensOpen && (
               <div className="border-t border-surface-border">
                 {preview.viagens.length === 0 ? (
-                  <p className="px-4 py-3 text-sm text-primary-500">Nenhuma viagem concluida no periodo.</p>
+                  <p className="px-4 py-3 text-sm text-primary-500">Nenhuma viagem concluída no período.</p>
                 ) : (
                   <table className="w-full text-sm">
                     <thead>
@@ -374,14 +373,14 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
             {gastosOpen && (
               <div className="border-t border-surface-border">
                 {preview.gastos.length === 0 ? (
-                  <p className="px-4 py-3 text-sm text-primary-500">Nenhum gasto no periodo.</p>
+                  <p className="px-4 py-3 text-sm text-primary-500">Nenhum gasto no período.</p>
                 ) : (
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-surface-border bg-surface-muted text-left">
                         <th className="px-4 py-2 font-medium text-primary-700">Data</th>
                         <th className="px-4 py-2 font-medium text-primary-700">Categoria</th>
-                        <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
+                        <th className="px-4 py-2 font-medium text-primary-700">Descrição</th>
                         <th className="px-4 py-2 text-right font-medium text-primary-700">Valor</th>
                       </tr>
                     </thead>

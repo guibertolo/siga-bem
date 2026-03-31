@@ -125,7 +125,7 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
                 </Link>
               )}
               <span className="text-sm text-primary-500">
-                Pagina {page} de {totalPages}
+                Página {page} de {totalPages}
               </span>
               {page < totalPages && (
                 <Link

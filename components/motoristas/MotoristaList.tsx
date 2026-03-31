@@ -151,8 +151,8 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                 <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Categoria</th>
                 <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Validade CNH</th>
                 <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Telefone</th>
-                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Situacao</th>
-                <th className="px-4 py-3.5 text-right text-base font-medium text-primary-500">Acoes</th>
+                <th className="px-4 py-3.5 text-left text-base font-medium text-primary-500">Situação</th>
+                <th className="px-4 py-3.5 text-right text-base font-medium text-primary-500">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border">

@@ -20,29 +20,29 @@ import { VIAGEM_STATUS_TRANSITIONS } from '@/types/viagem';
 
 const viagemSchema = z.object({
   motorista_id: z.string().uuid('Selecione um motorista'),
-  caminhao_id: z.string().uuid('Selecione um caminhao'),
+  caminhao_id: z.string().uuid('Selecione um caminhão'),
   origem: z.string()
-    .min(1, 'Origem e obrigatoria')
-    .max(200, 'Origem deve ter no maximo 200 caracteres'),
+    .min(1, 'Origem é obrigatória')
+    .max(200, 'Origem deve ter no máximo 200 caracteres'),
   destino: z.string()
-    .min(1, 'Destino e obrigatorio')
-    .max(200, 'Destino deve ter no maximo 200 caracteres'),
+    .min(1, 'Destino é obrigatório')
+    .max(200, 'Destino deve ter no máximo 200 caracteres'),
   data_saida: z.string()
-    .min(1, 'Data de saida e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data de saida invalida'),
+    .min(1, 'Data de saída é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data de saída inválida'),
   data_chegada_prevista: z.string()
     .refine(
       (val) => val === '' || !isNaN(Date.parse(val)),
-      'Data de chegada prevista invalida',
+      'Data de chegada prevista inválida',
     ),
   valor_total: z.string()
-    .min(1, 'Valor total e obrigatorio')
+    .min(1, 'Valor total é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
     }, 'Valor total deve ser maior que zero'),
   percentual_pagamento: z.string()
-    .min(1, 'Percentual e obrigatorio')
+    .min(1, 'Percentual é obrigatório')
     .refine((val) => {
       const num = parseFloat(val.replace(',', '.'));
       return !isNaN(num) && num >= 0 && num <= 100;
@@ -57,7 +57,7 @@ const viagemSchema = z.object({
       (val) => val === '' || (!isNaN(Number(val)) && Number(val) >= 0),
       'KM saida deve ser um numero positivo',
     ),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
 });
 
 function extractFieldErrors(
@@ -86,7 +86,7 @@ export async function listMotoristasAtivos(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -126,7 +126,7 @@ export async function listCaminhoesPorMotorista(
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -182,16 +182,16 @@ export async function createViagem(
 ): Promise<ViagemActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   // Motorista must have a motorista_id linked
   if (usuario.role === 'motorista' && !usuario.motorista_id) {
-    return { success: false, error: 'Voce nao possui perfil de motorista vinculado. Solicite ao proprietario.' };
+    return { success: false, error: 'Você não possui perfil de motorista vinculado. Solicite ao proprietario.' };
   }
 
   const parsed = viagemSchema.safeParse(formData);
@@ -203,7 +203,7 @@ export async function createViagem(
 
   const valorCentavos = parseBrlInputToCentavos(data.valor_total);
   if (valorCentavos === null || valorCentavos <= 0) {
-    return { success: false, fieldErrors: { valor_total: 'Valor invalido' } };
+    return { success: false, fieldErrors: { valor_total: 'Valor inválido' } };
   }
 
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
@@ -277,11 +277,11 @@ export async function updateViagem(
 ): Promise<ViagemActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   const supabase = await createClient();
@@ -294,12 +294,12 @@ export async function updateViagem(
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   // Only editable when planejada or em_andamento
   if (existing.status !== 'planejada' && existing.status !== 'em_andamento') {
-    return { success: false, error: 'Viagem concluida ou cancelada nao pode ser editada' };
+    return { success: false, error: 'Viagem concluída ou cancelada não pode ser editada' };
   }
 
   const parsed = viagemSchema.safeParse(formData);
@@ -311,7 +311,7 @@ export async function updateViagem(
 
   const valorCentavos = parseBrlInputToCentavos(data.valor_total);
   if (valorCentavos === null || valorCentavos <= 0) {
-    return { success: false, fieldErrors: { valor_total: 'Valor invalido' } };
+    return { success: false, fieldErrors: { valor_total: 'Valor inválido' } };
   }
 
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
@@ -332,7 +332,7 @@ export async function updateViagem(
   if (coreFieldChanged && !camposEditaveis) {
     return {
       success: false,
-      error: 'Campos bloqueados para edicao. Origem, destino e valor nao podem ser alterados.',
+      error: 'Campos bloqueados para edição. Origem, destino e valor não podem ser alterados.',
     };
   }
 
@@ -377,7 +377,7 @@ export async function updateViagemStatus(
 ): Promise<ViagemActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -389,14 +389,14 @@ export async function updateViagemStatus(
     .single();
 
   if (fetchError || !viagem) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   const transicoesValidas = VIAGEM_STATUS_TRANSITIONS[viagem.status as ViagemStatus];
   if (!transicoesValidas.includes(novoStatus)) {
     return {
       success: false,
-      error: `Transicao invalida: ${viagem.status} para ${novoStatus}`,
+      error: `Transição inválida: ${viagem.status} para ${novoStatus}`,
     };
   }
 
@@ -418,7 +418,7 @@ export async function updateViagemStatus(
   if (novoStatus === 'concluida' && !dataChegadaReal) {
     return {
       success: false,
-      error: 'Data de chegada real e obrigatoria para concluir viagem',
+      error: 'Data de chegada real é obrigatória para concluir viagem',
     };
   }
 
@@ -464,7 +464,7 @@ export async function updateViagemObservacao(
 ): Promise<ViagemActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -477,7 +477,7 @@ export async function updateViagemObservacao(
     .single();
 
   if (updateError) {
-    return { success: false, error: 'Erro ao atualizar observacao. Tente novamente.' };
+    return { success: false, error: 'Erro ao atualizar observação. Tente novamente.' };
   }
 
   revalidatePath('/viagens');
@@ -493,11 +493,11 @@ export async function deleteViagem(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode excluir viagens' };
+    return { success: false, error: 'Motorista não pode excluir viagens' };
   }
 
   const supabase = await createClient();
@@ -510,7 +510,7 @@ export async function deleteViagem(
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   if (existing.status !== 'planejada') {
@@ -539,7 +539,7 @@ export async function getViagem(
 ): Promise<ViagemActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -554,7 +554,7 @@ export async function getViagem(
     .single();
 
   if (error || !viagem) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   return { success: true, viagem: viagem as unknown as Viagem };
@@ -578,7 +578,7 @@ export async function listViagens(filters?: {
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, total: 0, error: 'Nao autenticado' };
+    return { data: null, total: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -668,16 +668,16 @@ export async function invalidarViagem(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   // Only dono/admin can invalidate
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode invalidar viagens' };
+    return { success: false, error: 'Motorista não pode invalidar viagens' };
   }
 
   if (!motivo || motivo.trim().length < 10) {
@@ -693,7 +693,7 @@ export async function invalidarViagem(
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   if (existing.status === 'cancelada') {
@@ -732,7 +732,7 @@ export async function listCidadesUsadas(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: [], error: 'Nao autenticado' };
+    return { data: [], error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -766,7 +766,7 @@ export async function getViagensEmAndamento(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { count: 0, error: 'Nao autenticado' };
+    return { count: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();

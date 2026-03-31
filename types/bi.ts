@@ -202,6 +202,7 @@ export interface BIEficienciaMotoristaItem {
   totalLitros: number;
   totalGastoCentavos: number;
   totalAbastecimentos: number;
+  totalViagens: number;
   classificacao: 'bom' | 'medio' | 'ruim' | null;
   metodo: 'viagem' | 'estimativa' | null;
 }
@@ -234,4 +235,56 @@ export interface BIManutencaoTipoItem {
   categoriaCor: string | null;
   totalCentavos: number;
   qtdEventos: number;
+}
+
+// ---------------------------------------------------------------------------
+// BI Alertas de Anomalia
+// ---------------------------------------------------------------------------
+
+/**
+ * Anomaly alert detected in fleet data.
+ * Used by the "Alertas" section at the top of the BI dashboard.
+ */
+export interface BIAlerta {
+  tipo: 'combustivel' | 'manutencao' | 'pneu' | 'gasto_acima_media';
+  severidade: 'alto' | 'medio';
+  titulo: string;
+  descricao: string;
+  entidade: string;
+  valor: string;
+  referencia: string;
+}
+
+// ---------------------------------------------------------------------------
+// BI Benchmarking Setor (Phase 2 — cross-company anonymous)
+// ---------------------------------------------------------------------------
+
+/**
+ * Sector benchmark data per truck type.
+ * Data comes from benchmarking_setor table (aggregated, anonymous).
+ * LGPD Art. 12 compliant — no individual empresa data exposed.
+ * k-anonymity: only shown when total_empresas >= 5.
+ */
+export interface BIBenchmarkSetor {
+  tipoCegonha: string;
+  totalEmpresas: number;
+  medianaKml: number | null;
+  medianaCustoPorKm: number | null;          // centavos
+  medianaPctCombustivelFrete: number | null;  // 0-100
+  medianaMargemViagem: number | null;         // 0-100 %
+  medianaManutencoesPorCaminhao: number | null;
+  atualizadoEm: string;
+}
+
+/**
+ * The user's own fleet metrics for the same period,
+ * used to compare against sector benchmarks.
+ */
+export interface BIBenchmarkProprio {
+  tipoCegonha: string;
+  kml: number | null;
+  custoPorKm: number | null;                 // centavos
+  pctCombustivelFrete: number | null;        // 0-100
+  margemViagem: number | null;               // 0-100 %
+  manutencoesPorCaminhao: number | null;
 }

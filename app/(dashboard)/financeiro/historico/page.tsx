@@ -5,7 +5,7 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Historico de Acertos',
+  title: 'Histórico de Acertos',
 };
 import {
   getFechamentosHistorico,
@@ -64,7 +64,7 @@ export default async function HistoricoPage({ searchParams }: HistoricoPageProps
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-primary-900">
-            Historico de Acertos
+            Histórico de Acertos
           </h1>
           <p className="mt-1 text-sm text-primary-500">
             {isMotorista

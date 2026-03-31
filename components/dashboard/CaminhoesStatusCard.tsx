@@ -15,7 +15,7 @@ export function CaminhoesStatusCard({ caminhoes }: CaminhoesStatusCardProps) {
       className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-primary-900">Caminhoes</h3>
+        <h3 className="text-lg font-semibold text-primary-900">Caminhões</h3>
         <span className="text-sm font-medium text-primary-500 tabular-nums">
           {rodando}/{total} rodando
         </span>
@@ -23,7 +23,7 @@ export function CaminhoesStatusCard({ caminhoes }: CaminhoesStatusCardProps) {
 
       {total === 0 ? (
         <p className="text-sm text-text-muted">
-          Nenhum caminhao cadastrado.
+          Nenhum caminhão cadastrado.
         </p>
       ) : (
         <ul className="space-y-2" role="list">

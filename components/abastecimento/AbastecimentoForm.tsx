@@ -117,7 +117,7 @@ export function AbastecimentoForm({
     if (!litros || litros <= 0) {
       errors.litros = 'Litros deve ser maior que zero';
     } else if (litros > 9999.999) {
-      errors.litros = 'Litros deve ser no maximo 9.999,999';
+      errors.litros = 'Litros deve ser no máximo 9.999,999';
     }
 
     if (!valorCentavos || valorCentavos <= 0) {
@@ -129,7 +129,7 @@ export function AbastecimentoForm({
     }
 
     if (!data) {
-      errors.data = 'Data e obrigatoria';
+      errors.data = 'Data é obrigatória';
     }
 
     if (kmOdometro != null) {
@@ -242,7 +242,7 @@ export function AbastecimentoForm({
             <p className="text-sm font-medium text-primary-900">{origem} &rarr; {destino}</p>
           </div>
           <div>
-            <p className="text-xs text-primary-500">Caminhao</p>
+            <p className="text-xs text-primary-500">Caminhão</p>
             <p className="text-sm font-medium text-primary-900">{caminhaoPlaca}</p>
           </div>
           <div>
@@ -297,7 +297,7 @@ export function AbastecimentoForm({
       {/* Preco por litro (AC 6) — readonly, calculated */}
       {precoLitro && (
         <div className="rounded-lg border border-info/20 bg-alert-info-bg p-4">
-          <p className="text-sm text-primary-500">Preco por litro (calculado automaticamente)</p>
+          <p className="text-sm text-primary-500">Preço por litro (calculado automaticamente)</p>
           <p className="mt-1 text-lg font-bold tabular-nums text-primary-900">
             R$ {precoLitro}/L
           </p>
@@ -393,8 +393,7 @@ export function AbastecimentoForm({
       {/* Observacao (AC 5) */}
       <div>
         <label htmlFor="observacao" className={labelClass}>
-          Observacao
-        </label>
+          Observação        </label>
         <textarea
           id="observacao"
           rows={3}

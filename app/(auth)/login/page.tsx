@@ -73,7 +73,7 @@ export default function LoginPage() {
         {success ? (
           <div className="bg-alert-success-bg rounded-default p-4 text-center text-sm text-success">
             {mode === 'recuperar'
-              ? 'Se este email estiver cadastrado, voce recebera um link de recuperacao em breve.'
+              ? 'Se este email estiver cadastrado, você receberá um link de recuperação em breve.'
               : 'Link de acesso enviado! Verifique sua caixa de entrada.'}
           </div>
         ) : (
@@ -152,7 +152,7 @@ export default function LoginPage() {
                   ? 'Entrar'
                   : mode === 'magic-link'
                     ? 'Enviar link de acesso'
-                    : 'Enviar link de recuperacao'}
+                    : 'Enviar link de recuperação'}
             </button>
           </form>
         )}

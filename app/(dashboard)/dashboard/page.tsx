@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 
 export const metadata: Metadata = {
-  title: 'Inicio',
+  title: 'Início',
 };
 
 import { ReceitaMesCard } from '@/components/dashboard/ReceitaMesCard';
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <h2 className="text-2xl font-bold text-primary-900 mb-1">
-        Inicio
+        Início
       </h2>
       <p className="text-sm text-primary-700 mb-6">
         Bem-vindo, {currentUsuario?.nome ?? user?.email}

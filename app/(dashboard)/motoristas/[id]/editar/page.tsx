@@ -13,7 +13,7 @@ export default async function EditarMotoristaPage({ params }: EditarMotoristaPag
   const result = await getMotorista(id);
 
   if (!result.success) {
-    if (result.error === 'Usuario nao autenticado') {
+    if (result.error === 'Usuário não autenticado') {
       redirect('/login');
     }
     notFound();

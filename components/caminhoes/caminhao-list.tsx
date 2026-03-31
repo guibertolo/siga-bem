@@ -26,7 +26,7 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
   if (caminhoes.length === 0) {
     return (
       <div className="rounded-xl border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-base text-primary-500">Nenhum caminhao cadastrado.</p>
+        <p className="text-base text-primary-500">Nenhum caminhão cadastrado.</p>
         <p className="mt-1 text-sm text-text-muted">Adicione seu primeiro caminhao para comecar a gerenciar a frota.</p>
         <Link
           href="/caminhoes/cadastro"
@@ -58,8 +58,8 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Capacidade</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-right">Km Atual</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Situacao</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Acoes</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Situação</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -101,7 +101,7 @@ function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
         </span>
       </div>
       <div className="text-sm text-primary-700 space-y-0.5">
-        <p>{tipoLabel} - {caminhao.capacidade_veiculos} veiculos</p>
+        <p>{tipoLabel} - {caminhao.capacidade_veiculos} veículos</p>
         <p>{caminhao.km_atual.toLocaleString('pt-BR')} km</p>
       </div>
       <div className="mt-3 flex items-center gap-2">

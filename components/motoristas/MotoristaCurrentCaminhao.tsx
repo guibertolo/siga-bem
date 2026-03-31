@@ -30,7 +30,7 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-4">
       <h3 className="mb-3 text-sm font-semibold text-primary-900">
-        {vinculos.length > 1 ? 'Caminhoes Atuais' : 'Caminhao Atual'}
+        {vinculos.length > 1 ? 'Caminhões Atuais' : 'Caminhão Atual'}
       </h3>
 
       {vinculos.length > 0 ? (
@@ -67,7 +67,7 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
         </div>
       ) : (
         <div className="space-y-2">
-          <p className="text-sm text-primary-500">Nenhum caminhao vinculado.</p>
+          <p className="text-sm text-primary-500">Nenhum caminhão vinculado.</p>
           {!canManageVinculos && (
             <Link
               href="/vinculos/novo"

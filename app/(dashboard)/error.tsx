@@ -14,7 +14,7 @@ export default function DashboardError({
           Algo deu errado
         </h2>
         <p className="text-base text-primary-700 mb-6">
-          Houve um problema ao carregar esta pagina. Tente novamente.
+          Houve um problema ao carregar esta página. Tente novamente.
         </p>
         <button
           onClick={reset}

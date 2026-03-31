@@ -52,7 +52,7 @@ export function FechamentoStatusActions({
       }
 
       if (!result.success) {
-        setError(result.error ?? 'Erro na operacao');
+        setError(result.error ?? 'Erro na operação');
         return;
       }
 

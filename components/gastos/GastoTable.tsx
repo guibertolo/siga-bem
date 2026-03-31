@@ -158,7 +158,7 @@ export function GastoTable({ gastos, isMotorista = false, isDono = false }: Gast
                 Comp.
               </th>
               <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">
-                Acoes
+                Ações
               </th>
             </tr>
           </thead>
@@ -281,7 +281,7 @@ export function GastoTable({ gastos, isMotorista = false, isDono = false }: Gast
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="mx-4 w-full max-w-sm rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl space-y-4">
               <p className="text-base font-bold text-danger">Tem certeza que deseja excluir este gasto?</p>
-              <p className="text-sm text-primary-500">Esta acao nao pode ser desfeita.</p>
+              <p className="text-sm text-primary-500">Esta ação não pode ser desfeita.</p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"

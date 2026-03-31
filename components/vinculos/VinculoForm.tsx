@@ -16,9 +16,9 @@ import type {
 
 const vinculoFormSchema = z.object({
   motorista_id: z.string().min(1, 'Selecione um motorista'),
-  caminhao_id: z.string().min(1, 'Selecione um caminhao'),
-  data_inicio: z.string().min(1, 'Data de inicio e obrigatoria'),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+  caminhao_id: z.string().min(1, 'Selecione um caminhão'),
+  data_inicio: z.string().min(1, 'Data de início é obrigatória'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
 });
 
 type FormValues = z.infer<typeof vinculoFormSchema>;
@@ -159,7 +159,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
       {/* Caminhao Select */}
       <div>
         <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-700">
-          Caminhao *
+          Caminhão *
         </label>
         <select
           id="caminhao_id"
@@ -175,7 +175,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           )}
           disabled={isPending}
         >
-          <option value="">Selecione um caminhao</option>
+          <option value="">Selecione um caminhão</option>
           {caminhoes.map((c) => (
             <option key={c.id} value={c.id}>
               {c.placa} — {c.modelo}
@@ -221,8 +221,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
       {/* Observacao */}
       <div>
         <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
-          Observacao
-        </label>
+          Observação        </label>
         <textarea
           id="observacao"
           rows={3}

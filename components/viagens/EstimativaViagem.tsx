@@ -116,7 +116,7 @@ export function EstimativaViagem({
 
         <div>
           <p className="text-xs text-primary-500">
-            Preco diesel
+            Preço diesel
             <span className="ml-1 text-xs text-text-muted">
               ({estimativa.preco_diesel_fonte === 'tabela' ? 'tabela' : 'padrao'})
             </span>

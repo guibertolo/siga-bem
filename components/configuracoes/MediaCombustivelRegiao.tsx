@@ -73,9 +73,9 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
               )}
             </div>
 
-            {/* Preco medio destaque */}
+            {/* Preço médio destaque */}
             <div className="mb-4">
-              <p className="text-sm text-primary-500">Preco medio/litro</p>
+              <p className="text-sm text-primary-500">Preço médio/litro</p>
               <p className="text-2xl font-bold tabular-nums text-primary-900">
                 {formatPrecoLitro(regiao.preco_medio_litro)}
               </p>
@@ -112,7 +112,7 @@ export function MediaCombustivelRegiao({ data }: MediaCombustivelRegiaoProps) {
             {/* Ultima data */}
             <div className="mt-3 border-t border-surface-border pt-3">
               <p className="text-xs text-text-muted">
-                Ultimo abastecimento: {formatDate(regiao.ultima_data)}
+                Último abastecimento: {formatDate(regiao.ultima_data)}
               </p>
             </div>
           </div>

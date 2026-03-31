@@ -11,13 +11,13 @@ import { EmpresaSwitcher } from '@/components/empresa/EmpresaSwitcher';
 
 // Motorista: menu ultra simplificado (só o essencial)
 const motoristaLinks = [
-  { href: '/dashboard', label: 'Inicio' },
+  { href: '/dashboard', label: 'Início' },
   { href: '/viagens', label: 'Minhas Viagens' },
 ];
 
 // Dono/Admin: menu completo com acertos unificado
 const donoLinks = [
-  { href: '/dashboard', label: 'Inicio' },
+  { href: '/dashboard', label: 'Início' },
   { href: '/empresa', label: 'Empresa' },
   { href: '/viagens', label: 'Viagens' },
   { href: '/gastos', label: 'Gastos' },
@@ -26,10 +26,10 @@ const donoLinks = [
 
 const adminLinks = [
   { href: '/motoristas', label: 'Motoristas' },
-  { href: '/caminhoes', label: 'Caminhoes' },
-  { href: '/vinculos', label: 'Vinculos Mot./Cam.' },
-  { href: '/usuarios', label: 'Usuarios' },
-  { href: '/configuracoes/combustivel', label: 'Preco Combustivel' },
+  { href: '/caminhoes', label: 'Caminhões' },
+  { href: '/vinculos', label: 'Vínculos Mot./Cam.' },
+  { href: '/usuarios', label: 'Usuários' },
+  { href: '/configuracoes/combustivel', label: 'Preço Combustível' },
 ];
 
 export default async function DashboardLayout({

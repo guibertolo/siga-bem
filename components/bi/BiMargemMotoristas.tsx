@@ -21,7 +21,7 @@ function margemBadgeBg(pct: number): string {
 }
 
 /**
- * Margem por Motorista — ranked table showing profitability per driver.
+ * Lucro por Motorista — ranked table showing profitability per driver.
  * Green > 40%, Yellow 20-40%, Red < 20%.
  */
 export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
@@ -29,10 +29,10 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Margem por Motorista
+          Lucro por Motorista
         </h3>
         <p className="text-base text-text-muted">
-          Nenhuma viagem concluida com motorista no periodo selecionado.
+          Nenhuma viagem concluída com motorista no período selecionado.
         </p>
       </div>
     );
@@ -41,7 +41,7 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-1">
-        Margem por Motorista
+        Lucro por Motorista
       </h3>
       <p className="text-sm text-primary-500 mb-4">
         Lucro de cada motorista nas viagens concluidas

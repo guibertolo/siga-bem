@@ -19,22 +19,22 @@ const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as cons
 
 const motoristaSchema = z.object({
   nome: z.string()
-    .min(1, 'Nome e obrigatorio')
-    .max(255, 'Nome deve ter no maximo 255 caracteres'),
+    .min(1, 'Nome é obrigatório')
+    .max(255, 'Nome deve ter no máximo 255 caracteres'),
   cpf: z.string()
-    .min(1, 'CPF e obrigatorio')
-    .refine((val) => validateCPF(val), 'CPF invalido'),
+    .min(1, 'CPF é obrigatório')
+    .refine((val) => validateCPF(val), 'CPF inválido'),
   cnh_numero: z.string()
-    .min(1, 'Numero da CNH e obrigatorio')
-    .max(20, 'Numero da CNH deve ter no maximo 20 caracteres'),
+    .min(1, 'Número da CNH é obrigatório')
+    .max(20, 'Número da CNH deve ter no máximo 20 caracteres'),
   cnh_categoria: z.enum(CNH_CATEGORIAS, {
-    error: 'Categoria da CNH invalida',
+    error: 'Categoria da CNH inválida',
   }),
   cnh_validade: z.string()
-    .min(1, 'Validade da CNH e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data invalida'),
-  telefone: z.string().max(20, 'Telefone deve ter no maximo 20 caracteres'),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+    .min(1, 'Validade da CNH é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data inválida'),
+  telefone: z.string().max(20, 'Telefone deve ter no máximo 20 caracteres'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
   percentual_pagamento: z.string()
     .refine(
       (val) => {
@@ -57,7 +57,7 @@ export async function createMotorista(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -133,7 +133,7 @@ export async function createMotorista(
  * Estende o schema base com email obrigatorio.
  */
 const motoristaComContaSchema = motoristaSchema.extend({
-  email: z.string().min(1, 'Email e obrigatorio').email('Email invalido'),
+  email: z.string().min(1, 'Email é obrigatório').email('Email inválido'),
   criar_conta: z.literal(true),
 });
 
@@ -158,7 +158,7 @@ export async function createMotoristaComConta(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -323,7 +323,7 @@ export async function updateMotorista(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -377,7 +377,7 @@ export async function softDeleteMotorista(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -405,7 +405,7 @@ export async function reactivateMotorista(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -435,7 +435,7 @@ export async function listMotoristas(): Promise<{
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -474,7 +474,7 @@ export async function getMotorista(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -487,7 +487,7 @@ export async function getMotorista(
     .single();
 
   if (error || !motorista) {
-    return { success: false, error: 'Motorista nao encontrado' };
+    return { success: false, error: 'Motorista não encontrado' };
   }
 
   return { success: true, motorista };

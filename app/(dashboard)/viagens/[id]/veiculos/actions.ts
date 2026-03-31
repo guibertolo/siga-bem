@@ -42,12 +42,12 @@ async function checkViagemEditable(
     .single();
 
   if (error || !viagem) {
-    return { error: 'Viagem nao encontrada', empresaId: null };
+    return { error: 'Viagem não encontrada', empresaId: null };
   }
 
   if (viagem.status === 'concluida' || viagem.status === 'cancelada') {
     return {
-      error: 'Nao e possivel alterar veiculos de viagem concluida ou cancelada',
+      error: 'Não é possível alterar veículos de viagem concluída ou cancelada',
       empresaId: null,
     };
   }
@@ -64,7 +64,7 @@ export async function listVeiculosViagem(
 ): Promise<{ data: ViagemVeiculo[] | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -91,16 +91,16 @@ export async function addVeiculoViagem(
 ): Promise<ViagemVeiculoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   const { error: statusError, empresaId } = await checkViagemEditable(viagemId);
   if (statusError || !empresaId) {
-    return { success: false, error: statusError ?? 'Viagem nao encontrada' };
+    return { success: false, error: statusError ?? 'Viagem não encontrada' };
   }
 
   const parsed = viagemVeiculoSchema.safeParse(formData);
@@ -146,11 +146,11 @@ export async function updateVeiculoViagem(
 ): Promise<ViagemVeiculoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   const { error: statusError } = await checkViagemEditable(viagemId);
@@ -199,7 +199,7 @@ export async function removeVeiculoViagem(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const { error: statusError } = await checkViagemEditable(viagemId);

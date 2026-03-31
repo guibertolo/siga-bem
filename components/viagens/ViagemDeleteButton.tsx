@@ -43,7 +43,7 @@ export function ViagemDeleteButton({ viagemId }: ViagemDeleteButtonProps) {
       {showConfirm ? (
         <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 space-y-3">
           <p className="text-sm font-medium text-danger">
-            Tem certeza que deseja excluir esta viagem? Esta acao nao pode ser desfeita.
+            Tem certeza que deseja excluir esta viagem? Esta ação não pode ser desfeita.
           </p>
           <div className="flex items-center gap-2">
             <button

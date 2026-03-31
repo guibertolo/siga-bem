@@ -21,7 +21,7 @@ export async function switchEmpresa(
   // Verify authentication
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: 'Usuario nao autenticado' };
+    return { success: false, error: 'Usuário não autenticado' };
   }
 
   // Call the SQL function that validates binding + switches empresa
@@ -33,7 +33,7 @@ export async function switchEmpresa(
     return {
       success: false,
       error: error.message.includes('vinculo')
-        ? 'Voce nao possui vinculo ativo com esta empresa.'
+        ? 'Você não possui vinculo ativo com esta empresa.'
         : 'Erro ao trocar empresa. Tente novamente.',
     };
   }

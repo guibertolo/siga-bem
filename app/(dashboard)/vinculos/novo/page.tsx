@@ -9,14 +9,14 @@ export default async function NovoVinculoPage() {
     getActiveCaminhoes(),
   ]);
 
-  if (motoristasResult.error === 'Nao autenticado' || caminhoesResult.error === 'Nao autenticado') {
+  if (motoristasResult.error === 'Não autenticado' || caminhoesResult.error === 'Não autenticado') {
     redirect('/login');
   }
 
-  if (motoristasResult.error === 'Permissao insuficiente' || caminhoesResult.error === 'Permissao insuficiente') {
+  if (motoristasResult.error === 'Permissão insuficiente' || caminhoesResult.error === 'Permissão insuficiente') {
     return (
       <div className="w-full max-w-4xl">
-        <p className="text-sm text-danger">Voce nao tem permissao para acessar esta pagina.</p>
+        <p className="text-sm text-danger">Você não tem permissão para acessar esta página.</p>
       </div>
     );
   }

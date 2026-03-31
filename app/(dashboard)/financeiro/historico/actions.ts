@@ -24,7 +24,7 @@ export async function getFechamentosHistorico(
     const usuario = await getCurrentUsuario();
 
     if (!usuario) {
-      return { error: 'Nao autenticado' };
+      return { error: 'Não autenticado' };
     }
 
     const { pagina, pageSize } = filtros;
@@ -119,7 +119,7 @@ export async function getResumoFinanceiro(): Promise<{
     const usuario = await getCurrentUsuario();
 
     if (!usuario) {
-      return { error: 'Nao autenticado' };
+      return { error: 'Não autenticado' };
     }
 
     // Only dono/admin see the summary
@@ -194,7 +194,7 @@ export async function reabrirFechamento(
     const usuario = await getCurrentUsuario();
 
     if (!usuario) {
-      return { success: false, error: 'Nao autenticado' };
+      return { success: false, error: 'Não autenticado' };
     }
 
     // Only dono can reopen (gestor/admin restricted)
@@ -213,13 +213,13 @@ export async function reabrirFechamento(
       .single();
 
     if (!fechamento) {
-      return { success: false, error: 'Fechamento nao encontrado.' };
+      return { success: false, error: 'Fechamento não encontrado.' };
     }
 
     if (fechamento.status === 'pago') {
       return {
         success: false,
-        error: 'Fechamentos com status "pago" nao podem ser reabertos.',
+        error: 'Fechamentos com status "pago" não podem ser reabertos.',
       };
     }
 

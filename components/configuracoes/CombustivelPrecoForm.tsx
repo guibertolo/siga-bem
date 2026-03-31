@@ -18,21 +18,21 @@ import type {
 
 const formSchema = z.object({
   regiao: z.string()
-    .min(1, 'Regiao e obrigatoria')
-    .max(100, 'Maximo 100 caracteres'),
+    .min(1, 'Região é obrigatória')
+    .max(100, 'Máximo 100 caracteres'),
   tipo: z.enum(['diesel_s10', 'diesel_comum'], {
-    error: 'Selecione um tipo de combustivel',
+    error: 'Selecione um tipo de combustível',
   }),
   preco: z.string()
-    .min(1, 'Preco e obrigatorio')
+    .min(1, 'Preço é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
-    }, 'Preco deve ser maior que zero'),
+    }, 'Preço deve ser maior que zero'),
   data_referencia: z.string()
-    .min(1, 'Data e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data invalida'),
-  fonte: z.string().max(100, 'Maximo 100 caracteres'),
+    .min(1, 'Data é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data inválida'),
+  fonte: z.string().max(100, 'Máximo 100 caracteres'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -111,7 +111,7 @@ export function CombustivelPrecoForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="regiao" className="mb-2 block text-base font-medium text-primary-700">
-            Regiao *
+            Região *
           </label>
           <input
             id="regiao"
@@ -145,7 +145,7 @@ export function CombustivelPrecoForm({
 
         <div>
           <label htmlFor="preco" className="mb-2 block text-base font-medium text-primary-700">
-            Preco por litro (R$) *
+            Preço por litro (R$) *
           </label>
           <input
             id="preco"
@@ -200,7 +200,7 @@ export function CombustivelPrecoForm({
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          {isPending ? 'Salvando...' : preco ? 'Salvar Alteracoes' : 'Cadastrar'}
+          {isPending ? 'Salvando...' : preco ? 'Salvar Alterações' : 'Cadastrar'}
         </button>
         <button
           type="button"

@@ -29,12 +29,12 @@ const fechamentoSchema = z.object({
     message: 'Selecione o tipo de fechamento',
   }),
   periodo_inicio: z.string()
-    .min(1, 'Data inicio e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data inicio invalida'),
+    .min(1, 'Data início é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data início inválida'),
   periodo_fim: z.string()
-    .min(1, 'Data fim e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data fim invalida'),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+    .min(1, 'Data fim é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data fim inválida'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
 }).refine((data) => {
   return new Date(data.periodo_fim) >= new Date(data.periodo_inicio);
 }, {
@@ -68,11 +68,11 @@ export async function listMotoristasParaFechamento(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { data: null, error: 'Permissao insuficiente' };
+    return { data: null, error: 'Permissão insuficiente' };
   }
 
   const supabase = await createClient();
@@ -98,11 +98,11 @@ export async function previewFechamento(
 ): Promise<{ data: FechamentoCalculo | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { data: null, error: 'Permissao insuficiente' };
+    return { data: null, error: 'Permissão insuficiente' };
   }
 
   const supabase = await createClient();
@@ -153,11 +153,11 @@ export async function previewFechamentoDetalhado(
 ): Promise<{ data: PreviewFechamento | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { data: null, error: 'Permissao insuficiente' };
+    return { data: null, error: 'Permissão insuficiente' };
   }
 
   const supabase = await createClient();
@@ -261,11 +261,11 @@ export async function getViagensPendentesAcerto(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { data: null, error: 'Permissao insuficiente' };
+    return { data: null, error: 'Permissão insuficiente' };
   }
 
   const supabase = await createClient();
@@ -335,15 +335,15 @@ export async function createFechamento(
 ): Promise<FechamentoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode criar fechamentos' };
+    return { success: false, error: 'Motorista não pode criar fechamentos' };
   }
 
   const parsed = fechamentoSchema.safeParse(formData);
@@ -497,7 +497,7 @@ export async function listFechamentos(filters?: {
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, total: 0, error: 'Nao autenticado' };
+    return { data: null, total: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -566,7 +566,7 @@ export async function getFechamentoDetalhado(
 ): Promise<{ data: FechamentoDetalhado | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -581,7 +581,7 @@ export async function getFechamentoDetalhado(
     .single();
 
   if (fetchError || !fechamento) {
-    return { data: null, error: 'Fechamento nao encontrado' };
+    return { data: null, error: 'Fechamento não encontrado' };
   }
 
   const { data: itens, error: itensError } = await supabase
@@ -622,7 +622,7 @@ export async function reabrirFechamento(
 ): Promise<FechamentoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
   if (usuario.role !== 'dono') {
     return { success: false, error: 'Apenas o proprietario pode reabrir fechamentos.' };
@@ -639,7 +639,7 @@ export async function marcarComoPago(
 ): Promise<FechamentoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
   if (usuario.role !== 'dono') {
     return { success: false, error: 'Apenas o proprietario pode marcar como pago.' };
@@ -656,11 +656,11 @@ async function updateFechamentoStatus(
 ): Promise<FechamentoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Permissao insuficiente' };
+    return { success: false, error: 'Permissão insuficiente' };
   }
 
   const supabase = await createClient();
@@ -673,7 +673,7 @@ async function updateFechamentoStatus(
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Fechamento nao encontrado' };
+    return { success: false, error: 'Fechamento não encontrado' };
   }
 
   const currentStatus = existing.status as FechamentoStatus;
@@ -682,7 +682,7 @@ async function updateFechamentoStatus(
   if (!validTransitions.includes(novoStatus)) {
     return {
       success: false,
-      error: `Transicao invalida: ${currentStatus} para ${novoStatus}`,
+      error: `Transição inválida: ${currentStatus} para ${novoStatus}`,
     };
   }
 
@@ -728,7 +728,7 @@ export async function deleteFechamento(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role !== 'dono') {
@@ -744,7 +744,7 @@ export async function deleteFechamento(
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Fechamento nao encontrado' };
+    return { success: false, error: 'Fechamento não encontrado' };
   }
 
   if (existing.status !== 'aberto') {

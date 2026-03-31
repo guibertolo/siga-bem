@@ -67,7 +67,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
   if (vinculos.length === 0) {
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-base text-primary-500">Nenhum vinculo encontrado.</p>
+        <p className="text-base text-primary-500">Nenhum vínculo encontrado.</p>
         <p className="mt-1 text-sm text-text-muted">Vincule motoristas a caminhoes para gerenciar a frota.</p>
       </div>
     );
@@ -175,10 +175,10 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                     Caminhao
                   </th>
                   <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
-                    Periodo
+                    Período
                   </th>
                   <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
-                    Situacao
+                    Situação
                   </th>
                 </tr>
               </thead>

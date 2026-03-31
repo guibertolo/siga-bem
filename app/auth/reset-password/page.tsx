@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
     }
 
     if (novaSenha !== confirmarSenha) {
-      setError('As senhas nao coincidem');
+      setError('As senhas não coincidem');
       setLoading(false);
       return;
     }
@@ -118,7 +118,7 @@ export default function ResetPasswordPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-surface-background px-4 py-12">
         <div className="w-full max-w-[400px] bg-surface-card rounded-card p-8 shadow-sm text-center">
-          <p className="text-primary-700">Verificando link de recuperacao...</p>
+          <p className="text-primary-700">Verificando link de recuperação...</p>
         </div>
       </main>
     );
@@ -141,7 +141,7 @@ export default function ResetPasswordPage() {
 
         {!tokenValid ? (
           <div className="bg-alert-danger-bg rounded-default p-4 text-center text-sm text-danger">
-            Link de recuperacao invalido ou expirado. Solicite um novo.
+            Link de recuperação inválido ou expirado. Solicite um novo.
           </div>
         ) : success ? (
           <div className="bg-alert-success-bg rounded-default p-4 text-center text-sm text-success">
@@ -161,7 +161,7 @@ export default function ResetPasswordPage() {
                   type={showNovaSenha ? 'text' : 'password'}
                   required
                   minLength={8}
-                  placeholder="Minimo 8 caracteres"
+                  placeholder="Mínimo 8 caracteres"
                   className={inputClasses}
                 />
                 {eyeButton(showNovaSenha, () => setShowNovaSenha(!showNovaSenha))}

@@ -30,7 +30,7 @@ export default async function FechamentoDetalhePage({
     getCurrentUsuario(),
   ]);
 
-  if (result.error === 'Nao autenticado' || !usuario) {
+  if (result.error === 'Não autenticado' || !usuario) {
     redirect('/login');
   }
 
@@ -88,7 +88,7 @@ export default async function FechamentoDetalhePage({
             </p>
           </div>
           <div>
-            <p className="text-sm text-text-muted">Periodo</p>
+            <p className="text-sm text-text-muted">Período</p>
             <p className="font-medium text-primary-900">
               {formatarData(fechamento.periodo_inicio)} a{' '}
               {formatarData(fechamento.periodo_fim)}
@@ -192,7 +192,7 @@ export default async function FechamentoDetalhePage({
               <thead>
                 <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
-                  <th className="pb-2 font-medium">Descricao</th>
+                  <th className="pb-2 font-medium">Descrição</th>
                   <th className="pb-2 text-right font-medium">Valor</th>
                 </tr>
               </thead>
@@ -227,7 +227,7 @@ export default async function FechamentoDetalhePage({
               <thead>
                 <tr className="border-b text-left text-text-muted">
                   <th className="pb-2 font-medium">Data</th>
-                  <th className="pb-2 font-medium">Descricao</th>
+                  <th className="pb-2 font-medium">Descrição</th>
                   <th className="pb-2 text-right font-medium">Valor</th>
                 </tr>
               </thead>
@@ -251,7 +251,7 @@ export default async function FechamentoDetalhePage({
       {fechamento.observacao && (
         <div className="mb-6 rounded-lg border border-surface-border bg-surface-card p-6 shadow-sm">
           <h3 className="mb-2 text-lg font-semibold text-primary-900">
-            Observacao
+            Observação
           </h3>
           <p className="text-sm text-text-muted">{fechamento.observacao}</p>
         </div>

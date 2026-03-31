@@ -16,7 +16,7 @@ export async function trocarEmpresa(empresaId: string): Promise<{ success?: bool
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: 'Nao autenticado' };
+    return { error: 'Não autenticado' };
   }
 
   const { error } = await supabase.rpc('fn_switch_empresa', {

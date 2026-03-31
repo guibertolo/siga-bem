@@ -221,7 +221,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
 
             <div>
               <label htmlFor="vf-posicao" className="mb-2 block text-base font-medium text-primary-700">
-                Posicao na cegonha
+                Posição na cegonha
               </label>
               <input
                 id="vf-posicao"
@@ -246,8 +246,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
           {/* Observacao */}
           <div>
             <label htmlFor="vf-observacao" className="mb-2 block text-base font-medium text-primary-700">
-              Observacao
-            </label>
+              Observação            </label>
             <textarea
               id="vf-observacao"
               maxLength={300}

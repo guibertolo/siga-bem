@@ -17,7 +17,7 @@ export default async function CombustivelConfigPage() {
 
   const result = await listCombustivelPrecos();
 
-  if (result.error === 'Nao autenticado') {
+  if (result.error === 'Não autenticado') {
     redirect('/login');
   }
 
@@ -39,14 +39,14 @@ export default async function CombustivelConfigPage() {
           href="/dashboard"
           className="text-sm text-primary-500 transition-colors hover:text-primary-700"
         >
-          &larr; Voltar ao Inicio
+          &larr; Voltar ao Início
         </Link>
         <h2 className="mt-2 text-2xl font-bold text-primary-900">
-          Precos de Combustivel
+          Preços de Combustível
         </h2>
         <p className="mt-1 text-sm text-primary-500">
-          Configure os precos de referencia do diesel por regiao. Estes valores sao usados
-          no calculo de estimativa de custo das viagens.
+          Configure os preços de referência do diesel por região. Estes valores são usados
+          no cálculo de estimativa de custo das viagens.
         </p>
       </div>
 
@@ -55,10 +55,10 @@ export default async function CombustivelConfigPage() {
       {isDono && mediaData !== null && (
         <div className="mt-10">
           <h3 className="mb-1 text-xl font-bold text-primary-900">
-            Media Real por Regiao
+            Média Real por Região
           </h3>
           <p className="mb-4 text-sm text-primary-500">
-            Precos medios calculados a partir dos abastecimentos registrados pelos
+            Preços médios calculados a partir dos abastecimentos registrados pelos
             motoristas nas viagens.
           </p>
           <MediaCombustivelRegiao data={mediaData} />

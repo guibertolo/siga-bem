@@ -12,12 +12,15 @@ import {
   getBIMargemMotoristas,
   getBICategoriasBreakdown,
   getBIRankingCaminhoes,
-  getBIRankingMotoristas,
+  getBIEficienciaMotoristas,
   getBITendenciaMensal,
   getBIEficienciaCombustivel,
   getBIManutencoes,
+  getBIAlertas,
+  getBenchmarkSetor,
 } from '@/app/(dashboard)/bi/actions';
 import { BiFiltros } from '@/components/bi/BiFiltros';
+import { BiAlertas } from '@/components/bi/BiAlertas';
 import { BiKpiCards } from '@/components/bi/BiKpiCards';
 import { BiMargemMotoristas } from '@/components/bi/BiMargemMotoristas';
 import { BiBreakdownCategorias } from '@/components/bi/BiBreakdownCategorias';
@@ -27,6 +30,7 @@ import { BiTendenciaMensal } from '@/components/bi/BiTendenciaMensal';
 import { BiPrevisaoMargens } from '@/components/bi/BiPrevisaoMargens';
 import { BiEficienciaCombustivel } from '@/components/bi/BiEficienciaCombustivel';
 import { BiManutencoes } from '@/components/bi/BiManutencoes';
+import { BiBenchmarkSetor } from '@/components/bi/BiBenchmarkSetor';
 import type { BIFiltros } from '@/types/bi';
 
 interface BiPageProps {
@@ -76,6 +80,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
   // Fetch all data in parallel
   const [
     filterOpts,
+    alertas,
     kpis,
     margemMotoristas,
     categorias,
@@ -84,16 +89,19 @@ export default async function BiPage({ searchParams }: BiPageProps) {
     tendencia,
     eficiencia,
     manutencoes,
+    benchmark,
   ] = await Promise.all([
     getBIFilterOptions(),
+    getBIAlertas(filtros),
     getBIKpis(filtros),
     getBIMargemMotoristas(filtros),
     getBICategoriasBreakdown(filtros),
     getBIRankingCaminhoes(filtros),
-    getBIRankingMotoristas(filtros),
+    getBIEficienciaMotoristas(filtros),
     getBITendenciaMensal(filtros),
     getBIEficienciaCombustivel(filtros),
     getBIManutencoes(filtros),
+    getBenchmarkSetor(),
   ]);
 
   const options = filterOpts.data ?? {
@@ -124,9 +132,22 @@ export default async function BiPage({ searchParams }: BiPageProps) {
         </Suspense>
       </div>
 
-      {/* 2. Hero KPIs — profit-first cards */}
+      {/* 2. Alertas de Anomalia — first thing the dono sees */}
+      <div className="mb-6">
+        <BiAlertas data={alertas.data} verificados={alertas.verificados} />
+      </div>
+
+      {/* 3. Hero KPIs — profit-first cards */}
       <div className="mb-6">
         <BiKpiCards data={kpis.data} />
+      </div>
+
+      {/* 3b. Benchmark Setor — cross-company anonymous comparison */}
+      <div className="mb-6">
+        <BiBenchmarkSetor
+          setor={benchmark.data?.setor ?? null}
+          proprio={benchmark.data?.proprio ?? null}
+        />
       </div>
 
       {/* 3. Margem por Motorista */}

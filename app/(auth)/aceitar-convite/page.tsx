@@ -26,7 +26,7 @@ export default function AceitarConvitePage() {
       if (!session) {
         setStatus('error');
         setErrorMessage(
-          'Link de convite invalido ou expirado. Solicite um novo convite.',
+          'Link de convite inválido ou expirado. Solicite um novo convite.',
         );
         return;
       }

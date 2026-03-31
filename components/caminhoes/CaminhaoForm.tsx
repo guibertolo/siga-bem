@@ -8,16 +8,17 @@ import { validatePlaca, maskPlaca } from '@/lib/utils/validate-placa';
 import { validateRenavam } from '@/lib/utils/validate-renavam';
 import { maskKm } from '@/lib/utils/mask-km';
 import { TIPO_CEGONHA_OPTIONS } from '@/types/caminhao';
+import { CaminhaoAutocomplete } from '@/components/ui/CaminhaoAutocomplete';
 import type { Caminhao, CaminhaoFormData, CaminhaoActionResult } from '@/types/caminhao';
 import { cn } from '@/lib/utils/cn';
 
 const caminhaoFormSchema = z.object({
   placa: z.string()
-    .min(1, 'Placa e obrigatoria')
-    .refine((val) => validatePlaca(val), 'Placa invalida. Use formato Mercosul (ABC1D23) ou antigo (ABC-1234)'),
+    .min(1, 'Placa é obrigatória')
+    .refine((val) => validatePlaca(val), 'Placa inválida. Use formato Mercosul (ABC1D23) ou antigo (ABC-1234)'),
   modelo: z.string()
-    .min(1, 'Modelo e obrigatorio')
-    .max(100, 'Modelo deve ter no maximo 100 caracteres'),
+    .min(1, 'Modelo é obrigatório')
+    .max(100, 'Modelo deve ter no máximo 100 caracteres'),
   marca: z.string().max(100),
   ano: z.string().refine(
     (val) => {
@@ -26,17 +27,17 @@ const caminhaoFormSchema = z.object({
       const maxYear = new Date().getFullYear() + 1;
       return !isNaN(num) && num >= 1970 && num <= maxYear;
     },
-    'Ano invalido',
+    'Ano inválido',
   ),
   renavam: z.string().refine(
     (val) => validateRenavam(val),
-    'RENAVAM invalido',
+    'RENAVAM inválido',
   ),
   tipo_cegonha: z.enum(['aberta', 'fechada'], {
     error: 'Selecione o tipo de cegonha',
   }),
   capacidade_veiculos: z.string()
-    .min(1, 'Capacidade e obrigatoria')
+    .min(1, 'Capacidade é obrigatória')
     .refine(
       (val) => {
         const num = parseInt(val, 10);
@@ -70,6 +71,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
     setValue,
     setError,
     formState: { errors },
@@ -171,37 +173,16 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
         </div>
       </div>
 
-      {/* Modelo + Marca row */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="modelo" className="mb-2 block text-base font-medium text-primary-900">
-            Modelo <span className="text-danger">*</span>
-          </label>
-          <input
-            id="modelo"
-            type="text"
-            placeholder="Ex: VW Constellation 24.280"
-            {...register('modelo')}
-            className={cn(inputClass, errors.modelo ? 'border-red-500' : 'border-surface-border')}
-          />
-          {errors.modelo && (
-            <p className="mt-1.5 text-sm text-danger font-medium">{errors.modelo.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="marca" className="mb-2 block text-base font-medium text-primary-900">
-            Marca
-          </label>
-          <input
-            id="marca"
-            type="text"
-            placeholder="Ex: Volkswagen"
-            {...register('marca')}
-            className={cn(inputClass, 'border-surface-border')}
-          />
-        </div>
-      </div>
+      {/* Marca + Modelo row — autocomplete inteligente */}
+      <CaminhaoAutocomplete
+        marcaValue={watch('marca') ?? ''}
+        modeloValue={watch('modelo')}
+        onMarcaChange={(val) => setValue('marca', val)}
+        onModeloChange={(val) => setValue('modelo', val)}
+        marcaError={undefined}
+        modeloError={errors.modelo?.message}
+        inputClassName={cn(inputClass, 'border-surface-border')}
+      />
 
       {/* Ano + RENAVAM row */}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -245,7 +226,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="capacidade_veiculos" className="mb-2 block text-base font-medium text-primary-900">
-            Capacidade (veiculos) <span className="text-danger">*</span>
+            Capacidade (veículos) <span className="text-danger">*</span>
           </label>
           <input
             id="capacidade_veiculos"
@@ -283,8 +264,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Observacao */}
       <div>
         <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
-          Observacao
-        </label>
+          Observação        </label>
         <textarea
           id="observacao"
           rows={3}
@@ -308,7 +288,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Cadastrar Caminhao'}
+          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Cadastrar Caminhão'}
         </button>
       </div>
     </form>

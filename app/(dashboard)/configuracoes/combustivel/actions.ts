@@ -19,21 +19,21 @@ import { PRECO_DIESEL_PADRAO_CENTAVOS } from '@/types/precificacao';
 
 const combustivelPrecoSchema = z.object({
   regiao: z.string()
-    .min(1, 'Regiao e obrigatoria')
-    .max(100, 'Regiao deve ter no maximo 100 caracteres'),
+    .min(1, 'Região é obrigatória')
+    .max(100, 'Região deve ter no máximo 100 caracteres'),
   tipo: z.enum(['diesel_s10', 'diesel_comum'], {
-    error: 'Selecione um tipo de combustivel',
+    error: 'Selecione um tipo de combustível',
   }),
   preco: z.string()
-    .min(1, 'Preco e obrigatorio')
+    .min(1, 'Preço é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
-    }, 'Preco deve ser maior que zero'),
+    }, 'Preço deve ser maior que zero'),
   data_referencia: z.string()
-    .min(1, 'Data de referencia e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data de referencia invalida'),
-  fonte: z.string().max(100, 'Fonte deve ter no maximo 100 caracteres'),
+    .min(1, 'Data de referência é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data de referência inválida'),
+  fonte: z.string().max(100, 'Fonte deve ter no máximo 100 caracteres'),
 });
 
 function extractFieldErrors(
@@ -62,11 +62,11 @@ export async function createCombustivelPreco(
 ): Promise<CombustivelPrecoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode gerenciar precos de combustivel' };
+    return { success: false, error: 'Motorista não pode gerenciar preços de combustível' };
   }
 
   const parsed = combustivelPrecoSchema.safeParse(formData);
@@ -77,7 +77,7 @@ export async function createCombustivelPreco(
   const data = parsed.data;
   const precoCentavos = parseBrlInputToCentavos(data.preco);
   if (precoCentavos === null || precoCentavos <= 0) {
-    return { success: false, fieldErrors: { preco: 'Preco invalido' } };
+    return { success: false, fieldErrors: { preco: 'Preço inválido' } };
   }
 
   const supabase = await createClient();
@@ -113,11 +113,11 @@ export async function updateCombustivelPreco(
 ): Promise<CombustivelPrecoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode gerenciar precos de combustivel' };
+    return { success: false, error: 'Motorista não pode gerenciar preços de combustível' };
   }
 
   const parsed = combustivelPrecoSchema.safeParse(formData);
@@ -128,7 +128,7 @@ export async function updateCombustivelPreco(
   const data = parsed.data;
   const precoCentavos = parseBrlInputToCentavos(data.preco);
   if (precoCentavos === null || precoCentavos <= 0) {
-    return { success: false, fieldErrors: { preco: 'Preco invalido' } };
+    return { success: false, fieldErrors: { preco: 'Preço inválido' } };
   }
 
   const supabase = await createClient();
@@ -162,11 +162,11 @@ export async function deleteCombustivelPreco(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { success: false, error: 'Motorista nao pode gerenciar precos de combustivel' };
+    return { success: false, error: 'Motorista não pode gerenciar preços de combustível' };
   }
 
   const supabase = await createClient();
@@ -193,7 +193,7 @@ export async function listCombustivelPrecos(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -261,7 +261,7 @@ export async function getMediaPorRegiao(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   if (usuario.role !== 'dono') {

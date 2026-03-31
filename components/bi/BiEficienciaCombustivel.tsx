@@ -74,7 +74,7 @@ export function BiEficienciaCombustivel({
           Referencia cegonheiro: ~2,5 km/L
         </p>
         <p className="text-sm text-text-muted">
-          Nenhum dado de abastecimento no periodo selecionado.
+          Nenhum dado de abastecimento no período selecionado.
         </p>
       </div>
     );

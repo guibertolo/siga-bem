@@ -6,14 +6,14 @@ import { VinculoList } from '@/components/vinculos/VinculoList';
 export default async function HistoricoVinculosPage() {
   const result = await listVinculos();
 
-  if (result.error === 'Nao autenticado') {
+  if (result.error === 'Não autenticado') {
     redirect('/login');
   }
 
-  if (result.error === 'Permissao insuficiente') {
+  if (result.error === 'Permissão insuficiente') {
     return (
       <div className="w-full max-w-4xl">
-        <p className="text-sm text-danger">Voce nao tem permissao para acessar esta pagina.</p>
+        <p className="text-sm text-danger">Você não tem permissão para acessar esta página.</p>
       </div>
     );
   }
@@ -25,11 +25,11 @@ export default async function HistoricoVinculosPage() {
           href="/vinculos"
           className="text-sm text-primary-500 transition-colors hover:text-primary-700"
         >
-          &larr; Voltar para vinculos
+          &larr; Voltar para vínculos
         </Link>
-        <h2 className="mt-2 text-2xl font-bold text-primary-900">Historico de Vinculos</h2>
+        <h2 className="mt-2 text-2xl font-bold text-primary-900">Histórico de Vínculos</h2>
         <p className="mt-1 text-sm text-primary-500">
-          Historico completo de todas as vinculacoes entre motoristas e caminhoes.
+          Histórico completo de todas as vinculações entre motoristas e caminhões.
         </p>
       </div>
 

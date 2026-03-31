@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const viagemVeiculoSchema = z.object({
   modelo: z
     .string()
-    .min(1, 'Modelo e obrigatorio')
+    .min(1, 'Modelo é obrigatório')
     .max(100, 'Modelo deve ter no maximo 100 caracteres'),
   marca: z
     .string()
@@ -24,7 +24,7 @@ export const viagemVeiculoSchema = z.object({
         !val ||
         /^[A-Z]{3}-?\d{4}$/.test(val) ||
         /^[A-Z]{3}\d[A-Z]\d{2}$/.test(val),
-      { message: 'Placa invalida (ex: ABC-1234 ou ABC1D23)' },
+      { message: 'Placa inválida (ex: ABC-1234 ou ABC1D23)' },
     ),
   chassi: z
     .string()

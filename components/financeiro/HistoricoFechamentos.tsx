@@ -203,7 +203,7 @@ export function HistoricoFechamentos({
                 Motorista
               </th>
               <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
-                Periodo
+                Período
               </th>
               <th className="px-4 py-3.5 text-left text-sm font-medium uppercase tracking-wider text-primary-500">
                 Tipo
@@ -218,10 +218,10 @@ export function HistoricoFechamentos({
                 Saldo
               </th>
               <th className="px-4 py-3.5 text-center text-sm font-medium uppercase tracking-wider text-primary-500">
-                Situacao
+                Situação
               </th>
               <th className="px-4 py-3.5 text-right text-sm font-medium uppercase tracking-wider text-primary-500">
-                Acoes
+                Ações
               </th>
             </tr>
           </thead>

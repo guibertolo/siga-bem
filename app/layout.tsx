@@ -13,23 +13,23 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'FrotaViva - Gestao de Frotas de Cegonha',
+    default: 'FrotaViva - Gestão de Frotas de Cegonha',
     template: '%s | FrotaViva',
   },
   description:
-    'FrotaViva - Plataforma de gestao inteligente para transportadoras de veiculos (cegonheiros). Controle viagens, gastos, combustivel e fechamentos.',
+    'FrotaViva - Plataforma de gestão inteligente para transportadoras de veículos (cegonheiros). Controle viagens, gastos, combustível e fechamentos.',
   keywords: [
-    'gestao de frotas',
+    'gestão de frotas',
     'cegonheiro',
-    'transporte de veiculos',
-    'caminhao cegonha',
+    'transporte de veículos',
+    'caminhão cegonha',
     'controle de gastos',
     'fechamento financeiro',
   ],
   authors: [{ name: 'FrotaViva' }],
   openGraph: {
     title: 'FrotaViva - Sua frota no controle',
-    description: 'Gestao inteligente para transportadoras de veiculos',
+    description: 'Gestão inteligente para transportadoras de veículos',
     type: 'website',
     locale: 'pt_BR',
     siteName: 'FrotaViva',

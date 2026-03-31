@@ -10,12 +10,12 @@ import type { CaminhaoActionResult, CaminhaoFormData } from '@/types/caminhao';
 
 const caminhaoSchema = z.object({
   placa: z.string()
-    .min(1, 'Placa e obrigatoria')
-    .refine((val) => validatePlaca(val), 'Placa invalida. Use formato Mercosul (ABC1D23) ou antigo (ABC-1234)'),
+    .min(1, 'Placa é obrigatória')
+    .refine((val) => validatePlaca(val), 'Placa inválida. Use formato Mercosul (ABC1D23) ou antigo (ABC-1234)'),
   modelo: z.string()
-    .min(1, 'Modelo e obrigatorio')
-    .max(100, 'Modelo deve ter no maximo 100 caracteres'),
-  marca: z.string().max(100, 'Marca deve ter no maximo 100 caracteres'),
+    .min(1, 'Modelo é obrigatório')
+    .max(100, 'Modelo deve ter no máximo 100 caracteres'),
+  marca: z.string().max(100, 'Marca deve ter no máximo 100 caracteres'),
   ano: z.string().refine(
     (val) => {
       if (val === '') return true;
@@ -23,23 +23,23 @@ const caminhaoSchema = z.object({
       const maxYear = new Date().getFullYear() + 1;
       return !isNaN(num) && num >= 1970 && num <= maxYear;
     },
-    'Ano invalido (1970 ate ano atual + 1)',
+    'Ano inválido (1970 até ano atual + 1)',
   ),
   renavam: z.string().refine(
     (val) => validateRenavam(val),
-    'RENAVAM invalido',
+    'RENAVAM inválido',
   ),
   tipo_cegonha: z.enum(['aberta', 'fechada'], {
-    error: 'Tipo de cegonha e obrigatorio',
+    error: 'Tipo de cegonha é obrigatório',
   }),
   capacidade_veiculos: z.string()
-    .min(1, 'Capacidade e obrigatoria')
+    .min(1, 'Capacidade é obrigatória')
     .refine(
       (val) => {
         const num = parseInt(val, 10);
         return !isNaN(num) && num >= 1 && num <= 15;
       },
-      'Capacidade deve ser entre 1 e 15 veiculos',
+      'Capacidade deve ser entre 1 e 15 veículos',
     ),
   km_atual: z.string().refine(
     (val) => {
@@ -47,9 +47,9 @@ const caminhaoSchema = z.object({
       const num = parseInt(val, 10);
       return !isNaN(num) && num >= 0;
     },
-    'Km deve ser um numero positivo',
+    'Km deve ser um número positivo',
   ),
-  observacao: z.string().max(500, 'Observacao deve ter no maximo 500 caracteres'),
+  observacao: z.string().max(500, 'Observação deve ter no máximo 500 caracteres'),
 });
 
 function extractFieldErrors(
@@ -87,7 +87,7 @@ export async function listCaminhoes(): Promise<{
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -114,7 +114,7 @@ export async function getCaminhao(id: string): Promise<CaminhaoActionResult> {
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -126,7 +126,7 @@ export async function getCaminhao(id: string): Promise<CaminhaoActionResult> {
     .single();
 
   if (error || !data) {
-    return { success: false, error: 'Caminhao nao encontrado' };
+    return { success: false, error: 'Caminhão não encontrado' };
   }
 
   return { success: true, caminhao: data };
@@ -145,7 +145,7 @@ export async function createCaminhao(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -220,7 +220,7 @@ export async function updateCaminhao(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -294,7 +294,7 @@ export async function toggleCaminhaoAtivo(
     await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 

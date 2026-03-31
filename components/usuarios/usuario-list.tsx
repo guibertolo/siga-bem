@@ -144,12 +144,12 @@ export default function UsuarioList({
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">Email</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">Role</th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">
-                Situacao
+                Situação
               </th>
               <th className="px-4 py-3.5 text-base font-medium text-primary-500">
                 Cadastro
               </th>
-              <th className="px-4 py-3.5 text-base font-medium text-primary-500">Acoes</th>
+              <th className="px-4 py-3.5 text-base font-medium text-primary-500">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -243,7 +243,7 @@ export default function UsuarioList({
       {usuarios.length === 0 && (
         <div className="py-8 text-center">
           <p className="text-base text-primary-500">
-            Nenhum usuario encontrado.
+            Nenhum usuário encontrado.
           </p>
           <p className="mt-1 text-sm text-text-muted">
             Convide usuarios para gerenciar o sistema.

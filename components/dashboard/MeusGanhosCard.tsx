@@ -30,7 +30,7 @@ export function MeusGanhosCard({ totalCentavos }: MeusGanhosCardProps) {
         </p>
       ) : (
         <p className="mt-2 text-base text-text-muted">
-          Nenhuma viagem concluida este mes
+          Nenhuma viagem concluída este mês
         </p>
       )}
       <p className="mt-1 text-sm text-text-muted">Este mes</p>

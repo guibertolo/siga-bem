@@ -27,21 +27,21 @@ type TipoCombustivel = 'diesel_s10' | 'diesel_comum';
 // ---------------------------------------------------------------------------
 
 const abastecimentoSchema = z.object({
-  viagem_id: z.string().uuid('Viagem invalida'),
+  viagem_id: z.string().uuid('Viagem inválida'),
   litros: z.number()
     .gt(0, 'Litros deve ser maior que zero')
-    .lte(9999.999, 'Litros deve ser no maximo 9.999,999'),
+    .lte(9999.999, 'Litros deve ser no máximo 9.999,999'),
   valor_centavos: z.number()
     .int('Valor deve ser inteiro em centavos')
     .gt(0, 'Valor deve ser maior que zero'),
   uf_abastecimento: z.string()
     .length(2, 'UF deve ter 2 letras')
-    .refine((val) => (UF_LIST as readonly string[]).includes(val), 'UF invalida'),
+    .refine((val) => (UF_LIST as readonly string[]).includes(val), 'UF inválida'),
   tipo_combustivel: z.enum(['diesel_s10', 'diesel_comum']).default('diesel_s10'),
-  posto_local: z.string().max(200, 'Posto deve ter no maximo 200 caracteres').optional().nullable(),
+  posto_local: z.string().max(200, 'Posto deve ter no máximo 200 caracteres').optional().nullable(),
   km_odometro: z.number().int().positive().optional().nullable(),
-  observacao: z.string().max(500, 'Observacao deve ter no maximo 500 caracteres').optional().nullable(),
-  data: z.string().min(1, 'Data e obrigatoria'),
+  observacao: z.string().max(500, 'Observação deve ter no máximo 500 caracteres').optional().nullable(),
+  data: z.string().min(1, 'Data é obrigatória'),
 });
 
 export type AbastecimentoInput = z.infer<typeof abastecimentoSchema>;
@@ -71,10 +71,10 @@ export async function createAbastecimento(
   // 1. Auth check
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   // 2. Validate input
@@ -101,7 +101,7 @@ export async function createAbastecimento(
     .single();
 
   if (viagemError || !viagem) {
-    return { success: false, error: 'Viagem nao encontrada' };
+    return { success: false, error: 'Viagem não encontrada' };
   }
 
   if (viagem.status !== 'em_andamento') {
@@ -128,14 +128,14 @@ export async function createAbastecimento(
     .single();
 
   if (catError || !categoria) {
-    return { success: false, error: 'Categoria "Combustivel" nao encontrada. Verifique as categorias cadastradas.' };
+    return { success: false, error: 'Categoria "Combustível" não encontrada. Verifique as categorias cadastradas.' };
   }
 
   // 6. For motorista role, enforce motorista_id from viagem
   // (motorista can only register on trips where they are the driver)
   if (usuario.role === 'motorista') {
     if (!usuario.motorista_id || viagem.motorista_id !== usuario.motorista_id) {
-      return { success: false, error: 'Permissao insuficiente: voce nao e o motorista desta viagem' };
+      return { success: false, error: 'Permissão insuficiente: você não é o motorista desta viagem' };
     }
   }
 
@@ -191,7 +191,7 @@ export async function getAbastecimentosForViagem(
 ): Promise<AbastecimentoListResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: [], error: 'Nao autenticado' };
+    return { data: [], error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -230,7 +230,7 @@ export async function getGastosPorViagem(
 ): Promise<GastoViagemListResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: [], totalCentavos: 0, error: 'Nao autenticado' };
+    return { data: [], totalCentavos: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();

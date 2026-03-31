@@ -30,7 +30,7 @@ export function VinculoDashboard({
   if (isEmpty) {
     return (
       <div className="rounded-lg border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-base text-primary-500">Nenhum vinculo ou caminhao encontrado.</p>
+        <p className="text-base text-primary-500">Nenhum vínculo ou caminhão encontrado.</p>
         <p className="mt-1 text-base text-text-muted">
           Cadastre caminhoes e motoristas para comecar a gerenciar vinculos.
         </p>
@@ -40,9 +40,9 @@ export function VinculoDashboard({
 
   return (
     <div className="space-y-8">
-      {/* Section 1: Caminhoes sem Motorista (action needed!) */}
+      {/* Section 1: Caminhões sem Motorista (action needed!) */}
       {caminhoesSem.length > 0 ? (
-        <section role="region" aria-label="Caminhoes sem motorista">
+        <section role="region" aria-label="Caminhões sem motorista">
           <h3 className="mb-4 text-lg font-semibold text-primary-900">
             <span className="inline-flex items-center gap-2">
               <svg
@@ -59,7 +59,7 @@ export function VinculoDashboard({
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Caminhoes sem Motorista
+              Caminhões sem Motorista
             </span>
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -82,11 +82,11 @@ export function VinculoDashboard({
         )
       )}
 
-      {/* Section 2: Caminhoes com Motorista */}
+      {/* Section 2: Caminhões com Motorista */}
       {caminhoesCom.length > 0 && (
-        <section role="region" aria-label="Caminhoes com motorista">
+        <section role="region" aria-label="Caminhões com motorista">
           <h3 className="mb-4 text-lg font-semibold text-primary-900">
-            Caminhoes com Motorista
+            Caminhões com Motorista
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {caminhoesCom.map((c) => (

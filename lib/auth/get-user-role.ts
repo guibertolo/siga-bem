@@ -58,11 +58,11 @@ export async function requireRole(
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
-    throw new Error('Nao autenticado');
+    throw new Error('Não autenticado');
   }
 
   if (!allowedRoles.includes(usuario.role)) {
-    throw new Error('Permissao insuficiente');
+    throw new Error('Permissão insuficiente');
   }
 
   if (!usuario.ativo) {

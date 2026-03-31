@@ -65,7 +65,7 @@ export function ViagemFilters({
       {/* Status multi-select as checkboxes */}
       <div>
         <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-primary-500">
-          Situacao
+          Situação
         </label>
         <div className="flex flex-wrap gap-2">
           {VIAGEM_STATUS_OPTIONS.map((s) => (
@@ -82,6 +82,39 @@ export function ViagemFilters({
               {VIAGEM_STATUS_LABELS[s]}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Atalhos de periodo */}
+      <div>
+        <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-primary-500">
+          Período
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: 'Esta semana', days: 7 },
+            { label: 'Este mes', days: 30 },
+            { label: 'Ultimos 3 meses', days: 90 },
+            { label: 'Este ano', days: 365 },
+          ].map(({ label, days }) => {
+            const end = new Date().toISOString().split('T')[0];
+            const start = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
+            const isActive = filters.data_inicio === start && filters.data_fim === end;
+            return (
+              <button
+                key={days}
+                type="button"
+                onClick={() => handleChange({ data_inicio: start, data_fim: end })}
+                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors min-h-[36px] ${
+                  isActive
+                    ? 'bg-btn-primary text-white'
+                    : 'bg-surface-muted text-primary-700 hover:bg-surface-hover'
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

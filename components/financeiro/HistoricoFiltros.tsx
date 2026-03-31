@@ -130,6 +130,34 @@ export function HistoricoFiltros({
         )}
       </div>
 
+      {/* Atalhos de periodo */}
+      <div className="flex flex-wrap gap-2 mb-3">
+        {[
+          { label: 'Esta semana', days: 7 },
+          { label: 'Este mes', days: 30 },
+          { label: 'Ultimos 3 meses', days: 90 },
+          { label: 'Este ano', days: 365 },
+        ].map(({ label, days }) => {
+          const end = new Date().toISOString().split('T')[0];
+          const start = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
+          const isActive = periodoInicioLocal === start && periodoFimLocal === end;
+          return (
+            <button
+              key={days}
+              type="button"
+              onClick={() => updateParams({ periodoInicio: start, periodoFim: end })}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors min-h-[36px] ${
+                isActive
+                  ? 'bg-btn-primary text-white'
+                  : 'bg-surface-muted text-primary-700 hover:bg-surface-hover'
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {/* Text search */}
         <div>
@@ -195,7 +223,7 @@ export function HistoricoFiltros({
             htmlFor="status"
             className="mb-1 block text-xs font-medium text-primary-700"
           >
-            Situacao
+            Situação
           </label>
           <select
             id="status"
@@ -310,7 +338,7 @@ function MultiSelectDropdown({
           <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-surface-border bg-surface-card py-1 shadow-lg">
             {options.length === 0 ? (
               <div className="px-3 py-2 text-sm text-text-muted">
-                Nenhuma opcao
+                Nenhuma opção
               </div>
             ) : (
               options.map((option) => (

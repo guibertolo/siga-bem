@@ -101,7 +101,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
             />
           ) : (
             <p className={inputReadonlyClasses + ' flex items-center'}>
-              {telefone || 'Nao informado'}
+              {telefone || 'Não informado'}
             </p>
           )}
         </div>
@@ -153,7 +153,7 @@ export function DadosPerfil({ nome, email, telefone, role, empresaNome }: DadosP
                 <polyline points="17 21 17 13 7 13 7 21" />
                 <polyline points="7 3 7 8 15 8" />
               </svg>
-              Salvar Alteracoes
+              Salvar Alterações
             </>
           )}
         </button>

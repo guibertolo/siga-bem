@@ -15,21 +15,21 @@ const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as cons
 
 const motoristaFormSchema = z.object({
   nome: z.string()
-    .min(1, 'Nome e obrigatorio')
-    .max(255, 'Nome deve ter no maximo 255 caracteres'),
+    .min(1, 'Nome é obrigatório')
+    .max(255, 'Nome deve ter no máximo 255 caracteres'),
   cpf: z.string()
-    .min(1, 'CPF e obrigatorio')
-    .refine((val) => validateCPF(val), 'CPF invalido'),
+    .min(1, 'CPF é obrigatório')
+    .refine((val) => validateCPF(val), 'CPF inválido'),
   cnh_numero: z.string()
-    .min(1, 'Numero da CNH e obrigatorio')
-    .max(20, 'Numero da CNH deve ter no maximo 20 caracteres'),
+    .min(1, 'Número da CNH é obrigatório')
+    .max(20, 'Número da CNH deve ter no máximo 20 caracteres'),
   cnh_categoria: z.enum(CNH_CATEGORIAS, {
     error: 'Selecione uma categoria',
   }),
   cnh_validade: z.string()
-    .min(1, 'Validade da CNH e obrigatoria'),
-  telefone: z.string().max(20, 'Telefone deve ter no maximo 20 caracteres'),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+    .min(1, 'Validade da CNH é obrigatória'),
+  telefone: z.string().max(20, 'Telefone deve ter no máximo 20 caracteres'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
   percentual_pagamento: z.string()
     .refine(
       (val) => {
@@ -116,19 +116,19 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
     // If toggle ON, validate email and call createMotoristaComConta
     if (criarConta) {
       if (!values.email || values.email.trim() === '') {
-        setEmailError('Email e obrigatorio quando criar acesso esta ativo');
+        setEmailError('Email é obrigatório quando criar acesso está ativo');
         return;
       }
 
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(values.email)) {
-        setEmailError('Email invalido');
+        setEmailError('Email inválido');
         return;
       }
 
       if (!onSubmitComConta) {
-        setServerError('Funcionalidade de criar conta nao disponivel');
+        setServerError('Funcionalidade de criar conta não disponível');
         return;
       }
 
@@ -381,8 +381,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         {/* Observacao */}
         <div>
           <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
-            Observacao
-          </label>
+            Observação          </label>
           <textarea
             id="observacao"
             rows={3}
@@ -473,7 +472,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : criarConta ? 'Cadastrar com Acesso' : 'Cadastrar Motorista'}
+            {isPending ? 'Salvando...' : isEditing ? 'Salvar Alterações' : criarConta ? 'Cadastrar com Acesso' : 'Cadastrar Motorista'}
           </button>
         </div>
       </form>

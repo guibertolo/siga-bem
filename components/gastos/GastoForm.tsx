@@ -26,13 +26,13 @@ const gastoFormSchema = z.object({
   caminhao_id: z.string(),
   viagem_id: z.string(),
   valor: z.string()
-    .min(1, 'Valor e obrigatorio')
+    .min(1, 'Valor é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
     }, 'Valor deve ser maior que zero'),
-  data: z.string().min(1, 'Data e obrigatoria'),
-  descricao: z.string().max(1000, 'Descricao deve ter no maximo 1000 caracteres'),
+  data: z.string().min(1, 'Data é obrigatória'),
+  descricao: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres'),
 });
 
 type FormValues = z.infer<typeof gastoFormSchema>;
@@ -314,8 +314,7 @@ export function GastoForm({
       {/* Descricao */}
       <div>
         <label htmlFor="descricao" className="mb-2 block text-base font-medium text-primary-900">
-          Descricao
-        </label>
+          Descrição        </label>
         <textarea
           id="descricao"
           rows={3}
@@ -346,7 +345,7 @@ export function GastoForm({
           <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alteracoes' : 'Registrar Gasto'}
+          {isPending ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Registrar Gasto'}
         </button>
       </div>
     </form>

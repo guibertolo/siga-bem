@@ -23,7 +23,7 @@ export function TrocaSenhaForm() {
     }
 
     if (novaSenha !== confirmarSenha) {
-      return 'As senhas nao coincidem';
+      return 'As senhas não coincidem';
     }
 
     return null;
@@ -113,7 +113,7 @@ export function TrocaSenhaForm() {
               type={showNovaSenha ? 'text' : 'password'}
               required
               minLength={8}
-              placeholder="Minimo 8 caracteres"
+              placeholder="Mínimo 8 caracteres"
               className={inputClasses}
             />
             {eyeButton(showNovaSenha, () => setShowNovaSenha(!showNovaSenha))}

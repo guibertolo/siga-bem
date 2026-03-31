@@ -205,7 +205,7 @@ export function VeiculosSection({
                 <th className="pb-2 pr-4">Marca / Modelo</th>
                 <th className="pb-2 pr-4">Placa</th>
                 <th className="pb-2 pr-4">Cor</th>
-                {!readonly && <th className="pb-2 text-right">Acoes</th>}
+                {!readonly && <th className="pb-2 text-right">Ações</th>}
               </tr>
             </thead>
             <tbody>

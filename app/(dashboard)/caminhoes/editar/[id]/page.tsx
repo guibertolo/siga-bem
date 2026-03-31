@@ -13,7 +13,7 @@ export default async function EditarCaminhaoPage({ params }: EditarCaminhaoPageP
   const result = await getCaminhao(id);
 
   if (!result.success) {
-    if (result.error === 'Nao autenticado') {
+    if (result.error === 'Não autenticado') {
       redirect('/login');
     }
     notFound();
@@ -31,9 +31,9 @@ export default async function EditarCaminhaoPage({ params }: EditarCaminhaoPageP
           </svg>
           Voltar
         </Link>
-        <h2 className="mt-4 text-2xl font-bold text-primary-900">Editar Caminhao</h2>
+        <h2 className="mt-4 text-2xl font-bold text-primary-900">Editar Caminhão</h2>
         <p className="mt-1 text-sm text-primary-500">
-          Altere os dados do caminhao.
+          Altere os dados do caminhão.
         </p>
       </div>
 

@@ -27,11 +27,11 @@ export function HistoricoRotas({
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Viagens Parecidas que Voce Ja Fez
+        Viagens Parecidas que Você Já Fez
       </h3>
 
       {isLoading && (
-        <div className="text-sm text-primary-500">Buscando historico...</div>
+        <div className="text-sm text-primary-500">Buscando histórico...</div>
       )}
 
       {error && (
@@ -50,7 +50,7 @@ export function HistoricoRotas({
       {searched && !isLoading && data && data.viagens.length === 0 && (
         <div className="rounded-md bg-surface-muted p-4 text-center">
           <p className="text-sm text-text-muted">
-            Nenhuma viagem concluida encontrada para esta rota.
+            Nenhuma viagem concluída encontrada para esta rota.
           </p>
         </div>
       )}
@@ -127,7 +127,7 @@ export function HistoricoRotas({
                   <p className="text-sm font-semibold text-primary-900 tabular-nums">
                     {v.freteCentavos != null
                       ? formatBRL(v.freteCentavos)
-                      : 'Frete nao cadastrado'}
+                      : 'Frete não cadastrado'}
                   </p>
                 </div>
                 <div>

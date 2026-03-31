@@ -12,10 +12,10 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
     return (
       <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
-          Caminhoes que Mais Gastaram
+          Gastos com Manutenção por Caminhão
         </h3>
         <p className="text-sm text-text-muted">
-          Nenhum gasto com caminhao no periodo selecionado.
+          Nenhum gasto com caminhão no período selecionado.
         </p>
       </div>
     );
@@ -24,7 +24,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
   return (
     <div className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-primary-900 mb-4">
-        Caminhoes que Mais Gastaram
+        Gastos com Manutenção por Caminhão
       </h3>
 
       {/* Desktop table */}
@@ -36,8 +36,7 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
               <th className="pb-2 font-semibold text-primary-700">Placa</th>
               <th className="pb-2 font-semibold text-primary-700">Modelo</th>
               <th className="pb-2 font-semibold text-primary-700 text-right">Total Gasto</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">%</th>
-              <th className="pb-2 font-semibold text-primary-700 text-right">Qtd.</th>
+              <th className="pb-2 font-semibold text-primary-700 text-right">Lancamentos</th>
             </tr>
           </thead>
           <tbody>
@@ -48,9 +47,6 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
                 <td className="py-2.5 text-primary-700">{item.modelo}</td>
                 <td className="py-2.5 text-right font-semibold text-primary-900 tabular-nums">
                   {formatBRL(item.totalGasto)}
-                </td>
-                <td className="py-2.5 text-right text-primary-500 tabular-nums">
-                  {item.porcentagem.toFixed(1)}%
                 </td>
                 <td className="py-2.5 text-right text-primary-500 tabular-nums">
                   {item.qtdLancamentos}
@@ -70,9 +66,6 @@ export function BiRankingCaminhoes({ data }: BiRankingCaminhoesProps) {
           >
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-primary-500">#{index + 1}</span>
-              <span className="text-xs text-primary-500">
-                {item.porcentagem.toFixed(1)}%
-              </span>
             </div>
             <p className="font-semibold text-primary-900">
               {item.placa} — {item.modelo}

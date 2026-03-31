@@ -19,7 +19,7 @@ export async function completeInviteAcceptance(): Promise<{
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: 'Nao autenticado. Faça login novamente.' };
+    return { error: 'Ão autenticado. Faça login novamente.' };
   }
 
   // Check if usuario record already exists

@@ -13,7 +13,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
   const result = await getCaminhao(id);
 
   if (!result.success) {
-    if (result.error === 'Nao autenticado') {
+    if (result.error === 'Não autenticado') {
       redirect('/login');
     }
     notFound();
@@ -82,7 +82,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
             </div>
             <div>
               <dt className="text-primary-500">Capacidade</dt>
-              <dd className="font-medium text-primary-900">{caminhao.capacidade_veiculos} veiculos</dd>
+              <dd className="font-medium text-primary-900">{caminhao.capacidade_veiculos} veículos</dd>
             </div>
             <div>
               <dt className="text-primary-500">Km Atual</dt>
@@ -104,7 +104,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
             </div>
             {caminhao.observacao && (
               <div>
-                <dt className="text-primary-500">Observacao</dt>
+                <dt className="text-primary-500">Observação</dt>
                 <dd className="text-primary-700">{caminhao.observacao}</dd>
               </div>
             )}

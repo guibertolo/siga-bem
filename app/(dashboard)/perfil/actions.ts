@@ -8,7 +8,7 @@ export async function alterarSenha(formData: FormData) {
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
-    return { error: 'Nao autenticado' };
+    return { error: 'Não autenticado' };
   }
 
   const senhaAtual = formData.get('senha_atual') as string;
@@ -24,7 +24,7 @@ export async function alterarSenha(formData: FormData) {
   }
 
   if (novaSenha !== confirmarSenha) {
-    return { error: 'As senhas nao coincidem' };
+    return { error: 'As senhas não coincidem' };
   }
 
   // Verify current password by attempting sign-in
@@ -54,19 +54,19 @@ export async function atualizarPerfil(formData: FormData) {
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
-    return { error: 'Nao autenticado' };
+    return { error: 'Não autenticado' };
   }
 
   // REGRA CRITICA: motorista NAO pode alterar dados cadastrais
   if (usuario.role === 'motorista') {
-    return { error: 'Motoristas nao podem alterar dados cadastrais' };
+    return { error: 'Motoristas não podem alterar dados cadastrais' };
   }
 
   const nome = formData.get('nome') as string;
   const telefone = formData.get('telefone') as string;
 
   if (!nome || nome.trim().length === 0) {
-    return { error: 'Nome e obrigatorio' };
+    return { error: 'Nome é obrigatório' };
   }
 
   const { error } = await supabase

@@ -139,7 +139,7 @@ export function SimuladorViagem({
             htmlFor="sim-caminhao"
             className="mb-1 block text-xs font-medium text-primary-700"
           >
-            Caminhao (opcional)
+            Caminhão (opcional)
           </label>
           <select
             id="sim-caminhao"
@@ -228,7 +228,7 @@ export function SimuladorViagem({
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-500">Preco do litro</p>
+                <p className="text-xs text-primary-500">Preço do litro</p>
                 <p className="text-lg font-bold text-primary-900 tabular-nums">
                   {formatBRL(resultado.precoMedioLitroCentavos)}
                 </p>
@@ -243,12 +243,12 @@ export function SimuladorViagem({
             )}
             {resultado.fonteConsumo === 'historico_real' && (
               <p className="mt-2 text-xs text-success">
-                Fonte: Historico real do caminhao selecionado
+                Fonte: Histórico real do caminhão selecionado
               </p>
             )}
             {resultado.fontePreco === 'padrao' && (
               <p className="mt-1 text-xs text-warning">
-                Preco: Padrao nacional (R$ 6,50/l) — cadastre precos para
+                Preço: Padrão nacional (R$ 6,50/l) — cadastre preços para
                 estimativa mais precisa
               </p>
             )}

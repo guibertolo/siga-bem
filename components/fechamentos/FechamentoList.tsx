@@ -64,13 +64,13 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted text-left">
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Periodo</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Período</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Viagens</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Gastos</th>
             <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Saldo</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
-            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
+            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
           </tr>
         </thead>
         <tbody>

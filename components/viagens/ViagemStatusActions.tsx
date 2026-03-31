@@ -47,7 +47,7 @@ export function ViagemStatusActions({
 
   function handleConcluir() {
     if (!dataChegadaReal) {
-      setError('Data de chegada real e obrigatoria');
+      setError('Data de chegada real é obrigatória');
       return;
     }
 
@@ -74,7 +74,7 @@ export function ViagemStatusActions({
     startTransition(async () => {
       const result = await updateViagemObservacao(viagemId, obsValue);
       if (!result.success) {
-        setError(result.error ?? 'Erro ao salvar observacao');
+        setError(result.error ?? 'Erro ao salvar observação');
       } else {
         setEditingObs(false);
         router.refresh();
@@ -170,7 +170,7 @@ export function ViagemStatusActions({
       {(currentStatus === 'concluida' || currentStatus === 'cancelada') && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-primary-700">Observacao</h4>
+            <h4 className="text-sm font-medium text-primary-700">Observação</h4>
             {!editingObs && (
               <button
                 type="button"
@@ -213,7 +213,7 @@ export function ViagemStatusActions({
             </div>
           ) : (
             <p className="text-sm text-primary-500">
-              {observacao || 'Nenhuma observacao.'}
+              {observacao || 'Nenhuma observação.'}
             </p>
           )}
         </div>

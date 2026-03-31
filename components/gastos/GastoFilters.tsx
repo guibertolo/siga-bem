@@ -110,6 +110,34 @@ export function GastoFilters({
         )}
       </div>
 
+      {/* Atalhos de período */}
+      <div className="flex flex-wrap gap-2 mb-3">
+        {[
+          { label: 'Esta semana', days: 7 },
+          { label: 'Este mês', days: 30 },
+          { label: 'Últimos 3 meses', days: 90 },
+          { label: 'Este ano', days: 365 },
+        ].map(({ label, days }) => {
+          const end = new Date().toISOString().split('T')[0];
+          const start = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
+          const isActive = startDate === start && endDate === end;
+          return (
+            <button
+              key={days}
+              type="button"
+              onClick={() => updateParams({ startDate: start, endDate: end })}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors min-h-[36px] ${
+                isActive
+                  ? 'bg-btn-primary text-white'
+                  : 'bg-surface-muted text-primary-700 hover:bg-surface-hover'
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Date range: start */}
         <div>
@@ -117,7 +145,7 @@ export function GastoFilters({
             htmlFor="startDate"
             className="mb-1 block text-xs font-medium text-primary-700"
           >
-            Data inicio
+            Data início
           </label>
           <input
             id="startDate"

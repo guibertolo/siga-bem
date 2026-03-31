@@ -129,7 +129,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
 
         {fechamento.observacao && (
           <p className="mt-4 text-sm text-primary-700">
-            <span className="font-medium">Observacao:</span> {fechamento.observacao}
+            <span className="font-medium">Observação:</span> {fechamento.observacao}
           </p>
         )}
 
@@ -158,7 +158,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
               <thead>
                 <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-2 font-medium text-primary-700">Data</th>
-                  <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
+                  <th className="px-4 py-2 font-medium text-primary-700">Descrição</th>
                   <th className="px-4 py-2 text-right font-medium text-primary-700">Valor</th>
                 </tr>
               </thead>
@@ -193,7 +193,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
               <thead>
                 <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-2 font-medium text-primary-700">Data</th>
-                  <th className="px-4 py-2 font-medium text-primary-700">Descricao</th>
+                  <th className="px-4 py-2 font-medium text-primary-700">Descrição</th>
                   <th className="px-4 py-2 text-right font-medium text-primary-700">Valor</th>
                 </tr>
               </thead>

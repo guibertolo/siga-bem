@@ -24,7 +24,7 @@ export async function listUsuarios(): Promise<{
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -54,7 +54,7 @@ export async function inviteUsuario(
     currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -68,7 +68,7 @@ export async function inviteUsuario(
   }
 
   if (!input.email || !input.nome) {
-    return { error: 'Email e nome sao obrigatorios.' };
+    return { error: 'Email e nome são obrigatórios.' };
   }
 
   const adminClient = createAdminClient();
@@ -105,16 +105,16 @@ export async function updateUsuarioRole(
     currentUsuario = await requireRole(['dono']);
   } catch (err) {
     return {
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
   if (input.usuario_id === currentUsuario.id) {
-    return { error: 'Nao e permitido alterar o proprio role.' };
+    return { error: 'Não é permitido alterar o próprio role.' };
   }
 
   if (input.role === 'dono') {
-    return { error: 'Nao e permitido promover outro usuario a dono.' };
+    return { error: 'Não é permitido promover outro usuário a dono.' };
   }
 
   const supabase = await createClient();
@@ -127,11 +127,11 @@ export async function updateUsuarioRole(
     .single();
 
   if (fetchError || !targetUser) {
-    return { error: 'Usuario nao encontrado.' };
+    return { error: 'Usuario não encontrado.' };
   }
 
   if (targetUser.empresa_id !== currentUsuario.empresa_id) {
-    return { error: 'Usuario nao pertence a sua empresa.' };
+    return { error: 'Usuário não pertence à sua empresa.' };
   }
 
   const { error: updateError } = await supabase
@@ -160,12 +160,12 @@ export async function toggleUsuarioAtivo(
     currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
   if (input.usuario_id === currentUsuario.id) {
-    return { error: 'Nao e permitido desativar a si mesmo.' };
+    return { error: 'Não é permitido desativar a si mesmo.' };
   }
 
   const supabase = await createClient();
@@ -178,15 +178,15 @@ export async function toggleUsuarioAtivo(
     .single();
 
   if (fetchError || !targetUser) {
-    return { error: 'Usuario nao encontrado.' };
+    return { error: 'Usuario não encontrado.' };
   }
 
   if (targetUser.empresa_id !== currentUsuario.empresa_id) {
-    return { error: 'Usuario nao pertence a sua empresa.' };
+    return { error: 'Usuário não pertence à sua empresa.' };
   }
 
   if (targetUser.role === 'dono') {
-    return { error: 'Nao e permitido desativar o dono da empresa.' };
+    return { error: 'Não é permitido desativar o dono da empresa.' };
   }
 
   // Gestor (admin) can only toggle motorista users, not other gestores

@@ -9,12 +9,12 @@ import type { EmpresaActionResult, EmpresaFormData } from '@/types/empresa';
 
 const empresaSchema = z.object({
   cnpj: z.string()
-    .min(1, 'CNPJ e obrigatorio')
-    .refine((val) => validateCNPJ(val), 'CNPJ invalido'),
+    .min(1, 'CNPJ é obrigatório')
+    .refine((val) => validateCNPJ(val), 'CNPJ inválido'),
   razao_social: z.string()
-    .min(1, 'Razao Social e obrigatoria')
-    .max(255, 'Razao Social deve ter no maximo 255 caracteres'),
-  nome_fantasia: z.string().max(255, 'Nome Fantasia deve ter no maximo 255 caracteres'),
+    .min(1, 'Razão Social é obrigatória')
+    .max(255, 'Razão Social deve ter no máximo 255 caracteres'),
+  nome_fantasia: z.string().max(255, 'Nome Fantasia deve ter no máximo 255 caracteres'),
   endereco: z.string(),
   cidade: z.string(),
   estado: z.string().refine(
@@ -22,10 +22,10 @@ const empresaSchema = z.object({
     'UF deve ter 2 letras maiusculas',
   ),
   cep: z.string(),
-  telefone: z.string().max(20, 'Telefone deve ter no maximo 20 caracteres'),
+  telefone: z.string().max(20, 'Telefone deve ter no máximo 20 caracteres'),
   email: z.string().refine(
     (val) => val === '' || z.string().email().safeParse(val).success,
-    'Email invalido',
+    'Email inválido',
   ),
 });
 
@@ -39,7 +39,7 @@ export async function createEmpresa(
   // Verify authentication
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: 'Usuario nao autenticado' };
+    return { success: false, error: 'Usuário não autenticado' };
   }
 
   // Validate input
@@ -130,7 +130,7 @@ export async function updateEmpresa(
   // Verify authentication
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: 'Usuario nao autenticado' };
+    return { success: false, error: 'Usuário não autenticado' };
   }
 
   // Validate input
@@ -180,7 +180,7 @@ export async function createEmpresaAdicional(
   // Verify authentication
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: 'Usuario nao autenticado' };
+    return { success: false, error: 'Usuário não autenticado' };
   }
 
   // Validate input
@@ -282,7 +282,7 @@ export async function getEmpresa(): Promise<EmpresaActionResult> {
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: 'Usuario nao autenticado' };
+    return { success: false, error: 'Usuário não autenticado' };
   }
 
   // Get usuario to find empresa_id
@@ -304,7 +304,7 @@ export async function getEmpresa(): Promise<EmpresaActionResult> {
     .single();
 
   if (error || !empresa) {
-    return { success: false, error: 'Empresa nao encontrada' };
+    return { success: false, error: 'Empresa não encontrada' };
   }
 
   return { success: true, empresa };

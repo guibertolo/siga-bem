@@ -196,10 +196,10 @@ export function ViagemList({
                 <tr className="border-b border-warning/20 bg-alert-warning-bg text-left">
                   <th className="px-4 py-3 text-base font-medium text-warning">Origem/Destino</th>
                   <th className="px-4 py-3 text-base font-medium text-warning">Motorista</th>
-                  <th className="px-4 py-3 text-base font-medium text-warning">Caminhao</th>
+                  <th className="px-4 py-3 text-base font-medium text-warning">Caminhão</th>
                   <th className="px-4 py-3 text-base font-medium text-warning">Saida</th>
                   <th className="px-4 py-3 text-base text-right font-medium text-warning">Valor</th>
-                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Acoes</th>
+                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -327,7 +327,7 @@ export function ViagemList({
                   {!isMotorista && v.status === 'planejada' && (
                     confirmId === v.id ? (
                       <span className="flex flex-col gap-1">
-                        <span className="text-xs text-danger">Tem certeza que deseja excluir esta viagem? Esta acao nao pode ser desfeita.</span>
+                        <span className="text-xs text-danger">Tem certeza que deseja excluir esta viagem? Esta ação não pode ser desfeita.</span>
                         <span className="flex items-center gap-1">
                           <button type="button" onClick={() => handleConfirmDelete(v.id)} disabled={deletingId === v.id} className="rounded-md px-3 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg transition-colors min-h-[40px]">Confirmar</button>
                           <button type="button" onClick={handleCancelDelete} className="rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]">Cancelar</button>
@@ -359,12 +359,12 @@ export function ViagemList({
                 <tr className="border-b border-surface-border bg-surface-muted text-left">
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhao</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhão</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saida</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -465,7 +465,7 @@ export function ViagemList({
                   Anterior
                 </button>
                 <span className="text-sm text-primary-500">
-                  Pagina {page} de {totalPages}
+                  Página {page} de {totalPages}
                 </span>
                 <button
                   type="button"
@@ -493,7 +493,7 @@ export function ViagemList({
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="mx-4 w-full max-w-sm rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl space-y-4">
               <p className="text-base font-bold text-danger">Tem certeza que deseja excluir esta viagem?</p>
-              <p className="text-sm text-primary-500">Esta acao nao pode ser desfeita.</p>
+              <p className="text-sm text-primary-500">Esta ação não pode ser desfeita.</p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"

@@ -1,0 +1,10 @@
+{
+  "Scania": ["R450", "R500", "R540", "R620", "R730", "P360", "P410", "G450", "G500", "S500", "S730"],
+  "Volvo": ["FH 460", "FH 500", "FH 540", "FH 750", "FM 380", "FM 460", "VM 270", "VM 330"],
+  "Mercedes-Benz": ["Actros 2546", "Actros 2553", "Actros 2651", "Actros 2663", "Atego 2430", "Atego 2533", "Axor 2544", "Axor 2644"],
+  "DAF": ["XF 480", "XF 530", "CF 410", "CF 480"],
+  "MAN": ["TGX 29.480", "TGX 33.480", "TGX 29.440", "TGS 33.440", "TGS 29.440"],
+  "Iveco": ["S-Way 490", "S-Way 530", "Hi-Way 560", "Hi-Way 480", "Tector 240"],
+  "Ford": ["Cargo 2842", "Cargo 2431", "Cargo 1932", "F-Max"],
+  "Volkswagen": ["Constellation 25.420", "Constellation 33.460", "Meteor 29.520", "e-Delivery"]
+}

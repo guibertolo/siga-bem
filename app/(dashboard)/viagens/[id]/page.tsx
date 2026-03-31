@@ -44,7 +44,7 @@ export default async function ViagemDetalhePage({
   }
 
   if (!result.success) {
-    if (result.error === 'Nao autenticado') {
+    if (result.error === 'Não autenticado') {
       redirect('/login');
     }
     notFound();
@@ -147,7 +147,7 @@ export default async function ViagemDetalhePage({
               </p>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-primary-500">Caminhao</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-primary-500">Caminhão</p>
               <p className="mt-1 text-sm font-medium text-primary-900">
                 {viagem.caminhao ? `${viagem.caminhao.placa} - ${viagem.caminhao.modelo}` : '-'}
               </p>
@@ -220,7 +220,7 @@ export default async function ViagemDetalhePage({
               </div>
               <div>
                 <p className="text-xs text-primary-500">
-                  Preco diesel ({estimativa.preco_diesel_fonte === 'tabela' ? 'tabela' : 'padrao'})
+                  Preço diesel ({estimativa.preco_diesel_fonte === 'tabela' ? 'tabela' : 'padrao'})
                 </p>
                 <p className="mt-1 text-sm font-medium tabular-nums text-primary-900">
                   {formatBRL(estimativa.preco_diesel_centavos)}/l
@@ -284,7 +284,7 @@ export default async function ViagemDetalhePage({
         {/* Observacao for editable viagens */}
         {isEditable && viagem.observacao && (
           <div className="rounded-lg border border-surface-border bg-surface-card p-6">
-            <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-primary-500">Observacao</h3>
+            <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-primary-500">Observação</h3>
             <p className="text-sm text-primary-700">{viagem.observacao}</p>
           </div>
         )}
@@ -332,7 +332,7 @@ export default async function ViagemDetalhePage({
 
         {/* Status actions */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">
-          <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-500">Acoes</h3>
+          <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-500">Ações</h3>
           <ViagemStatusActions
             viagemId={viagem.id}
             currentStatus={viagem.status as ViagemStatus}

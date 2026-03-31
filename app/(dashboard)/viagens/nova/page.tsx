@@ -29,7 +29,7 @@ export default async function NovaViagemPage() {
   // Story 3.4: motorista without linked caminhao cannot create viagem
   const noCaminhaoMessage =
     isMotorista && caminhoes.length === 0
-      ? 'Voce nao possui caminhao vinculado. Solicite ao proprietario.'
+      ? 'Você não possui caminhao vinculado. Solicite ao proprietario.'
       : undefined;
 
   return (

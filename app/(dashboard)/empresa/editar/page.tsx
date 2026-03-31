@@ -37,7 +37,7 @@ export default async function EditarEmpresaPage() {
         </Link>
         <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Editar Empresa</h2>
         <p className="mt-1 text-base text-primary-500">
-          Atualize os dados da sua empresa. O CNPJ nao pode ser alterado.
+          Atualize os dados da sua empresa. O CNPJ não pode ser alterado.
         </p>
       </div>
 

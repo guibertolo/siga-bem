@@ -35,18 +35,18 @@ export function InvalidarViagemForm({ viagemId }: InvalidarViagemFormProps) {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label htmlFor="motivo" className="mb-2 block text-base font-medium text-primary-700">
-          Motivo da invalidacao <span className="text-danger">*</span>
+          Motivo da invalidação <span className="text-danger">*</span>
         </label>
         <textarea
           id="motivo"
           value={motivo}
           onChange={(e) => setMotivo(e.target.value)}
-          placeholder="Descreva o motivo da invalidacao"
+          placeholder="Descreva o motivo da invalidação"
           rows={4}
           className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-danger/50 focus:border-danger"
         />
         <p className="mt-1.5 text-sm text-primary-500">
-          Minimo 10 caracteres ({motivo.trim().length}/10)
+          Mínimo 10 caracteres ({motivo.trim().length}/10)
         </p>
       </div>
 
@@ -62,7 +62,7 @@ export function InvalidarViagemForm({ viagemId }: InvalidarViagemFormProps) {
           disabled={!canSubmit}
           className="w-full sm:flex-1 rounded-lg bg-danger px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
         >
-          {isPending ? 'Invalidando...' : 'Confirmar Invalidacao'}
+          {isPending ? 'Invalidando...' : 'Confirmar Invalidação'}
         </button>
         <button
           type="button"

@@ -18,26 +18,26 @@ import { getGastos, getGastoFilterOptions } from '@/lib/queries/gastos';
 import { generateGastosCsv } from '@/lib/utils/export-gastos-csv';
 
 const gastoSchema = z.object({
-  categoria_id: z.string().uuid('Categoria e obrigatoria'),
-  motorista_id: z.string().uuid('Motorista e obrigatorio'),
+  categoria_id: z.string().uuid('Categoria é obrigatória'),
+  motorista_id: z.string().uuid('Motorista é obrigatório'),
   caminhao_id: z.string().refine(
     (val) => val === '' || z.string().uuid().safeParse(val).success,
-    'Caminhao invalido',
+    'Caminhão inválido',
   ),
   viagem_id: z.string().refine(
     (val) => val === '' || z.string().uuid().safeParse(val).success,
-    'Viagem invalida',
+    'Viagem inválida',
   ),
   valor: z.string()
-    .min(1, 'Valor e obrigatorio')
+    .min(1, 'Valor é obrigatório')
     .refine((val) => {
       const centavos = parseBrlInputToCentavos(val);
       return centavos !== null && centavos > 0;
     }, 'Valor deve ser maior que zero'),
   data: z.string()
-    .min(1, 'Data e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data invalida'),
-  descricao: z.string().max(1000, 'Descricao deve ter no maximo 1000 caracteres'),
+    .min(1, 'Data é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data inválida'),
+  descricao: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres'),
 });
 
 function extractFieldErrors(
@@ -62,7 +62,7 @@ export async function listCategorias(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -89,7 +89,7 @@ export async function listMotoristasAtivos(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -129,7 +129,7 @@ export async function listCaminhoesAtivos(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -193,11 +193,11 @@ export async function createGasto(
 ): Promise<GastoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   const parsed = gastoSchema.safeParse(formData);
@@ -210,7 +210,7 @@ export async function createGasto(
   // Convert BRL string to centavos
   const valorCentavos = parseBrlInputToCentavos(data.valor);
   if (valorCentavos === null || valorCentavos <= 0) {
-    return { success: false, fieldErrors: { valor: 'Valor invalido' } };
+    return { success: false, fieldErrors: { valor: 'Valor inválido' } };
   }
 
   // Motorista ownership enforcement
@@ -226,7 +226,7 @@ export async function createGasto(
       .maybeSingle();
 
     if (!motoristaRecord) {
-      return { success: false, error: 'Motorista nao vinculado ao usuario' };
+      return { success: false, error: 'Motorista não vinculado ao usuário' };
     }
 
     // Force motorista to use their own ID regardless of what was submitted
@@ -272,11 +272,11 @@ export async function updateGasto(
 ): Promise<GastoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   if (!usuario.ativo) {
-    return { success: false, error: 'Usuario desativado' };
+    return { success: false, error: 'Usuário desativado' };
   }
 
   // Only dono can edit gastos after creation
@@ -293,7 +293,7 @@ export async function updateGasto(
 
   const valorCentavos = parseBrlInputToCentavos(data.valor);
   if (valorCentavos === null || valorCentavos <= 0) {
-    return { success: false, fieldErrors: { valor: 'Valor invalido' } };
+    return { success: false, fieldErrors: { valor: 'Valor inválido' } };
   }
 
   const supabase = await createClient();
@@ -334,7 +334,7 @@ export async function deleteGasto(
 ): Promise<{ success: boolean; error?: string }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   // Only dono can delete gastos
@@ -368,7 +368,7 @@ export async function listGastos(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -417,7 +417,7 @@ export async function getGasto(
 ): Promise<GastoActionResult> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { success: false, error: 'Nao autenticado' };
+    return { success: false, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
@@ -428,7 +428,7 @@ export async function getGasto(
     .single();
 
   if (error || !gasto) {
-    return { success: false, error: 'Gasto nao encontrado' };
+    return { success: false, error: 'Gasto não encontrado' };
   }
 
   // Motorista ownership check
@@ -441,7 +441,7 @@ export async function getGasto(
       .maybeSingle();
 
     if (!motoristaRecord || gasto.motorista_id !== motoristaRecord.id) {
-      return { success: false, error: 'Permissao insuficiente' };
+      return { success: false, error: 'Permissão insuficiente' };
     }
   }
 
@@ -457,7 +457,7 @@ export async function listGastosFiltered(
 ): Promise<{ data: GastoListResult | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   try {
@@ -480,7 +480,7 @@ export async function fetchFilterOptions(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   try {
@@ -492,7 +492,7 @@ export async function fetchFilterOptions(): Promise<{
     return { data: options, error: null };
   } catch (err) {
     const message =
-      err instanceof Error ? err.message : 'Erro ao buscar opcoes de filtro';
+      err instanceof Error ? err.message : 'Erro ao buscar opções de filtro';
     return { data: null, error: message };
   }
 }
@@ -507,11 +507,11 @@ export async function exportGastosCsv(
 ): Promise<{ csv: string | null; error: string | null }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { csv: null, error: 'Nao autenticado' };
+    return { csv: null, error: 'Não autenticado' };
   }
 
   if (usuario.role === 'motorista') {
-    return { csv: null, error: 'Permissao insuficiente' };
+    return { csv: null, error: 'Permissão insuficiente' };
   }
 
   try {
@@ -541,7 +541,7 @@ export async function getGastosMesAtual(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { total: 0, error: 'Nao autenticado' };
+    return { total: 0, error: 'Não autenticado' };
   }
 
   const now = new Date();
@@ -580,7 +580,7 @@ export async function listViagensAtivas(): Promise<{
 }> {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
-    return { data: null, error: 'Nao autenticado' };
+    return { data: null, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();

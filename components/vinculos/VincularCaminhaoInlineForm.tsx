@@ -41,7 +41,7 @@ export function VincularCaminhaoInlineForm({
 
   const handleSubmit = () => {
     if (!selectedCaminhaoId) {
-      setError('Selecione um caminhao');
+      setError('Selecione um caminhão');
       return;
     }
 
@@ -121,7 +121,7 @@ export function VincularCaminhaoInlineForm({
           )}
           disabled={isPending}
         >
-          <option value="">Selecione um caminhao</option>
+          <option value="">Selecione um caminhão</option>
           {caminhoes.map((c) => (
             <option key={c.id} value={c.id}>
               {c.placa} — {c.modelo}

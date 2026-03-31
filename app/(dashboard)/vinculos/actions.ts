@@ -17,11 +17,11 @@ import type {
 
 const vinculoSchema = z.object({
   motorista_id: z.string().uuid('Selecione um motorista'),
-  caminhao_id: z.string().uuid('Selecione um caminhao'),
+  caminhao_id: z.string().uuid('Selecione um caminhão'),
   data_inicio: z.string()
-    .min(1, 'Data de inicio e obrigatoria')
-    .refine((val) => !isNaN(Date.parse(val)), 'Data invalida'),
-  observacao: z.string().max(1000, 'Observacao deve ter no maximo 1000 caracteres'),
+    .min(1, 'Data de início é obrigatória')
+    .refine((val) => !isNaN(Date.parse(val)), 'Data inválida'),
+  observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
 });
 
 function extractFieldErrors(
@@ -51,7 +51,7 @@ export async function createVinculo(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -74,7 +74,7 @@ export async function createVinculo(
   if (!motorista) {
     return {
       success: false,
-      fieldErrors: { motorista_id: 'Motorista nao encontrado na sua empresa' },
+      fieldErrors: { motorista_id: 'Motorista não encontrado na sua empresa' },
     };
   }
 
@@ -96,14 +96,14 @@ export async function createVinculo(
   if (!caminhao) {
     return {
       success: false,
-      fieldErrors: { caminhao_id: 'Caminhao nao encontrado na sua empresa' },
+      fieldErrors: { caminhao_id: 'Caminhão não encontrado na sua empresa' },
     };
   }
 
   if (!caminhao.ativo) {
     return {
       success: false,
-      fieldErrors: { caminhao_id: 'Caminhao esta inativo' },
+      fieldErrors: { caminhao_id: 'Caminhão está inativo' },
     };
   }
 
@@ -145,7 +145,7 @@ export async function encerrarVinculo(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -164,7 +164,7 @@ export async function encerrarVinculo(
     .single();
 
   if (error || !vinculo) {
-    return { success: false, error: 'Vinculo nao encontrado ou ja encerrado.' };
+    return { success: false, error: 'Vinculo não encontrado ou ja encerrado.' };
   }
 
   revalidatePath('/vinculos');
@@ -190,7 +190,7 @@ export async function listVinculos(filter?: {
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -252,7 +252,7 @@ export async function getActiveMotoristas(): Promise<{
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -282,7 +282,7 @@ export async function getActiveCaminhoes(): Promise<{
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 
@@ -458,7 +458,7 @@ export async function getDashboardVinculos(): Promise<VinculosDashboardData> {
       caminhoesSem: [],
       historico: [],
       contadores: { totalVinculados: 0, totalSemMotorista: 0, totalEncerrados: 0 },
-      error: err instanceof Error ? err.message : 'Permissao insuficiente',
+      error: err instanceof Error ? err.message : 'Permissão insuficiente',
     };
   }
 

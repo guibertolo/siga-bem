@@ -29,9 +29,9 @@ export default function CadastroCaminhaoPage() {
           </svg>
           Voltar
         </Link>
-        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Cadastrar Caminhao</h2>
+        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Cadastrar Caminhão</h2>
         <p className="mt-1 text-base text-primary-500">
-          Preencha os dados do caminhao cegonheiro.
+          Preencha os dados do caminhão cegonheiro.
         </p>
       </div>
 
