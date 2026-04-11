@@ -4,6 +4,7 @@ const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/__tests__'],
+  testPathIgnorePatterns: ['/node_modules/', '/__helpers__/'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
