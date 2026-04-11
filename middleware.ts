@@ -21,5 +21,7 @@ export const config = {
     '/configuracoes/:path*',
     '/bi/:path*',
     '/perfil/:path*',
+    '/assistente/:path*',
+    '/api/assistente/:path*',
   ],
 };
