@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatBRL } from '@/lib/utils/currency';
 import { deleteGasto } from '@/app/(dashboard)/gastos/actions';
-import { ReceiptModal } from '@/components/gastos/ReceiptModal';
 import { OverflowMenu } from '@/components/ui/OverflowMenu';
 import type { GastoListItemWithFoto } from '@/types/gasto';
 
@@ -20,11 +20,11 @@ function formatDate(dateStr: string): string {
 }
 
 export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono = false }: GastoTableProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [receiptGastoId, setReceiptGastoId] = useState<string | null>(null);
 
   function handleDeleteClick(gastoId: string) {
     setConfirmId(gastoId);
@@ -93,13 +93,12 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                 </Link>
               )}
               {gasto.foto_url && (
-                <button
-                  type="button"
-                  onClick={() => setReceiptGastoId(gasto.id)}
+                <Link
+                  href={`/gastos/${gasto.id}/editar`}
                   className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
                 >
                   Comprovante
-                </button>
+                </Link>
               )}
               {isDono && (
                 confirmId === gasto.id ? (
@@ -195,10 +194,9 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                 </td>
                 <td className="px-4 py-3.5 text-center">
                   {gasto.foto_url ? (
-                    <button
-                      type="button"
-                      onClick={() => setReceiptGastoId(gasto.id)}
-                      className="inline-block cursor-pointer text-primary-500 transition-colors hover:text-primary-800"
+                    <Link
+                      href={`/gastos/${gasto.id}/editar`}
+                      className="inline-block text-primary-500 transition-colors hover:text-primary-800"
                       title="Ver comprovante"
                     >
                       <svg
@@ -214,7 +212,7 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                           d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                         />
                       </svg>
-                    </button>
+                    </Link>
                   ) : (
                     <span className="text-text-subtle">-</span>
                   )}
@@ -233,13 +231,12 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                       </Link>
                     )}
                     {gasto.foto_url && !isDono && (
-                      <button
-                        type="button"
-                        onClick={() => setReceiptGastoId(gasto.id)}
+                      <Link
+                        href={`/gastos/${gasto.id}/editar`}
                         className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[40px]"
                       >
                         Comprovante
-                      </button>
+                      </Link>
                     )}
                     {isDono && (
                       <OverflowMenu
@@ -247,7 +244,7 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                           ...(gasto.foto_url ? [{
                             label: 'Comprovante',
                             variant: 'default' as const,
-                            onClick: () => setReceiptGastoId(gasto.id),
+                            onClick: () => router.push(`/gastos/${gasto.id}/editar`),
                             icon: (
                               <svg className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -304,12 +301,6 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
         </div>
       )}
 
-      {receiptGastoId && (
-        <ReceiptModal
-          gastoId={receiptGastoId}
-          onClose={() => setReceiptGastoId(null)}
-        />
-      )}
     </>
   );
 }

@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
-import { ReceiptModal } from '@/components/gastos/ReceiptModal';
 import { AbastecimentoResumo } from '@/components/abastecimento/AbastecimentoResumo';
 import type { AbastecimentoItem } from '@/lib/queries/combustivel-queries';
 
@@ -56,15 +54,13 @@ interface AbastecimentoListProps {
  * Renders a card-based list (mobile-first) with:
  * - Date, liters, total value, derived price/liter
  * - Gas station + UF
- * - Camera icon for receipt photos (tapping opens ReceiptModal)
+ * - Camera icon for receipt photos (tapping navigates to edit page)
  * - Empty state with guidance message
  * - Summary totals via AbastecimentoResumo
  *
  * UX for 60+ audience: large text, large touch targets, bold values.
  */
 export function AbastecimentoList({ abastecimentos, isDono = false }: AbastecimentoListProps) {
-  const [receiptGastoId, setReceiptGastoId] = useState<string | null>(null);
-
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-6">
       <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-500">
@@ -157,9 +153,8 @@ export function AbastecimentoList({ abastecimentos, isDono = false }: Abastecime
                   </Link>
                 )}
                 {item.tem_foto ? (
-                  <button
-                    type="button"
-                    onClick={() => setReceiptGastoId(item.id)}
+                  <Link
+                    href={`/gastos/${item.id}/editar`}
                     className="rounded-lg p-2 text-success transition-colors hover:bg-surface-muted min-h-[40px] min-w-[40px] flex items-center justify-center"
                     aria-label="Ver comprovante"
                     title="Ver comprovante"
@@ -167,7 +162,7 @@ export function AbastecimentoList({ abastecimentos, isDono = false }: Abastecime
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                  </button>
+                  </Link>
                 ) : (
                   <Link
                     href={`/gastos/${item.id}/editar`}
@@ -186,13 +181,6 @@ export function AbastecimentoList({ abastecimentos, isDono = false }: Abastecime
         </div>
       )}
 
-      {/* Receipt modal (REUSE existing component — AC 6) */}
-      {receiptGastoId && (
-        <ReceiptModal
-          gastoId={receiptGastoId}
-          onClose={() => setReceiptGastoId(null)}
-        />
-      )}
     </div>
   );
 }
