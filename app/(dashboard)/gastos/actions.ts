@@ -603,8 +603,8 @@ export async function listViagensAtivas(): Promise<{
     status: v.status,
     motorista_id: v.motorista_id,
     caminhao_id: v.caminhao_id,
-    motorista_nome: (v.motorista as { nome: string } | null)?.nome ?? null,
-    caminhao_placa: (v.caminhao as { placa: string } | null)?.placa ?? null,
+    motorista_nome: (v.motorista as unknown as { nome: string } | null)?.nome ?? null,
+    caminhao_placa: (v.caminhao as unknown as { placa: string } | null)?.placa ?? null,
   }));
 
   return { data: mapped, error: null };

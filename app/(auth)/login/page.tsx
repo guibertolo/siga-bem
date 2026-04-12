@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { sendMagicLink, signInWithPassword, solicitarResetSenha } from '@/app/(auth)/login/actions';
 
 type LoginMode = 'password' | 'magic-link' | 'recuperar';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);

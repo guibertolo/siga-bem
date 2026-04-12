@@ -22,7 +22,7 @@ const MOTORISTA_STEPS = [
 export default function TutorialWelcomePage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [role, setRole] = useState<'dono' | 'motorista' | null>(null);
+  const [role] = useState<'dono' | 'motorista' | null>(null);
 
   // Detect role from URL or default to dono
   const steps = role === 'motorista' ? MOTORISTA_STEPS : DONO_STEPS;
@@ -46,6 +46,7 @@ export default function TutorialWelcomePage() {
       <div className="w-full bg-surface-card rounded-2xl shadow-2xl p-8 text-center" style={{ maxWidth: '520px' }}>
         {/* Logo */}
         <div className="mb-6 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element -- SVG logo, next/image adds no benefit */}
           <img
             src="/logos/frotaviva-logo-icon.svg"
             alt="FrotaViva"

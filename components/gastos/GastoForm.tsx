@@ -132,7 +132,6 @@ export function GastoForm({
       }
     }
     // Only run on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleViagemChange(e: React.ChangeEvent<HTMLSelectElement>) {

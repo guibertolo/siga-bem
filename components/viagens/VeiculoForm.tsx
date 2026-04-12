@@ -7,7 +7,7 @@ import { viagemVeiculoSchema } from '@/lib/validations/viagem-veiculo';
 import { maskPlaca } from '@/lib/utils/validate-placa';
 import { cn } from '@/lib/utils/cn';
 import type { ViagemVeiculo, ViagemVeiculoFormData, ViagemVeiculoActionResult } from '@/types/viagem-veiculo';
-import type { ViagemVeiculoFormValues } from '@/lib/validations/viagem-veiculo';
+import type { ViagemVeiculoFormInput } from '@/lib/validations/viagem-veiculo';
 
 interface VeiculoFormProps {
   veiculo?: ViagemVeiculo | null;
@@ -26,7 +26,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<ViagemVeiculoFormValues>({
+  } = useForm<ViagemVeiculoFormInput>({
     resolver: standardSchemaResolver(viagemVeiculoSchema),
     defaultValues: {
       modelo: veiculo?.modelo ?? '',
@@ -51,7 +51,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
     }
   }, [watchedPlaca, setValue]);
 
-  function onFormSubmit(values: ViagemVeiculoFormValues) {
+  function onFormSubmit(values: ViagemVeiculoFormInput) {
     setServerError(null);
 
     startTransition(async () => {
@@ -71,7 +71,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
         if (result.fieldErrors) {
           for (const [field, message] of Object.entries(result.fieldErrors)) {
             if (message) {
-              setError(field as keyof ViagemVeiculoFormValues, { message });
+              setError(field as keyof ViagemVeiculoFormInput, { message });
             }
           }
         }

@@ -51,3 +51,4 @@ export const viagemVeiculoSchema = z.object({
 });
 
 export type ViagemVeiculoFormValues = z.infer<typeof viagemVeiculoSchema>;
+export type ViagemVeiculoFormInput = z.input<typeof viagemVeiculoSchema>;

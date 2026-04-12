@@ -49,8 +49,6 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
   const hasMultiple = empresas.length > 1;
 
   const isMultiActive = multiMode && checkedIds.size >= 2;
-  const allChecked = checkedIds.size === empresas.length;
-  const someChecked = checkedIds.size > 0 && checkedIds.size < empresas.length;
 
   const displayName = isMultiActive
     ? `${checkedIds.size} de ${empresas.length} empresas`
@@ -93,7 +91,6 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
   }
 
   function handleCheckboxToggle(empresaId: string) {
-    const activeId = activeEmpresa?.empresa_id;
     setCheckedIds((prev) => {
       const next = new Set(prev);
       if (next.has(empresaId)) {
@@ -103,18 +100,6 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
       }
       return next;
     });
-    setMultiMode(true);
-  }
-
-  function handleToggleAll() {
-    if (allChecked) {
-      // Deselect all except active
-      const activeId = activeEmpresa?.empresa_id;
-      setCheckedIds(activeId ? new Set([activeId]) : new Set());
-    } else {
-      // Select all
-      setCheckedIds(new Set(empresas.map((e) => e.empresa_id)));
-    }
     setMultiMode(true);
   }
 

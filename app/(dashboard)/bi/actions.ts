@@ -1600,7 +1600,6 @@ export async function getBIAlertas(
             const outlier = isSmall ? pctDev >= 0.30 : v.kml < stats.mean - OUTLIER_FACTOR * stats.stdDev;
             const critical = isSmall ? pctDev >= 0.50 : v.kml < stats.mean - 2 * stats.stdDev;
             if (outlier) {
-              const pctBelow = Math.round(pctDev * 100);
               alertas.push({
                 tipo: 'combustivel',
                 severidade: critical ? 'alto' : 'medio',

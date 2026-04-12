@@ -15,7 +15,7 @@ export default async function EmpresaPage() {
   if (!usuario) redirect('/login');
   if (usuario.role === 'motorista') redirect('/dashboard');
 
-  const [empresas, empresaAtiva] = await Promise.all([
+  const [empresas] = await Promise.all([
     getUserEmpresas(),
     getEmpresa(),
   ]);

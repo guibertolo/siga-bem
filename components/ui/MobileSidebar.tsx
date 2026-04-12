@@ -96,6 +96,7 @@ export function MobileSidebar({
             className="flex items-center gap-3 no-underline"
             onClick={() => setOpen(false)}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG logo, next/image adds no benefit */}
             <img
               src="/logos/frotaviva-logo-icon.svg"
               alt=""

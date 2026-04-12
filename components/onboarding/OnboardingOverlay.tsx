@@ -84,6 +84,7 @@ export function OnboardingOverlay({
       <div className="bg-surface-card rounded-2xl shadow-2xl p-8 text-center" style={{ width: '100%', maxWidth: '520px' }}>
         {/* Logo */}
         <div className="mb-6 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element -- SVG logo, next/image adds no benefit */}
           <img
             src="/logos/frotaviva-logo-icon.svg"
             alt=""

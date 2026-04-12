@@ -19,7 +19,7 @@ function formatDate(dateStr: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export function GastoTable({ gastos, isMotorista = false, isDono = false }: GastoTableProps) {
+export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono = false }: GastoTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
