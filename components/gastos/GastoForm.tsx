@@ -3,13 +3,19 @@
 import { useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { z } from 'zod';
-import { useEffect, useState, useTransition } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import { maskCurrency } from '@/lib/utils/mask-currency';
 import { cn } from '@/lib/utils/cn';
+import { listComprovantes } from '@/app/(dashboard)/gastos/comprovante-actions';
 import type { Gasto, GastoFormData, GastoActionResult } from '@/types/gasto';
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
+import type { FotoComprovanteWithUrl } from '@/types/foto-comprovante';
+
+const ComprovantesUpload = lazy(() =>
+  import('@/components/gastos/ComprovantesUpload').then((m) => ({ default: m.ComprovantesUpload })),
+);
 
 export interface ViagemOption {
   id: string;
@@ -18,6 +24,8 @@ export interface ViagemOption {
   status: string;
   motorista_id: string;
   caminhao_id: string;
+  motorista_nome?: string | null;
+  caminhao_placa?: string | null;
 }
 
 const gastoFormSchema = z.object({
@@ -46,6 +54,7 @@ interface GastoFormProps {
   viagens?: ViagemOption[];
   viagemIdInicial?: string | null;
   motoristaFixo?: string | null; // Pre-filled for motorista role
+  empresaId?: string | null;
   onSubmit: (data: GastoFormData) => Promise<GastoActionResult>;
 }
 
@@ -62,11 +71,21 @@ export function GastoForm({
   viagens = [],
   viagemIdInicial,
   motoristaFixo,
+  empresaId,
   onSubmit,
 }: GastoFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [createdGasto, setCreatedGasto] = useState<Gasto | null>(null);
+  const [comprovantesLista, setComprovantesLista] = useState<FotoComprovanteWithUrl[]>([]);
+
+  const refreshComprovantes = useCallback(async (gastoId: string) => {
+    const result = await listComprovantes(gastoId);
+    if (result.success && result.data) {
+      setComprovantesLista(result.data);
+    }
+  }, []);
 
   const defaultViagemId = gasto?.viagem_id ?? viagemIdInicial ?? '';
 
@@ -153,7 +172,11 @@ export function GastoForm({
           setServerError(result.error);
         }
       } else {
-        router.push(viagemIdInicial ? `/viagens/${viagemIdInicial}` : '/gastos');
+        if (mode === 'create' && result.gasto) {
+          setCreatedGasto(result.gasto);
+        } else {
+          router.push(viagemIdInicial ? `/viagens/${viagemIdInicial}` : '/gastos');
+        }
       }
     });
   }
@@ -169,6 +192,51 @@ export function GastoForm({
   const isMotoristaLocked = isMotoristaFixo || isViagemSelected;
   const isCaminhaoLocked = isViagemSelected;
   const inputClass = 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500';
+
+  // After creation: show success + comprovante upload inline
+  if (createdGasto) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-lg border border-success/20 bg-alert-success-bg p-4 text-base text-success font-medium">
+          Gasto registrado com sucesso!
+        </div>
+
+        {empresaId && (
+          <Suspense fallback={<div className="text-sm text-primary-500">Carregando...</div>}>
+            <ComprovantesUpload
+              gastoId={createdGasto.id}
+              empresaId={empresaId}
+              comprovantes={comprovantesLista}
+              onComprovanteChange={() => refreshComprovantes(createdGasto.id)}
+            />
+          </Suspense>
+        )}
+
+        <div className="flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              setCreatedGasto(null);
+              setServerError(null);
+            }}
+            className="rounded-lg border border-surface-border px-6 py-3 text-base font-medium text-primary-700 min-h-[48px] transition-colors hover:bg-surface-muted"
+          >
+            Registrar outro gasto
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push(viagemIdInicial ? `/viagens/${viagemIdInicial}` : '/gastos')}
+            className={cn(
+              'inline-flex items-center justify-center gap-2 rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors',
+              'hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+            )}
+          >
+            Concluir
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
@@ -196,11 +264,19 @@ export function GastoForm({
             )}
           >
             <option value="">Sem viagem vinculada</option>
-            {viagens.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.origem} &rarr; {v.destino} ({v.status === 'em_andamento' ? 'Em Viagem' : 'Planejada'})
-              </option>
-            ))}
+            {viagens.map((v) => {
+              const parts = [
+                v.motorista_nome,
+                v.caminhao_placa,
+                `${v.origem} \u2192 ${v.destino}`,
+                v.status === 'em_andamento' ? 'Em Viagem' : 'Planejada',
+              ].filter(Boolean);
+              return (
+                <option key={v.id} value={v.id}>
+                  {parts.join(' | ')}
+                </option>
+              );
+            })}
           </select>
         </div>
       )}

@@ -66,10 +66,15 @@ export async function uploadComprovante(
   }
 
   // Valida que o content-type declarado bate com o tipo do File (anti-spoof simples).
-  if (file.type && file.type.toLowerCase() !== normalizedMime) {
-    return {
-      success: false,
-      error: 'Tipo de arquivo inconsistente',
+  // Imagens comprimidas no client viram JPEG, entao file.type (original) pode diferir
+  // do contentType declarado (pos-compressao). Aceitar se ambos sao tipos permitidos.
+  const fileTypeLower = file.type?.toLowerCase() ?? ''
+  if (fileTypeLower && fileTypeLower !== normalizedMime) {
+    if (!ALLOWED_MIME_TYPES.has(fileTypeLower)) {
+      return {
+        success: false,
+        error: 'Tipo de arquivo inconsistente',
+      }
     }
   }
 

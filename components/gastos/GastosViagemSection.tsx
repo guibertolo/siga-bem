@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { formatBRL } from '@/lib/utils/currency';
 import { resolveIcone } from '@/lib/utils/categoria-icone';
@@ -68,6 +71,8 @@ export function GastosViagemSection({
   totalCentavos,
   isDono = false,
 }: GastosViagemSectionProps) {
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+
   return (
     <div className="rounded-lg border border-surface-border bg-surface-card p-6">
       <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-500">
@@ -136,12 +141,25 @@ export function GastosViagemSection({
                 </span>
                 <div className="flex items-center gap-2">
                   {gasto.foto_url ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-success">
-                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Comprovante
-                    </span>
+                    gasto.foto_signed_url ? (
+                      <button
+                        type="button"
+                        onClick={() => setLightboxUrl(gasto.foto_signed_url)}
+                        className="inline-flex items-center gap-1 text-xs text-success transition-colors hover:text-success/80"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Ver Comprovante
+                      </button>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs text-success">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Comprovante
+                      </span>
+                    )
                   ) : (
                     <Link
                       href={`/gastos/${gasto.id}/editar`}
@@ -175,6 +193,46 @@ export function GastosViagemSection({
               {formatBRL(totalCentavos)}
             </span>
           </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          style={{ width: '100vw', height: '100vh', top: 0, left: 0 }}
+          onClick={() => setLightboxUrl(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Visualizar comprovante"
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxUrl(null)}
+            className="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white transition-colors hover:bg-white/40"
+            aria-label="Fechar"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+          {lightboxUrl.endsWith('.pdf') ? (
+            <iframe
+              src={lightboxUrl}
+              title="Comprovante PDF"
+              className="h-[85vh] w-[90vw] max-w-4xl rounded-lg bg-white"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={lightboxUrl}
+              alt="Comprovante em tamanho completo"
+              className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
         </div>
       )}
     </div>

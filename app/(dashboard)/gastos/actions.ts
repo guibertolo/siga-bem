@@ -575,6 +575,8 @@ export async function listViagensAtivas(): Promise<{
     status: string;
     motorista_id: string;
     caminhao_id: string;
+    motorista_nome: string | null;
+    caminhao_placa: string | null;
   }> | null;
   error: string | null;
 }> {
@@ -586,7 +588,7 @@ export async function listViagensAtivas(): Promise<{
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('viagem')
-    .select('id, origem, destino, status, motorista_id, caminhao_id')
+    .select('id, origem, destino, status, motorista_id, caminhao_id, motorista:motorista_id(nome), caminhao:caminhao_id(placa)')
     .in('status', ['planejada', 'em_andamento'])
     .order('data_saida', { ascending: false });
 
@@ -594,5 +596,16 @@ export async function listViagensAtivas(): Promise<{
     return { data: null, error: error.message };
   }
 
-  return { data: data ?? [], error: null };
+  const mapped = (data ?? []).map((v) => ({
+    id: v.id,
+    origem: v.origem,
+    destino: v.destino,
+    status: v.status,
+    motorista_id: v.motorista_id,
+    caminhao_id: v.caminhao_id,
+    motorista_nome: (v.motorista as { nome: string } | null)?.nome ?? null,
+    caminhao_placa: (v.caminhao as { placa: string } | null)?.placa ?? null,
+  }));
+
+  return { data: mapped, error: null };
 }

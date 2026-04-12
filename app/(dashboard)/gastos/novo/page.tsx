@@ -79,6 +79,7 @@ export default async function NovoGastoPage({ searchParams }: NovoGastoPageProps
         viagens={viagensResult.data ?? []}
         viagemIdInicial={viagemId ?? null}
         motoristaFixo={motoristaFixo}
+        empresaId={multiCtx.activeEmpresaId ?? usuario.empresa_id}
         onSubmit={createGasto}
       />
     </div>

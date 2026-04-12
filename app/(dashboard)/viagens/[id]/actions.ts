@@ -209,6 +209,7 @@ export interface GastoViagemItem {
   valor: number; // centavos
   descricao: string | null;
   foto_url: string | null;
+  foto_signed_url: string | null;
   categoria_nome: string;
   categoria_icone: string | null;
   categoria_cor: string | null;
@@ -253,18 +254,29 @@ export async function getGastosPorViagem(
     return { data: [], totalCentavos: 0, error: error.message };
   }
 
-  const items: GastoViagemItem[] = (data ?? [])
+  const filtered = (data ?? [])
     .filter((row) => {
       const cat = row.categoria_gasto as unknown as { nome: string } | null;
       // Exclude fuel entries — those appear in AbastecimentoList
       return cat?.nome?.toLowerCase() !== 'combustivel';
-    })
-    .map((row) => {
+    });
+
+  // Generate signed URLs for comprovantes in parallel
+  const items: GastoViagemItem[] = await Promise.all(
+    filtered.map(async (row) => {
       const cat = row.categoria_gasto as unknown as {
         nome: string;
         icone: string | null;
         cor: string | null;
       } | null;
+
+      let fotoSignedUrl: string | null = null;
+      if (row.foto_url) {
+        const { data: signedData } = await supabase.storage
+          .from('comprovantes')
+          .createSignedUrl(row.foto_url, 3600);
+        fotoSignedUrl = signedData?.signedUrl ?? null;
+      }
 
       return {
         id: row.id,
@@ -273,11 +285,13 @@ export async function getGastosPorViagem(
         valor: row.valor,
         descricao: row.descricao,
         foto_url: row.foto_url ?? null,
+        foto_signed_url: fotoSignedUrl,
         categoria_nome: cat?.nome ?? 'Sem categoria',
         categoria_icone: cat?.icone ?? null,
         categoria_cor: cat?.cor ?? null,
       };
-    });
+    }),
+  );
 
   const totalCentavos = items.reduce((sum, item) => sum + item.valor, 0);
 
