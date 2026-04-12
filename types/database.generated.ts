@@ -1255,7 +1255,7 @@ export type Database = {
     Enums: {
       cnh_categoria: "A" | "B" | "C" | "D" | "E" | "AB" | "AC" | "AD" | "AE"
       combustivel_tipo: "diesel_s10" | "diesel_comum"
-      fechamento_item_tipo: "gasto" | "viagem"
+      fechamento_item_tipo: "gasto" | "viagem" | "avulso" | "ajuste"
       fechamento_status: "aberto" | "fechado" | "pago"
       fechamento_tipo: "semanal" | "mensal"
       motorista_status: "ativo" | "inativo"
@@ -1395,7 +1395,7 @@ export const Constants = {
     Enums: {
       cnh_categoria: ["A", "B", "C", "D", "E", "AB", "AC", "AD", "AE"],
       combustivel_tipo: ["diesel_s10", "diesel_comum"],
-      fechamento_item_tipo: ["gasto", "viagem"],
+      fechamento_item_tipo: ["gasto", "viagem", "avulso", "ajuste"],
       fechamento_status: ["aberto", "fechado", "pago"],
       fechamento_tipo: ["semanal", "mensal"],
       motorista_status: ["ativo", "inativo"],
