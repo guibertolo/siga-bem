@@ -13,22 +13,51 @@ import type {
 } from '@/types/fechamento';
 import type { FechamentoTipo } from '@/types/database';
 
+interface ViagemPendenteResumo {
+  id: string;
+  origem: string;
+  destino: string;
+  data_saida: string;
+  valor_total: number;
+}
+
 interface FechamentoFormProps {
   motoristas: Array<{ id: string; nome: string }>;
   initialMotoristaId?: string;
   initialDataInicio?: string;
   initialDataFim?: string;
+  autoPeriodo?: boolean;
+  autoPeriodoInicio?: string;
+  autoPeriodoFim?: string;
+  viagensPendentes?: ViagemPendenteResumo[];
 }
 
-export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInicio, initialDataFim }: FechamentoFormProps) {
+export function FechamentoForm({
+  motoristas,
+  initialMotoristaId,
+  initialDataInicio,
+  initialDataFim,
+  autoPeriodo,
+  autoPeriodoInicio,
+  autoPeriodoFim,
+  viagensPendentes,
+}: FechamentoFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  // Auto-periodo mode: start read-only, allow switching to manual
+  const [modoManual, setModoManual] = useState(false);
+  const isAutoMode = autoPeriodo && !modoManual;
 
   // Step 1: params
   const [motoristaId, setMotoristaId] = useState(initialMotoristaId ?? '');
   const [tipo, setTipo] = useState<FechamentoTipo>('mensal');
-  const [periodoInicio, setPeriodoInicio] = useState(initialDataInicio ?? '');
-  const [periodoFim, setPeriodoFim] = useState(initialDataFim ?? '');
+  const [periodoInicio, setPeriodoInicio] = useState(
+    (autoPeriodo && autoPeriodoInicio) ? autoPeriodoInicio : (initialDataInicio ?? ''),
+  );
+  const [periodoFim, setPeriodoFim] = useState(
+    (autoPeriodo && autoPeriodoFim) ? autoPeriodoFim : (initialDataFim ?? ''),
+  );
   const [observacao, setObservacao] = useState('');
 
   // Month selector for mensal
@@ -170,74 +199,146 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
             )}
           </div>
 
-          {/* Tipo */}
-          <div>
-            <label className="mb-2 block text-base font-medium text-primary-700">
-              Tipo de Período *
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-base text-primary-900">
-                <input
-                  type="radio"
-                  name="tipo"
-                  value="mensal"
-                  checked={tipo === 'mensal'}
-                  onChange={() => handleTipoChange('mensal')}
-                  className="text-primary-700"
-                />
-                Mensal
-              </label>
-              <label className="flex items-center gap-2 text-base text-primary-900">
-                <input
-                  type="radio"
-                  name="tipo"
-                  value="semanal"
-                  checked={tipo === 'semanal'}
-                  onChange={() => handleTipoChange('semanal')}
-                  className="text-primary-700"
-                />
-                Semanal
-              </label>
-            </div>
-          </div>
+          {/* Auto-periodo: read-only display with viagens list */}
+          {isAutoMode && (
+            <>
+              {(!viagensPendentes || viagensPendentes.length === 0) ? (
+                <div className="rounded-lg border border-badge-warning-bg bg-badge-warning-bg/20 p-4">
+                  <p className="text-base font-medium text-primary-900">
+                    Nenhuma viagem pendente para este motorista.
+                  </p>
+                  <p className="mt-1 text-sm text-primary-500">
+                    Todas as viagens já foram acertadas ou não existem viagens concluídas.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="rounded-lg border border-success/30 bg-success/5 p-4">
+                    <p className="text-base font-medium text-primary-900">
+                      Período calculado automaticamente
+                    </p>
+                    <p className="mt-1 text-lg font-bold tabular-nums text-primary-900">
+                      {formatarData(periodoInicio)} até {formatarData(periodoFim)}
+                    </p>
+                    <p className="mt-1 text-sm text-primary-500">
+                      {viagensPendentes.length} {viagensPendentes.length === 1 ? 'viagem pendente' : 'viagens pendentes'}
+                    </p>
+                  </div>
 
-          {/* Periodo selector */}
-          {tipo === 'mensal' ? (
-            <div>
-              <label htmlFor="mes" className="mb-2 block text-base font-medium text-primary-700">
-                Mes/Ano *
-              </label>
-              <select
-                id="mes"
-                value={selectedMonth}
-                onChange={(e) => handleMonthChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              >
-                <option value="">Selecione o mes</option>
-                {monthOptions.map((opt) => (
-                  <option key={`${opt.ano}-${opt.mes}`} value={`${opt.ano}-${opt.mes}`}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div>
-              <label htmlFor="semana" className="mb-2 block text-base font-medium text-primary-700">
-                Data de referência da semana *
-              </label>
-              <input
-                id="semana"
-                type="date"
-                onChange={(e) => handleWeekDateChange(e.target.value)}
-                className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              />
-              {periodoInicio && periodoFim && (
-                <p className="mt-1 text-xs text-primary-500">
-                  Semana: {formatarData(periodoInicio)} a {formatarData(periodoFim)}
-                </p>
+                  {/* Viagens included in auto-periodo */}
+                  <div className="rounded-lg border border-surface-border bg-surface-card overflow-hidden">
+                    <div className="px-4 py-3 bg-surface-muted">
+                      <p className="text-sm font-medium text-primary-700">
+                        Viagens incluídas no acerto
+                      </p>
+                    </div>
+                    <div className="divide-y divide-surface-border">
+                      {viagensPendentes.map((v) => (
+                        <div key={v.id} className="flex items-center justify-between px-4 py-3">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-base text-primary-900">
+                              {v.origem} &rarr; {v.destino}
+                            </p>
+                            <p className="text-sm tabular-nums text-primary-500">
+                              {formatarData(v.data_saida)}
+                            </p>
+                          </div>
+                          <span className="shrink-0 text-base font-medium tabular-nums text-primary-900">
+                            {formatBRL(v.valor_total)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
-            </div>
+
+              <button
+                type="button"
+                onClick={() => setModoManual(true)}
+                className="inline-flex items-center gap-2 text-base font-medium text-primary-700 transition-colors hover:text-primary-900 min-h-[48px]"
+              >
+                <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Ajustar manualmente
+              </button>
+            </>
+          )}
+
+          {/* Manual mode: tipo + periodo selectors */}
+          {!isAutoMode && (
+            <>
+              {/* Tipo */}
+              <div>
+                <label className="mb-2 block text-base font-medium text-primary-700">
+                  Tipo de Período *
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 text-base text-primary-900">
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="mensal"
+                      checked={tipo === 'mensal'}
+                      onChange={() => handleTipoChange('mensal')}
+                      className="text-primary-700"
+                    />
+                    Mensal
+                  </label>
+                  <label className="flex items-center gap-2 text-base text-primary-900">
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value="semanal"
+                      checked={tipo === 'semanal'}
+                      onChange={() => handleTipoChange('semanal')}
+                      className="text-primary-700"
+                    />
+                    Semanal
+                  </label>
+                </div>
+              </div>
+
+              {/* Periodo selector */}
+              {tipo === 'mensal' ? (
+                <div>
+                  <label htmlFor="mes" className="mb-2 block text-base font-medium text-primary-700">
+                    Mes/Ano *
+                  </label>
+                  <select
+                    id="mes"
+                    value={selectedMonth}
+                    onChange={(e) => handleMonthChange(e.target.value)}
+                    className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  >
+                    <option value="">Selecione o mes</option>
+                    {monthOptions.map((opt) => (
+                      <option key={`${opt.ano}-${opt.mes}`} value={`${opt.ano}-${opt.mes}`}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div>
+                  <label htmlFor="semana" className="mb-2 block text-base font-medium text-primary-700">
+                    Data de referência da semana *
+                  </label>
+                  <input
+                    id="semana"
+                    type="date"
+                    onChange={(e) => handleWeekDateChange(e.target.value)}
+                    className="w-full rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base text-primary-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  />
+                  {periodoInicio && periodoFim && (
+                    <p className="mt-1 text-xs text-primary-500">
+                      Semana: {formatarData(periodoInicio)} a {formatarData(periodoFim)}
+                    </p>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
           {/* Observacao */}
@@ -258,7 +359,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
           <button
             type="button"
             onClick={handleCalcular}
-            disabled={isPending}
+            disabled={isPending || (isAutoMode && (!viagensPendentes || viagensPendentes.length === 0))}
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-btn-primary px-4 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover disabled:opacity-50"
           >
             {isPending ? 'Calculando...' : 'Ver Resumo do Acerto'}

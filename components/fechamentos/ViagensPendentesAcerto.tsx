@@ -176,7 +176,7 @@ function MotoristaCard({ group, isMultiEmpresa }: { group: MotoristaGroup; isMul
           {/* Action */}
           <div className="border-t border-surface-border px-4 py-3 bg-surface-muted">
             <Link
-              href={`/fechamentos/novo?motorista_id=${group.motorista_id}`}
+              href={`/fechamentos/novo?motorista_id=${group.motorista_id}&auto_periodo=true`}
               className="inline-flex items-center gap-2 rounded-lg bg-success px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-success/90 min-h-[48px]"
             >
               <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
