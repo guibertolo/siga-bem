@@ -451,6 +451,135 @@ async function updateFechamentoStatus(
   return { success: true, fechamento: updated as Fechamento };
 }
 
+// ---------------------------------------------------------------------------
+// Acerto Avulso (ad-hoc settlement item)
+// ---------------------------------------------------------------------------
+
+const acertoAvulsoSchema = z.object({
+  motorista_id: z.string().uuid(),
+  valor: z.number().positive('Valor deve ser positivo'),
+  descricao: z.string().min(3, 'Descrição deve ter pelo menos 3 caracteres').max(200, 'Descrição deve ter no máximo 200 caracteres'),
+});
+
+/**
+ * Create an ad-hoc settlement item (acerto avulso).
+ * Finds or creates an open fechamento for the motorista in the current month,
+ * then inserts a fechamento_item with tipo='avulso'.
+ */
+export async function criarAcertoAvulso(input: {
+  motorista_id: string;
+  valor: number;
+  descricao: string;
+}): Promise<{ success: boolean; fechamentoId?: string; error?: string }> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { success: false, error: 'Não autenticado' };
+  }
+
+  if (!usuario.ativo) {
+    return { success: false, error: 'Usuário desativado' };
+  }
+
+  if (usuario.role === 'motorista') {
+    return { success: false, error: 'Motorista não pode criar acertos avulsos' };
+  }
+
+  const parsed = acertoAvulsoSchema.safeParse(input);
+  if (!parsed.success) {
+    const firstIssue = parsed.error.issues[0];
+    return { success: false, error: firstIssue?.message ?? 'Dados inválidos' };
+  }
+
+  const data = parsed.data;
+  const supabase = await createClient();
+
+  // Verify motorista belongs to user's empresa
+  const { data: motorista, error: motoristaError } = await supabase
+    .from('motorista')
+    .select('id, nome')
+    .eq('id', data.motorista_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (motoristaError || !motorista) {
+    return { success: false, error: 'Motorista não encontrado na sua empresa' };
+  }
+
+  try {
+    // Find open fechamento for this motorista
+    const { data: existingFechamento } = await supabase
+      .from('fechamento')
+      .select('id')
+      .eq('empresa_id', usuario.empresa_id!)
+      .eq('motorista_id', data.motorista_id)
+      .eq('status', 'aberto')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    let fechamentoId: string;
+
+    if (existingFechamento) {
+      fechamentoId = existingFechamento.id;
+    } else {
+      // Create new fechamento for the current month
+      const now = new Date();
+      const periodoInicio = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+      const periodoFim = now.toISOString().split('T')[0];
+
+      const { data: novoFechamento, error: createError } = await supabase
+        .from('fechamento')
+        .insert({
+          empresa_id: usuario.empresa_id,
+          motorista_id: data.motorista_id,
+          tipo: 'mensal' as const,
+          status: 'aberto' as FechamentoStatus,
+          periodo_inicio: periodoInicio,
+          periodo_fim: periodoFim,
+          total_viagens: 0,
+          total_gastos: 0,
+          saldo_motorista: 0,
+          created_by: usuario.id,
+        })
+        .select('id')
+        .single();
+
+      if (createError || !novoFechamento) {
+        logError({ action: 'criarAcertoAvulso.createFechamento', empresaId: usuario.empresa_id, usuarioId: usuario.id }, createError);
+        return { success: false, error: 'Erro ao criar fechamento. Tente novamente.' };
+      }
+
+      fechamentoId = novoFechamento.id;
+    }
+
+    // Insert the avulso item
+    const today = new Date().toISOString().split('T')[0];
+    const { error: itemError } = await supabase
+      .from('fechamento_item')
+      .insert({
+        fechamento_id: fechamentoId,
+        tipo: 'avulso',
+        referencia_id: null,
+        descricao: data.descricao,
+        valor: data.valor,
+        data: today,
+      });
+
+    if (itemError) {
+      logError({ action: 'criarAcertoAvulso.insertItem', empresaId: usuario.empresa_id, usuarioId: usuario.id }, itemError);
+      return { success: false, error: 'Erro ao criar lançamento avulso. Tente novamente.' };
+    }
+
+    revalidatePath('/fechamentos');
+    revalidatePath(`/fechamentos/${fechamentoId}`);
+    revalidatePath('/dashboard');
+    return { success: true, fechamentoId };
+  } catch (err) {
+    logError({ action: 'criarAcertoAvulso', empresaId: usuario.empresa_id, usuarioId: usuario.id }, err);
+    return { success: false, error: 'Erro inesperado. Tente novamente.' };
+  }
+}
+
 /**
  * Delete a fechamento (only if status is 'aberto').
  */

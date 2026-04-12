@@ -85,18 +85,29 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
   return (
     <div className="w-full max-w-6xl">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary-900">Acerto de Contas</h2>
         {canCreate && (
-          <Link
-            href="/fechamentos/novo"
-            className="inline-flex items-center gap-2 rounded-lg bg-btn-primary px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-btn-primary-hover min-h-[48px]"
-          >
-            <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Novo Acerto
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/fechamentos/avulso"
+              className="inline-flex items-center gap-2 rounded-lg border border-surface-border bg-surface-card px-5 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover min-h-[48px]"
+            >
+              <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Lançar Avulso
+            </Link>
+            <Link
+              href="/fechamentos/novo"
+              className="inline-flex items-center gap-2 rounded-lg bg-btn-primary px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-btn-primary-hover min-h-[48px]"
+            >
+              <svg className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Novo Acerto
+            </Link>
+          </div>
         )}
       </div>
 

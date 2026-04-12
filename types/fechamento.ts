@@ -42,8 +42,8 @@ export interface Fechamento {
 export interface FechamentoItem {
   id: string;
   fechamento_id: string;
-  tipo: 'viagem' | 'gasto';
-  referencia_id: string;
+  tipo: 'viagem' | 'gasto' | 'avulso' | 'ajuste';
+  referencia_id: string | null;
   descricao: string;
   valor: number;  // centavos
   data: string;   // ISO date
