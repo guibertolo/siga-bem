@@ -14,6 +14,7 @@ import type {
 } from '@/types/viagem';
 import type { ViagemStatus } from '@/types/database';
 import { VIAGEM_STATUS_TRANSITIONS } from '@/types/viagem';
+import { logError } from '@/lib/observability/logger';
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -259,6 +260,7 @@ export async function createViagem(
     .single();
 
   if (insertError) {
+    logError({ action: 'createViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id }, insertError);
     return { success: false, error: 'Erro ao cadastrar viagem. Tente novamente.' };
   }
 
@@ -357,6 +359,7 @@ export async function updateViagem(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, updateError);
     return { success: false, error: 'Erro ao atualizar viagem. Tente novamente.' };
   }
 
@@ -440,6 +443,7 @@ export async function updateViagemStatus(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateViagemStatus', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId, novoStatus } }, updateError);
     return { success: false, error: 'Erro ao atualizar status. Tente novamente.' };
   }
 
@@ -478,6 +482,7 @@ export async function updateViagemObservacao(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateViagemObservacao', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, updateError);
     return { success: false, error: 'Erro ao atualizar observação. Tente novamente.' };
   }
 
@@ -524,6 +529,7 @@ export async function deleteViagem(
     .eq('id', viagemId);
 
   if (error) {
+    logError({ action: 'deleteViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, error);
     return { success: false, error: 'Erro ao excluir viagem. Tente novamente.' };
   }
 
@@ -715,6 +721,7 @@ export async function invalidarViagem(
     .eq('id', viagemId);
 
   if (updateError) {
+    logError({ action: 'invalidarViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, updateError);
     return { success: false, error: 'Erro ao invalidar viagem. Tente novamente.' };
   }
 

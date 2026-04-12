@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { validateCNPJ, formatCNPJ, stripCNPJ } from '@/lib/utils/validate-cnpj';
 import type { EmpresaActionResult, EmpresaFormData } from '@/types/empresa';
+import { logError } from '@/lib/observability/logger';
 
 const empresaSchema = z.object({
   cnpj: z.string()
@@ -98,6 +99,7 @@ export async function createEmpresa(
         fieldErrors: { cnpj: 'CNPJ ja cadastrado' },
       };
     }
+    logError({ action: 'createEmpresa', usuarioId: user.id }, insertError);
     return { success: false, error: 'Erro ao cadastrar empresa. Tente novamente.' };
   }
 
@@ -166,6 +168,7 @@ export async function updateEmpresa(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateEmpresa', params: { empresaId } }, updateError);
     return { success: false, error: 'Erro ao atualizar empresa. Tente novamente.' };
   }
 

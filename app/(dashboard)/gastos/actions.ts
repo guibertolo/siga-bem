@@ -17,6 +17,7 @@ import type {
 import type { CategoriaGastoOption } from '@/types/categoria-gasto';
 import { getGastos, getGastoFilterOptions } from '@/lib/queries/gastos';
 import { generateGastosCsv } from '@/lib/utils/export-gastos-csv';
+import { logError } from '@/lib/observability/logger';
 
 const gastoSchema = z.object({
   categoria_id: z.string().uuid('Categoria é obrigatória'),
@@ -252,6 +253,7 @@ export async function createGasto(
     .single();
 
   if (insertError) {
+    logError({ action: 'createGasto', empresaId: usuario.empresa_id, usuarioId: usuario.id }, insertError);
     return { success: false, error: 'Erro ao registrar gasto. Tente novamente.' };
   }
 
@@ -318,6 +320,7 @@ export async function updateGasto(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateGasto', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { gastoId } }, updateError);
     return { success: false, error: 'Erro ao atualizar gasto. Tente novamente.' };
   }
 
@@ -351,6 +354,7 @@ export async function deleteGasto(
     .eq('id', gastoId);
 
   if (error) {
+    logError({ action: 'deleteGasto', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { gastoId } }, error);
     return { success: false, error: 'Erro ao excluir gasto. Tente novamente.' };
   }
 

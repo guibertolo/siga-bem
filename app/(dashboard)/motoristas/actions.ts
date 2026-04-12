@@ -14,6 +14,7 @@ import type {
 import { createAdminClient } from '@/lib/supabase/admin';
 import { gerarSenhaTemporaria } from '@/lib/utils/gerar-senha';
 import { isCnhExpired, isCnhExpiringSoon } from '@/lib/utils/validate-cpf';
+import { logError } from '@/lib/observability/logger';
 
 const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as const;
 
@@ -122,6 +123,7 @@ export async function createMotorista(
         fieldErrors: { cpf: 'CPF ja cadastrado nesta empresa' },
       };
     }
+    logError({ action: 'createMotorista', empresaId: currentUsuario.empresa_id, usuarioId: currentUsuario.id }, insertError);
     return { success: false, error: 'Erro ao cadastrar motorista. Tente novamente.' };
   }
 
@@ -305,6 +307,7 @@ export async function createMotoristaComConta(
       },
     };
   } catch (error) {
+    logError({ action: 'createMotoristaComConta', empresaId: empresaId, usuarioId: currentUsuario.id }, error);
     // AC: 10 — Rollback: deletar auth user criado
     await adminClient.auth.admin.deleteUser(authUserId);
 
@@ -364,6 +367,7 @@ export async function updateMotorista(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateMotorista', params: { motoristaId } }, updateError);
     return { success: false, error: 'Erro ao atualizar motorista. Tente novamente.' };
   }
 

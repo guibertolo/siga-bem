@@ -10,6 +10,7 @@ import {
   type AbastecimentoItem,
   type AbastecimentoListResult,
 } from '@/lib/queries/combustivel-queries';
+import { logError } from '@/lib/observability/logger';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -163,6 +164,7 @@ export async function createAbastecimento(
     .single();
 
   if (insertError || !gasto) {
+    logError({ action: 'createAbastecimento', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagem_id: data.viagem_id } }, insertError ?? new Error('Insert returned null'));
     return { success: false, error: 'Erro ao registrar abastecimento. Tente novamente.' };
   }
 

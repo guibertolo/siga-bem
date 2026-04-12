@@ -7,6 +7,7 @@ import type {
   ComprovanteActionResult,
   ComprovantesListResult,
 } from '@/types/foto-comprovante'
+import { logError } from '@/lib/observability/logger'
 
 const BUCKET = 'comprovantes'
 const SIGNED_URL_EXPIRY = 3600 // 1 hour
@@ -109,6 +110,7 @@ export async function uploadComprovante(
     })
 
   if (uploadError) {
+    logError({ action: 'uploadComprovante', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { gastoId: gastoId ?? '' } }, uploadError)
     return { success: false, error: `Erro no upload: ${uploadError.message}` }
   }
 
@@ -126,6 +128,7 @@ export async function uploadComprovante(
     .single()
 
   if (insertError) {
+    logError({ action: 'uploadComprovante.insert', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { gastoId: gastoId ?? '' } }, insertError)
     // Rollback: remove uploaded file
     await supabase.storage.from(BUCKET).remove([storagePath])
     return { success: false, error: 'Erro ao registrar comprovante' }
@@ -182,6 +185,7 @@ export async function deleteComprovante(
     .remove([comprovante.storage_path])
 
   if (storageError) {
+    logError({ action: 'deleteComprovante.storage', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { comprovanteId } }, storageError)
     return { success: false, error: `Erro ao remover arquivo: ${storageError.message}` }
   }
 
@@ -192,6 +196,7 @@ export async function deleteComprovante(
     .eq('id', comprovanteId)
 
   if (deleteError) {
+    logError({ action: 'deleteComprovante.db', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { comprovanteId } }, deleteError)
     return { success: false, error: 'Erro ao remover registro' }
   }
 

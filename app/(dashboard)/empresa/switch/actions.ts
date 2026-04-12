@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import type { SwitchEmpresaResult } from '@/types/empresa-multi';
+import { logError } from '@/lib/observability/logger';
 
 /**
  * Server action: switch the authenticated user's active empresa.
@@ -30,6 +31,7 @@ export async function switchEmpresa(
   });
 
   if (error) {
+    logError({ action: 'switchEmpresa', usuarioId: user.id, params: { empresaId } }, error);
     return {
       success: false,
       error: error.message.includes('vinculo')

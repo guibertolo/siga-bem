@@ -23,6 +23,7 @@ import {
   calcularValorMotorista,
   agruparDespesasPorViagem,
 } from '@/lib/business/fechamentos';
+import { logError } from '@/lib/observability/logger';
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -384,6 +385,7 @@ export async function createFechamento(
   });
 
   if (calcError) {
+    logError({ action: 'createFechamento', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { motorista_id: data.motorista_id } }, calcError);
     return { success: false, error: 'Erro ao calcular fechamento. Tente novamente.' };
   }
 
@@ -429,6 +431,7 @@ export async function createFechamento(
     .single();
 
   if (insertError) {
+    logError({ action: 'createFechamento', empresaId: usuario.empresa_id, usuarioId: usuario.id }, insertError);
     return { success: false, error: 'Erro ao criar fechamento. Tente novamente.' };
   }
 
@@ -492,6 +495,7 @@ export async function createFechamento(
       .insert(allItems);
 
     if (itemsError) {
+      logError({ action: 'createFechamento.items', empresaId: usuario.empresa_id, usuarioId: usuario.id }, itemsError);
       // Rollback: delete the fechamento if items fail
       await supabase.from('fechamento').delete().eq('id', fechamento.id);
       return { success: false, error: 'Erro ao criar itens do fechamento. Tente novamente.' };
@@ -732,6 +736,7 @@ async function updateFechamentoStatus(
     .single();
 
   if (updateError) {
+    logError({ action: 'updateFechamentoStatus', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { fechamentoId, novoStatus } }, updateError);
     return { success: false, error: 'Erro ao atualizar status. Tente novamente.' };
   }
 
@@ -780,6 +785,7 @@ export async function deleteFechamento(
     .eq('id', fechamentoId);
 
   if (error) {
+    logError({ action: 'deleteFechamento', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { fechamentoId } }, error);
     return { success: false, error: 'Erro ao excluir fechamento. Tente novamente.' };
   }
 

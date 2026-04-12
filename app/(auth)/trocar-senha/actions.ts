@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { logError } from '@/lib/observability/logger';
 
 /**
  * Server action: force password change on first login.
@@ -32,6 +33,7 @@ export async function forcarTrocaSenha(novaSenha: string): Promise<{ error?: str
   });
 
   if (error) {
+    logError({ action: 'forcarTrocaSenha', usuarioId: user.id }, error);
     return { error: `Erro ao alterar senha: ${error.message}` };
   }
 
