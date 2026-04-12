@@ -36,7 +36,7 @@ export function BiTendenciaMensal({ data }: BiTendenciaMensalProps) {
       </h3>
 
       {/* Bar chart — CSS only */}
-      <div className="flex items-end gap-3 h-48">
+      <div role="img" aria-label="Gráfico de gastos mensais em barras" className="flex items-end gap-3 h-48">
         {data.map((item) => {
           const heightPct = range > 0
             ? 30 + ((item.total - minTotal) / range) * 70

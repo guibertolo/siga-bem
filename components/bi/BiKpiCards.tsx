@@ -48,6 +48,8 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Card 1: Lucro Bruto */}
       <div
+        role="group"
+        aria-label="Lucro bruto do período"
         className={`rounded-card border p-5 shadow-sm ${lucroBgColor} ${
           lucroPositivo ? 'border-success/20' : 'border-danger/20'
         }`}
@@ -77,7 +79,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
       </div>
 
       {/* Card 2: Margem Media por Viagem */}
-      <div className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm">
+      <div role="group" aria-label="Margem média por viagem" className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm">
         <p className="text-base font-medium text-primary-700 mb-1">
           Margem Media por Viagem
         </p>
@@ -97,7 +99,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
       </div>
 
       {/* Card 3: Receita (Fretes) — always primary/blue, neutral */}
-      <div className="rounded-card border border-primary-300/40 bg-primary-50/50 p-5 shadow-sm dark:border-primary-500/20 dark:bg-primary-900/10">
+      <div role="group" aria-label="Receita em fretes" className="rounded-card border border-primary-300/40 bg-primary-50/50 p-5 shadow-sm dark:border-primary-500/20 dark:bg-primary-900/10">
         <p className="text-base font-medium text-primary-700 mb-1">
           Receita em Fretes
         </p>
@@ -110,7 +112,7 @@ export function BiKpiCards({ data }: BiKpiCardsProps) {
       </div>
 
       {/* Card 4: Custos Totais — muted, second plane */}
-      <div className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm">
+      <div role="group" aria-label="Custos totais do período" className="rounded-card border border-surface-border bg-surface-card p-5 shadow-sm">
         <p className="text-base font-medium text-text-muted mb-1">
           Custos Totais
         </p>

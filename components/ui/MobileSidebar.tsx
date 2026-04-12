@@ -59,6 +59,7 @@ export function MobileSidebar({
         onClick={() => setOpen(true)}
         className="inline-flex items-center justify-center rounded-md p-2 text-primary-700 hover:bg-surface-hover transition-colors md:hidden"
         aria-label="Abrir menu"
+        aria-expanded={open}
       >
         <svg
           className="h-6 w-6"
@@ -130,16 +131,19 @@ export function MobileSidebar({
 
         <EmpresaSwitcher empresas={empresas} selectedEmpresaIds={selectedEmpresaIds} />
 
-        <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-230px)]">
-          {navLinks.map((link) => (
+        <nav role="navigation" aria-label="Menu principal" className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-230px)]">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href || pathname.startsWith(link.href + '/');
+            return (
             <Link
               key={link.href}
               href={link.href}
               prefetch={true}
               onClick={() => setOpen(false)}
               data-onboarding-id={link.onboardingId}
+              aria-current={isActive ? 'page' : undefined}
               className={`flex items-center px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
-                pathname === link.href || pathname.startsWith(link.href + '/')
+                isActive
                   ? 'bg-white/20 text-white'
                   : 'text-white/80 hover:bg-white/15'
               }`}
@@ -151,7 +155,8 @@ export function MobileSidebar({
                 </span>
               )}
             </Link>
-          ))}
+            );
+          })}
 
           {showBILink && (
             <Link
@@ -159,6 +164,7 @@ export function MobileSidebar({
               prefetch={true}
               onClick={() => setOpen(false)}
               data-onboarding-id="bi"
+              aria-current={pathname === '/bi' ? 'page' : undefined}
               className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === '/bi'
                   ? 'bg-white/20 text-white'
@@ -174,22 +180,26 @@ export function MobileSidebar({
               <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">
                 Gerenciar
               </div>
-              {adminLinks.map((link) => (
+              {adminLinks.map((link) => {
+                const isAdminActive = pathname === link.href || pathname.startsWith(link.href + '/');
+                return (
                 <Link
                   key={link.href}
                   href={link.href}
                   prefetch={true}
                   onClick={() => setOpen(false)}
                   data-onboarding-id={link.onboardingId}
+                  aria-current={isAdminActive ? 'page' : undefined}
                   className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
-                    pathname === link.href || pathname.startsWith(link.href + '/')
+                    isAdminActive
                       ? 'bg-white/20 text-white'
                       : 'text-white/80 hover:bg-white/15'
                   }`}
                 >
                   {link.label}
                 </Link>
-              ))}
+                );
+              })}
             </>
           )}
         </nav>
@@ -199,6 +209,7 @@ export function MobileSidebar({
             href="/perfil"
             prefetch={true}
             onClick={() => setOpen(false)}
+            aria-current={pathname === '/perfil' ? 'page' : undefined}
             className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors ${
               pathname === '/perfil'
                 ? 'bg-white/20 text-white'

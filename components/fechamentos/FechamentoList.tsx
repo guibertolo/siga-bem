@@ -18,7 +18,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
   return (
     <>
     {/* Mobile card view */}
-    <div className="space-y-3 md:hidden">
+    <div className="space-y-3 md:hidden" aria-label="Lista de acertos de contas">
       {fechamentos.map((f) => (
         <div key={f.id} className="rounded-lg border border-surface-border bg-surface-card p-4">
           <div className="flex items-start justify-between mb-2">
@@ -60,17 +60,17 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
 
     {/* Desktop table view */}
     <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
-      <table className="w-full">
+      <table className="w-full" aria-label="Lista de acertos de contas">
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted text-left">
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Período</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
-            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Viagens</th>
-            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Gastos</th>
-            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Saldo</th>
-            <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
-            <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
+            <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
+            <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Período</th>
+            <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
+            <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Viagens</th>
+            <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Gastos</th>
+            <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Saldo</th>
+            <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
+            <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -117,7 +117,7 @@ export function FechamentoList({ fechamentos }: FechamentoListProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
-                  Detalhes
+                  <span>Detalhes</span>
                 </Link>
               </td>
             </tr>

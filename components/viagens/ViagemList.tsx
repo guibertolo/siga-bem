@@ -193,15 +193,15 @@ export function ViagemList({
 
           {/* Desktop active table */}
           <div className="hidden md:block overflow-x-auto rounded-lg border border-warning/20 bg-surface-card">
-            <table className="w-full">
+            <table className="w-full" aria-label="Viagens em andamento">
               <thead>
                 <tr className="border-b border-warning/20 bg-alert-warning-bg text-left">
-                  <th className="px-4 py-3 text-base font-medium text-warning">Origem/Destino</th>
-                  <th className="px-4 py-3 text-base font-medium text-warning">Motorista</th>
-                  <th className="px-4 py-3 text-base font-medium text-warning">Caminhão</th>
-                  <th className="px-4 py-3 text-base font-medium text-warning">Saída</th>
-                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Valor</th>
-                  <th className="px-4 py-3 text-base text-right font-medium text-warning">Ações</th>
+                  <th scope="col" className="px-4 py-3 text-base font-medium text-warning">Origem/Destino</th>
+                  <th scope="col" className="px-4 py-3 text-base font-medium text-warning">Motorista</th>
+                  <th scope="col" className="px-4 py-3 text-base font-medium text-warning">Caminhão</th>
+                  <th scope="col" className="px-4 py-3 text-base font-medium text-warning">Saída</th>
+                  <th scope="col" className="px-4 py-3 text-base text-right font-medium text-warning">Valor</th>
+                  <th scope="col" className="px-4 py-3 text-base text-right font-medium text-warning">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -366,20 +366,20 @@ export function ViagemList({
 
           {/* Desktop table view */}
           <div className="hidden md:block overflow-x-auto rounded-lg border border-surface-border bg-surface-card">
-            <table className="w-full">
+            <table className="w-full" aria-label="Lista de viagens">
               <thead>
                 <tr className="border-b border-surface-border bg-surface-muted text-left">
                   {isMultiEmpresa && (
-                    <th className="px-4 py-3.5 text-base font-medium text-primary-700">Empresa</th>
+                    <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Empresa</th>
                   )}
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhão</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saída</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
+                  <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
+                  <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
+                  <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhão</th>
+                  <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Saída</th>
+                  <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
+                  <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
+                  <th scope="col" className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
+                  <th scope="col" className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
                 </tr>
               </thead>
               <tbody>
