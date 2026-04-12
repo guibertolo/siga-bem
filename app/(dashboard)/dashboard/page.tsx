@@ -23,7 +23,7 @@ import {
   getDashboardDataForEmpresa,
   getViagemAtivaForEmpresa,
   getDonoMicroDataForEmpresa,
-} from '@/app/(dashboard)/dashboard/multi-actions';
+} from '@/app/(dashboard)/dashboard/multi-queries';
 import type { DashboardData, DonoMicroData, ViagemAtivaData } from '@/app/(dashboard)/dashboard/actions';
 
 function CardSkeleton() {

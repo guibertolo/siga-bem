@@ -32,7 +32,7 @@ import {
   getBIEficienciaCombustivelForEmpresa,
   getBIManutencoesForEmpresa,
   getBIAlertasForEmpresa,
-} from '@/app/(dashboard)/bi/multi-actions';
+} from '@/app/(dashboard)/bi/multi-queries';
 import { BiFiltros } from '@/components/bi/BiFiltros';
 import { BiAlertas } from '@/components/bi/BiAlertas';
 import { BiKpiCards } from '@/components/bi/BiKpiCards';

@@ -5,7 +5,7 @@ import { listViagens, listMotoristasAtivos } from '@/app/(dashboard)/viagens/act
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 import { queryMultiEmpresa, flattenMultiResults } from '@/lib/queries/multi-empresa-query';
-import { listViagensForEmpresa } from '@/app/(dashboard)/viagens/multi-actions';
+import { listViagensForEmpresa } from '@/app/(dashboard)/viagens/multi-queries';
 import { ViagemList } from '@/components/viagens/ViagemList';
 import type { ViagemListItem } from '@/types/viagem';
 

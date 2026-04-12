@@ -10,7 +10,7 @@ import {
   listMotoristasParaFechamento,
   getViagensPendentesAcerto,
 } from '@/app/(dashboard)/fechamentos/actions';
-import { getViagensPendentesAcertoForEmpresa } from '@/app/(dashboard)/fechamentos/multi-actions';
+import { getViagensPendentesAcertoForEmpresa } from '@/app/(dashboard)/fechamentos/multi-queries';
 import type { ViagemPendenteAcerto } from '@/app/(dashboard)/fechamentos/actions';
 
 export const metadata: Metadata = {
