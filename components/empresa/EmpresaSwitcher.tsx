@@ -170,31 +170,42 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
           role="listbox"
           aria-label="Lista de empresas"
         >
-          {/* Lista de empresas — clique para trocar */}
-          {empresas.map((empresa) => {
+          {/* Lista de empresas — clique para trocar (oculta no modo multi, checkboxes embaixo cobrem) */}
+          {!multiMode && empresas.map((empresa) => {
             const isActive = optimisticActiveId
               ? empresa.empresa_id === optimisticActiveId
               : empresa.is_active;
+            const isSelectedMulti = isMultiActive && checkedIds.has(empresa.empresa_id);
             const name = empresa.nome_fantasia ?? empresa.razao_social;
             return (
               <button
                 key={empresa.empresa_id}
                 type="button"
-                onClick={() => { if (!isActive) handleSingleSwitch(empresa.empresa_id); }}
-                disabled={isActive || isPending}
+                onClick={() => handleSingleSwitch(empresa.empresa_id)}
+                disabled={isPending}
                 className={`
                   flex flex-col w-full px-4 py-3 text-left border-b border-white/5
                   transition-colors bg-transparent border-none cursor-pointer
-                  ${isActive ? 'bg-white/10 cursor-default' : 'hover:bg-white/10'}
+                  hover:bg-white/10
                 `}
               >
                 <div className="flex items-center gap-2">
-                  {isActive && (
+                  {isMultiActive ? (
+                    <span className={`flex items-center justify-center h-4 w-4 rounded-sm shrink-0 ${isSelectedMulti ? 'bg-success' : 'border border-white/40'}`}>
+                      {isSelectedMulti && (
+                        <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </span>
+                  ) : isActive ? (
                     <svg className="h-4 w-4 text-success shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
+                  ) : (
+                    <span className="h-4 w-4 shrink-0" />
                   )}
-                  <span className={`text-sm font-medium truncate ${isActive ? 'text-white' : 'text-white/80'}`}>
+                  <span className={`text-sm font-medium truncate ${(isActive || isSelectedMulti) ? 'text-white' : 'text-white/80'}`}>
                     {name}
                   </span>
                 </div>
