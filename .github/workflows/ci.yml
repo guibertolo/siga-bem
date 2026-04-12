@@ -10,9 +10,6 @@ jobs:
   quality:
     name: Lint + TypeCheck + Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/siga-bem
 
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +18,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: apps/siga-bem/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - run: npm ci
 
