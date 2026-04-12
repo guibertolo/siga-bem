@@ -19,6 +19,12 @@ export interface MultiEmpresaContext {
  * Returns selected_empresas if set (multi mode), otherwise [active empresa_id].
  *
  * Cached per-request via React.cache() to avoid duplicate DB calls.
+ *
+ * SECURITY: Antes de retornar, faz uma revalidacao em runtime do vinculo
+ * usuario<->empresa contra fn_get_user_empresas() (lista autoritativa de
+ * vinculos ATIVOS no momento da query). Isso impede que um vinculo
+ * revogado apos o login do usuario continue dando acesso via o cache
+ * de selected_empresas na tabela usuario.
  */
 export const getMultiEmpresaContext = cache(
   async (): Promise<MultiEmpresaContext> => {
@@ -34,38 +40,54 @@ export const getMultiEmpresaContext = cache(
 
     const supabase = await createClient();
 
-    // Fetch selected_empresas from usuario
+    // Fetch selected_empresas from usuario (cache potencialmente stale)
     const { data } = await supabase
       .from('usuario')
       .select('selected_empresas')
       .eq('id', usuario.id)
       .single();
 
-    const selectedEmpresas = data?.selected_empresas as string[] | null;
-    const isMulti = Array.isArray(selectedEmpresas) && selectedEmpresas.length >= 2;
+    const selectedEmpresasRaw = data?.selected_empresas as string[] | null;
+
+    // Sempre consultar fn_get_user_empresas (lista autoritativa de vinculos
+    // ATIVOS) — isso e o guard contra vinculo revogado em runtime. Tambem
+    // usamos o resultado para montar o empresaNames, entao o custo e zero
+    // quando em multi mode.
+    const activeEmpresas = await getUserEmpresas();
+    const activeEmpresaIds = new Set(activeEmpresas.map((e) => e.empresa_id));
+
+    // Filtra selected_empresas removendo qualquer empresa sem vinculo ativo.
+    const selectedEmpresasFiltered = Array.isArray(selectedEmpresasRaw)
+      ? selectedEmpresasRaw.filter((id) => activeEmpresaIds.has(id))
+      : null;
+
+    const isMulti =
+      Array.isArray(selectedEmpresasFiltered) &&
+      selectedEmpresasFiltered.length >= 2;
+
+    // Tambem valida o empresa_id ativo: se o vinculo foi revogado, nao
+    // retornamos ele como activeEmpresaId.
+    const activeEmpresaId =
+      usuario.empresa_id && activeEmpresaIds.has(usuario.empresa_id)
+        ? usuario.empresa_id
+        : null;
 
     const empresaIds = isMulti
-      ? selectedEmpresas
-      : usuario.empresa_id
-        ? [usuario.empresa_id]
+      ? (selectedEmpresasFiltered as string[])
+      : activeEmpresaId
+        ? [activeEmpresaId]
         : [];
 
-    // Build name map from user's empresas
+    // Build name map from user's empresas (sempre, para uso pelo caller)
     const empresaNames = new Map<string, string>();
-    if (isMulti) {
-      const allEmpresas = await getUserEmpresas();
-      for (const e of allEmpresas) {
-        empresaNames.set(
-          e.empresa_id,
-          e.nome_fantasia ?? e.razao_social,
-        );
-      }
+    for (const e of activeEmpresas) {
+      empresaNames.set(e.empresa_id, e.nome_fantasia ?? e.razao_social);
     }
 
     return {
       isMultiEmpresa: isMulti,
       empresaIds,
-      activeEmpresaId: usuario.empresa_id,
+      activeEmpresaId,
       empresaNames,
     };
   },
