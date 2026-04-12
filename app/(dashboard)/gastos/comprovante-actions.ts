@@ -11,6 +11,18 @@ import type {
 const BUCKET = 'comprovantes'
 const SIGNED_URL_EXPIRY = 3600 // 1 hour
 
+// Validacao server-side de upload (defesa em profundidade — client tambem valida).
+// Valores alinhados com o fluxo atual: foto de recibo comprimida no client fica
+// bem abaixo de 5MB, PDFs de extrato raramente passam disso.
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
+const ALLOWED_MIME_TYPES = new Set([
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'application/pdf',
+])
+
 /**
  * Upload a comprovante file to Supabase Storage and create DB record.
  * Called from client after compression.
@@ -29,6 +41,36 @@ export async function uploadComprovante(
 
   if (!file || !gastoId || !contentType) {
     return { success: false, error: 'Dados incompletos para upload' }
+  }
+
+  // Validacao server-side: tamanho e tipo de arquivo.
+  // NUNCA confie apenas na validacao do client.
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    const limitMb = (MAX_FILE_SIZE_BYTES / (1024 * 1024)).toFixed(0)
+    return {
+      success: false,
+      error: `Arquivo muito grande (maximo ${limitMb}MB)`,
+    }
+  }
+
+  if (file.size === 0) {
+    return { success: false, error: 'Arquivo vazio' }
+  }
+
+  const normalizedMime = contentType.toLowerCase().trim()
+  if (!ALLOWED_MIME_TYPES.has(normalizedMime)) {
+    return {
+      success: false,
+      error: 'Tipo de arquivo nao permitido. Envie imagem (JPG, PNG, WEBP) ou PDF.',
+    }
+  }
+
+  // Valida que o content-type declarado bate com o tipo do File (anti-spoof simples).
+  if (file.type && file.type.toLowerCase() !== normalizedMime) {
+    return {
+      success: false,
+      error: 'Tipo de arquivo inconsistente',
+    }
   }
 
   const supabase = await createClient()
