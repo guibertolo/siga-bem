@@ -32,13 +32,17 @@ export async function getUserRole(): Promise<UsuarioRole | null> {
  * Wrapped with React.cache() to deduplicate calls within the same
  * server request (e.g. layout + page both calling getCurrentUsuario).
  */
-export const getCurrentUsuario = cache(async (): Promise<Usuario | null> => {
+/**
+ * Internal cached fetch: returns both the Supabase auth user and the usuario record.
+ * Used by getCurrentUsuario() and getAuthUser() to avoid duplicate getUser() calls.
+ */
+const _fetchCurrentUser = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (!user) return { authUser: null, usuario: null };
 
   const { data } = await supabase
     .from('usuario')
@@ -46,7 +50,21 @@ export const getCurrentUsuario = cache(async (): Promise<Usuario | null> => {
     .eq('auth_id', user.id)
     .single();
 
-  return (data as Usuario) ?? null;
+  return { authUser: user, usuario: (data as Usuario) ?? null };
+});
+
+export const getCurrentUsuario = cache(async (): Promise<Usuario | null> => {
+  const { usuario } = await _fetchCurrentUser();
+  return usuario;
+});
+
+/**
+ * Get the Supabase auth user (for metadata like onboarding state).
+ * Shares the same cached fetch as getCurrentUsuario — no extra round trip.
+ */
+export const getAuthUser = cache(async () => {
+  const { authUser } = await _fetchCurrentUser();
+  return authUser;
 });
 
 /**

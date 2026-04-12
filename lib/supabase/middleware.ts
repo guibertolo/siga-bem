@@ -34,12 +34,11 @@ export async function updateSession(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // All paths in the matcher are protected (require auth session).
-  // Public paths (/login, /signup, /aceitar-convite) are NOT in the matcher
-  // and never reach this function.
-  const isProtected = true;
+  // Landing page passes through middleware for session refresh but is public.
+  const pathname = request.nextUrl.pathname;
+  const isPublicPath = pathname === '/';
 
-  if (!session && isProtected) {
+  if (!session && !isPublicPath) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);

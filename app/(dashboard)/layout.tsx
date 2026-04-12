@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getCurrentUsuario, getAuthUser } from '@/lib/auth/get-user-role';
 import { getUserEmpresas } from '@/lib/queries/empresas';
 import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 import { createClient } from '@/lib/supabase/server';
@@ -95,8 +95,8 @@ export default async function DashboardLayout({
   const navLinks = isMotorista ? motoristaLinks : donoLinks;
 
   // Onboarding tutorial — persistent, resumes from where user left off
-  const supabaseForOnboarding = await createClient();
-  const { data: { user: authUser } } = await supabaseForOnboarding.auth.getUser();
+  // Uses cached getAuthUser() — shares same fetch as getCurrentUsuario, no extra round trip
+  const authUser = await getAuthUser();
   const isTestAccount = authUser?.email?.endsWith('@frotaviva.com.br') ?? false;
   const onboardingCompleted = authUser?.user_metadata?.onboarding_completed === true;
   const onboardingRedo = authUser?.user_metadata?.onboarding_redo === true;
