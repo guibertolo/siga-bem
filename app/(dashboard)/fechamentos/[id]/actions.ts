@@ -9,6 +9,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import type {
   FechamentoCompleto,
@@ -99,12 +100,12 @@ export async function getFechamentoCompleto(
   }
 
   const row = fechamentoResult.data;
-  const mot = row.motorista as unknown as { nome: string; cpf: string } | null;
-  const emp = row.empresa as unknown as {
+  const mot = singleRelation<{ nome: string; cpf: string }>(row.motorista);
+  const emp = singleRelation<{
     razao_social: string;
     nome_fantasia: string | null;
     cnpj: string;
-  } | null;
+  }>(row.empresa);
 
   if (!mot || !emp) {
     return { success: false, error: 'Dados de motorista ou empresa não encontrados' };
@@ -112,13 +113,13 @@ export async function getFechamentoCompleto(
 
   const viagens: FechamentoViagemItem[] = (viagensResult.data ?? []).map(
     (item) => {
-      const v = item.viagem as unknown as {
+      const v = singleRelation<{
         origem: string;
         destino: string;
         data_saida: string;
         valor_total: number;
         percentual_pagamento: number;
-      } | null;
+      }>(item.viagem);
       return {
         id: item.id,
         valor: item.valor,
@@ -138,11 +139,12 @@ export async function getFechamentoCompleto(
 
   const gastos: FechamentoGastoItem[] = (gastosResult.data ?? []).map(
     (item) => {
-      const g = item.gasto as unknown as {
+      const g = singleRelation<{
         data: string;
         descricao: string | null;
-        categoria_gasto: { nome: string } | null;
-      } | null;
+        categoria_gasto: { nome: string }[] | null;
+      }>(item.gasto);
+      const cat = g ? singleRelation<{ nome: string }>(g.categoria_gasto) : null;
       return {
         id: item.id,
         valor: item.valor,
@@ -151,7 +153,7 @@ export async function getFechamentoCompleto(
           ? {
               data: g.data,
               descricao: g.descricao,
-              categoria_gasto: g.categoria_gasto,
+              categoria_gasto: cat,
             }
           : null,
       };

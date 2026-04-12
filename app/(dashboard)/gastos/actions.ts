@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import type {
@@ -391,9 +392,9 @@ export async function listGastos(): Promise<{
   }
 
   const items: GastoListItem[] = (data ?? []).map((row) => {
-    const cat = row.categoria_gasto as unknown as { nome: string } | null;
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string } | null;
+    const cat = singleRelation<{ nome: string }>(row.categoria_gasto);
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string }>(row.caminhao);
 
     return {
       id: row.id,
@@ -603,8 +604,8 @@ export async function listViagensAtivas(): Promise<{
     status: v.status,
     motorista_id: v.motorista_id,
     caminhao_id: v.caminhao_id,
-    motorista_nome: (v.motorista as unknown as { nome: string } | null)?.nome ?? null,
-    caminhao_placa: (v.caminhao as unknown as { placa: string } | null)?.placa ?? null,
+    motorista_nome: singleRelation<{ nome: string }>(v.motorista)?.nome ?? null,
+    caminhao_placa: singleRelation<{ placa: string }>(v.caminhao)?.placa ?? null,
   }));
 
   return { data: mapped, error: null };

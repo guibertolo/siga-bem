@@ -74,7 +74,7 @@ export async function getAbastecimentosPorViagem(
 
   const items: AbastecimentoItem[] = (data ?? []).map((row) => {
     // foto_comprovante comes as an array (one-to-many relation)
-    const fotos = row.foto_comprovante as unknown as Array<{ id: string }> | null;
+    const fotos = row.foto_comprovante as Array<{ id: string }> | null;
 
     return {
       id: row.id as string,

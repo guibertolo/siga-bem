@@ -1,31 +1,18 @@
 /**
  * Types for the Usuario (user management) domain.
  * Story 1.6 — Gestao de Usuarios e Perfis
+ *
+ * The canonical Usuario interface lives in types/database.ts.
+ * This file re-exports it and adds domain-specific derived types.
  */
 
-export type UsuarioRole = 'dono' | 'motorista' | 'admin';
-
-export interface Usuario {
-  id: string;
-  auth_id: string;
-  empresa_id: string | null;
-  motorista_id: string | null;
-  nome: string;
-  email: string;
-  telefone: string | null;
-  role: UsuarioRole;
-  ativo: boolean;
-  ultima_empresa_id: string | null;
-  selected_empresas: string[] | null;
-  created_at: string;
-  updated_at: string;
-}
+export type { UsuarioRole, Usuario } from '@/types/database';
 
 export interface UsuarioListItem {
   id: string;
   nome: string;
   email: string;
-  role: UsuarioRole;
+  role: 'dono' | 'motorista' | 'admin';
   ativo: boolean;
   created_at: string;
 }
@@ -38,7 +25,7 @@ export interface InviteUsuarioInput {
 
 export interface UpdateUsuarioRoleInput {
   usuario_id: string;
-  role: UsuarioRole;
+  role: 'dono' | 'motorista' | 'admin';
 }
 
 export interface ToggleUsuarioAtivoInput {

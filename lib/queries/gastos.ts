@@ -6,6 +6,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import type {
   GastoFilters,
   GastoListItemWithFoto,
@@ -80,13 +81,13 @@ export async function getGastos(
 
   // Map rows to typed items
   const gastos: GastoListItemWithFoto[] = (data ?? []).map((row) => {
-    const cat = row.categoria_gasto as unknown as {
+    const cat = singleRelation<{
       nome: string;
       icone: string | null;
       cor: string | null;
-    } | null;
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string } | null;
+    }>(row.categoria_gasto);
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string }>(row.caminhao);
 
     return {
       id: row.id,

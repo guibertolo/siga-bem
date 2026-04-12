@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { requireRole } from '@/lib/auth/get-user-role';
 import type {
   VinculoActionResult,
@@ -221,8 +222,8 @@ export async function listVinculos(filter?: {
   }
 
   const items: VinculoListItem[] = (data ?? []).map((v) => {
-    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
-    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
+    const motorista = singleRelation<{ nome: string; cpf: string }>(v.motorista);
+    const caminhao = singleRelation<{ placa: string; modelo: string }>(v.caminhao);
 
     return {
       id: v.id,
@@ -325,8 +326,8 @@ export async function getVinculoAtivoByMotorista(motoristaId: string): Promise<{
   }
 
   const items: VinculoListItem[] = data.map((v) => {
-    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
-    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
+    const motorista = singleRelation<{ nome: string; cpf: string }>(v.motorista);
+    const caminhao = singleRelation<{ placa: string; modelo: string }>(v.caminhao);
 
     return {
       id: v.id,
@@ -369,8 +370,8 @@ export async function getVinculoAtivoByCaminhao(caminhaoId: string): Promise<{
   }
 
   const items: VinculoListItem[] = data.map((v) => {
-    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
-    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
+    const motorista = singleRelation<{ nome: string; cpf: string }>(v.motorista);
+    const caminhao = singleRelation<{ placa: string; modelo: string }>(v.caminhao);
 
     return {
       id: v.id,
@@ -409,7 +410,7 @@ export async function getVinculoAtivoCaminhao(caminhaoId: string): Promise<{
   }
 
   const motoristas = (data ?? []).map((v) => {
-    const motorista = v.motorista as unknown as { nome: string } | null;
+    const motorista = singleRelation<{ nome: string }>(v.motorista);
     return motorista?.nome ?? 'N/A';
   });
 
@@ -437,7 +438,7 @@ export async function getVinculoAtivoMotorista(motoristaId: string): Promise<{
   }
 
   const caminhoes = (data ?? []).map((v) => {
-    const caminhao = v.caminhao as unknown as { placa: string } | null;
+    const caminhao = singleRelation<{ placa: string }>(v.caminhao);
     return caminhao?.placa ?? 'N/A';
   });
 
@@ -502,8 +503,8 @@ export async function getDashboardVinculos(): Promise<VinculosDashboardData> {
   // Group active vinculos by caminhao
   const caminhaoMap = new Map<string, CaminhaoComMotorista>();
   for (const v of activeResult.data ?? []) {
-    const motorista = v.motorista as unknown as { id: string; nome: string; cpf: string } | null;
-    const caminhao = v.caminhao as unknown as { id: string; placa: string; modelo: string } | null;
+    const motorista = singleRelation<{ id: string; nome: string; cpf: string }>(v.motorista);
+    const caminhao = singleRelation<{ id: string; placa: string; modelo: string }>(v.caminhao);
     if (!caminhao) continue;
 
     const key = caminhao.id;
@@ -539,8 +540,8 @@ export async function getDashboardVinculos(): Promise<VinculosDashboardData> {
 
   // Map historico
   const historico: VinculoListItem[] = (historicoResult.data ?? []).map((v) => {
-    const motorista = v.motorista as unknown as { nome: string; cpf: string } | null;
-    const caminhao = v.caminhao as unknown as { placa: string; modelo: string } | null;
+    const motorista = singleRelation<{ nome: string; cpf: string }>(v.motorista);
+    const caminhao = singleRelation<{ placa: string; modelo: string }>(v.caminhao);
     return {
       id: v.id,
       motorista_nome: motorista?.nome ?? 'N/A',

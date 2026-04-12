@@ -4,6 +4,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import type { ViagemPendenteAcerto } from '@/app/(dashboard)/fechamentos/actions';
 
 export async function getViagensPendentesAcertoForEmpresa(
@@ -61,7 +62,7 @@ export async function getViagensPendentesAcertoForEmpresa(
   }
 
   const pendentes: ViagemPendenteAcerto[] = pendenteViagens.map((v) => {
-    const mot = v.motorista as unknown as { nome: string } | null;
+    const mot = singleRelation<{ nome: string }>(v.motorista);
     return {
       id: v.id,
       motorista_id: v.motorista_id,

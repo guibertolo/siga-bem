@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import type {
   FechamentoActionResult,
@@ -209,7 +210,7 @@ export async function previewFechamentoDetalhado(
   }));
 
   const gastos: PreviewGastoItem[] = (gastosResult.data ?? []).map((g) => {
-    const cat = g.categoria_gasto as unknown as { nome: string } | null;
+    const cat = singleRelation<{ nome: string }>(g.categoria_gasto);
     return {
       id: g.id,
       data: g.data,
@@ -325,7 +326,7 @@ export async function getViagensPendentesAcerto(): Promise<{
   }
 
   const pendentes: ViagemPendenteAcerto[] = pendenteViagens.map((v) => {
-    const mot = v.motorista as unknown as { nome: string } | null;
+    const mot = singleRelation<{ nome: string }>(v.motorista);
     return {
       id: v.id,
       motorista_id: v.motorista_id,
@@ -473,7 +474,7 @@ export async function createFechamento(
     valor: number;
     data: string;
   }> = (gastos ?? []).map((g) => {
-    const cat = g.categoria_gasto as unknown as { nome: string } | null;
+    const cat = singleRelation<{ nome: string }>(g.categoria_gasto);
     return {
       fechamento_id: fechamento.id,
       tipo: 'gasto',
@@ -562,7 +563,7 @@ export async function listFechamentos(filters?: {
   }
 
   const items: FechamentoListItem[] = (data ?? []).map((row) => {
-    const mot = row.motorista as unknown as { nome: string } | null;
+    const mot = singleRelation<{ nome: string }>(row.motorista);
     return {
       id: row.id,
       motorista_nome: mot?.nome ?? 'Desconhecido',
@@ -618,7 +619,7 @@ export async function getFechamentoDetalhado(
 
   return {
     data: {
-      ...(fechamento as unknown as Fechamento),
+      ...(fechamento as Fechamento),
       itens: (itens ?? []) as FechamentoItem[],
     },
     error: null,

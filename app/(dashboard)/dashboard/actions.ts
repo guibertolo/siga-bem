@@ -9,6 +9,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
 import { getGastosMesAtual } from '@/app/(dashboard)/gastos/actions';
@@ -219,8 +220,8 @@ export async function getViagemAtiva(): Promise<ViagemAtivaData> {
   }
 
   const items: ViagemAtivaItem[] = (data ?? []).map((row) => {
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string; modelo: string } | null;
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string; modelo: string }>(row.caminhao);
 
     return {
       id: row.id,
@@ -364,7 +365,7 @@ export async function getMotoristaData(motoristaId: string): Promise<MotoristaDa
   let proximaViagem: ProximaViagemItem | null = null;
   if (nextTripResult.data) {
     const row = nextTripResult.data;
-    const cam = row.caminhao as unknown as { placa: string } | null;
+    const cam = singleRelation<{ placa: string }>(row.caminhao);
     proximaViagem = {
       id: row.id,
       origem: row.origem,

@@ -7,6 +7,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import type {
   DashboardData,
   DonoMicroData,
@@ -142,8 +143,8 @@ export async function getViagemAtivaForEmpresa(
   }
 
   const items: ViagemAtivaItem[] = (data ?? []).map((row) => {
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string; modelo: string } | null;
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string; modelo: string }>(row.caminhao);
     return {
       id: row.id,
       origem: row.origem,

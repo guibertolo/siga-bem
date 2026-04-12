@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import {
   getAbastecimentosPorViagem,
@@ -256,7 +257,7 @@ export async function getGastosPorViagem(
 
   const filtered = (data ?? [])
     .filter((row) => {
-      const cat = row.categoria_gasto as unknown as { nome: string } | null;
+      const cat = singleRelation<{ nome: string }>(row.categoria_gasto);
       // Exclude fuel entries — those appear in AbastecimentoList
       return cat?.nome?.toLowerCase() !== 'combustivel';
     });
@@ -264,11 +265,11 @@ export async function getGastosPorViagem(
   // Generate signed URLs for comprovantes in parallel
   const items: GastoViagemItem[] = await Promise.all(
     filtered.map(async (row) => {
-      const cat = row.categoria_gasto as unknown as {
+      const cat = singleRelation<{
         nome: string;
         icone: string | null;
         cor: string | null;
-      } | null;
+      }>(row.categoria_gasto);
 
       let fotoSignedUrl: string | null = null;
       if (row.foto_url) {

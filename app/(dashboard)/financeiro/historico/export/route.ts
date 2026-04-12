@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { mascararCpf } from '@/lib/utils/mascarar-cpf';
 import { FECHAMENTO_STATUS_LABELS } from '@/types/fechamento';
@@ -92,7 +93,7 @@ export async function GET(request: Request) {
   ];
 
   const rows = (data ?? []).map((f) => {
-    const motorista = f.motorista as unknown as { nome: string; cpf: string };
+    const motorista = singleRelation<{ nome: string; cpf: string }>(f.motorista)!;
     const saldo = f.saldo as number;
     const totalViagens = f.total_viagens as number;
     const totalGastos = f.total_gastos as number;

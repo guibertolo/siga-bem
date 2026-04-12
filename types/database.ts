@@ -43,6 +43,7 @@ export interface Usuario {
   role: UsuarioRole;
   ativo: boolean;
   ultima_empresa_id: string | null;
+  selected_empresas: string[] | null;
   created_at: string;
   updated_at: string;
 }

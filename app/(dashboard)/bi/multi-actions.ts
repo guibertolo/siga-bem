@@ -7,6 +7,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import type {
   BIFiltros,
   BIKpis,
@@ -213,7 +214,7 @@ export async function getBIMargemMotoristasForEmpresa(
 
     for (const v of viagens) {
       const motId = v.motorista_id!;
-      const mot = v.motorista as unknown as { nome: string } | null;
+      const mot = singleRelation<{ nome: string }>(v.motorista);
       const frete = v.valor_total ?? 0;
       const custo = gastosPorViagem.get(v.id) ?? 0;
 
@@ -285,9 +286,9 @@ export async function getBICategoriasBreakdownForEmpresa(
     const totalGeral = (gastos ?? []).reduce((sum, g) => sum + g.valor, 0);
 
     for (const gasto of gastos ?? []) {
-      const cat = gasto.categoria_gasto as unknown as {
+      const cat = singleRelation<{
         id: string; nome: string; icone: string | null; cor: string | null;
-      } | null;
+      }>(gasto.categoria_gasto);
       const catId = cat?.id ?? gasto.categoria_id;
       const existing = byCategory.get(catId);
 
@@ -349,7 +350,7 @@ export async function getBIRankingCaminhoesForEmpresa(
     const totalGeral = (gastos ?? []).reduce((sum, g) => sum + g.valor, 0);
 
     for (const gasto of gastos ?? []) {
-      const cam = gasto.caminhao as unknown as { placa: string; modelo: string } | null;
+      const cam = singleRelation<{ placa: string; modelo: string }>(gasto.caminhao);
       const camId = gasto.caminhao_id!;
       const existing = byTruck.get(camId);
       if (existing) {
@@ -449,7 +450,7 @@ export async function getBIEficienciaMotoristasForEmpresa(
       nome: string; totalLitros: number; totalGastoCentavos: number; totalAbastecimentos: number;
     }>();
     for (const gasto of gastos) {
-      const mot = gasto.motorista as unknown as { nome: string } | null;
+      const mot = singleRelation<{ nome: string }>(gasto.motorista);
       const motId = gasto.motorista_id!;
       const litros = Number(gasto.litros) || 0;
       const existing = fuelByDriver.get(motId);
@@ -636,7 +637,7 @@ export async function getBIEficienciaCombustivelForEmpresa(
       totalGastoCentavos: number; totalAbastecimentos: number;
     }>();
     for (const gasto of gastos) {
-      const cam = gasto.caminhao as unknown as { placa: string; modelo: string } | null;
+      const cam = singleRelation<{ placa: string; modelo: string }>(gasto.caminhao);
       const camId = gasto.caminhao_id!;
       const litros = Number(gasto.litros) || 0;
       const existing = fuelByTruck.get(camId);
@@ -738,7 +739,7 @@ export async function getBIManutencoesForEmpresa(
     }>();
 
     for (const gasto of gastos ?? []) {
-      const cam = gasto.caminhao as unknown as { placa: string; modelo: string } | null;
+      const cam = singleRelation<{ placa: string; modelo: string }>(gasto.caminhao);
       const camId = gasto.caminhao_id!;
       const existing = byTruck.get(camId);
 
@@ -870,7 +871,7 @@ export async function getBIAlertasForEmpresa(
         const litrosByTruck = new Map<string, { litros: number; placa: string }>();
         for (const g of fuelRes.data ?? []) {
           const camId = g.caminhao_id!;
-          const cam = g.caminhao as unknown as { placa: string } | null;
+          const cam = singleRelation<{ placa: string }>(g.caminhao);
           const litros = Number(g.litros) || 0;
           const existing = litrosByTruck.get(camId);
           if (existing) {
@@ -942,7 +943,7 @@ export async function getBIAlertasForEmpresa(
           const manutByTruck = new Map<string, { total: number; pneu: number; placa: string }>();
           for (const g of manutGastos) {
             const camId = g.caminhao_id!;
-            const cam = g.caminhao as unknown as { placa: string } | null;
+            const cam = singleRelation<{ placa: string }>(g.caminhao);
             const isPneu = pneuCatIds.includes(g.categoria_id);
             const existing = manutByTruck.get(camId);
             if (existing) {
@@ -1036,7 +1037,7 @@ export async function getBIAlertasForEmpresa(
         const byMotorista = new Map<string, { nome: string; custoTotal: number; viagens: number }>();
         for (const v of viagens) {
           const motId = v.motorista_id!;
-          const mot = v.motorista as unknown as { nome: string } | null;
+          const mot = singleRelation<{ nome: string }>(v.motorista);
           const custo = gastosPorViagem.get(v.id) ?? 0;
           const existing = byMotorista.get(motId);
           if (existing) {

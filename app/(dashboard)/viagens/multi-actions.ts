@@ -7,6 +7,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import type { ViagemListItem } from '@/types/viagem';
 
 export async function listViagensForEmpresa(
@@ -36,8 +37,8 @@ export async function listViagensForEmpresa(
   }
 
   const items: ViagemListItem[] = (data ?? []).map((row) => {
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string } | null;
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string }>(row.caminhao);
 
     return {
       id: row.id,

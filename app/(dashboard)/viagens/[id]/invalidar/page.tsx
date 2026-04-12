@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { formatBRL } from '@/lib/utils/currency';
 import { InvalidarViagemForm } from '@/components/viagens/InvalidarViagemForm';
 
@@ -31,7 +32,7 @@ export default async function InvalidarViagemPage({ params }: InvalidarPageProps
 
   if (!viagem || viagem.status === 'cancelada') notFound();
 
-  const mot = viagem.motorista as unknown as { nome: string } | null;
+  const mot = singleRelation<{ nome: string }>(viagem.motorista);
 
   return (
     <div className="w-full min-w-0 max-w-lg mx-auto">

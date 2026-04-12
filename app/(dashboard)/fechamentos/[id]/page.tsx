@@ -8,6 +8,7 @@ import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getFechamentoDetalhado } from '@/app/(dashboard)/fechamentos/actions';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { formatBRL } from '@/lib/utils/currency';
 import { formatarData } from '@/lib/utils/format-date';
 import {
@@ -39,7 +40,7 @@ export default async function FechamentoDetalhePage({
   }
 
   const fechamento = result.data;
-  const mot = fechamento.motorista as unknown as { nome: string } | undefined;
+  const mot = singleRelation<{ nome: string }>(fechamento.motorista);
   const status = fechamento.status as FechamentoStatus;
   const tipo = fechamento.tipo as FechamentoTipo;
 

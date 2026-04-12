@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import type {
@@ -557,7 +558,7 @@ export async function getViagem(
     return { success: false, error: 'Viagem não encontrada' };
   }
 
-  return { success: true, viagem: viagem as unknown as Viagem };
+  return { success: true, viagem: viagem as Viagem };
 }
 
 /**
@@ -637,8 +638,8 @@ export async function listViagens(filters?: {
   }
 
   const items: ViagemListItem[] = (data ?? []).map((row) => {
-    const mot = row.motorista as unknown as { nome: string } | null;
-    const cam = row.caminhao as unknown as { placa: string } | null;
+    const mot = singleRelation<{ nome: string }>(row.motorista);
+    const cam = singleRelation<{ placa: string }>(row.caminhao);
 
     return {
       id: row.id,

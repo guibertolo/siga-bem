@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import type {
   FechamentoHistoricoFiltros,
@@ -77,7 +78,7 @@ export async function getFechamentosHistorico(
     }
 
     const fechamentos: FechamentoListItem[] = (data ?? []).map((f) => {
-      const motorista = f.motorista as unknown as { nome: string; cpf: string };
+      const motorista = singleRelation<{ nome: string; cpf: string }>(f.motorista)!;
       return {
         id: f.id as string,
         motorista_nome: motorista.nome,
