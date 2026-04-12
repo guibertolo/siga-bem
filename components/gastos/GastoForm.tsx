@@ -389,7 +389,7 @@ export function GastoForm({
       {/* Descricao */}
       <div>
         <label htmlFor="descricao" className="mb-2 block text-base font-medium text-primary-900">
-          Descrição        </label>
+          Descrição</label>
         <textarea
           id="descricao"
           rows={3}

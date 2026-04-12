@@ -31,7 +31,7 @@ export function EncerrarVinculoButton({ vinculoId, label = 'Encerrar' }: Encerra
   if (confirming) {
     return (
       <div className="mt-2 rounded-lg border border-danger/20 bg-alert-danger-bg p-3 space-y-2">
-        <p className="text-sm font-medium text-danger">Encerrar este vinculo?</p>
+        <p className="text-sm font-medium text-danger">Encerrar este vínculo?</p>
         {error && <p className="text-xs text-danger">{error}</p>}
         <div className="flex items-center gap-2">
           <button

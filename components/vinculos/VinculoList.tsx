@@ -140,7 +140,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
       {/* Inactive vinculos — flat list */}
       {inactive.length > 0 && (
         <div className="mt-6">
-          <h3 className="mb-3 text-base font-semibold text-primary-500">Vinculos Encerrados</h3>
+          <h3 className="mb-3 text-base font-semibold text-primary-500">Vínculos Encerrados</h3>
 
           {/* Mobile card view */}
           <div className="space-y-3 md:hidden">

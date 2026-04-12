@@ -1688,7 +1688,7 @@ export async function getBIAlertas(
                   titulo: 'Manutenção frequente',
                   descricao: `Caminhão com manutenções acima da média da frota`,
                   entidade: data.placa,
-                  valor: `${data.total} manutencoes`,
+                  valor: `${data.total} manutenções`,
                   referencia: `média da frota: ${manutStats.mean.toFixed(1)}`,
                 });
               }
@@ -1816,11 +1816,11 @@ export async function getBIAlertas(
               alertas.push({
                 tipo: 'gasto_acima_media',
                 severidade: critical ? 'alto' : 'medio',
-                titulo: 'Custo por viagem acima da media',
+                titulo: 'Custo por viagem acima da média',
                 descricao: `Motorista com gasto ${pctAcima}% acima da média da empresa`,
                 entidade: driver.nome,
                 valor: `R$ ${(custoMedio / 100).toFixed(0)}/viagem`,
-                referencia: `media: R$ ${(mediaGlobal / 100).toFixed(0)}/viagem`,
+                referencia: `média: R$ ${(mediaGlobal / 100).toFixed(0)}/viagem`,
               });
             }
           }

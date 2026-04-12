@@ -260,7 +260,7 @@ export function DespesaViagemSection({
             {/* Descricao */}
             <div>
               <label htmlFor="despesa-descricao" className="mb-2 block text-base font-medium text-primary-900">
-                Descrição              </label>
+                Descrição</label>
               <textarea
                 id="despesa-descricao"
                 rows={2}

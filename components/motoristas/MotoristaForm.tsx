@@ -274,12 +274,12 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="cnh_numero" className="mb-2 block text-base font-medium text-primary-900">
-              Numero da CNH <span className="text-danger">*</span>
+              Número da CNH <span className="text-danger">*</span>
             </label>
             <input
               id="cnh_numero"
               type="text"
-              placeholder="Numero do registro da CNH"
+              placeholder="Número do registro da CNH"
               {...register('cnh_numero')}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
@@ -381,7 +381,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         {/* Observacao */}
         <div>
           <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
-            Observação          </label>
+            Observação</label>
           <textarea
             id="observacao"
             rows={3}

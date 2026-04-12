@@ -24,10 +24,10 @@ export function ProximaViagemCard({ viagem }: ProximaViagemCardProps) {
       <div
         className="rounded-card border border-surface-border bg-surface-card p-6 shadow-sm"
         role="region"
-        aria-label="Proxima viagem: nenhuma viagem planejada"
+        aria-label="Próxima viagem: nenhuma viagem planejada"
       >
         <h3 className="text-lg font-semibold text-primary-900">
-          Proxima Viagem
+          Próxima Viagem
         </h3>
         <p className="mt-2 text-base text-text-muted">
           Nenhuma viagem planejada
@@ -41,16 +41,16 @@ export function ProximaViagemCard({ viagem }: ProximaViagemCardProps) {
       href={`/viagens/${viagem.id}`}
       className="block rounded-card border border-surface-border border-l-4 border-l-info bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
       role="region"
-      aria-label={`Proxima viagem: ${viagem.origem} para ${viagem.destino}, saida em ${formatDate(viagem.data_saida)}`}
+      aria-label={`Próxima viagem: ${viagem.origem} para ${viagem.destino}, saída em ${formatDate(viagem.data_saida)}`}
     >
       <h3 className="text-lg font-semibold text-primary-900">
-        Proxima Viagem
+        Próxima Viagem
       </h3>
       <p className="mt-2 text-xl font-bold text-primary-900">
         {viagem.origem} &rarr; {viagem.destino}
       </p>
       <div className="mt-2 space-y-1 text-sm text-primary-700">
-        <p>Saida: {formatDate(viagem.data_saida)}</p>
+        <p>Saída: {formatDate(viagem.data_saida)}</p>
         <p className="text-base font-semibold tabular-nums">
           Frete: {formatBRL(viagem.valor_total)}
         </p>

@@ -406,7 +406,7 @@ export async function createFechamento(
   if (overlapping && overlapping.length > 0) {
     return {
       success: false,
-      error: 'Ja existe um fechamento para este motorista no periodo selecionado.',
+      error: 'Já existe um fechamento para este motorista no período selecionado.',
     };
   }
 

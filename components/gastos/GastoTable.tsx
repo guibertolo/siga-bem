@@ -289,7 +289,7 @@ export function GastoTable({ gastos, isMotorista: _isMotorista = false, isDono =
                   disabled={isPending}
                   className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
                 >
-                  Confirmar Exclusao
+                  Confirmar Exclusão
                 </button>
                 <button
                   type="button"

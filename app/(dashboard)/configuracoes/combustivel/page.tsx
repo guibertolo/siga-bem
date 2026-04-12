@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { listCombustivelPrecos, getMediaPorRegiao } from '@/app/(dashboard)/configuracoes/combustivel/actions';
 
 export const metadata: Metadata = {
-  title: 'Combustivel',
+  title: 'Combustível',
 };
 import { CombustivelPrecoList } from '@/components/configuracoes/CombustivelPrecoList';
 import { MediaCombustivelRegiao } from '@/components/configuracoes/MediaCombustivelRegiao';

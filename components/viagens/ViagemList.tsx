@@ -199,7 +199,7 @@ export function ViagemList({
                   <th className="px-4 py-3 text-base font-medium text-warning">Origem/Destino</th>
                   <th className="px-4 py-3 text-base font-medium text-warning">Motorista</th>
                   <th className="px-4 py-3 text-base font-medium text-warning">Caminhão</th>
-                  <th className="px-4 py-3 text-base font-medium text-warning">Saida</th>
+                  <th className="px-4 py-3 text-base font-medium text-warning">Saída</th>
                   <th className="px-4 py-3 text-base text-right font-medium text-warning">Valor</th>
                   <th className="px-4 py-3 text-base text-right font-medium text-warning">Ações</th>
                 </tr>
@@ -374,12 +374,12 @@ export function ViagemList({
                   )}
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Origem/Destino</th>
                   <th className="px-4 py-3.5 text-base font-medium text-primary-700">Motorista</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhao</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saida</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Caminhão</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Saída</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Valor</th>
                   <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">%</th>
-                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situacao</th>
-                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Acoes</th>
+                  <th className="px-4 py-3.5 text-base font-medium text-primary-700">Situação</th>
+                  <th className="px-4 py-3.5 text-base text-right font-medium text-primary-700">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -524,7 +524,7 @@ export function ViagemList({
                   disabled={deletingId === confirmId}
                   className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
                 >
-                  Confirmar Exclusao
+                  Confirmar Exclusão
                 </button>
                 <button
                   type="button"

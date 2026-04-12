@@ -315,7 +315,7 @@ export function ComprovantesUpload({
                       onClick={() => handleDelete(comp.id)}
                       disabled={deletingId === comp.id}
                       className="rounded-full bg-danger p-1 text-white shadow-sm"
-                      title="Confirmar exclusao"
+                      title="Confirmar exclusão"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />

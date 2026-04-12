@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "db:types": "npx supabase gen types typescript --linked 2>/dev/null > types/database.generated.ts",
+    "check-ptbr": "node scripts/check-ptbr.js",
     "prepare": "husky"
   },
   "dependencies": {

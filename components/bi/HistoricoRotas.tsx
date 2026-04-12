@@ -119,7 +119,7 @@ export function HistoricoRotas({
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-primary-500">Combustivel</p>
+                  <p className="text-xs text-primary-500">Combustível</p>
                   <p className="text-sm font-semibold text-primary-900 tabular-nums">
                     {formatBRL(v.custoCombustivelCentavos)}
                   </p>

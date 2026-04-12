@@ -123,7 +123,7 @@ export async function createVinculo(
     .single();
 
   if (insertError) {
-    return { success: false, error: 'Erro ao criar vinculo. Tente novamente.' };
+    return { success: false, error: 'Erro ao criar vínculo. Tente novamente.' };
   }
 
   revalidatePath('/vinculos');
@@ -165,7 +165,7 @@ export async function encerrarVinculo(
     .single();
 
   if (error || !vinculo) {
-    return { success: false, error: 'Vinculo não encontrado ou ja encerrado.' };
+    return { success: false, error: 'Vínculo não encontrado ou já encerrado.' };
   }
 
   revalidatePath('/vinculos');

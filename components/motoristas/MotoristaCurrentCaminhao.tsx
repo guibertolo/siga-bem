@@ -62,7 +62,7 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
             href={`/vinculos/historico?motorista=${motoristaId}`}
             className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
           >
-            Ver historico completo &rarr;
+            Ver histórico completo &rarr;
           </Link>
         </div>
       ) : (
@@ -73,7 +73,7 @@ export async function MotoristaCurrentCaminhao({ motoristaId }: MotoristaCurrent
               href="/vinculos/novo"
               className="inline-block text-xs text-primary-500 transition-colors hover:text-primary-800"
             >
-              Criar vinculo &rarr;
+              Criar vínculo &rarr;
             </Link>
           )}
         </div>

@@ -93,7 +93,7 @@ export function EstimativaViagem({
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <p className="text-xs text-primary-500">Distancia</p>
+          <p className="text-xs text-primary-500">Distância</p>
           <p className="text-sm font-medium tabular-nums text-primary-900">
             {kmEstimado.toLocaleString('pt-BR')} km
           </p>
@@ -101,9 +101,9 @@ export function EstimativaViagem({
 
         <div>
           <p className="text-xs text-primary-500">
-            Consumo medio
+            Consumo médio
             <span className="ml-1 text-xs text-text-muted">
-              ({estimativa.consumo_fonte === 'historico' ? 'historico' : 'padrao'})
+              ({estimativa.consumo_fonte === 'historico' ? 'histórico' : 'padrão'})
             </span>
           </p>
           <p className="text-sm font-medium tabular-nums text-primary-900">
@@ -127,7 +127,7 @@ export function EstimativaViagem({
         </div>
 
         <div>
-          <p className="text-xs text-primary-500">Custo estimado combustivel</p>
+          <p className="text-xs text-primary-500">Custo estimado combustível</p>
           <p className="text-sm font-bold tabular-nums text-danger">
             {formatBRL(estimativa.custo_combustivel_centavos)}
           </p>

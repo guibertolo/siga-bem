@@ -83,8 +83,8 @@ export async function GET(request: Request) {
   const headersCsv = [
     'Motorista',
     'CPF',
-    'Periodo Inicio',
-    'Periodo Fim',
+    'Período Início',
+    'Período Fim',
     'Tipo',
     'Total Viagens (R$)',
     'Total Gastos (R$)',

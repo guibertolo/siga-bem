@@ -903,10 +903,10 @@ export async function getBIAlertasForEmpresa(
                 tipo: 'combustivel',
                 severidade: critical ? 'alto' : 'medio',
                 titulo: 'Consumo excessivo de combustível',
-                descricao: 'Caminhao abaixo da media da frota',
+                descricao: 'Caminhão abaixo da média da frota',
                 entidade: v.placa,
                 valor: `${v.kml.toFixed(1)} km/L`,
-                referencia: `media da frota: ${stats.mean.toFixed(1)} km/L`,
+                referencia: `média da frota: ${stats.mean.toFixed(1)} km/L`,
               });
             }
           }
@@ -967,11 +967,11 @@ export async function getBIAlertasForEmpresa(
                 alertas.push({
                   tipo: 'manutencao',
                   severidade: critical ? 'alto' : 'medio',
-                  titulo: 'Manutencao frequente',
-                  descricao: 'Caminhao com manutencoes acima da media da frota',
+                  titulo: 'Manutenção frequente',
+                  descricao: 'Caminhão com manutenções acima da média da frota',
                   entidade: data.placa,
-                  valor: `${data.total} manutencoes`,
-                  referencia: `media da frota: ${manutStats.mean.toFixed(1)}`,
+                  valor: `${data.total} manutenções`,
+                  referencia: `média da frota: ${manutStats.mean.toFixed(1)}`,
                 });
               }
             }
@@ -984,10 +984,10 @@ export async function getBIAlertasForEmpresa(
                   tipo: 'pneu',
                   severidade: critical ? 'alto' : 'medio',
                   titulo: 'Troca de pneu frequente',
-                  descricao: 'Caminhao com trocas de pneu acima da media da frota',
+                  descricao: 'Caminhão com trocas de pneu acima da média da frota',
                   entidade: data.placa,
                   valor: `${data.pneu} trocas de pneu`,
-                  referencia: `media da frota: ${pneuStats.mean.toFixed(1)}`,
+                  referencia: `média da frota: ${pneuStats.mean.toFixed(1)}`,
                 });
               }
             }
@@ -1067,11 +1067,11 @@ export async function getBIAlertasForEmpresa(
               alertas.push({
                 tipo: 'gasto_acima_media',
                 severidade: critical ? 'alto' : 'medio',
-                titulo: 'Custo por viagem acima da media',
-                descricao: `Motorista com gasto ${pctAcima}% acima da media da empresa`,
+                titulo: 'Custo por viagem acima da média',
+                descricao: `Motorista com gasto ${pctAcima}% acima da média da empresa`,
                 entidade: driver.nome,
                 valor: `R$ ${(custoMedio / 100).toFixed(0)}/viagem`,
-                referencia: `media: R$ ${(mediaGlobal / 100).toFixed(0)}/viagem`,
+                referencia: `média: R$ ${(mediaGlobal / 100).toFixed(0)}/viagem`,
               });
             }
           }

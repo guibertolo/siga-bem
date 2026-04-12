@@ -1,1 +1,1 @@
-npm run typecheck && npm run lint && npm test -- --passWithNoTests
+npm run check-ptbr && npm run typecheck && npm run lint && npm test -- --passWithNoTests

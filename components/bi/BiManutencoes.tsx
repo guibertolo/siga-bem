@@ -119,7 +119,7 @@ export function BiManutencoes({ data }: BiManutencoesProps) {
           Gastos com Manutenção e Pneu agrupados por veículo
         </p>
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-xs text-primary-500">Total no periodo:</span>
+          <span className="text-xs text-primary-500">Total no período:</span>
           <span className="text-sm font-bold text-primary-900 tabular-nums">
             {formatBRL(totalGeral)}
           </span>

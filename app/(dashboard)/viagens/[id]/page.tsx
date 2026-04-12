@@ -153,7 +153,7 @@ export default async function ViagemDetalhePage({
               </p>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-primary-500">Saida</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-primary-500">Saída</p>
               <p className="mt-1 text-sm text-primary-700">{formatDateTime(viagem.data_saida)}</p>
             </div>
             <div>
@@ -202,14 +202,14 @@ export default async function ViagemDetalhePage({
             </h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div>
-                <p className="text-xs text-primary-500">Distancia</p>
+                <p className="text-xs text-primary-500">Distância</p>
                 <p className="mt-1 text-sm font-medium tabular-nums text-primary-900">
                   {estimativa.km_estimado.toLocaleString('pt-BR')} km
                 </p>
               </div>
               <div>
                 <p className="text-xs text-primary-500">
-                  Consumo medio ({estimativa.consumo_fonte === 'historico' ? 'historico' : 'padrao'})
+                  Consumo médio ({estimativa.consumo_fonte === 'historico' ? 'histórico' : 'padrão'})
                 </p>
                 <p className="mt-1 text-sm font-medium tabular-nums text-primary-900">
                   {estimativa.consumo_medio_km_l.toFixed(1).replace('.', ',')} km/l
@@ -227,7 +227,7 @@ export default async function ViagemDetalhePage({
                 </p>
               </div>
               <div>
-                <p className="text-xs text-primary-500">Custo estimado combustivel</p>
+                <p className="text-xs text-primary-500">Custo estimado combustível</p>
                 <p className="mt-1 text-lg font-bold tabular-nums text-danger">
                   {formatBRL(estimativa.custo_combustivel_centavos)}
                 </p>
@@ -258,7 +258,7 @@ export default async function ViagemDetalhePage({
             <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-primary-500">Quilometragem</h3>
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-xs text-primary-500">KM Saida</p>
+                <p className="text-xs text-primary-500">KM Saída</p>
                 <p className="mt-1 text-sm tabular-nums text-primary-900">
                   {viagem.km_saida != null ? viagem.km_saida.toLocaleString('pt-BR') : '-'}
                 </p>
@@ -271,7 +271,7 @@ export default async function ViagemDetalhePage({
               </div>
               {distancia != null && (
                 <div>
-                  <p className="text-xs text-primary-500">Distancia Percorrida</p>
+                  <p className="text-xs text-primary-500">Distância Percorrida</p>
                   <p className="mt-1 text-sm font-bold tabular-nums text-primary-900">
                     {distancia.toLocaleString('pt-BR')} km
                   </p>

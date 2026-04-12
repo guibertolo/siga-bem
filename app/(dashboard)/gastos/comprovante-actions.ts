@@ -49,7 +49,7 @@ export async function uploadComprovante(
     const limitMb = (MAX_FILE_SIZE_BYTES / (1024 * 1024)).toFixed(0)
     return {
       success: false,
-      error: `Arquivo muito grande (maximo ${limitMb}MB)`,
+      error: `Arquivo muito grande (máximo ${limitMb}MB)`,
     }
   }
 

@@ -134,9 +134,9 @@ export function AbastecimentoForm({
 
     if (kmOdometro != null) {
       if (isNaN(kmOdometro) || kmOdometro <= 0) {
-        errors.km_odometro = 'Odometro deve ser um numero positivo';
+        errors.km_odometro = 'Odômetro deve ser um número positivo';
       } else if (kmSaida != null && kmOdometro < kmSaida) {
-        errors.km_odometro = `Odometro deve ser maior ou igual ao KM de saida (${kmSaida.toLocaleString('pt-BR')} km)`;
+        errors.km_odometro = `Odômetro deve ser maior ou igual ao KM de saída (${kmSaida.toLocaleString('pt-BR')} km)`;
       }
     }
 
@@ -251,7 +251,7 @@ export function AbastecimentoForm({
           </div>
           <div>
             <p className="text-xs text-primary-500">Categoria</p>
-            <p className="text-sm font-medium text-primary-900">Combustivel</p>
+            <p className="text-sm font-medium text-primary-900">Combustível</p>
           </div>
         </div>
       </div>
@@ -326,7 +326,7 @@ export function AbastecimentoForm({
 
         <div>
           <label htmlFor="tipo_combustivel" className={labelClass}>
-            Tipo de Combustivel
+            Tipo de Combustível
           </label>
           <select
             id="tipo_combustivel"
@@ -375,13 +375,13 @@ export function AbastecimentoForm({
 
         <div>
           <label htmlFor="km_odometro" className={labelClass}>
-            Leitura do Odometro (km)
+            Leitura do Odômetro (km)
           </label>
           <input
             id="km_odometro"
             type="text"
             inputMode="numeric"
-            placeholder={kmSaida != null ? `Minimo: ${kmSaida.toLocaleString('pt-BR')} km` : 'Ex: 320.450'}
+            placeholder={kmSaida != null ? `Mínimo: ${kmSaida.toLocaleString('pt-BR')} km` : 'Ex: 320.450'}
             value={kmOdometroStr}
             onChange={(e) => setKmOdometroStr(maskKm(e.target.value))}
             className={cn(inputClass, fieldErrors.km_odometro ? 'border-danger' : 'border-surface-border')}
@@ -393,7 +393,7 @@ export function AbastecimentoForm({
       {/* Observacao (AC 5) */}
       <div>
         <label htmlFor="observacao" className={labelClass}>
-          Observação        </label>
+          Observação</label>
         <textarea
           id="observacao"
           rows={3}

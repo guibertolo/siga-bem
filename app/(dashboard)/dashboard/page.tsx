@@ -6,7 +6,7 @@ import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 import { queryMultiEmpresa } from '@/lib/queries/multi-empresa-query';
 
 export const metadata: Metadata = {
-  title: 'Inicio',
+  title: 'Início',
 };
 
 import { ReceitaMesCard } from '@/components/dashboard/ReceitaMesCard';

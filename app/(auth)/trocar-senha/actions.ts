@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function forcarTrocaSenha(novaSenha: string): Promise<{ error?: string }> {
   if (!novaSenha || novaSenha.length < 8) {
-    return { error: 'A senha deve ter no minimo 8 caracteres' };
+    return { error: 'A senha deve ter no mínimo 8 caracteres' };
   }
 
   const supabase = await createClient();

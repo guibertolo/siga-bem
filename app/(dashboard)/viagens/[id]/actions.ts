@@ -115,7 +115,7 @@ export async function createAbastecimento(
       return {
         success: false,
         fieldErrors: {
-          km_odometro: `Odometro deve ser maior ou igual ao KM de saida (${viagem.km_saida.toLocaleString('pt-BR')} km)`,
+          km_odometro: `Odômetro deve ser maior ou igual ao KM de saída (${viagem.km_saida.toLocaleString('pt-BR')} km)`,
         },
       };
     }

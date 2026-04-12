@@ -178,7 +178,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
         <input
           id="endereco"
           type="text"
-          placeholder="Rua, numero, complemento"
+          placeholder="Rua, número, complemento"
           {...register('endereco')}
           className="w-full rounded-lg border border-surface-border px-4 py-3 text-base outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         />

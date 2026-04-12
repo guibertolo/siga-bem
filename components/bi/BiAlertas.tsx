@@ -32,7 +32,7 @@ export function BiAlertas({ data, verificados = [] }: BiAlertasProps) {
               <InfoTooltip text="O sistema detecta automaticamente quando algum caminhão ou motorista está fora do padrão da sua frota." />
             </p>
             <p className="text-sm text-primary-600 dark:text-primary-400">
-              Operacao dentro do esperado no periodo selecionado
+              Operação dentro do esperado no período selecionado
             </p>
           </div>
         </div>

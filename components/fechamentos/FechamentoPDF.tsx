@@ -388,7 +388,7 @@ export function FechamentoPDFDocument({ fechamento }: FechamentoPDFProps) {
             {viagens.length === 0 ? (
               <View style={styles.emptyRow}>
                 <Text style={styles.emptyText}>
-                  Nenhuma viagem no periodo
+                  Nenhuma viagem no período
                 </Text>
               </View>
             ) : (

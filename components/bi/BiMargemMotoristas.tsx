@@ -47,7 +47,7 @@ export function BiMargemMotoristas({ data }: BiMargemMotoristasProps) {
         <InfoTooltip text="Receita dos fretes menos os custos de cada motorista. Margem verde acima de 40% é saudável." />
       </h3>
       <p className="text-sm text-primary-500 mb-4">
-        Lucro de cada motorista nas viagens concluidas
+        Lucro de cada motorista nas viagens concluídas
       </p>
 
       {/* Desktop table */}

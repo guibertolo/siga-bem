@@ -24,7 +24,7 @@ export function VinculoHistoricoSection({
   }
 
   return (
-    <div role="region" aria-label="Historico de vinculos">
+    <div role="region" aria-label="Histórico de vínculos">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
@@ -32,7 +32,7 @@ export function VinculoHistoricoSection({
         className="min-h-[48px] flex w-full items-center justify-between rounded-lg border border-surface-border bg-surface-card px-4 py-3 text-base font-semibold text-primary-700 transition-colors hover:bg-surface-hover"
       >
         <span>
-          {expanded ? 'Ocultar Historico' : 'Mostrar Historico'}{' '}
+          {expanded ? 'Ocultar Histórico' : 'Mostrar Histórico'}{' '}
           <span className="font-normal text-primary-500">({totalEncerrados} registros)</span>
         </span>
         <svg

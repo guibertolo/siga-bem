@@ -57,7 +57,7 @@ export function ViagemInvalidarButton({ viagemId }: ViagemInvalidarButtonProps) 
             minLength={10}
           />
           {motivo.length > 0 && motivo.trim().length < 10 && (
-            <p className="text-xs text-danger">Motivo deve ter no minimo 10 caracteres</p>
+            <p className="text-xs text-danger">Motivo deve ter no mínimo 10 caracteres</p>
           )}
           <div className="flex items-center gap-2">
             <button

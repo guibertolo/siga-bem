@@ -52,7 +52,7 @@ export default async function CaminhaoDetailPage({ params }: CaminhaoDetailPageP
       <div className="grid gap-6 md:grid-cols-2">
         {/* Dados do Caminhao */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-4">
-          <h3 className="mb-3 text-sm font-semibold text-primary-900">Dados do Veiculo</h3>
+          <h3 className="mb-3 text-sm font-semibold text-primary-900">Dados do Veículo</h3>
           <dl className="space-y-2 text-sm">
             <div>
               <dt className="text-primary-500">Placa</dt>

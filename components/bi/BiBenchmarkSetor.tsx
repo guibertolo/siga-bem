@@ -292,7 +292,7 @@ export function BiBenchmarkSetor({ setor, proprio }: BiBenchmarkSetorProps) {
 
               {/* 3. % Combustivel sobre frete */}
               <MetricCard
-                label="Combustivel / Frete"
+                label="Combustível / Frete"
                 proprioValor={
                   proprioItem?.pctCombustivelFrete != null
                     ? `${proprioItem.pctCombustivelFrete.toFixed(1)}%`

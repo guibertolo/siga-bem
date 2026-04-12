@@ -51,12 +51,12 @@ const viagemSchema = z.object({
   km_estimado: z.string()
     .refine(
       (val) => val === '' || (!isNaN(Number(val)) && Number(val) > 0),
-      'Distancia estimada deve ser maior que zero',
+      'Distância estimada deve ser maior que zero',
     ),
   km_saida: z.string()
     .refine(
       (val) => val === '' || (!isNaN(Number(val)) && Number(val) >= 0),
-      'KM saida deve ser um numero positivo',
+      'KM saída deve ser um número positivo',
     ),
   observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
 });
@@ -682,7 +682,7 @@ export async function invalidarViagem(
   }
 
   if (!motivo || motivo.trim().length < 10) {
-    return { success: false, error: 'Motivo deve ter no minimo 10 caracteres' };
+    return { success: false, error: 'Motivo deve ter no mínimo 10 caracteres' };
   }
 
   const supabase = await createClient();

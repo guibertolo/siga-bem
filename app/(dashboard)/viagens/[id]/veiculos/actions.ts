@@ -128,7 +128,7 @@ export async function addVeiculoViagem(
     .single();
 
   if (insertError) {
-    return { success: false, error: 'Erro ao adicionar veiculo. Tente novamente.' };
+    return { success: false, error: 'Erro ao adicionar veículo. Tente novamente.' };
   }
 
   revalidatePath(`/viagens/${viagemId}`);
@@ -182,7 +182,7 @@ export async function updateVeiculoViagem(
     .single();
 
   if (updateError) {
-    return { success: false, error: 'Erro ao atualizar veiculo. Tente novamente.' };
+    return { success: false, error: 'Erro ao atualizar veículo. Tente novamente.' };
   }
 
   revalidatePath(`/viagens/${viagemId}`);
@@ -214,7 +214,7 @@ export async function removeVeiculoViagem(
     .eq('id', veiculoId);
 
   if (error) {
-    return { success: false, error: 'Erro ao remover veiculo. Tente novamente.' };
+    return { success: false, error: 'Erro ao remover veículo. Tente novamente.' };
   }
 
   revalidatePath(`/viagens/${viagemId}`);

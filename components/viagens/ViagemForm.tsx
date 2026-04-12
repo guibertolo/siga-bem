@@ -46,7 +46,7 @@ const viagemFormSchema = z.object({
         const num = Number(val.replace(/\./g, ''));
         return !isNaN(num) && num > 0;
       },
-      'Distancia estimada deve ser maior que zero',
+      'Distância estimada deve ser maior que zero',
     ),
   km_saida: z.string(),
   observacao: z.string().max(1000, 'Máximo 1000 caracteres'),
@@ -484,7 +484,7 @@ export function ViagemForm({
       {/* Observacao */}
       <div>
         <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
-          Observação        </label>
+          Observação</label>
         <textarea
           id="observacao"
           rows={3}

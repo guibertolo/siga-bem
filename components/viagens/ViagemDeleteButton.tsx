@@ -52,7 +52,7 @@ export function ViagemDeleteButton({ viagemId }: ViagemDeleteButtonProps) {
               disabled={isPending}
               className="rounded-lg bg-danger px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-danger/80 disabled:opacity-50 min-h-[40px]"
             >
-              {isPending ? 'Excluindo...' : 'Confirmar Exclusao'}
+              {isPending ? 'Excluindo...' : 'Confirmar Exclusão'}
             </button>
             <button
               type="button"

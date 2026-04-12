@@ -12,7 +12,7 @@ export function VinculoSummaryBar({
   return (
     <div
       role="region"
-      aria-label="Resumo dos vinculos"
+      aria-label="Resumo dos vínculos"
       className="grid grid-cols-3 gap-3 sm:flex sm:items-center sm:gap-4"
     >
       <div className="flex items-center gap-2 rounded-lg border border-surface-border bg-surface-card px-4 py-3 sm:flex-1 sm:min-w-[140px]">

@@ -31,7 +31,7 @@ export function SimuladorViagem({
   function handleSimular() {
     const km = parseInt(kmEstimado, 10);
     if (!km || km <= 0) {
-      setError('Informe o km estimado (numero inteiro positivo).');
+      setError('Informe o km estimado (número inteiro positivo).');
       return;
     }
 
@@ -164,7 +164,7 @@ export function SimuladorViagem({
             htmlFor="sim-combustivel"
             className="mb-1 block text-xs font-medium text-primary-700"
           >
-            Tipo de Combustivel
+            Tipo de Combustível
           </label>
           <select
             id="sim-combustivel"
@@ -240,7 +240,7 @@ export function SimuladorViagem({
             {/* Source warning */}
             {resultado.fonteConsumo === 'padrao_cegonheiro' && (
               <div className="mt-3 rounded-md bg-alert-warning-bg border border-warning/20 p-2 text-xs text-warning">
-                Sem historico — usando consumo padrao de cegonheiros (2,5 km/l)
+                Sem histórico — usando consumo padrão de cegonheiros (2,5 km/l)
               </div>
             )}
             {resultado.fonteConsumo === 'historico_real' && (

@@ -87,7 +87,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
       return;
     }
     if (!periodoInicio || !periodoFim) {
-      setError('Selecione o periodo');
+      setError('Selecione o período');
       return;
     }
 
@@ -224,7 +224,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
           ) : (
             <div>
               <label htmlFor="semana" className="mb-2 block text-base font-medium text-primary-700">
-                Data de referencia da semana *
+                Data de referência da semana *
               </label>
               <input
                 id="semana"
@@ -243,7 +243,7 @@ export function FechamentoForm({ motoristas, initialMotoristaId, initialDataInic
           {/* Observacao */}
           <div>
             <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-700">
-              Observação            </label>
+              Observação</label>
             <textarea
               id="observacao"
               value={observacao}

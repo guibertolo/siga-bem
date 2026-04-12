@@ -264,7 +264,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
       {/* Observacao */}
       <div>
         <label htmlFor="observacao" className="mb-2 block text-base font-medium text-primary-900">
-          Observação        </label>
+          Observação</label>
         <textarea
           id="observacao"
           rows={3}

@@ -47,9 +47,9 @@ function MotoristaView({ viagem }: { viagem: ViagemAtivaItem }) {
 
       <div className="mt-2 space-y-1 text-sm text-primary-700">
         <p>
-          Caminhao: {viagem.caminhao_placa} - {viagem.caminhao_modelo}
+          Caminhão: {viagem.caminhao_placa} - {viagem.caminhao_modelo}
         </p>
-        <p>Saida: {formatDateTime(viagem.data_saida)}</p>
+        <p>Saída: {formatDateTime(viagem.data_saida)}</p>
         <p className="text-base font-semibold tabular-nums">
           Frete: {formatBRL(viagem.valor_total)}
         </p>

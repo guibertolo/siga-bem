@@ -39,9 +39,9 @@ export default async function NovoVinculoPage() {
           </svg>
           Voltar
         </Link>
-        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Vinculo</h2>
+        <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-primary-900">Novo Vínculo</h2>
         <p className="mt-1 text-base text-primary-500">
-          Vincule um motorista a um caminhao. Um caminhao pode ter mais de um motorista
+          Vincule um motorista a um caminhão. Um caminhão pode ter mais de um motorista
           vinculado (turnos, revezamento).
         </p>
       </div>
