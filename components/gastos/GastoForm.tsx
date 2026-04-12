@@ -289,7 +289,7 @@ export function GastoForm({
           <select
             id="categoria_id"
             {...register('categoria_id')}
-            className={cn(inputClass, errors.categoria_id ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.categoria_id ? 'border-danger' : 'border-surface-border')}
           >
             <option value="">Selecione o tipo de gasto</option>
             {filteredCategorias.map((cat) => (
@@ -309,7 +309,7 @@ export function GastoForm({
             id="data"
             type="date"
             {...register('data')}
-            className={cn(inputClass, errors.data ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.data ? 'border-danger' : 'border-surface-border')}
           />
           {errors.data && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.data.message}</p>
@@ -330,7 +330,7 @@ export function GastoForm({
             inputMode="numeric"
             placeholder="0,00"
             {...register('valor')}
-            className={cn(inputClass, 'pl-10', errors.valor ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, 'pl-10', errors.valor ? 'border-danger' : 'border-surface-border')}
           />
         </div>
         {errors.valor && (
@@ -350,7 +350,7 @@ export function GastoForm({
             {...register('motorista_id')}
             className={cn(
               inputClass,
-              errors.motorista_id ? 'border-red-500' : 'border-surface-border',
+              errors.motorista_id ? 'border-danger' : 'border-surface-border',
               isMotoristaLocked && 'cursor-not-allowed bg-surface-muted',
             )}
           >

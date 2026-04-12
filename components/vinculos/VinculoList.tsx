@@ -96,7 +96,7 @@ export function VinculoList({ vinculos }: VinculoListProps) {
                   <span className="ml-2 text-sm text-primary-500">{group.modelo}</span>
                 </div>
                 {group.vinculos.length > 1 && (
-                  <span className="ml-auto inline-flex items-center rounded-full bg-alert-warning-bg px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-200 border border-warning/30">
+                  <span className="ml-auto inline-flex items-center rounded-full bg-alert-warning-bg px-2.5 py-0.5 text-xs font-semibold text-badge-warning-fg dark:text-warning border border-warning/30">
                     {group.vinculos.length} motoristas ativos
                   </span>
                 )}

@@ -261,7 +261,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                     type="button"
                     onClick={handlePagar}
                     disabled={isPending}
-                    className="rounded-lg bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                    className="rounded-lg bg-success px-3 py-1.5 text-sm font-medium text-white hover:bg-success/80 disabled:opacity-50"
                   >
                     Sim
                   </button>
@@ -278,7 +278,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   type="button"
                   onClick={() => setConfirmAction('pagar')}
                   disabled={isPending}
-                  className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                  className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white hover:bg-success/80 disabled:opacity-50"
                 >
                   Marcar como Pago
                 </button>
@@ -295,7 +295,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                     type="button"
                     onClick={handleExcluir}
                     disabled={isPending}
-                    className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                    className="rounded-lg bg-danger px-3 py-1.5 text-sm font-medium text-white hover:bg-danger/80 disabled:opacity-50"
                   >
                     Sim
                   </button>
@@ -312,7 +312,7 @@ export function FechamentoDetail({ fechamento, canManage }: FechamentoDetailProp
                   type="button"
                   onClick={() => setConfirmAction('excluir')}
                   disabled={isPending}
-                  className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg disabled:opacity-50"
+                  className="rounded-lg border border-danger/30 px-4 py-2 text-sm font-medium text-danger hover:bg-alert-danger-bg disabled:opacity-50"
                 >
                   Excluir
                 </button>

@@ -96,7 +96,7 @@ export function CombustivelPrecoForm({
       'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
-        ? 'border-red-300 bg-alert-danger-bg'
+        ? 'border-danger/30 bg-alert-danger-bg'
         : 'border-surface-border bg-surface-card',
     );
 

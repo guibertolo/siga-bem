@@ -105,7 +105,7 @@ export function ViagemStatusActions({
               disabled={isPending}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 novoStatus === 'cancelada'
-                  ? 'border border-red-300 text-danger hover:bg-alert-danger-bg'
+                  ? 'border border-danger/30 text-danger hover:bg-alert-danger-bg'
                   : 'bg-btn-primary text-white hover:bg-btn-primary-hover'
               }`}
             >
@@ -151,7 +151,7 @@ export function ViagemStatusActions({
               type="button"
               onClick={handleConcluir}
               disabled={isPending}
-              className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-success/80 disabled:opacity-50"
             >
               {isPending ? 'Concluindo...' : 'Confirmar Conclusao'}
             </button>

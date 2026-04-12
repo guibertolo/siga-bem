@@ -130,7 +130,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.motorista_id ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+            errors.motorista_id ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -171,7 +171,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.caminhao_id ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+            errors.caminhao_id ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         >
@@ -186,7 +186,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           <p className="mt-1.5 text-sm text-danger font-medium">{errors.caminhao_id.message}</p>
         )}
         {caminhaoWarning && (
-          <div className="mt-2 rounded-lg border border-warning/30 bg-alert-warning-bg p-3 text-sm text-amber-800 dark:text-amber-200">
+          <div className="mt-2 rounded-lg border border-warning/30 bg-alert-warning-bg p-3 text-sm text-badge-warning-fg dark:text-warning">
             <div className="flex items-start gap-2">
               <svg className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.832c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -209,7 +209,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.data_inicio ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+            errors.data_inicio ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
         />
@@ -229,7 +229,7 @@ export function VinculoForm({ motoristas, caminhoes, onSubmit }: VinculoFormProp
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base text-primary-900 outline-none transition-colors',
             'focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
-            errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+            errors.observacao ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
           )}
           disabled={isPending}
           placeholder="Observações sobre este vínculo (opcional)"

@@ -82,7 +82,7 @@ function MotoristaCard({ group, isMultiEmpresa }: { group: MotoristaGroup; isMul
                 {group.empresa_nome}
               </span>
             )}
-            <span className="inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-semibold text-amber-800 shrink-0">
+            <span className="inline-flex items-center justify-center rounded-full bg-badge-warning-bg px-2.5 py-0.5 text-sm font-semibold text-badge-warning-fg shrink-0">
               {group.viagens.length} {group.viagens.length === 1 ? 'viagem' : 'viagens'}
             </span>
           </div>
@@ -208,7 +208,7 @@ export function ViagensPendentesAcerto({ viagens, isMultiEmpresa }: ViagensPende
     <div>
       <h3 className="mb-3 text-xl font-bold text-primary-900">
         Viagens Prontas para Acerto
-        <span className="ml-2 inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-semibold text-amber-800">
+        <span className="ml-2 inline-flex items-center justify-center rounded-full bg-badge-warning-bg px-2.5 py-0.5 text-sm font-semibold text-badge-warning-fg">
           {viagens.length}
         </span>
       </h3>

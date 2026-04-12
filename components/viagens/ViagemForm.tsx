@@ -239,7 +239,7 @@ export function ViagemForm({
       'block w-full rounded-lg border px-4 py-3 text-base transition-colors',
       'focus:outline-none focus:ring-2 focus:ring-primary-500',
       errors[fieldName]
-        ? 'border-red-300 bg-alert-danger-bg'
+        ? 'border-danger/30 bg-alert-danger-bg'
         : 'border-surface-border bg-surface-card',
       disabled && 'bg-surface-muted text-text-muted cursor-not-allowed',
     );
@@ -253,7 +253,7 @@ export function ViagemForm({
       )}
 
       {camposLocked && (
-        <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-amber-800">
+        <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-badge-warning-fg">
           Campos definidos pelo proprietário -- origem, destino e valor não podem ser alterados.
         </div>
       )}

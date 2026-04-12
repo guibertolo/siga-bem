@@ -120,7 +120,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
             isEditing && 'cursor-not-allowed bg-surface-muted text-text-muted',
-            errors.cnpj ? 'border-red-500' : 'border-surface-border',
+            errors.cnpj ? 'border-danger' : 'border-surface-border',
           )}
         />
         {errors.cnpj && (
@@ -141,7 +141,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-            errors.razao_social ? 'border-red-500' : 'border-surface-border',
+            errors.razao_social ? 'border-danger' : 'border-surface-border',
           )}
         />
         {errors.razao_social && (
@@ -162,7 +162,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
           className={cn(
             'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
             'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-            errors.nome_fantasia ? 'border-red-500' : 'border-surface-border',
+            errors.nome_fantasia ? 'border-danger' : 'border-surface-border',
           )}
         />
         {errors.nome_fantasia && (
@@ -209,7 +209,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.estado ? 'border-red-500' : 'border-surface-border',
+              errors.estado ? 'border-danger' : 'border-surface-border',
             )}
           >
             <option value="">Selecione</option>
@@ -264,7 +264,7 @@ export function EmpresaForm({ empresa, mode, onSubmit }: EmpresaFormProps) {
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.email ? 'border-red-500' : 'border-surface-border',
+              errors.email ? 'border-danger' : 'border-surface-border',
             )}
           />
           {errors.email && (

@@ -123,7 +123,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={100}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.modelo ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                errors.modelo ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Onix, HB20, Corolla"
               {...register('modelo')}
@@ -144,7 +144,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               maxLength={50}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.marca ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                errors.marca ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Ex: Chevrolet, Hyundai, Toyota"
               {...register('marca')}
@@ -166,7 +166,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={8}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base uppercase transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.placa ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                  errors.placa ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="ABC-1234 ou ABC1D23"
                 {...register('placa')}
@@ -186,7 +186,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={20}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.chassi ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                  errors.chassi ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Chassi do veículo"
                 {...register('chassi')}
@@ -209,7 +209,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 maxLength={30}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.cor ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                  errors.cor ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="Ex: Branco, Prata, Preto"
                 {...register('cor')}
@@ -230,7 +230,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
                 max={15}
                 className={cn(
                   'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                  errors.posicao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                  errors.posicao ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
                 )}
                 placeholder="1 a 15"
                 {...register('posicao', {
@@ -253,7 +253,7 @@ export function VeiculoForm({ veiculo, onSubmit, onClose }: VeiculoFormProps) {
               rows={2}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500',
-                errors.observacao ? 'border-red-300 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
+                errors.observacao ? 'border-danger/30 bg-alert-danger-bg' : 'border-surface-border bg-surface-card',
               )}
               placeholder="Observações sobre o veículo"
               {...register('observacao')}

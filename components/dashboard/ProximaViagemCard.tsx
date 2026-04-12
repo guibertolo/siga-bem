@@ -39,7 +39,7 @@ export function ProximaViagemCard({ viagem }: ProximaViagemCardProps) {
   return (
     <Link
       href={`/viagens/${viagem.id}`}
-      className="block rounded-card border border-surface-border border-l-4 border-l-blue-400 bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
+      className="block rounded-card border border-surface-border border-l-4 border-l-info bg-surface-card p-6 shadow-sm no-underline text-inherit hover:border-primary-500 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
       role="region"
       aria-label={`Proxima viagem: ${viagem.origem} para ${viagem.destino}, saida em ${formatDate(viagem.data_saida)}`}
     >

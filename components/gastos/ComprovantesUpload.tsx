@@ -314,7 +314,7 @@ export function ComprovantesUpload({
                       type="button"
                       onClick={() => handleDelete(comp.id)}
                       disabled={deletingId === comp.id}
-                      className="rounded-full bg-red-600 p-1 text-white shadow-sm"
+                      className="rounded-full bg-danger p-1 text-white shadow-sm"
                       title="Confirmar exclusao"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

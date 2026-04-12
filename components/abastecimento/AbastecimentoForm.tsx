@@ -269,7 +269,7 @@ export function AbastecimentoForm({
             placeholder="Ex: 450,5"
             value={litrosStr}
             onChange={(e) => setLitrosStr(e.target.value)}
-            className={cn(inputClass, fieldErrors.litros ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, fieldErrors.litros ? 'border-danger' : 'border-surface-border')}
           />
           {fieldErrors.litros && <p className={errorClass}>{fieldErrors.litros}</p>}
         </div>
@@ -287,7 +287,7 @@ export function AbastecimentoForm({
               placeholder="0,00"
               value={valorStr}
               onChange={(e) => setValorStr(maskCurrency(e.target.value))}
-              className={cn(inputClass, 'pl-10', fieldErrors.valor_centavos ? 'border-red-500' : 'border-surface-border')}
+              className={cn(inputClass, 'pl-10', fieldErrors.valor_centavos ? 'border-danger' : 'border-surface-border')}
             />
           </div>
           {fieldErrors.valor_centavos && <p className={errorClass}>{fieldErrors.valor_centavos}</p>}
@@ -314,7 +314,7 @@ export function AbastecimentoForm({
             id="uf_abastecimento"
             value={uf}
             onChange={(e) => setUf(e.target.value)}
-            className={cn(inputClass, fieldErrors.uf_abastecimento ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, fieldErrors.uf_abastecimento ? 'border-danger' : 'border-surface-border')}
           >
             <option value="">Selecione a UF</option>
             {UF_LIST.map((estado) => (
@@ -368,7 +368,7 @@ export function AbastecimentoForm({
             type="date"
             value={data}
             onChange={(e) => setData(e.target.value)}
-            className={cn(inputClass, fieldErrors.data ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, fieldErrors.data ? 'border-danger' : 'border-surface-border')}
           />
           {fieldErrors.data && <p className={errorClass}>{fieldErrors.data}</p>}
         </div>
@@ -384,7 +384,7 @@ export function AbastecimentoForm({
             placeholder={kmSaida != null ? `Minimo: ${kmSaida.toLocaleString('pt-BR')} km` : 'Ex: 320.450'}
             value={kmOdometroStr}
             onChange={(e) => setKmOdometroStr(maskKm(e.target.value))}
-            className={cn(inputClass, fieldErrors.km_odometro ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, fieldErrors.km_odometro ? 'border-danger' : 'border-surface-border')}
           />
           {fieldErrors.km_odometro && <p className={errorClass}>{fieldErrors.km_odometro}</p>}
         </div>

@@ -147,7 +147,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             {...register('placa', {
               onChange: handleMaskedChange('placa', maskPlaca),
             })}
-            className={cn(inputClass, errors.placa ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.placa ? 'border-danger' : 'border-surface-border')}
           />
           {errors.placa && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.placa.message}</p>
@@ -161,7 +161,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
           <select
             id="tipo_cegonha"
             {...register('tipo_cegonha')}
-            className={cn(inputClass, errors.tipo_cegonha ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.tipo_cegonha ? 'border-danger' : 'border-surface-border')}
           >
             {TIPO_CEGONHA_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -197,7 +197,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             min={1970}
             max={new Date().getFullYear() + 1}
             {...register('ano')}
-            className={cn(inputClass, errors.ano ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.ano ? 'border-danger' : 'border-surface-border')}
           />
           {errors.ano && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.ano.message}</p>
@@ -214,7 +214,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             placeholder="11 digitos (opcional)"
             maxLength={11}
             {...register('renavam')}
-            className={cn(inputClass, errors.renavam ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.renavam ? 'border-danger' : 'border-surface-border')}
           />
           {errors.renavam && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.renavam.message}</p>
@@ -234,7 +234,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             min={1}
             max={15}
             {...register('capacidade_veiculos')}
-            className={cn(inputClass, errors.capacidade_veiculos ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.capacidade_veiculos ? 'border-danger' : 'border-surface-border')}
           />
           {errors.capacidade_veiculos && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.capacidade_veiculos.message}</p>
@@ -253,7 +253,7 @@ export function CaminhaoForm({ caminhao, mode, onSubmit }: CaminhaoFormProps) {
             {...register('km_atual', {
               onChange: handleMaskedChange('km_atual', maskKm),
             })}
-            className={cn(inputClass, errors.km_atual ? 'border-red-500' : 'border-surface-border')}
+            className={cn(inputClass, errors.km_atual ? 'border-danger' : 'border-surface-border')}
           />
           {errors.km_atual && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_atual.message}</p>

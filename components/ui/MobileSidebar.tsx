@@ -141,7 +141,7 @@ export function MobileSidebar({
               className={`flex items-center px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === link.href || pathname.startsWith(link.href + '/')
                   ? 'bg-white/20 text-white'
-                  : 'text-slate-200 hover:bg-white/15'
+                  : 'text-white/80 hover:bg-white/15'
               }`}
             >
               {link.label}
@@ -162,7 +162,7 @@ export function MobileSidebar({
               className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                 pathname === '/bi'
                   ? 'bg-white/20 text-white'
-                  : 'text-slate-200 hover:bg-white/15'
+                  : 'text-white/80 hover:bg-white/15'
               }`}
             >
               Resumo dos Gastos
@@ -184,7 +184,7 @@ export function MobileSidebar({
                   className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
                     pathname === link.href || pathname.startsWith(link.href + '/')
                       ? 'bg-white/20 text-white'
-                      : 'text-slate-200 hover:bg-white/15'
+                      : 'text-white/80 hover:bg-white/15'
                   }`}
                 >
                   {link.label}
@@ -202,7 +202,7 @@ export function MobileSidebar({
             className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors ${
               pathname === '/perfil'
                 ? 'bg-white/20 text-white'
-                : 'text-slate-200 hover:bg-white/15'
+                : 'text-white/80 hover:bg-white/15'
             }`}
           >
             Meu Perfil
@@ -210,7 +210,7 @@ export function MobileSidebar({
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="w-full px-4 py-3 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-danger/20 hover:text-red-300 transition-colors"
+              className="w-full px-4 py-3 text-base font-semibold text-white/80 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-danger/20 hover:text-danger transition-colors"
             >
               Sair
             </button>

@@ -140,7 +140,7 @@ export function VeiculosSection({
             className={cn(
               'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
               excedeu
-                ? 'bg-amber-100 text-amber-800'
+                ? 'bg-badge-warning-bg text-badge-warning-fg'
                 : 'bg-surface-muted text-text-muted',
             )}
           >
@@ -241,7 +241,7 @@ export function VeiculosSection({
                               e.stopPropagation();
                               handleRemove(v.id);
                             }}
-                            className="rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700"
+                            className="rounded bg-danger px-2 py-1 text-xs font-medium text-white hover:bg-danger/80"
                             disabled={isPending}
                           >
                             Sim

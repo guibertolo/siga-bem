@@ -144,7 +144,7 @@ export function ViagemList({
             {viagensAtivas.map((v) => (
               <div
                 key={v.id}
-                className="rounded-lg border-l-4 border-amber-400 bg-surface-card p-4"
+                className="rounded-lg border-l-4 border-warning bg-surface-card p-4"
               >
                 <div className="flex items-start justify-between mb-1">
                   <div>
@@ -192,7 +192,7 @@ export function ViagemList({
           </div>
 
           {/* Desktop active table */}
-          <div className="hidden md:block overflow-x-auto rounded-lg border border-warning/20 bg-surface-card border-amber-800">
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-warning/20 bg-surface-card">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-warning/20 bg-alert-warning-bg text-left">

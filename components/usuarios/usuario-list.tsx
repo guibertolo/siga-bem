@@ -20,7 +20,7 @@ const ROLE_LABELS: Record<UsuarioRole, string> = {
 };
 
 const ROLE_COLORS: Record<UsuarioRole, string> = {
-  dono: 'bg-amber-100 text-amber-800',
+  dono: 'bg-badge-warning-bg text-badge-warning-fg',
   admin: 'bg-info/20 text-info',
   motorista: 'bg-alert-success-bg text-success',
 };
@@ -89,7 +89,7 @@ export default function UsuarioList({
                   className={`shrink-0 ml-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${
                     usuario.ativo
                       ? 'bg-alert-success-bg text-success'
-                      : 'bg-alert-danger-bg text-red-800'
+                      : 'bg-alert-danger-bg text-badge-danger-fg'
                   }`}
                 >
                   {usuario.ativo ? 'Ativo' : 'Inativo'}
@@ -202,7 +202,7 @@ export default function UsuarioList({
                       className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${
                         usuario.ativo
                           ? 'bg-alert-success-bg text-success'
-                          : 'bg-alert-danger-bg text-red-800'
+                          : 'bg-alert-danger-bg text-badge-danger-fg'
                       }`}
                     >
                       {usuario.ativo ? 'Ativo' : 'Inativo'}

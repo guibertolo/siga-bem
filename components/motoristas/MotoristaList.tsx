@@ -40,7 +40,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
       {/* CNH Alert Banner */}
       {cnhAlerts.length > 0 && (
         <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4">
-          <p className="text-sm font-medium text-amber-800">
+          <p className="text-sm font-medium text-badge-warning-fg">
             Atencao: {cnhAlerts.length} motorista(s) com CNH vencida ou proxima do vencimento
           </p>
           <ul className="mt-2 space-y-1">
@@ -169,7 +169,7 @@ export function MotoristaList({ motoristas }: MotoristaListProps) {
                         m.cnh_vencida
                           ? 'bg-alert-danger-bg text-danger'
                           : m.cnh_vence_em_30_dias
-                            ? 'bg-amber-100 text-warning'
+                            ? 'bg-badge-warning-bg text-warning'
                             : 'text-primary-700',
                       )}
                     >

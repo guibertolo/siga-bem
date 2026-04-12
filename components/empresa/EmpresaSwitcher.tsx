@@ -190,7 +190,7 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
               >
                 <div className="flex items-center gap-2">
                   {isActive && (
-                    <svg className="h-4 w-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                    <svg className="h-4 w-4 text-success shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -251,7 +251,7 @@ export function EmpresaSwitcher({ empresas, selectedEmpresaIds }: EmpresaSwitche
                         onClick={() => handleCheckboxToggle(emp.empresa_id)}
                         className="flex items-center gap-2 w-full px-2 py-1.5 text-left bg-transparent border-none cursor-pointer hover:bg-white/10 rounded transition-colors"
                       >
-                        <span className={`flex items-center justify-center h-5 w-5 rounded border-2 shrink-0 transition-colors ${checked ? 'bg-green-500 border-green-500' : 'border-white/40'}`}>
+                        <span className={`flex items-center justify-center h-5 w-5 rounded border-2 shrink-0 transition-colors ${checked ? 'bg-success border-success' : 'border-white/40'}`}>
                           {checked && (
                             <svg className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

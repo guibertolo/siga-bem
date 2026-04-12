@@ -143,7 +143,7 @@ export default async function FechamentoDetalhePage({
             <span className="text-primary-700">
               Valor total dos fretes ({viagemItens.length} {viagemItens.length === 1 ? 'viagem' : 'viagens'})
             </span>
-            <span className="text-xl font-bold tabular-nums text-blue-900">
+            <span className="text-xl font-bold tabular-nums text-badge-info-fg">
               {formatBRL(fechamento.total_viagens)}
             </span>
           </div>
@@ -151,7 +151,7 @@ export default async function FechamentoDetalhePage({
             <span className="text-primary-700">
               Despesas descontadas ({gastoItens.length} {gastoItens.length === 1 ? 'gasto' : 'gastos'})
             </span>
-            <span className="text-xl font-bold tabular-nums text-red-900">
+            <span className="text-xl font-bold tabular-nums text-badge-danger-fg">
               - {formatBRL(fechamento.total_gastos)}
             </span>
           </div>
@@ -168,8 +168,8 @@ export default async function FechamentoDetalhePage({
             <span
               className={`text-2xl font-bold tabular-nums ${
                 fechamento.saldo_motorista >= 0
-                  ? 'text-green-900'
-                  : 'text-red-900'
+                  ? 'text-badge-success-fg'
+                  : 'text-badge-danger-fg'
               }`}
             >
               {formatBRL(fechamento.saldo_motorista)}

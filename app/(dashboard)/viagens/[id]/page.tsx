@@ -115,7 +115,7 @@ export default async function ViagemDetalhePage({
           </span>
           {/* Motorista: show earnings badge next to status */}
           {usuario.role === 'motorista' && valorMotorista > 0 && (
-            <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <span className="inline-block rounded-full bg-badge-success-bg px-3 py-1 text-xs font-bold text-badge-success-fg dark:bg-success/20 dark:text-success">
               Seu ganho: {formatBRL(valorMotorista)}
             </span>
           )}

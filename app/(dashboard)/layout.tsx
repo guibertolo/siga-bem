@@ -138,7 +138,7 @@ export default async function DashboardLayout({
               href={link.href}
               prefetch={true}
               data-onboarding-id={link.onboardingId}
-              className="flex items-center px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+              className="flex items-center px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               {link.label}
               {link.href === '/viagens' && viagensAtivasCount > 0 && (
@@ -154,7 +154,7 @@ export default async function DashboardLayout({
               href="/bi"
               prefetch={true}
               data-onboarding-id="bi"
-              className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+              className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
             >
               Resumo dos Gastos
             </Link>
@@ -171,7 +171,7 @@ export default async function DashboardLayout({
                   href={link.href}
                   prefetch={true}
                   data-onboarding-id={link.onboardingId}
-                  className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+                  className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
                 >
                   {link.label}
                 </Link>
@@ -184,14 +184,14 @@ export default async function DashboardLayout({
           <Link
             href="/perfil"
             prefetch={true}
-            className="block px-4 py-3.5 text-base font-semibold text-slate-200 no-underline rounded-lg hover:bg-white/15 transition-colors"
+            className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors"
           >
             Meu Perfil
           </Link>
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="w-full px-4 py-3.5 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-danger/20 hover:text-red-300 transition-colors"
+              className="w-full px-4 py-3.5 text-base font-semibold text-white/80 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-danger/20 hover:text-danger transition-colors"
             >
               Sair
             </button>

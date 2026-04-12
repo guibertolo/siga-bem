@@ -1,11 +1,17 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Primary Colors */
-  --color-primary-900: #1B3A4B;
-  --color-primary-700: #2C5F7C;
-  --color-primary-500: #3D8EB9;
+  /* Primary Colors — full scale */
+  --color-primary-50: #F0F7FA;
   --color-primary-100: #E3F2FD;
+  --color-primary-200: #B3D9EF;
+  --color-primary-300: #7ABFDF;
+  --color-primary-400: #4DA6CE;
+  --color-primary-500: #3D8EB9;
+  --color-primary-600: #2F749D;
+  --color-primary-700: #2C5F7C;
+  --color-primary-800: #234B63;
+  --color-primary-900: #1B3A4B;
 
   /* Semantic Colors */
   --color-success: #1B7A3D;
@@ -36,6 +42,18 @@
   --color-alert-danger-bg: #FEF2F2;
   --color-alert-warning-bg: #FFFBEB;
   --color-alert-info-bg: #EFF6FF;
+
+  /* Badge Colors — status indicators, tags */
+  --color-badge-success-bg: #DCFCE7;
+  --color-badge-success-fg: #166534;
+  --color-badge-warning-bg: #FEF3C7;
+  --color-badge-warning-fg: #92400E;
+  --color-badge-danger-bg: #FEE2E2;
+  --color-badge-danger-fg: #991B1B;
+  --color-badge-info-bg: #DBEAFE;
+  --color-badge-info-fg: #1E40AF;
+  --color-badge-neutral-bg: #E2E8F0;
+  --color-badge-neutral-fg: #334155;
 
   /* Trip Status Colors */
   --color-status-planejada: #3B82F6;
@@ -88,10 +106,16 @@ select option {
 /* Dark mode - auto (system preference) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --color-primary-900: #E3F2FD;
-    --color-primary-700: #90CAF9;
-    --color-primary-500: #64B5F6;
+    --color-primary-50: #1B3A4B;
     --color-primary-100: #1B3A4B;
+    --color-primary-200: #234B63;
+    --color-primary-300: #2C5F7C;
+    --color-primary-400: #3D8EB9;
+    --color-primary-500: #64B5F6;
+    --color-primary-600: #7ABFDF;
+    --color-primary-700: #90CAF9;
+    --color-primary-800: #B3D9EF;
+    --color-primary-900: #E3F2FD;
 
     --color-success: #4ADE80;
     --color-warning: #FBBF24;
@@ -119,6 +143,17 @@ select option {
     --color-alert-danger-bg: #450A0A;
     --color-alert-warning-bg: #451A03;
     --color-alert-info-bg: #172554;
+
+    --color-badge-success-bg: #052E16;
+    --color-badge-success-fg: #4ADE80;
+    --color-badge-warning-bg: #451A03;
+    --color-badge-warning-fg: #FBBF24;
+    --color-badge-danger-bg: #450A0A;
+    --color-badge-danger-fg: #F87171;
+    --color-badge-info-bg: #172554;
+    --color-badge-info-fg: #60A5FA;
+    --color-badge-neutral-bg: #334155;
+    --color-badge-neutral-fg: #CBD5E1;
   }
 }
 
@@ -126,10 +161,16 @@ select option {
 
 /* Dark mode - manual toggle */
 .dark {
-  --color-primary-900: #E3F2FD;
-  --color-primary-700: #90CAF9;
-  --color-primary-500: #64B5F6;
+  --color-primary-50: #1B3A4B;
   --color-primary-100: #1B3A4B;
+  --color-primary-200: #234B63;
+  --color-primary-300: #2C5F7C;
+  --color-primary-400: #3D8EB9;
+  --color-primary-500: #64B5F6;
+  --color-primary-600: #7ABFDF;
+  --color-primary-700: #90CAF9;
+  --color-primary-800: #B3D9EF;
+  --color-primary-900: #E3F2FD;
 
   --color-success: #4ADE80;
   --color-warning: #FBBF24;
@@ -157,4 +198,15 @@ select option {
   --color-alert-danger-bg: #450A0A;
   --color-alert-warning-bg: #451A03;
   --color-alert-info-bg: #172554;
+
+  --color-badge-success-bg: #052E16;
+  --color-badge-success-fg: #4ADE80;
+  --color-badge-warning-bg: #451A03;
+  --color-badge-warning-fg: #FBBF24;
+  --color-badge-danger-bg: #450A0A;
+  --color-badge-danger-fg: #F87171;
+  --color-badge-info-bg: #172554;
+  --color-badge-info-fg: #60A5FA;
+  --color-badge-neutral-bg: #334155;
+  --color-badge-neutral-fg: #CBD5E1;
 }

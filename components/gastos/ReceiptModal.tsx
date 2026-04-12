@@ -81,7 +81,7 @@ export function ReceiptModal({ gastoId, onClose }: ReceiptModalProps) {
         )}
 
         {error && (
-          <div className="rounded-lg bg-red-900/50 p-4 text-sm text-red-200">
+          <div className="rounded-lg bg-danger/20 p-4 text-sm text-danger">
             {error}
           </div>
         )}

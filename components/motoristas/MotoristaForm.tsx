@@ -203,11 +203,11 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
         {empresaInfo && (
           <div className="rounded-lg border border-info/20 bg-alert-info-bg p-4">
             <div className="flex items-start gap-3">
-              <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
               <div>
-                <p className="text-base font-semibold text-blue-900">
+                <p className="text-base font-semibold text-badge-info-fg">
                   Cadastrando para: {empresaInfo.nome}
                 </p>
                 <p className="text-sm text-info">
@@ -237,7 +237,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.nome ? 'border-red-500' : 'border-surface-border',
+              errors.nome ? 'border-danger' : 'border-surface-border',
             )}
           />
           {errors.nome && (
@@ -262,7 +262,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
               isEditing && 'cursor-not-allowed bg-surface-muted text-text-muted',
-              errors.cpf ? 'border-red-500' : 'border-surface-border',
+              errors.cpf ? 'border-danger' : 'border-surface-border',
             )}
           />
           {errors.cpf && (
@@ -284,7 +284,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
                 'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-                errors.cnh_numero ? 'border-red-500' : 'border-surface-border',
+                errors.cnh_numero ? 'border-danger' : 'border-surface-border',
               )}
             />
             {errors.cnh_numero && (
@@ -302,7 +302,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
                 'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-                errors.cnh_categoria ? 'border-red-500' : 'border-surface-border',
+                errors.cnh_categoria ? 'border-danger' : 'border-surface-border',
               )}
             >
               {CNH_CATEGORIA_OPTIONS.map((opt) => (
@@ -327,7 +327,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.cnh_validade ? 'border-red-500' : 'border-surface-border',
+              errors.cnh_validade ? 'border-danger' : 'border-surface-border',
             )}
           />
           {errors.cnh_validade && (
@@ -367,7 +367,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.percentual_pagamento ? 'border-red-500' : 'border-surface-border',
+              errors.percentual_pagamento ? 'border-danger' : 'border-surface-border',
             )}
           />
           <p className="mt-1 text-sm text-primary-500">
@@ -390,7 +390,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
             className={cn(
               'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
               'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-              errors.observacao ? 'border-red-500' : 'border-surface-border',
+              errors.observacao ? 'border-danger' : 'border-surface-border',
             )}
           />
           {errors.observacao && (
@@ -447,7 +447,7 @@ export function MotoristaForm({ motorista, mode, empresaInfo, onSubmit, onSubmit
                   className={cn(
                     'w-full rounded-lg border px-4 py-3 text-base outline-none transition-colors',
                     'focus:border-primary-500 focus:ring-1 focus:ring-primary-500',
-                    emailError ? 'border-red-500' : 'border-surface-border',
+                    emailError ? 'border-danger' : 'border-surface-border',
                   )}
                 />
                 {emailError && (

@@ -72,7 +72,7 @@ export function OnboardingBar({
       {/* Progress bar */}
       <div className="h-1 w-full bg-white/20">
         <div
-          className="h-full bg-green-400 transition-all duration-300 ease-out"
+          className="h-full bg-success transition-all duration-300 ease-out"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -121,7 +121,7 @@ export function OnboardingBar({
             type="button"
             onClick={handleNext}
             disabled={isPending}
-            className="flex items-center justify-center gap-1 min-h-[40px] px-3 rounded-lg bg-green-500 text-white text-sm font-bold transition-colors hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-1 min-h-[40px] px-3 rounded-lg bg-success text-white text-sm font-bold transition-colors hover:bg-success/80 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLastContentStep ? 'Concluir' : 'Próximo'}
             <svg
