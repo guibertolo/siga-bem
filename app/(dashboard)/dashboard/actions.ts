@@ -2,379 +2,96 @@
  * Dashboard data fetching — consolidates all summary card queries
  * into a single Promise.all() to eliminate sequential round-trips.
  *
- * Performance fix: previously each card (ViagemSummaryCard,
- * GastoSummaryCard, FechamentoSummaryCard) made its own independent
- * server queries (7+ round-trips). Now a single getDashboardData()
- * call fetches everything in parallel (3 concurrent queries).
+ * Delegates read queries to lib/repositories/dashboard.ts.
  */
 
 import { createClient } from '@/lib/supabase/server';
-import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
-import { getViagensEmAndamento } from '@/app/(dashboard)/viagens/actions';
-import { getGastosMesAtual } from '@/app/(dashboard)/gastos/actions';
+import {
+  getDashboardDataRepo,
+  getViagemAtivaRepo,
+  getDonoMicroDataRepo,
+  getMotoristaDataRepo,
+} from '@/lib/repositories/dashboard';
 
 // ---------------------------------------------------------------------------
-// Types
+// Re-export types so existing consumers don't need import changes
 // ---------------------------------------------------------------------------
 
-export interface ViagemAtivaItem {
-  id: string;
-  origem: string;
-  destino: string;
-  status: string;
-  data_saida: string;
-  valor_total: number;
-  motorista_nome: string;
-  caminhao_placa: string;
-  caminhao_modelo: string;
-  empresa_nome?: string;
-}
-
-export interface ViagemAtivaData {
-  viagens: ViagemAtivaItem[];
-  count: number;
-  error: string | null;
-}
-
-export interface ProximaViagemItem {
-  id: string;
-  origem: string;
-  destino: string;
-  data_saida: string;
-  valor_total: number; // centavos
-  caminhao_placa: string;
-}
-
-export interface MotoristaData {
-  ganhosMes: number;           // centavos
-  viagensConcludasMes: number;
-  proximaViagem: ProximaViagemItem | null;
-}
-
-export interface DashboardData {
-  viagens: {
-    count: number;
-    error: string | null;
-  };
-  gastos: {
-    total: number; // centavos
-    error: string | null;
-  };
-  fechamentos: {
-    count: number;
-    totalCentavos: number;
-  };
-  receitaCusto: {
-    receita: number; // centavos
-    custo: number;   // centavos
-  };
-}
+export type {
+  ViagemAtivaItem,
+  ViagemAtivaData,
+  ProximaViagemItem,
+  MotoristaData,
+  DashboardData,
+  MotoristaSituacao,
+  CaminhaoSituacao,
+  MotoristaStatusItem,
+  CaminhaoStatusItem,
+  DonoMicroData,
+} from '@/lib/repositories/dashboard';
 
 // ---------------------------------------------------------------------------
-// Dono Micro — Motoristas & Caminhoes status
+// Data fetching — delegates to repository
 // ---------------------------------------------------------------------------
-
-export type MotoristaSituacao = 'em_viagem' | 'livre';
-export type CaminhaoSituacao = 'rodando' | 'parado';
-
-export interface MotoristaStatusItem {
-  id: string;
-  nome: string;
-  situacao: MotoristaSituacao;
-}
-
-export interface CaminhaoStatusItem {
-  id: string;
-  placa: string;
-  modelo: string;
-  situacao: CaminhaoSituacao;
-}
-
-export interface DonoMicroData {
-  motoristas: MotoristaStatusItem[];
-  caminhoes: CaminhaoStatusItem[];
-}
-
-// ---------------------------------------------------------------------------
-// Data fetching
-// ---------------------------------------------------------------------------
-
-async function getFechamentosPendentes(): Promise<{
-  count: number;
-  totalCentavos: number;
-}> {
-  const supabase = await createClient();
-
-  // Count viagens concluidas without an acerto (same logic as getViagensPendentesAcerto)
-  const { data: viagens } = await supabase
-    .from('viagem')
-    .select('id, valor_total, percentual_pagamento')
-    .eq('status', 'concluida');
-
-  if (!viagens || viagens.length === 0) {
-    return { count: 0, totalCentavos: 0 };
-  }
-
-  const viagemIds = viagens.map((v: { id: string }) => v.id);
-  const { data: itens } = await supabase
-    .from('fechamento_item')
-    .select('referencia_id')
-    .eq('tipo', 'viagem')
-    .in('referencia_id', viagemIds);
-
-  const idsComAcerto = new Set((itens ?? []).map((i: { referencia_id: string }) => i.referencia_id));
-  const pendentes = viagens.filter((v: { id: string }) => !idsComAcerto.has(v.id));
-
-  const totalCentavos = pendentes.reduce(
-    (sum: number, v: { valor_total: number; percentual_pagamento: number }) =>
-      sum + Math.round((v.valor_total * v.percentual_pagamento) / 100),
-    0,
-  );
-
-  return { count: pendentes.length, totalCentavos };
-}
-
-async function getReceitaCustoMes(): Promise<{
-  receita: number;
-  custo: number;
-}> {
-  const supabase = await createClient();
-  const now = new Date();
-  const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const [viagensResult, gastosResult] = await Promise.all([
-    supabase
-      .from('viagem')
-      .select('valor_total')
-      .eq('status', 'concluida')
-      .gte('data_saida', inicioMes),
-    supabase
-      .from('gasto')
-      .select('valor')
-      .gte('data', inicioMes.split('T')[0]),
-  ]);
-
-  const receita = (viagensResult.data ?? []).reduce(
-    (sum: number, v: { valor_total: number }) => sum + v.valor_total, 0,
-  );
-  const custo = (gastosResult.data ?? []).reduce(
-    (sum: number, g: { valor: number }) => sum + g.valor, 0,
-  );
-
-  return { receita, custo };
-}
 
 /**
  * Fetch all dashboard summary data in parallel.
  * Consolidates card queries into a single Promise.all().
  */
-export async function getDashboardData(): Promise<DashboardData> {
-  const [viagens, gastos, fechamentos, receitaCusto] = await Promise.all([
-    getViagensEmAndamento(),
-    getGastosMesAtual(),
-    getFechamentosPendentes(),
-    getReceitaCustoMes(),
-  ]);
-
-  return { viagens, gastos, fechamentos, receitaCusto };
+export async function getDashboardData() {
+  const supabase = await createClient();
+  // RLS handles empresa filtering for the logged-in user
+  // We pass a dummy empresaIds since RLS is active; the repo uses .in()
+  // but RLS will further restrict. For single-user context this works fine.
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return {
+      viagens: { count: 0, error: 'Não autenticado' },
+      gastos: { total: 0, error: 'Não autenticado' },
+      fechamentos: { count: 0, totalCentavos: 0 },
+      receitaCusto: { receita: 0, custo: 0 },
+    };
+  }
+  return getDashboardDataRepo(supabase, [usuario.empresa_id!]);
 }
 
 /**
  * Fetch viagens em_andamento with full details for the active trip card.
  * Motorista sees only their own trip. Dono/admin sees all (up to 5).
  */
-export async function getViagemAtiva(): Promise<ViagemAtivaData> {
+export async function getViagemAtiva() {
   const usuario = await getCurrentUsuario();
   if (!usuario) {
     return { viagens: [], count: 0, error: 'Não autenticado' };
   }
 
   const supabase = await createClient();
+  const motoristaId = usuario.role === 'motorista' && usuario.motorista_id
+    ? usuario.motorista_id
+    : undefined;
 
-  let query = supabase
-    .from('viagem')
-    .select(`
-      id,
-      origem,
-      destino,
-      status,
-      data_saida,
-      valor_total,
-      motorista ( nome ),
-      caminhao ( placa, modelo )
-    `, { count: 'exact' })
-    .eq('status', 'em_andamento');
-
-  // Motorista sees only their own trips
-  if (usuario.role === 'motorista' && usuario.motorista_id) {
-    query = query.eq('motorista_id', usuario.motorista_id);
-  }
-
-  const { data, count, error } = await query
-    .order('data_saida', { ascending: true })
-    .limit(5);
-
-  if (error) {
-    return { viagens: [], count: 0, error: error.message };
-  }
-
-  const items: ViagemAtivaItem[] = (data ?? []).map((row) => {
-    const mot = singleRelation<{ nome: string }>(row.motorista);
-    const cam = singleRelation<{ placa: string; modelo: string }>(row.caminhao);
-
-    return {
-      id: row.id,
-      origem: row.origem,
-      destino: row.destino,
-      status: row.status,
-      data_saida: row.data_saida,
-      valor_total: row.valor_total,
-      motorista_nome: mot?.nome ?? 'Desconhecido',
-      caminhao_placa: cam?.placa ?? '-',
-      caminhao_modelo: cam?.modelo ?? '-',
-    };
-  });
-
-  return { viagens: items, count: count ?? 0, error: null };
+  return getViagemAtivaRepo(supabase, [usuario.empresa_id!], { motoristaId });
 }
 
 /**
  * Fetch motoristas and caminhoes status for the Dono micro dashboard.
- * Returns each motorista/caminhao with their current situation
- * (em_viagem/livre or rodando/parado) based on active viagens.
- *
  * Only accessible by dono/admin roles.
  */
-export async function getDonoMicroData(): Promise<DonoMicroData> {
+export async function getDonoMicroData() {
   const usuario = await getCurrentUsuario();
   if (!usuario || !['dono', 'admin'].includes(usuario.role)) {
     return { motoristas: [], caminhoes: [] };
   }
 
   const supabase = await createClient();
-
-  // Fetch active viagem motorista_ids and caminhao_ids in one query
-  const [motoristasResult, caminhoesResult, viagensAtivas] = await Promise.all([
-    supabase
-      .from('motorista')
-      .select('id, nome')
-      .eq('status', 'ativo')
-      .order('nome'),
-    supabase
-      .from('caminhao')
-      .select('id, placa, modelo')
-      .eq('ativo', true)
-      .order('placa'),
-    supabase
-      .from('viagem')
-      .select('motorista_id, caminhao_id')
-      .eq('status', 'em_andamento'),
-  ]);
-
-  const motoristasEmViagem = new Set(
-    (viagensAtivas.data ?? []).map((v) => v.motorista_id),
-  );
-  const caminhoesRodando = new Set(
-    (viagensAtivas.data ?? []).map((v) => v.caminhao_id),
-  );
-
-  const motoristas: MotoristaStatusItem[] = (motoristasResult.data ?? []).map(
-    (m) => ({
-      id: m.id,
-      nome: m.nome,
-      situacao: motoristasEmViagem.has(m.id) ? 'em_viagem' : 'livre',
-    }),
-  );
-
-  const caminhoes: CaminhaoStatusItem[] = (caminhoesResult.data ?? []).map(
-    (c) => ({
-      id: c.id,
-      placa: c.placa,
-      modelo: c.modelo,
-      situacao: caminhoesRodando.has(c.id) ? 'rodando' : 'parado',
-    }),
-  );
-
-  return { motoristas, caminhoes };
+  return getDonoMicroDataRepo(supabase, [usuario.empresa_id!]);
 }
 
-// ---------------------------------------------------------------------------
-// Motorista Dashboard — Earnings, Completed Trips, Next Trip
-// ---------------------------------------------------------------------------
-
 /**
- * Fetch motorista-specific dashboard data: monthly earnings, completed trip
- * count, and next planned trip. Executes 3 queries in parallel.
- *
- * Story S-DASH-1 — Motorista dashboard differentiation.
- *
- * @param motoristaId - The motorista's UUID (from usuario.motorista_id)
+ * Fetch motorista-specific dashboard data.
  */
-export async function getMotoristaData(motoristaId: string): Promise<MotoristaData> {
+export async function getMotoristaData(motoristaId: string) {
   const supabase = await createClient();
-
-  // First day of current month in ISO format
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const [earningsResult, countResult, nextTripResult] = await Promise.all([
-    // 1. Sum of (valor_total * percentual_pagamento / 100) for completed trips this month
-    supabase
-      .from('viagem')
-      .select('valor_total, percentual_pagamento')
-      .eq('motorista_id', motoristaId)
-      .eq('status', 'concluida')
-      .gte('data_chegada_real', firstDayOfMonth),
-
-    // 2. Count of completed trips this month
-    supabase
-      .from('viagem')
-      .select('id', { count: 'exact', head: true })
-      .eq('motorista_id', motoristaId)
-      .eq('status', 'concluida')
-      .gte('data_chegada_real', firstDayOfMonth),
-
-    // 3. Next planned trip (first by data_saida ascending)
-    supabase
-      .from('viagem')
-      .select(`
-        id,
-        origem,
-        destino,
-        data_saida,
-        valor_total,
-        caminhao ( placa )
-      `)
-      .eq('motorista_id', motoristaId)
-      .eq('status', 'planejada')
-      .order('data_saida', { ascending: true })
-      .limit(1)
-      .maybeSingle(),
-  ]);
-
-  // Calculate earnings: SUM(ROUND(valor_total * percentual_pagamento / 100))
-  const ganhosMes = (earningsResult.data ?? []).reduce(
-    (sum: number, v: { valor_total: number; percentual_pagamento: number }) =>
-      sum + Math.round(v.valor_total * v.percentual_pagamento / 100),
-    0,
-  );
-
-  const viagensConcludasMes = countResult.count ?? 0;
-
-  let proximaViagem: ProximaViagemItem | null = null;
-  if (nextTripResult.data) {
-    const row = nextTripResult.data;
-    const cam = singleRelation<{ placa: string }>(row.caminhao);
-    proximaViagem = {
-      id: row.id,
-      origem: row.origem,
-      destino: row.destino,
-      data_saida: row.data_saida,
-      valor_total: row.valor_total,
-      caminhao_placa: cam?.placa ?? '-',
-    };
-  }
-
-  return { ganhosMes, viagensConcludasMes, proximaViagem };
+  return getMotoristaDataRepo(supabase, motoristaId);
 }

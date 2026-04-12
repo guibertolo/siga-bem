@@ -3,18 +3,24 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { singleRelation } from '@/lib/utils/supabase-types';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import type {
   ViagemActionResult,
   ViagemFormData,
-  ViagemListItem,
   Viagem,
 } from '@/types/viagem';
 import type { ViagemStatus } from '@/types/database';
 import { VIAGEM_STATUS_TRANSITIONS } from '@/types/viagem';
 import { logError } from '@/lib/observability/logger';
+import {
+  listViagensRepo,
+  listMotoristasAtivosRepo,
+  listCaminhoesPorMotoristaRepo,
+  getViagemRepo,
+  getViagensEmAndamentoRepo,
+  listCidadesUsadasRepo,
+} from '@/lib/repositories/viagens';
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -76,7 +82,7 @@ function extractFieldErrors(
 }
 
 // ---------------------------------------------------------------------------
-// Data loading for selects
+// Read operations — delegate to repository
 // ---------------------------------------------------------------------------
 
 /**
@@ -94,26 +100,10 @@ export async function listMotoristasAtivos(): Promise<{
   const supabase = await createClient();
 
   if (usuario.role === 'motorista') {
-    const { data, error } = await supabase
-      .from('motorista')
-      .select('id, nome, percentual_pagamento')
-      .eq('empresa_id', usuario.empresa_id)
-      .eq('usuario_id', usuario.id)
-      .eq('status', 'ativo');
-
-    if (error) return { data: null, error: error.message };
-    return { data, error: null };
+    return listMotoristasAtivosRepo(supabase, [usuario.empresa_id!], { usuarioId: usuario.id });
   }
 
-  const { data, error } = await supabase
-    .from('motorista')
-    .select('id, nome, percentual_pagamento')
-    .eq('empresa_id', usuario.empresa_id)
-    .eq('status', 'ativo')
-    .order('nome');
-
-  if (error) return { data: null, error: error.message };
-  return { data, error: null };
+  return listMotoristasAtivosRepo(supabase, [usuario.empresa_id!]);
 }
 
 /**
@@ -132,47 +122,85 @@ export async function listCaminhoesPorMotorista(
   }
 
   const supabase = await createClient();
+  return listCaminhoesPorMotoristaRepo(supabase, [usuario.empresa_id!], motoristaId);
+}
 
-  if (motoristaId) {
-    // Get caminhoes linked to this motorista via active vinculos
-    const { data: vinculos, error: vincError } = await supabase
-      .from('motorista_caminhao')
-      .select('caminhao_id')
-      .eq('motorista_id', motoristaId)
-      .eq('ativo', true);
-
-    if (vincError) return { data: null, error: vincError.message };
-
-    const caminhaoIds = (vinculos ?? []).map((v) => v.caminhao_id);
-    if (caminhaoIds.length === 0) {
-      return { data: [], error: null };
-    }
-
-    const { data, error } = await supabase
-      .from('caminhao')
-      .select('id, placa, modelo')
-      .in('id', caminhaoIds)
-      .eq('ativo', true)
-      .order('placa');
-
-    if (error) return { data: null, error: error.message };
-    return { data, error: null };
+/**
+ * Get a single viagem by ID (with joins).
+ */
+export async function getViagem(
+  viagemId: string,
+): Promise<ViagemActionResult> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { success: false, error: 'Não autenticado' };
   }
 
-  // No motorista filter: return all active caminhoes
-  const { data, error } = await supabase
-    .from('caminhao')
-    .select('id, placa, modelo')
-    .eq('empresa_id', usuario.empresa_id)
-    .eq('ativo', true)
-    .order('placa');
+  const supabase = await createClient();
+  const { data, error } = await getViagemRepo(supabase, viagemId);
 
-  if (error) return { data: null, error: error.message };
-  return { data, error: null };
+  if (error || !data) {
+    return { success: false, error: error ?? 'Viagem não encontrada' };
+  }
+
+  return { success: true, viagem: data as Viagem };
+}
+
+/**
+ * List viagens with optional filters (AC5).
+ */
+export async function listViagens(filters?: {
+  status?: ViagemStatus[];
+  motorista_id?: string;
+  data_inicio?: string;
+  data_fim?: string;
+  texto?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: null, total: 0, error: 'Não autenticado' };
+  }
+
+  const supabase = await createClient();
+  return listViagensRepo(supabase, [usuario.empresa_id!], filters);
+}
+
+/**
+ * Get count of viagens em_andamento for dashboard card (T7).
+ */
+export async function getViagensEmAndamento(): Promise<{
+  count: number;
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { count: 0, error: 'Não autenticado' };
+  }
+
+  const supabase = await createClient();
+  return getViagensEmAndamentoRepo(supabase, [usuario.empresa_id!]);
+}
+
+/**
+ * List unique cities used in origem/destino for the current empresa.
+ */
+export async function listCidadesUsadas(): Promise<{
+  data: string[];
+  error: string | null;
+}> {
+  const usuario = await getCurrentUsuario();
+  if (!usuario) {
+    return { data: [], error: 'Não autenticado' };
+  }
+
+  const supabase = await createClient();
+  return listCidadesUsadasRepo(supabase, [usuario.empresa_id!]);
 }
 
 // ---------------------------------------------------------------------------
-// CRUD Operations
+// CRUD Operations (mutations stay here)
 // ---------------------------------------------------------------------------
 
 /**
@@ -271,8 +299,6 @@ export async function createViagem(
 
 /**
  * Update an existing viagem.
- * Fields editable depend on status (enforced by caller / UI).
- * Only dono/admin can update (motorista read-only).
  */
 export async function updateViagem(
   viagemId: string,
@@ -320,9 +346,7 @@ export async function updateViagem(
   const kmEstimado = data.km_estimado !== '' ? Number(data.km_estimado) : null;
   const kmSaida = data.km_saida !== '' ? Number(data.km_saida) : null;
 
-  // Story 3.4: 3-level edit lock for core fields (origem, destino, valor_total)
-  // Core fields are editable IF AND ONLY IF:
-  //   role === 'dono' OR (editavel_motorista === true AND status === 'planejada')
+  // Story 3.4: 3-level edit lock for core fields
   const camposEditaveis =
     usuario.role === 'dono' ||
     (existing.editavel_motorista === true && existing.status === 'planejada');
@@ -339,7 +363,7 @@ export async function updateViagem(
     };
   }
 
-  // percentual_pagamento is NEVER updated via viagem edit — it comes from motorista cadastro
+  // percentual_pagamento is NEVER updated via viagem edit
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')
     .update({
@@ -370,8 +394,6 @@ export async function updateViagem(
 
 /**
  * Update viagem status with transition validation.
- * AC3: planejada -> em_andamento -> concluida; planejada -> cancelada.
- * AC7: km_chegada available when updating to concluida.
  */
 export async function updateViagemStatus(
   viagemId: string,
@@ -539,135 +561,7 @@ export async function deleteViagem(
 }
 
 /**
- * Get a single viagem by ID (with joins).
- */
-export async function getViagem(
-  viagemId: string,
-): Promise<ViagemActionResult> {
-  const usuario = await getCurrentUsuario();
-  if (!usuario) {
-    return { success: false, error: 'Não autenticado' };
-  }
-
-  const supabase = await createClient();
-  const { data: viagem, error } = await supabase
-    .from('viagem')
-    .select(`
-      *,
-      motorista ( nome ),
-      caminhao ( placa, modelo, capacidade_veiculos )
-    `)
-    .eq('id', viagemId)
-    .single();
-
-  if (error || !viagem) {
-    return { success: false, error: 'Viagem não encontrada' };
-  }
-
-  return { success: true, viagem: viagem as Viagem };
-}
-
-/**
- * List viagens with optional filters (AC5).
- */
-export async function listViagens(filters?: {
-  status?: ViagemStatus[];
-  motorista_id?: string;
-  data_inicio?: string;
-  data_fim?: string;
-  texto?: string;
-  page?: number;
-  pageSize?: number;
-}): Promise<{
-  data: ViagemListItem[] | null;
-  total: number;
-  error: string | null;
-}> {
-  const usuario = await getCurrentUsuario();
-  if (!usuario) {
-    return { data: null, total: 0, error: 'Não autenticado' };
-  }
-
-  const supabase = await createClient();
-  const page = filters?.page ?? 1;
-  const pageSize = filters?.pageSize ?? 20;
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-
-  let query = supabase
-    .from('viagem')
-    .select(`
-      id,
-      motorista_id,
-      origem,
-      destino,
-      data_saida,
-      valor_total,
-      percentual_pagamento,
-      status,
-      motorista ( nome ),
-      caminhao ( placa )
-    `, { count: 'exact' });
-
-  // Filters
-  if (filters?.status && filters.status.length > 0) {
-    query = query.in('status', filters.status);
-  }
-
-  if (filters?.motorista_id) {
-    query = query.eq('motorista_id', filters.motorista_id);
-  }
-
-  if (filters?.data_inicio) {
-    query = query.gte('data_saida', filters.data_inicio);
-  }
-
-  if (filters?.data_fim) {
-    // Add time to include the whole end day
-    query = query.lte('data_saida', `${filters.data_fim}T23:59:59`);
-  }
-
-  if (filters?.texto) {
-    query = query.or(
-      `origem.ilike.%${filters.texto}%,destino.ilike.%${filters.texto}%`,
-    );
-  }
-
-  query = query
-    .order('data_saida', { ascending: false })
-    .range(from, to);
-
-  const { data, count, error } = await query;
-
-  if (error) {
-    return { data: null, total: 0, error: error.message };
-  }
-
-  const items: ViagemListItem[] = (data ?? []).map((row) => {
-    const mot = singleRelation<{ nome: string }>(row.motorista);
-    const cam = singleRelation<{ placa: string }>(row.caminhao);
-
-    return {
-      id: row.id,
-      motorista_id: row.motorista_id,
-      origem: row.origem,
-      destino: row.destino,
-      motorista_nome: mot?.nome ?? 'Desconhecido',
-      caminhao_placa: cam?.placa ?? '-',
-      data_saida: row.data_saida,
-      valor_total: row.valor_total,
-      percentual_pagamento: row.percentual_pagamento,
-      status: row.status,
-    };
-  });
-
-  return { data: items, total: count ?? 0, error: null };
-}
-
-/**
  * Invalidar (cancel) a viagem — admin/dono override.
- * Bypasses normal status transitions. Works for any status except 'cancelada'.
- * Sets status to 'cancelada' and prepends motivo to observacao.
  */
 export async function invalidarViagem(
   viagemId: string,
@@ -728,64 +622,4 @@ export async function invalidarViagem(
   revalidatePath('/viagens');
   revalidatePath('/dashboard');
   return { success: true };
-}
-
-/**
- * List unique cities used in origem/destino for the current empresa.
- * Used for autocomplete suggestions in the viagem form.
- */
-export async function listCidadesUsadas(): Promise<{
-  data: string[];
-  error: string | null;
-}> {
-  const usuario = await getCurrentUsuario();
-  if (!usuario) {
-    return { data: [], error: 'Não autenticado' };
-  }
-
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('viagem')
-    .select('origem, destino');
-
-  if (error) {
-    return { data: [], error: error.message };
-  }
-
-  const cidadesSet = new Set<string>();
-  for (const row of data ?? []) {
-    if (row.origem) cidadesSet.add(row.origem.trim());
-    if (row.destino) cidadesSet.add(row.destino.trim());
-  }
-
-  const sorted = Array.from(cidadesSet).sort((a, b) =>
-    a.localeCompare(b, 'pt-BR'),
-  );
-
-  return { data: sorted, error: null };
-}
-
-/**
- * Get count of viagens em_andamento for dashboard card (T7).
- */
-export async function getViagensEmAndamento(): Promise<{
-  count: number;
-  error: string | null;
-}> {
-  const usuario = await getCurrentUsuario();
-  if (!usuario) {
-    return { count: 0, error: 'Não autenticado' };
-  }
-
-  const supabase = await createClient();
-  const { count, error } = await supabase
-    .from('viagem')
-    .select('id', { count: 'exact', head: true })
-    .eq('status', 'em_andamento');
-
-  if (error) {
-    return { count: 0, error: error.message };
-  }
-
-  return { count: count ?? 0, error: null };
 }
