@@ -5,6 +5,10 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { singleRelation } from '@/lib/utils/supabase-types';
+import {
+  calcularValorMotorista,
+  agruparDespesasPorViagem,
+} from '@/lib/business/fechamentos';
 import type { ViagemPendenteAcerto } from '@/app/(dashboard)/fechamentos/actions';
 
 export async function getViagensPendentesAcertoForEmpresa(
@@ -44,7 +48,7 @@ export async function getViagensPendentesAcertoForEmpresa(
 
   // 3. Query total despesas per viagem
   const pendenteIds = pendenteViagens.map((v) => v.id);
-  const despesasPorViagem = new Map<string, number>();
+  let despesasPorViagem = new Map<string, number>();
 
   if (pendenteIds.length > 0) {
     const { data: gastosData } = await admin
@@ -53,11 +57,7 @@ export async function getViagensPendentesAcertoForEmpresa(
       .in('viagem_id', pendenteIds);
 
     if (gastosData) {
-      for (const g of gastosData) {
-        if (g.viagem_id) {
-          despesasPorViagem.set(g.viagem_id, (despesasPorViagem.get(g.viagem_id) ?? 0) + g.valor);
-        }
-      }
+      despesasPorViagem = agruparDespesasPorViagem(gastosData);
     }
   }
 
@@ -72,7 +72,7 @@ export async function getViagensPendentesAcertoForEmpresa(
       data_saida: v.data_saida,
       valor_total: v.valor_total,
       percentual_pagamento: v.percentual_pagamento,
-      valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+      valor_motorista: calcularValorMotorista(v.valor_total, v.percentual_pagamento),
       totalDespesas: despesasPorViagem.get(v.id) ?? 0,
     };
   });

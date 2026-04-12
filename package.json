@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:rls": "jest --testPathPatterns='integration/rls' --runInBand",
+    "test:fechamentos": "jest --testPathPatterns='fechamentos' --runInBand",
     "db:types": "npx supabase gen types typescript --linked 2>/dev/null > types/database.generated.ts",
     "check-ptbr": "node scripts/check-ptbr.js",
     "prepare": "husky"

@@ -19,6 +19,10 @@ import type {
 } from '@/types/fechamento';
 import type { FechamentoStatus } from '@/types/database';
 import { FECHAMENTO_STATUS_TRANSITIONS } from '@/types/fechamento';
+import {
+  calcularValorMotorista,
+  agruparDespesasPorViagem,
+} from '@/lib/business/fechamentos';
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -206,7 +210,7 @@ export async function previewFechamentoDetalhado(
     data_saida: v.data_saida.split('T')[0],
     valor_total: v.valor_total,
     percentual_pagamento: v.percentual_pagamento,
-    valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+    valor_motorista: calcularValorMotorista(v.valor_total, v.percentual_pagamento),
   }));
 
   const gastos: PreviewGastoItem[] = (gastosResult.data ?? []).map((g) => {
@@ -316,12 +320,7 @@ export async function getViagensPendentesAcerto(): Promise<{
       .in('viagem_id', pendenteIds);
 
     if (gastosData) {
-      for (const g of gastosData) {
-        if (g.viagem_id) {
-          const current = despesasPorViagem.get(g.viagem_id) ?? 0;
-          despesasPorViagem.set(g.viagem_id, current + g.valor);
-        }
-      }
+      despesasPorViagem = agruparDespesasPorViagem(gastosData);
     }
   }
 
@@ -336,7 +335,7 @@ export async function getViagensPendentesAcerto(): Promise<{
       data_saida: v.data_saida,
       valor_total: v.valor_total,
       percentual_pagamento: v.percentual_pagamento,
-      valor_motorista: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+      valor_motorista: calcularValorMotorista(v.valor_total, v.percentual_pagamento),
       totalDespesas: despesasPorViagem.get(v.id) ?? 0,
     };
   });
@@ -454,7 +453,7 @@ export async function createFechamento(
     tipo: 'viagem',
     referencia_id: v.id,
     descricao: `${v.origem} -> ${v.destino}`,
-    valor: Math.round((v.valor_total * v.percentual_pagamento) / 100),
+    valor: calcularValorMotorista(v.valor_total, v.percentual_pagamento),
     data: v.data_saida.split('T')[0],
   }));
 
