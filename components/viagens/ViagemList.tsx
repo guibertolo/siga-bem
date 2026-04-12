@@ -385,7 +385,8 @@ export function ViagemList({
               <tbody>
                 {(viagensAtivas.length > 0 ? viagensOutras : viagens).map((v) => {
                   const empresaNome = (v as ViagemListItem & { empresa_nome?: string }).empresa_nome;
-                  return (
+                  const rows: React.ReactNode[] = [];
+                  rows.push(
                   <tr
                     key={v.id}
                     className="border-b border-surface-border last:border-b-0 hover:bg-surface-muted"
@@ -467,6 +468,36 @@ export function ViagemList({
                     </td>
                   </tr>
                   );
+                  // Inline delete confirmation row (desktop)
+                  if (confirmId === v.id) {
+                    rows.push(
+                      <tr key={`${v.id}-confirm`} className="bg-alert-danger-bg/50">
+                        <td colSpan={9} className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm text-danger font-medium">
+                              Tem certeza que deseja excluir a viagem {v.origem} → {v.destino}? Esta ação não pode ser desfeita.
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleConfirmDelete(v.id)}
+                              disabled={deletingId === v.id}
+                              className="rounded-md bg-danger px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px] whitespace-nowrap"
+                            >
+                              Confirmar Exclusão
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleCancelDelete}
+                              className="rounded-md px-4 py-2 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px] whitespace-nowrap"
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>,
+                    );
+                  }
+                  return rows;
                 })}
               </tbody>
             </table>
@@ -510,34 +541,7 @@ export function ViagemList({
 
       {/* Modal de Invalidar removido daqui — usa o modal fixo global abaixo */}
 
-      {/* Excluir confirmation modal (desktop) */}
-      {confirmId && (
-        <div className="hidden md:block">
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="mx-4 w-full max-w-sm rounded-xl border border-surface-border bg-surface-card p-6 shadow-xl space-y-4">
-              <p className="text-base font-bold text-danger">Tem certeza que deseja excluir esta viagem?</p>
-              <p className="text-sm text-primary-500">Esta ação não pode ser desfeita.</p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleConfirmDelete(confirmId)}
-                  disabled={deletingId === confirmId}
-                  className="rounded-md bg-danger px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger/90 disabled:opacity-50 min-h-[48px]"
-                >
-                  Confirmar Exclusão
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancelDelete}
-                  className="rounded-md px-4 py-2.5 text-sm font-medium text-primary-500 hover:bg-surface-hover transition-colors min-h-[48px]"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Excluir confirmation is now inline in both mobile cards and desktop table rows */}
     </div>
   );
 }
