@@ -145,7 +145,7 @@ export function MobileSidebar({
             >
               {link.label}
               {link.href === '/viagens' && viagensAtivasCount > 0 && (
-                <span className="ml-auto bg-alert-warning-bg0 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                <span className="ml-auto bg-warning text-white text-xs font-bold rounded-full px-2 py-0.5">
                   {viagensAtivasCount}
                 </span>
               )}
@@ -209,7 +209,7 @@ export function MobileSidebar({
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="w-full px-4 py-3 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-alert-danger-bg0/20 hover:text-red-300 transition-colors"
+              className="w-full px-4 py-3 text-base font-semibold text-slate-200 bg-transparent border-none cursor-pointer text-left rounded-lg hover:bg-danger/20 hover:text-red-300 transition-colors"
             >
               Sair
             </button>

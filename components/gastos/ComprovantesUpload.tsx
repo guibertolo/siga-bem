@@ -337,7 +337,7 @@ export function ComprovantesUpload({
                   <button
                     type="button"
                     onClick={() => setConfirmDeleteId(comp.id)}
-                    className="absolute -right-1 -top-1 hidden rounded-full bg-alert-danger-bg0 p-1 text-white shadow-sm group-hover:block"
+                    className="absolute -right-1 -top-1 hidden rounded-full bg-danger p-1 text-white shadow-sm group-hover:block"
                     title="Remover comprovante"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
