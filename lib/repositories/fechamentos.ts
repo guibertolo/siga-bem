@@ -214,11 +214,20 @@ export async function getViagensPendentesAcertoRepo(
     return { data: [], error: null };
   }
 
-  // 2. Get viagem referencia_ids that already have a fechamento_item
+  // 2. Get fechamento IDs that are fully paid
+  const { data: fechamentosPagos } = await client
+    .from('fechamento')
+    .select('id')
+    .in('empresa_id', empresaIds)
+    .eq('status', 'pago');
+
+  const pagoIds = new Set((fechamentosPagos ?? []).map((f) => f.id));
+
+  // 3. Get viagem referencia_ids linked to a PAID fechamento only
   const viagemIds = viagens.map((v) => v.id);
   const { data: itensExistentes, error: itensError } = await client
     .from('fechamento_item')
-    .select('referencia_id')
+    .select('referencia_id, fechamento_id')
     .eq('tipo', 'viagem')
     .in('referencia_id', viagemIds);
 
@@ -226,7 +235,11 @@ export async function getViagensPendentesAcertoRepo(
     return { data: null, error: itensError.message };
   }
 
-  const idsComAcerto = new Set((itensExistentes ?? []).map((i) => i.referencia_id));
+  const idsComAcerto = new Set(
+    (itensExistentes ?? [])
+      .filter((i) => pagoIds.has(i.fechamento_id))
+      .map((i) => i.referencia_id),
+  );
   const pendenteViagens = viagens.filter((v) => !idsComAcerto.has(v.id));
 
   // 3. Query total despesas per viagem
