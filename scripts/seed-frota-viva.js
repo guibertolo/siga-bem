@@ -6,8 +6,11 @@
  */
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = 'https://bsjuntynmnlhbvxemxqp.supabase.co';
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzanVudHlubW5saGJ2eGVteHFwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDczOTc1MiwiZXhwIjoyMDkwMzE1NzUyfQ.K-4mVfrUvz1JWfoJ5RoDNVowpXO4yUDe22Re4bpYaC4';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://bsjuntynmnlhbvxemxqp.supabase.co';
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!SERVICE_ROLE_KEY) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY env var e obrigatoria. Defina em .env.local antes de rodar o seed.');
+}
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false }

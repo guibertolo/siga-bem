@@ -1,17 +1,19 @@
 /**
- * Seed: 3 meses de dados ricos de operacao de frota (Jan-Mar 2026).
+ * Seed: 3 meses de dados ricos de operacao de frota (Fev-Abr 2026).
  * Run: node scripts/seed-dados-ricos.js
  *
  * Gera ~90-100 viagens para Empresa 1 (3 motoristas) e ~20 para Empresa 2 (1 motorista).
- * Inclui gastos realistas, fechamentos para Jan/Fev, e km_atual atualizado.
+ * Inclui gastos realistas, fechamentos para Fev/Mar, e km_atual atualizado.
  *
  * Idempotent: cleanup primeiro, depois recria tudo.
  */
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = 'https://bsjuntynmnlhbvxemxqp.supabase.co';
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzanVudHlubW5saGJ2eGVteHFwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDczOTc1MiwiZXhwIjoyMDkwMzE1NzUyfQ.K-4mVfrUvz1JWfoJ5RoDNVowpXO4yUDe22Re4bpYaC4';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://bsjuntynmnlhbvxemxqp.supabase.co';
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!SERVICE_ROLE_KEY) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY env var e obrigatoria. Defina em .env.local antes de rodar o seed.');
+}
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
@@ -25,14 +27,14 @@ const EMPRESA2_ID = '58c20582-36ff-4e9a-b98a-e3f772a8c628';
 // ============================================================
 
 const ROTAS = [
-  { origem: 'Sao Paulo, SP', destino: 'Curitiba, PR', km: 410, valorBase: 850000 },
-  { origem: 'Curitiba, PR', destino: 'Porto Alegre, RS', km: 710, valorBase: 650000 },
-  { origem: 'Sao Paulo, SP', destino: 'Belo Horizonte, MG', km: 585, valorBase: 720000 },
-  { origem: 'Rio de Janeiro, RJ', destino: 'Sao Paulo, SP', km: 430, valorBase: 550000 },
-  { origem: 'Belo Horizonte, MG', destino: 'Brasilia, DF', km: 735, valorBase: 980000 },
-  { origem: 'Porto Alegre, RS', destino: 'Florianopolis, SC', km: 470, valorBase: 480000 },
-  { origem: 'Sao Paulo, SP', destino: 'Campinas, SP', km: 100, valorBase: 320000 },
-  { origem: 'Curitiba, PR', destino: 'Londrina, PR', km: 380, valorBase: 390000 },
+  { origem: 'Sao Paulo, SP', destino: 'Curitiba, PR', km: 410, valorBase: 1850000 },
+  { origem: 'Curitiba, PR', destino: 'Porto Alegre, RS', km: 710, valorBase: 2800000 },
+  { origem: 'Sao Paulo, SP', destino: 'Belo Horizonte, MG', km: 585, valorBase: 2200000 },
+  { origem: 'Rio de Janeiro, RJ', destino: 'Sao Paulo, SP', km: 430, valorBase: 1650000 },
+  { origem: 'Belo Horizonte, MG', destino: 'Brasilia, DF', km: 735, valorBase: 3100000 },
+  { origem: 'Porto Alegre, RS', destino: 'Florianopolis, SC', km: 470, valorBase: 1900000 },
+  { origem: 'Sao Paulo, SP', destino: 'Campinas, SP', km: 100, valorBase: 950000 },
+  { origem: 'Curitiba, PR', destino: 'Londrina, PR', km: 380, valorBase: 1500000 },
 ];
 
 const POSTOS = ['Posto Shell', 'Auto Posto Ipiranga', 'Posto Graal', 'Rede Sim', 'Posto Ale'];
@@ -449,7 +451,7 @@ function generateGastos(empresaId, motorista, caminhao, viagem, rota, catMap, do
   // 2. Pedagio (90% chance)
   if (catPed && Math.random() < 0.90) {
     // Pedagio correlates with distance
-    const pedBase = rota.km < 200 ? rand(8000, 20000) : rand(15000, 55000);
+    const pedBase = rota.km < 200 ? rand(5000, 12000) : rand(10000, 30000);
     const pedVariation = randFloat(0.85, 1.15);
     gastos.push({
       empresa_id: empresaId,
@@ -498,7 +500,7 @@ function generateGastos(empresaId, motorista, caminhao, viagem, rota, catMap, do
       motorista_id: motorista.id,
       caminhao_id: caminhao.id,
       viagem_id: viagem.id,
-      valor: rand(15000, 250000),
+      valor: rand(15000, 80000),
       data: toDateStr(departureDay),
       descricao: pick(manutDescricoes),
       created_by: donoUsuarioId,
@@ -513,7 +515,7 @@ function generateGastos(empresaId, motorista, caminhao, viagem, rota, catMap, do
       motorista_id: motorista.id,
       caminhao_id: caminhao.id,
       viagem_id: viagem.id,
-      valor: rand(80000, 350000),
+      valor: rand(60000, 150000),
       data: toDateStr(departureDay),
       descricao: 'Troca de pneu em rota',
       created_by: donoUsuarioId,
@@ -533,8 +535,8 @@ async function createFechamentos(empresaId, motoristas, donoUsuarioId) {
   console.log('============================================\n');
 
   const months = [
-    { inicio: '2026-01-01', fim: '2026-01-31', status: 'pago', label: 'Janeiro' },
-    { inicio: '2026-02-01', fim: '2026-02-28', status: 'fechado', label: 'Fevereiro' },
+    { inicio: '2026-02-01', fim: '2026-02-28', status: 'pago', label: 'Fevereiro' },
+    { inicio: '2026-03-01', fim: '2026-03-31', status: 'aberto', label: 'Marco' },
   ];
 
   let fechamentoCount = 0;
@@ -644,7 +646,7 @@ async function createFechamentos(empresaId, motoristas, donoUsuarioId) {
   }
 
   console.log(`\n  Fechamentos: ${fechamentoCount}, Items: ${itemCount}`);
-  console.log('  Marco: sem fechamento (pendente para acerto)\n');
+  console.log('  Abril: sem fechamento (pendente para acerto)\n');
 }
 
 // ============================================================
@@ -678,11 +680,11 @@ async function updateKmAtual(kmTracker) {
 async function main() {
   console.log('\n========================================================');
   console.log('  SEED: 3 MESES DE DADOS RICOS - FROTAVIVA');
-  console.log('  Periodo: Janeiro a Marco 2026');
+  console.log('  Periodo: Fevereiro a Abril 2026');
   console.log('========================================================\n');
 
-  const startDate = new Date(2026, 0, 1); // Jan 1, 2026
-  const endDate = new Date(2026, 2, 30);   // Mar 30, 2026
+  const startDate = new Date(2026, 1, 1); // Feb 1, 2026
+  const endDate = new Date(2026, 3, 7);   // Apr 7, 2026
 
   // Phase 0: Cleanup
   await cleanup();
@@ -767,7 +769,7 @@ async function main() {
   console.log('  SEED CONCLUIDO!');
   console.log('========================================================');
   console.log(`  Empresa 1: ${result1.viagens.length} viagens, ${result1.gastoCount} gastos`);
-  console.log('  Fechamentos: Jan (pago), Fev (fechado), Mar (pendente)');
+  console.log('  Fechamentos: Fev (pago), Mar (fechado), Abr (pendente)');
   console.log('========================================================\n');
 }
 
