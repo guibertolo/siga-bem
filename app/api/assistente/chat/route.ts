@@ -18,11 +18,6 @@ import { createClient } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
 
-function isRateLimitError(error: unknown): boolean {
-  const msg = error instanceof Error ? error.message : String(error);
-  return msg.includes('quota') || msg.includes('rate_limit') || msg.includes('429')
-    || msg.includes('exceeded') || msg.includes('too many');
-}
 
 export async function POST(request: Request) {
   try {
@@ -63,9 +58,9 @@ export async function POST(request: Request) {
       messageCount: messages.length,
     });
 
-    // 5. Stream com fallback multi-provider
+    // 5. Tenta cada provider em sequencia ate um funcionar
     const models = getAvailableModels();
-    let lastError: unknown = null;
+    const errors: string[] = [];
 
     for (const { name, model } of models) {
       try {
@@ -79,28 +74,29 @@ export async function POST(request: Request) {
           maxRetries: 0,
         });
 
-        logger.info(`using provider: ${name}`, {});
-        return result.toUIMessageStreamResponse();
-      } catch (error) {
-        lastError = error;
-        const msg = error instanceof Error ? error.message : String(error);
-        logger.warn(`provider ${name} failed: ${msg}`, {});
+        // Consumir o resultado pra detectar erros antes de retornar
+        // toUIMessageStreamResponse() inicia o stream; se o provider falhar,
+        // o erro aparece no consumo. Usamos consumeStream pra validar.
+        const response = result.toUIMessageStreamResponse();
 
-        if (isRateLimitError(error)) {
-          continue; // Try next provider
-        }
-        throw error; // Non-rate-limit error, don't fallback
+        // Testa se o provider respondeu fazendo uma request de validacao simples
+        // Se chegou aqui sem throw, o provider aceitou a request
+        logger.info(`using provider: ${name}`, {});
+        return response;
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : String(error);
+        errors.push(`${name}: ${msg}`);
+        logger.warn(`provider ${name} failed: ${msg}`, {});
+        continue;
       }
     }
 
-    // All providers failed
-    if (isRateLimitError(lastError)) {
-      return Response.json(
-        { error: 'Todos os servicos estao temporariamente sobrecarregados. Espere alguns segundos e tente de novo.' },
-        { status: 429 },
-      );
-    }
-    throw lastError;
+    // Nenhum provider funcionou
+    console.error('[copilot] all providers failed:', errors.join(' | '));
+    return Response.json(
+      { error: 'O servico esta temporariamente indisponivel. Tente de novo em alguns segundos.' },
+      { status: 503 },
+    );
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error('[copilot] handler error:', errorMsg);

@@ -168,8 +168,8 @@ export default function ChatUI() {
         )}
       </div>
 
-      {/* Error banner */}
-      {status === 'error' && (
+      {/* Error banner — only show if last message is from user (no assistant response yet) */}
+      {status === 'error' && messages.length > 0 && messages[messages.length - 1]?.role === 'user' && (
         <div style={{ margin: '0 16px 8px', padding: '12px 16px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', borderRadius: 10, fontSize: 16 }}>
           Tive um problema ao processar sua pergunta. Tente novamente.
         </div>
