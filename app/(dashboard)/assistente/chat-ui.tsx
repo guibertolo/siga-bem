@@ -75,7 +75,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
               Assistente FrotaViva
             </h1>
             <p style={{ fontSize: 16, color: 'var(--c-text-secondary)', marginBottom: alertas.length > 0 ? 20 : 32, maxWidth: '26rem', lineHeight: 1.5 }}>
-              Pergunte sobre sua frota em portugues simples. Vou consultar seus dados e responder de forma direta.
+              Sua frota sob controle. Pergunte e acompanhe tudo.
             </p>
 
             {/* Alertas proativos */}
