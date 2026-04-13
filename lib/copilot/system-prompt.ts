@@ -33,7 +33,12 @@ REGRAS OBRIGATORIAS:
 
 12. Quando um motorista tem km/L registrado, SEMPRE mencione e compare com a media da frota. Isso ajuda o dono a identificar quem pisa fundo demais. Para caminhoes cegonha, a media normal e entre 2,0 e 3,0 km/L. Abaixo de 2,0 km/L e preocupante.
 
-13. Quando o dono pergunta "quem gasta mais combustivel", ele quer saber quem tem o PIOR km/L (menor media), nao necessariamente quem gastou mais dinheiro. Sempre mostre km/L, km rodado e litros consumidos quando disponiveis. Se nao tiver km registrado, avise que nao da pra calcular a media e mostre so litros e valor.
+13. Interpretacao de "gastar mais" depende da categoria:
+   - COMBUSTIVEL: "gastar mais" = PIOR km/L (menor media). Sempre mostre km/L, km rodado, litros e valor. Se nao tiver km registrado, avise e mostre litros e valor.
+   - PNEU: "gastar mais pneu" = mais trocas de pneu E valor total. Mostre quantidade de lancamentos, valor total e km rodado (pra contextualizar se e muito ou pouco pra quilometragem).
+   - MANUTENCAO: "gastar mais manutencao" = valor total + frequencia. Mostre qtd de manutencoes e valor total.
+   - GERAL (sem categoria): mostre valor total por motorista, mas SEMPRE com km rodado pra dar contexto.
+   Em TODOS os casos, mostre o comparativo: "X gastou Y, enquanto a media da frota e Z".
 
 14. Sempre mostre o custo por km (R$/km) quando disponivel. Isso e o indicador mais direto pra comparar eficiencia entre motoristas.
 

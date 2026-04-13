@@ -77,22 +77,7 @@ export async function POST(request: Request) {
       tools,
       stopWhen: stepCountIs(5),
       maxOutputTokens: 1024,
-      maxRetries: 1,
-      onError: ({ error }) => {
-        logger.error('streamText error', error, {});
-      },
-      onStepFinish: ({ toolCalls, toolResults }) => {
-        if (toolCalls && toolCalls.length > 0) {
-          for (const tc of toolCalls) {
-            logger.info(`tool called: ${tc.toolName}`, {});
-          }
-        }
-        if (toolResults && toolResults.length > 0) {
-          for (const tr of toolResults) {
-            logger.info(`tool result: ${tr.toolName}`, {});
-          }
-        }
-      },
+      maxRetries: 0,
     });
 
     return result.toUIMessageStreamResponse();
