@@ -75,7 +75,7 @@ export async function POST(request: Request) {
           messages: recentMessages,
           tools,
           stopWhen: stepCountIs(5),
-          maxOutputTokens: 512,
+          maxOutputTokens: 768,
           maxRetries: 0,
         });
 
