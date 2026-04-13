@@ -19,7 +19,15 @@ const transport = new DefaultChatTransport({
   api: '/api/assistente/chat',
 });
 
-export default function ChatUI() {
+interface Alerta {
+  tipo: 'critico' | 'atencao' | 'info';
+  icone: string;
+  titulo: string;
+  detalhe: string;
+  pergunta: string;
+}
+
+export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
   const { messages, sendMessage, status } = useChat({ transport });
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -65,9 +73,48 @@ export default function ChatUI() {
             <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--c-text-primary)', marginBottom: 8 }}>
               Assistente FrotaViva
             </h1>
-            <p style={{ fontSize: 16, color: 'var(--c-text-secondary)', marginBottom: 32, maxWidth: '26rem', lineHeight: 1.5 }}>
+            <p style={{ fontSize: 16, color: 'var(--c-text-secondary)', marginBottom: alertas.length > 0 ? 20 : 32, maxWidth: '26rem', lineHeight: 1.5 }}>
               Pergunte sobre sua frota em portugues simples. Vou consultar seus dados e responder de forma direta.
             </p>
+
+            {/* Alertas proativos */}
+            {alertas.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', maxWidth: '26rem', marginBottom: 24 }}>
+                {alertas.map((alerta, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSubmit(alerta.pergunta)}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '12px 16px',
+                      fontSize: 15,
+                      lineHeight: 1.4,
+                      borderRadius: 10,
+                      border: `2px solid ${alerta.tipo === 'critico' ? 'rgba(239,68,68,0.4)' : 'rgba(234,179,8,0.3)'}`,
+                      backgroundColor: alerta.tipo === 'critico' ? 'rgba(239,68,68,0.08)' : 'rgba(234,179,8,0.06)',
+                      color: 'var(--c-text-primary)',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = alerta.tipo === 'critico' ? 'rgba(239,68,68,0.15)' : 'rgba(234,179,8,0.12)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = alerta.tipo === 'critico' ? 'rgba(239,68,68,0.08)' : 'rgba(234,179,8,0.06)';
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, marginBottom: 2, color: alerta.tipo === 'critico' ? '#fca5a5' : '#fcd34d' }}>
+                      {alerta.titulo}
+                    </div>
+                    <div style={{ fontSize: 14, color: 'var(--c-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {alerta.detalhe}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: '26rem' }}>
               {PERGUNTAS_FAROL.map((pergunta) => (
                 <button

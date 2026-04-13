@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
+import { getAlertasProativos } from '@/lib/copilot/alertas';
 import ChatUI from '@/app/(dashboard)/assistente/chat-ui';
 
 export default async function AssistentePage() {
@@ -13,5 +14,7 @@ export default async function AssistentePage() {
     redirect('/dashboard');
   }
 
-  return <ChatUI />;
+  const alertas = await getAlertasProativos();
+
+  return <ChatUI alertas={alertas} />;
 }
