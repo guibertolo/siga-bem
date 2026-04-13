@@ -30,10 +30,19 @@ interface Alerta {
 export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
   const { messages, sendMessage, status } = useChat({ transport });
   const [input, setInput] = useState('');
+  const [cooldown, setCooldown] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isStreaming = status === 'streaming' || status === 'submitted';
+  const isBlocked = isStreaming || cooldown > 0;
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -43,9 +52,10 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
 
   function handleSubmit(text?: string) {
     const value = text ?? input.trim();
-    if (!value || isStreaming) return;
+    if (!value || isBlocked) return;
     sendMessage({ text: value });
     setInput('');
+    setCooldown(20); // 20 segundos entre perguntas
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -233,7 +243,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
             onKeyDown={handleKeyDown}
             placeholder="Pergunte sobre sua frota..."
             rows={1}
-            disabled={isStreaming}
+            disabled={isBlocked}
             style={{
               flex: 1,
               minHeight: 48,
@@ -247,30 +257,30 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
               borderRadius: 10,
               resize: 'none',
               outline: 'none',
-              opacity: isStreaming ? 0.5 : 1,
+              opacity: isBlocked ? 0.5 : 1,
             }}
             onFocus={(e) => { e.currentTarget.style.borderColor = '#2D6A4F'; }}
             onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
           />
           <button
             onClick={() => handleSubmit()}
-            disabled={!input.trim() || isStreaming}
+            disabled={!input.trim() || isBlocked}
             style={{
               minHeight: 48,
               padding: '12px 20px',
               fontSize: 16,
               fontWeight: 600,
-              background: !input.trim() || isStreaming ? 'rgba(45,106,79,0.4)' : '#2D6A4F',
+              background: !input.trim() || isBlocked ? 'rgba(45,106,79,0.4)' : '#2D6A4F',
               color: '#fff',
               border: 'none',
               borderRadius: 10,
-              cursor: !input.trim() || isStreaming ? 'not-allowed' : 'pointer',
-              opacity: !input.trim() || isStreaming ? 0.5 : 1,
+              cursor: !input.trim() || isBlocked ? 'not-allowed' : 'pointer',
+              opacity: !input.trim() || isBlocked ? 0.5 : 1,
               transition: 'all 0.15s',
               flexShrink: 0,
             }}
           >
-            Enviar
+            {cooldown > 0 ? `${cooldown}s` : 'Enviar'}
           </button>
         </div>
       </div>
