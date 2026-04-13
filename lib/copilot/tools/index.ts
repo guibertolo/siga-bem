@@ -83,68 +83,57 @@ function wrapExecute<I, O>(
 export function buildToolset(ctx: ToolContext) {
   return {
     buscar_gastos_por_periodo: tool({
-      description:
-        'Busca gastos (combustivel, pedagio, manutencao, etc) em um periodo. Retorna totais, subtotais por categoria e detalhes.',
+      description: 'Gastos por periodo e categoria.',
       inputSchema: buscarGastosPorPeriodoSchema,
       execute: wrapExecute('buscar_gastos_por_periodo', executeBuscarGastosPorPeriodo, ctx),
     }),
     listar_caminhoes: tool({
-      description:
-        'Lista os caminhoes da frota com placa, modelo e apelido. Util para resolver placa/nome antes de outras consultas.',
+      description: 'Lista caminhoes da frota (placa, modelo).',
       inputSchema: listarCaminhoesSchema,
       execute: wrapExecute('listar_caminhoes', executeListarCaminhoes, ctx),
     }),
     ranking_caminhoes_por_lucro: tool({
-      description:
-        'Ranking de caminhoes por lucro (receita de fretes menos gastos) em um periodo. Mostra qual deu mais lucro ou mais prejuizo.',
+      description: 'Ranking caminhoes por lucro/prejuizo no periodo.',
       inputSchema: rankingCaminhoesPorLucroSchema,
       execute: wrapExecute('ranking_caminhoes_por_lucro', executeRankingCaminhoesPorLucro, ctx),
     }),
     ranking_viagens_por_margem: tool({
-      description:
-        'Ranking de viagens por margem de lucro percentual em um periodo. Mostra quais viagens foram mais ou menos rentaveis.',
+      description: 'Ranking viagens por margem de lucro no periodo.',
       inputSchema: rankingViagensPorMargemSchema,
       execute: wrapExecute('ranking_viagens_por_margem', executeRankingViagensPorMargem, ctx),
     }),
     motoristas_cnh_vencendo: tool({
-      description:
-        'Lista motoristas com CNH vencendo nos proximos N dias (default 30) ou ja vencida. Mostra nome, numero da CNH, categoria e dias ate vencer.',
+      description: 'Motoristas com CNH vencendo ou vencida.',
       inputSchema: motoristasCnhVencendoSchema,
       execute: wrapExecute('motoristas_cnh_vencendo', executeMotoristasCnhVencendo, ctx),
     }),
     resumo_desempenho_periodo: tool({
-      description:
-        'Resumo geral de desempenho da frota em um periodo: total viagens, receita, gastos, lucro, top 3 categorias de gasto, melhor e pior viagem por valor.',
+      description: 'Resumo da frota: viagens, receita, gastos, lucro, top categorias.',
       inputSchema: resumoDesempenhoPeriodoSchema,
       execute: wrapExecute('resumo_desempenho_periodo', executeResumoDesempenhoPeriodo, ctx),
     }),
     ranking_motoristas_por_gasto: tool({
-      description:
-        'Ranking de motoristas por gasto total em um periodo. Filtravel por categoria (ex: Combustivel, Pneu, Manutencao). Mostra quem gasta mais ou menos, com litros quando aplicavel.',
+      description: 'Ranking motoristas por gasto. Filtra por categoria (Combustivel, Pneu, etc). Inclui km/L e R$/km.',
       inputSchema: rankingMotoristasPorGastoSchema,
       execute: wrapExecute('ranking_motoristas_por_gasto', executeRankingMotoristasPorGasto, ctx),
     }),
     desempenho_motorista: tool({
-      description:
-        'Perfil completo de desempenho de um motorista em um periodo: receita gerada, gastos, lucro, km rodado, litros consumidos, km/L medio, top categorias de gasto. Busca por nome parcial ou ID.',
+      description: 'Perfil de um motorista: receita, gastos, lucro, km, km/L. Busca por nome.',
       inputSchema: desempenhoMotoristaSchema,
       execute: wrapExecute('desempenho_motorista', executeDesempenhoMotorista, ctx),
     }),
     produtividade_frota: tool({
-      description:
-        'Produtividade da frota: viagens por motorista e caminhao, km rodados, ociosidade (caminhao parado), tempo medio de viagem, taxa de cancelamento, receita por km. Filtravel por motorista ou caminhao.',
+      description: 'Produtividade: viagens, km, caminhao parado, cancelamentos, receita/km.',
       inputSchema: produtividadeFrotaSchema,
       execute: wrapExecute('produtividade_frota', executeProdutividadeFrota, ctx),
     }),
     fechamentos_pendentes: tool({
-      description:
-        'Fechamentos (acertos) pendentes e historico de pagamentos: quanto devo pro motorista, acertos abertos/fechados/pagos, saldo por motorista. Filtravel por motorista e periodo.',
+      description: 'Acertos pendentes: quanto devo pro motorista, saldo.',
       inputSchema: fechamentosPendentesSchema,
       execute: wrapExecute('fechamentos_pendentes', executeFechamentosPendentes, ctx),
     }),
     custo_por_km: tool({
-      description:
-        'Custo por km rodado (CPK) da frota: gasto total/km, receita/km, margem/km. Detalhavel por caminhao e por categoria de gasto (combustivel, pneu, manutencao, pedagio). O indicador mais completo de eficiencia operacional.',
+      description: 'Custo por km (CPK): gasto/km, receita/km, margem/km. Por caminhao e categoria.',
       inputSchema: custoPorKmSchema,
       execute: wrapExecute('custo_por_km', executeCustoPorKm, ctx),
     }),

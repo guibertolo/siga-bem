@@ -52,10 +52,15 @@ export async function POST(request: Request) {
     const tools = buildToolset({ supabase, usuario, empresaIds });
     const modelMessages = await convertToModelMessages(messages);
 
+    // Limitar historico a ultimas 6 mensagens pra economizar tokens
+    // Cada mensagem anterior consome tokens do input. O dono nao precisa
+    // que o LLM lembre de 20 perguntas atras.
+    const recentMessages = modelMessages.slice(-6);
+
     logger.info('chat request', {
       usuarioId: usuario.id,
       empresaCount: empresaIds.length,
-      messageCount: messages.length,
+      messageCount: recentMessages.length,
     });
 
     // 5. Tenta cada provider em sequencia ate um funcionar
@@ -67,7 +72,7 @@ export async function POST(request: Request) {
         const result = streamText({
           model,
           system: SYSTEM_PROMPT,
-          messages: modelMessages,
+          messages: recentMessages,
           tools,
           stopWhen: stepCountIs(5),
           maxOutputTokens: 512,
