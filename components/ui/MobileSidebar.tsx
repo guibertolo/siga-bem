@@ -175,6 +175,23 @@ export function MobileSidebar({
             </Link>
           )}
 
+          {showBILink && (
+            <Link
+              href="/assistente"
+              prefetch={true}
+              onClick={() => setOpen(false)}
+              data-onboarding-id="assistente"
+              aria-current={pathname === '/assistente' ? 'page' : undefined}
+              className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+                pathname === '/assistente'
+                  ? 'bg-white/20 text-white'
+                  : 'text-white/80 hover:bg-white/15'
+              }`}
+            >
+              Assistente
+            </Link>
+          )}
+
           {showAdminLinks && (
             <>
               <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">

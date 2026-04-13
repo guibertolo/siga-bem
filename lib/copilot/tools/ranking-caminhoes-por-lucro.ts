@@ -2,7 +2,7 @@
  * Assistente FrotaViva — Tool T2: ranking_caminhoes_por_lucro.
  *
  * Story 9.3 (AC-1). Computes per-caminhao:
- *   lucro_centavos = SUM(viagem.valor_frete_centavos no periodo)
+ *   lucro_centavos = SUM(viagem.valor_total no periodo)
  *                  - SUM(gasto.valor no periodo)
  *
  * Returns caminhoes ordered by lucro_centavos. Only caminhoes that had
@@ -15,8 +15,8 @@
 import { z } from 'zod';
 
 import { parsePeriod } from '@/lib/copilot/utils/period';
-import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/index';
-import type { ToolContext } from '@/lib/copilot/tools/index';
+import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
+import type { ToolContext } from '@/lib/copilot/tools/constants';
 
 export const rankingCaminhoesPorLucroSchema = z.object({
   periodo: z
@@ -55,12 +55,14 @@ export interface RankingCaminhoesResult {
     gasto_centavos: number;
     lucro_centavos: number;
     qtd_viagens: number;
+    motorista_principal: string | null;
   }>;
 }
 
 interface ViagemRow {
   caminhao_id: string | null;
-  valor_frete_centavos: number;
+  motorista_id: string | null;
+  valor_total: number;
   status: string;
 }
 
@@ -75,10 +77,16 @@ interface CaminhaoRow {
   modelo: string;
 }
 
+interface MotoristaRow {
+  id: string;
+  nome: string;
+}
+
 interface CaminhaoAggregate {
   receita_centavos: number;
   gasto_centavos: number;
   qtd_viagens: number;
+  motorista_viagens: Map<string, number>;
 }
 
 export async function executeRankingCaminhoesPorLucro(
@@ -107,7 +115,7 @@ export async function executeRankingCaminhoesPorLucro(
     // and all caminhoes for the empresas — in parallel.
     const viagensPromise = supabase
       .from('viagem')
-      .select('caminhao_id, valor_frete_centavos, status')
+      .select('caminhao_id, motorista_id, valor_total, status')
       .in('empresa_id', empresaIds)
       .gte('data_saida', period.startDate)
       .lte('data_saida', period.endDate)
@@ -125,10 +133,16 @@ export async function executeRankingCaminhoesPorLucro(
       .select('id, placa, modelo')
       .in('empresa_id', empresaIds);
 
-    const [viagensResult, gastosResult, caminhoesResult] = await Promise.all([
+    const motoristasPromise = supabase
+      .from('motorista')
+      .select('id, nome')
+      .in('empresa_id', empresaIds);
+
+    const [viagensResult, gastosResult, caminhoesResult, motoristasResult] = await Promise.all([
       viagensPromise,
       gastosPromise,
       caminhoesPromise,
+      motoristasPromise,
     ]);
 
     if (viagensResult.error) {
@@ -152,10 +166,24 @@ export async function executeRankingCaminhoesPorLucro(
         { period },
       );
     }
+    if (motoristasResult.error) {
+      throw new ToolExecutionError(
+        'ranking_caminhoes_por_lucro',
+        `Falha ao carregar motoristas: ${motoristasResult.error.message}`,
+        { period },
+      );
+    }
 
     const viagens = (viagensResult.data ?? []) as ViagemRow[];
     const gastos = (gastosResult.data ?? []) as GastoRow[];
     const caminhoes = (caminhoesResult.data ?? []) as CaminhaoRow[];
+    const motoristas = (motoristasResult.data ?? []) as MotoristaRow[];
+
+    // Build motorista lookup
+    const motoristaLookup = new Map<string, string>();
+    for (const m of motoristas) {
+      motoristaLookup.set(m.id, m.nome);
+    }
 
     // Aggregate by caminhao_id
     const aggregates = new Map<string, CaminhaoAggregate>();
@@ -166,6 +194,7 @@ export async function executeRankingCaminhoesPorLucro(
         receita_centavos: 0,
         gasto_centavos: 0,
         qtd_viagens: 0,
+        motorista_viagens: new Map(),
       };
       aggregates.set(caminhaoId, fresh);
       return fresh;
@@ -174,8 +203,14 @@ export async function executeRankingCaminhoesPorLucro(
     for (const v of viagens) {
       if (!v.caminhao_id) continue;
       const agg = touch(v.caminhao_id);
-      agg.receita_centavos += v.valor_frete_centavos;
+      agg.receita_centavos += v.valor_total;
       agg.qtd_viagens += 1;
+      if (v.motorista_id) {
+        agg.motorista_viagens.set(
+          v.motorista_id,
+          (agg.motorista_viagens.get(v.motorista_id) ?? 0) + 1,
+        );
+      }
     }
     for (const g of gastos) {
       if (!g.caminhao_id) continue;
@@ -194,6 +229,21 @@ export async function executeRankingCaminhoesPorLucro(
       .filter(([caminhaoId]) => caminhaoLookup.has(caminhaoId))
       .map(([caminhaoId, agg]) => {
         const meta = caminhaoLookup.get(caminhaoId);
+
+        // Find motorista who drove this caminhao the most in the period
+        let motoristaPrincipal: string | null = null;
+        if (agg.motorista_viagens.size > 0) {
+          let maxViagens = 0;
+          let maxId = '';
+          for (const [motId, count] of agg.motorista_viagens) {
+            if (count > maxViagens) {
+              maxViagens = count;
+              maxId = motId;
+            }
+          }
+          motoristaPrincipal = motoristaLookup.get(maxId) ?? null;
+        }
+
         return {
           id: caminhaoId,
           placa: meta?.placa ?? 'desconhecida',
@@ -202,6 +252,7 @@ export async function executeRankingCaminhoesPorLucro(
           gasto_centavos: agg.gasto_centavos,
           lucro_centavos: agg.receita_centavos - agg.gasto_centavos,
           qtd_viagens: agg.qtd_viagens,
+          motorista_principal: motoristaPrincipal,
         };
       });
 

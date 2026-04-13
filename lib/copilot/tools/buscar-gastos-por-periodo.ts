@@ -10,8 +10,8 @@
 import { z } from 'zod';
 
 import { parsePeriod } from '@/lib/copilot/utils/period';
-import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/index';
-import type { ToolContext } from '@/lib/copilot/tools/index';
+import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
+import type { ToolContext } from '@/lib/copilot/tools/constants';
 
 export const buscarGastosPorPeriodoSchema = z.object({
   periodo: z

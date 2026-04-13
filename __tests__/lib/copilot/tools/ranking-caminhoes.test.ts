@@ -28,20 +28,24 @@ const fakeUsuario: Usuario = {
 function buildSupabase(options: {
   viagens: Array<{
     caminhao_id: string | null;
-    valor_frete_centavos: number;
+    motorista_id?: string | null;
+    valor_total: number;
     status: string;
   }>;
   gastos: Array<{ caminhao_id: string | null; valor: number }>;
   caminhoes: Array<{ id: string; placa: string; modelo: string }>;
+  motoristas?: Array<{ id: string; nome: string }>;
 }) {
   const viagemChain = createChain({ data: options.viagens, error: null });
   const gastoChain = createChain({ data: options.gastos, error: null });
   const caminhaoChain = createChain({ data: options.caminhoes, error: null });
+  const motoristaChain = createChain({ data: options.motoristas ?? [], error: null });
 
   const from = jest.fn((table: string) => {
     if (table === 'viagem') return viagemChain;
     if (table === 'gasto') return gastoChain;
     if (table === 'caminhao') return caminhaoChain;
+    if (table === 'motorista') return motoristaChain;
     throw new Error(`unexpected: ${table}`);
   });
   return { supabase: { from }, viagemChain, gastoChain, caminhaoChain };
@@ -66,9 +70,9 @@ describe('executeRankingCaminhoesPorLucro', () => {
   it('ranks caminhoes by lucro ascending by default (prejuizo first)', async () => {
     const { supabase, viagemChain } = buildSupabase({
       viagens: [
-        { caminhao_id: 'c1', valor_frete_centavos: 100_000, status: 'concluida' },
-        { caminhao_id: 'c1', valor_frete_centavos: 50_000, status: 'concluida' },
-        { caminhao_id: 'c2', valor_frete_centavos: 200_000, status: 'concluida' },
+        { caminhao_id: 'c1', valor_total: 100_000, status: 'concluida' },
+        { caminhao_id: 'c1', valor_total: 50_000, status: 'concluida' },
+        { caminhao_id: 'c2', valor_total: 200_000, status: 'concluida' },
       ],
       gastos: [
         { caminhao_id: 'c1', valor: 80_000 },
@@ -112,8 +116,8 @@ describe('executeRankingCaminhoesPorLucro', () => {
   it('sorts decrescente when requested', async () => {
     const { supabase } = buildSupabase({
       viagens: [
-        { caminhao_id: 'c1', valor_frete_centavos: 100_000, status: 'concluida' },
-        { caminhao_id: 'c2', valor_frete_centavos: 200_000, status: 'concluida' },
+        { caminhao_id: 'c1', valor_total: 100_000, status: 'concluida' },
+        { caminhao_id: 'c2', valor_total: 200_000, status: 'concluida' },
       ],
       gastos: [
         { caminhao_id: 'c1', valor: 80_000 },
@@ -143,7 +147,7 @@ describe('executeRankingCaminhoesPorLucro', () => {
     const { supabase } = buildSupabase({
       viagens: Array.from({ length: 10 }, (_, i) => ({
         caminhao_id: `c${i}`,
-        valor_frete_centavos: (i + 1) * 10_000,
+        valor_total: (i + 1) * 10_000,
         status: 'concluida',
       })),
       gastos: [],

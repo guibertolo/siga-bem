@@ -31,7 +31,9 @@ function buildSupabase(options: {
     origem: string;
     destino: string;
     data_saida: string;
-    valor_frete_centavos: number;
+    valor_total: number;
+    motorista_id?: string | null;
+    caminhao_id?: string | null;
     status: string;
   }>;
   viagensCount?: number;
@@ -43,10 +45,14 @@ function buildSupabase(options: {
     count: options.viagensCount ?? options.viagens.length,
   });
   const gastoChain = createChain({ data: options.gastos, error: null });
+  const motoristaChain = createChain({ data: [], error: null });
+  const caminhaoChain = createChain({ data: [], error: null });
 
   const from = jest.fn((table: string) => {
     if (table === 'viagem') return viagemChain;
     if (table === 'gasto') return gastoChain;
+    if (table === 'motorista') return motoristaChain;
+    if (table === 'caminhao') return caminhaoChain;
     throw new Error(`unexpected: ${table}`);
   });
   return { supabase: { from }, viagemChain, gastoChain };
@@ -76,7 +82,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'RJ',
           data_saida: '2026-04-01',
-          valor_frete_centavos: 100_000,
+          valor_total: 100_000,
           status: 'concluida',
         },
         {
@@ -84,7 +90,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'BH',
           data_saida: '2026-04-05',
-          valor_frete_centavos: 200_000,
+          valor_total: 200_000,
           status: 'concluida',
         },
       ],
@@ -120,7 +126,7 @@ describe('executeRankingViagensPorMargem', () => {
 
     // excludes canceled + zero-frete at the SQL layer
     expect(viagemChain.neq).toHaveBeenCalledWith('status', 'cancelada');
-    expect(viagemChain.gt).toHaveBeenCalledWith('valor_frete_centavos', 0);
+    expect(viagemChain.gt).toHaveBeenCalledWith('valor_total', 0);
   });
 
   it('sorts decrescente when requested', async () => {
@@ -131,7 +137,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'RJ',
           data_saida: '2026-04-01',
-          valor_frete_centavos: 100_000,
+          valor_total: 100_000,
           status: 'concluida',
         },
         {
@@ -139,7 +145,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'BH',
           data_saida: '2026-04-05',
-          valor_frete_centavos: 100_000,
+          valor_total: 100_000,
           status: 'concluida',
         },
       ],
@@ -171,7 +177,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'BSB',
           data_saida: '2026-04-03',
-          valor_frete_centavos: 100_000,
+          valor_total: 100_000,
           status: 'concluida',
         },
       ],
@@ -200,7 +206,7 @@ describe('executeRankingViagensPorMargem', () => {
           origem: 'SP',
           destino: 'RJ',
           data_saida: '2026-04-01',
-          valor_frete_centavos: 100_000,
+          valor_total: 100_000,
           status: 'concluida',
         },
       ],

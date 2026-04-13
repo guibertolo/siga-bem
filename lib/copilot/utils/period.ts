@@ -193,6 +193,43 @@ export function parsePeriod(expression: string): ParsedPeriod {
     }
   }
 
+  // "ultimos N meses" / "ultimo N meses" / "N meses atras"
+  const ultimosMesesMatch = text.match(/^ultimos?\s+(\d+)\s+mes(?:es)?$/);
+  if (ultimosMesesMatch) {
+    const n = Number(ultimosMesesMatch[1]);
+    if (n > 0 && n <= 24) {
+      let startMonth = now.month - n;
+      let startYear = now.year;
+      while (startMonth < 0) {
+        startMonth += 12;
+        startYear -= 1;
+      }
+      return {
+        startDate: toIso(startYear, startMonth, 1),
+        endDate: toIso(now.year, now.month, now.day),
+        label: `ultimos ${n} meses`,
+      };
+    }
+  }
+
+  // "este ano" / "ano atual"
+  if (text === 'este ano' || text === 'ano atual') {
+    return {
+      startDate: toIso(now.year, 0, 1),
+      endDate: toIso(now.year, now.month, now.day),
+      label: 'este ano',
+    };
+  }
+
+  // "ano passado"
+  if (text === 'ano passado') {
+    return {
+      startDate: toIso(now.year - 1, 0, 1),
+      endDate: toIso(now.year - 1, 11, 31),
+      label: 'ano passado',
+    };
+  }
+
   // Month name (current year)
   const directMonth = MONTH_NAMES_PT[text];
   if (directMonth !== undefined) {

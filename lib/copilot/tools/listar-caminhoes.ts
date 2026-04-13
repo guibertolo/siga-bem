@@ -9,8 +9,8 @@
 
 import { z } from 'zod';
 
-import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/index';
-import type { ToolContext } from '@/lib/copilot/tools/index';
+import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
+import type { ToolContext } from '@/lib/copilot/tools/constants';
 
 export const listarCaminhoesSchema = z.object({
   busca: z

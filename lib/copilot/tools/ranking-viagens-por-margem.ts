@@ -3,8 +3,8 @@
  *
  * Story 9.3 (AC-2). Computes per-viagem:
  *   margem_percentual = round(
- *     (valor_frete_centavos - SUM(gastos vinculados a viagem)) * 100
- *     / valor_frete_centavos
+ *     (valor_total - SUM(gastos vinculados a viagem)) * 100
+ *     / valor_total
  *   )
  *
  * Convention: `margem_percentual` is an **integer 0-100** (rounded).
@@ -19,8 +19,8 @@
 import { z } from 'zod';
 
 import { parsePeriod } from '@/lib/copilot/utils/period';
-import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/index';
-import type { ToolContext } from '@/lib/copilot/tools/index';
+import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
+import type { ToolContext } from '@/lib/copilot/tools/constants';
 
 /**
  * Safety cap on how many viagens we pull into memory before ranking.
@@ -59,7 +59,9 @@ export interface RankingViagensResult {
     origem: string;
     destino: string;
     data_saida: string;
-    valor_frete_centavos: number;
+    motorista_nome: string | null;
+    placa: string | null;
+    valor_total: number;
     gasto_total_centavos: number;
     lucro_centavos: number;
     margem_percentual: number; // integer 0-100 (may be negative)
@@ -72,8 +74,20 @@ interface ViagemRow {
   origem: string;
   destino: string;
   data_saida: string;
-  valor_frete_centavos: number;
+  valor_total: number;
+  motorista_id: string | null;
+  caminhao_id: string | null;
   status: string;
+}
+
+interface MotoristaRow {
+  id: string;
+  nome: string;
+}
+
+interface CaminhaoRow {
+  id: string;
+  placa: string;
 }
 
 interface GastoViagemRow {
@@ -107,14 +121,14 @@ export async function executeRankingViagensPorMargem(
     const viagensPromise = supabase
       .from('viagem')
       .select(
-        'id, origem, destino, data_saida, valor_frete_centavos, status',
+        'id, origem, destino, data_saida, valor_total, motorista_id, caminhao_id, status',
         { count: 'exact' },
       )
       .in('empresa_id', empresaIds)
       .gte('data_saida', period.startDate)
       .lte('data_saida', period.endDate)
       .neq('status', 'cancelada')
-      .gt('valor_frete_centavos', 0)
+      .gt('valor_total', 0)
       .limit(RANKING_LOAD_CAP);
 
     const gastosPromise = supabase
@@ -125,9 +139,21 @@ export async function executeRankingViagensPorMargem(
       .lte('data', period.endDate)
       .not('viagem_id', 'is', null);
 
-    const [viagensResult, gastosResult] = await Promise.all([
+    const motoristasPromise = supabase
+      .from('motorista')
+      .select('id, nome')
+      .in('empresa_id', empresaIds);
+
+    const caminhoesPromise = supabase
+      .from('caminhao')
+      .select('id, placa')
+      .in('empresa_id', empresaIds);
+
+    const [viagensResult, gastosResult, motoristasResult, caminhoesResult] = await Promise.all([
       viagensPromise,
       gastosPromise,
+      motoristasPromise,
+      caminhoesPromise,
     ]);
 
     if (viagensResult.error) {
@@ -144,9 +170,31 @@ export async function executeRankingViagensPorMargem(
         { period },
       );
     }
+    if (motoristasResult.error) {
+      throw new ToolExecutionError(
+        'ranking_viagens_por_margem',
+        `Falha ao carregar motoristas: ${motoristasResult.error.message}`,
+        { period },
+      );
+    }
+    if (caminhoesResult.error) {
+      throw new ToolExecutionError(
+        'ranking_viagens_por_margem',
+        `Falha ao carregar caminhoes: ${caminhoesResult.error.message}`,
+        { period },
+      );
+    }
 
     const viagens = (viagensResult.data ?? []) as ViagemRow[];
     const gastos = (gastosResult.data ?? []) as GastoViagemRow[];
+    const motoristasList = (motoristasResult.data ?? []) as MotoristaRow[];
+    const caminhoesList = (caminhoesResult.data ?? []) as CaminhaoRow[];
+
+    const motoristaLookup = new Map<string, string>();
+    for (const m of motoristasList) motoristaLookup.set(m.id, m.nome);
+
+    const caminhaoLookup = new Map<string, string>();
+    for (const c of caminhoesList) caminhaoLookup.set(c.id, c.placa);
     const totalViagensInPeriod =
       viagensResult.count ?? viagens.length;
 
@@ -163,14 +211,16 @@ export async function executeRankingViagensPorMargem(
     // Compute margem per viagem
     const rows = viagens.map((v) => {
       const gastoTotal = gastoPorViagem.get(v.id) ?? 0;
-      const lucro = v.valor_frete_centavos - gastoTotal;
-      const margem = Math.round((lucro * 100) / v.valor_frete_centavos);
+      const lucro = v.valor_total - gastoTotal;
+      const margem = Math.round((lucro * 100) / v.valor_total);
       return {
         id: v.id,
         origem: v.origem,
         destino: v.destino,
         data_saida: v.data_saida,
-        valor_frete_centavos: v.valor_frete_centavos,
+        motorista_nome: v.motorista_id ? (motoristaLookup.get(v.motorista_id) ?? null) : null,
+        placa: v.caminhao_id ? (caminhaoLookup.get(v.caminhao_id) ?? null) : null,
+        valor_total: v.valor_total,
         gasto_total_centavos: gastoTotal,
         lucro_centavos: lucro,
         margem_percentual: margem,

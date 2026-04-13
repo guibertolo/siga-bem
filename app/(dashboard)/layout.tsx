@@ -161,6 +161,17 @@ export default async function DashboardLayout({
             </Link>
           )}
 
+          {showBILink && (
+            <Link
+              href="/assistente"
+              prefetch={true}
+              data-onboarding-id="assistente"
+              className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+            >
+              Assistente
+            </Link>
+          )}
+
           {showAdminLinks && (
             <>
               <div className="mx-2 mt-6 mb-3 pt-4 text-xs font-bold text-white/50 uppercase tracking-wider border-t border-white/10">
