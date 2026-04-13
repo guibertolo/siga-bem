@@ -1,25 +1,51 @@
 /**
- * Assistente FrotaViva — LLM client factory.
+ * Assistente FrotaViva — LLM com fallback automatico multi-provider.
  *
- * Supports multiple providers via env vars. Priority:
- * 1. GROQ_API_KEY → Groq
- * 2. GOOGLE_GENERATIVE_AI_API_KEY → Google Gemini 2.0 Flash
+ * Providers (ordem de prioridade):
+ * 1. Groq Llama 4 Scout 17B — 30 RPM, tool calling nativo, rapido, token-eficiente
+ * 2. Google Gemini 2.0 Flash — 10 RPM, 250 RPD, excelente tool calling
  *
- * Groq models and free tier limits (tokens/min):
- * - llama-3.3-70b-versatile: 6000 tok/min (best quality, low throughput)
- * - llama-3.1-8b-instant: 20000 tok/min (good quality, high throughput)
- * - gemma2-9b-it: 15000 tok/min (alternative)
- *
- * For a chat with tool calls (3-5k tokens per request), the 70B model
- * runs out after 1-2 questions. The 8B handles 5-8 questions per minute.
+ * Llama 4 Scout 17B usa ~750 tokens por request (vs ~3-4K do 70B).
+ * Com 30 RPM: ~10-15 perguntas/min (cada pergunta = 2-3 requests).
+ * Se Groq bater rate limit, cai pro Gemini automaticamente.
  */
 
 import { google } from '@ai-sdk/google';
 import { groq } from '@ai-sdk/groq';
+import type { LanguageModel } from 'ai';
 
-export function getAssistenteModel() {
-  if (process.env.GROQ_API_KEY) {
-    return groq('llama-3.1-8b-instant');
+interface ProviderConfig {
+  name: string;
+  envKey: string;
+  factory: () => LanguageModel;
+}
+
+const PROVIDERS: ProviderConfig[] = [
+  {
+    name: 'Groq (Llama 4 Scout 17B)',
+    envKey: 'GROQ_API_KEY',
+    factory: () => groq('meta-llama/llama-4-scout-17b-16e-instruct'),
+  },
+  {
+    name: 'Gemini 2.0 Flash',
+    envKey: 'GOOGLE_GENERATIVE_AI_API_KEY',
+    factory: () => google('gemini-2.0-flash'),
+  },
+];
+
+export function getAvailableModels(): Array<{ name: string; model: LanguageModel }> {
+  const models: Array<{ name: string; model: LanguageModel }> = [];
+  for (const p of PROVIDERS) {
+    if (process.env[p.envKey]) {
+      models.push({ name: p.name, model: p.factory() });
+    }
   }
-  return google('gemini-2.0-flash');
+  if (models.length === 0) {
+    throw new Error('Nenhuma API key configurada (GROQ_API_KEY ou GOOGLE_GENERATIVE_AI_API_KEY)');
+  }
+  return models;
+}
+
+export function getAssistenteModel(): LanguageModel {
+  return getAvailableModels()[0].model;
 }

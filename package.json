@@ -18,6 +18,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ai-sdk/cerebras": "^2.0.45",
+    "@ai-sdk/deepseek": "^2.0.29",
     "@ai-sdk/google": "^3.0.61",
     "@ai-sdk/groq": "^3.0.35",
     "@ai-sdk/react": "^3.0.160",
