@@ -60,6 +60,14 @@ import {
   custoPorKmSchema,
   executeCustoPorKm,
 } from '@/lib/copilot/tools/custo-por-km';
+import {
+  comparativoTemporalSchema,
+  executeComparativoTemporal,
+} from '@/lib/copilot/tools/comparativo-temporal';
+import {
+  rentabilidadeRotaSchema,
+  executeRentabilidadeRota,
+} from '@/lib/copilot/tools/rentabilidade-rota';
 
 /**
  * Build the full toolset for `streamText()`, injecting the
@@ -136,6 +144,16 @@ export function buildToolset(ctx: ToolContext) {
       description: 'Custo por km (CPK): gasto/km, receita/km, margem/km. Por caminhao e categoria.',
       inputSchema: custoPorKmSchema,
       execute: wrapExecute('custo_por_km', executeCustoPorKm, ctx),
+    }),
+    comparativo_temporal: tool({
+      description: 'Compara dois periodos: receita, gastos, lucro, margem, viagens, km/L, variacao %. Use para "subiu ou caiu", "esse mes vs mes passado", "como ta comparado".',
+      inputSchema: comparativoTemporalSchema,
+      execute: wrapExecute('comparativo_temporal', executeComparativoTemporal, ctx),
+    }),
+    rentabilidade_por_rota: tool({
+      description: 'Rentabilidade por rota (origem->destino): lucro, margem, frete medio, km. Use para "qual rota compensa", "trajeto mais lucrativo", "rentabilidade por rota".',
+      inputSchema: rentabilidadeRotaSchema,
+      execute: wrapExecute('rentabilidade_por_rota', executeRentabilidadeRota, ctx),
     }),
   };
 }

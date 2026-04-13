@@ -12,8 +12,22 @@ const PERGUNTAS_FAROL = [
   'Me faz um resumo do desempenho da ultima semana',
   'Quais motoristas estao com CNH vencendo?',
   'Qual viagem teve maior margem?',
-  'Como esta o desempenho do motorista Joao?',
+  'Qual rota ta dando mais lucro?',
 ];
+
+const FOLLOWUP_REGEX = /\[FOLLOWUP\](.*?)\[\/FOLLOWUP\]/g;
+
+function parseFollowups(text: string): { cleanText: string; followups: string[] } {
+  const followups: string[] = [];
+  let match;
+  while ((match = FOLLOWUP_REGEX.exec(text)) !== null) {
+    const q = match[1].trim();
+    if (q) followups.push(q);
+  }
+  FOLLOWUP_REGEX.lastIndex = 0;
+  const cleanText = text.replace(FOLLOWUP_REGEX, '').trimEnd();
+  return { cleanText, followups };
+}
 
 const transport = new DefaultChatTransport({
   api: '/api/assistente/chat',
@@ -161,7 +175,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
         )}
 
         {/* Message thread */}
-        {messages.map((message) => {
+        {messages.map((message, msgIndex) => {
           const isUser = message.role === 'user';
           const textContent = message.parts
             ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
@@ -170,44 +184,86 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
 
           if (!textContent) return null;
 
+          const isLastAssistant = !isUser && msgIndex === messages.length - 1;
+          const { cleanText, followups } = isUser
+            ? { cleanText: textContent, followups: [] }
+            : parseFollowups(textContent);
+
           return (
-            <div
-              key={message.id}
-              style={{
-                display: 'flex',
-                justifyContent: isUser ? 'flex-end' : 'flex-start',
-                marginBottom: 16,
-              }}
-            >
+            <div key={message.id} style={{ marginBottom: 16 }}>
               <div
                 style={{
-                  maxWidth: '85%',
-                  padding: '12px 16px',
-                  borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                  fontSize: 16,
-                  lineHeight: 1.6,
-                  ...(isUser
-                    ? {
-                        background: '#2D6A4F',
-                        color: '#fff',
-                      }
-                    : {
-                        background: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        color: 'var(--c-text-primary)',
-                      }),
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
                 }}
               >
-                {isUser ? (
-                  <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{textContent}</p>
-                ) : (
-                  <div className="prose prose-sm max-w-none dark:prose-invert [&_table]:text-sm [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_table]:border-collapse [&_th]:border [&_th]:border-white/10 [&_td]:border [&_td]:border-white/10 [&_th]:bg-white/5 [&_p]:my-1.5 [&_ul]:my-1.5 [&_ol]:my-1.5">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {textContent}
-                    </ReactMarkdown>
-                  </div>
-                )}
+                <div
+                  style={{
+                    maxWidth: '85%',
+                    padding: '12px 16px',
+                    borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                    fontSize: 16,
+                    lineHeight: 1.6,
+                    ...(isUser
+                      ? {
+                          background: '#2D6A4F',
+                          color: '#fff',
+                        }
+                      : {
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: 'var(--c-text-primary)',
+                        }),
+                  }}
+                >
+                  {isUser ? (
+                    <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{textContent}</p>
+                  ) : (
+                    <div className="prose prose-sm max-w-none dark:prose-invert [&_table]:text-sm [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_table]:border-collapse [&_th]:border [&_th]:border-white/10 [&_td]:border [&_td]:border-white/10 [&_th]:bg-white/5 [&_p]:my-1.5 [&_ul]:my-1.5 [&_ol]:my-1.5">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {cleanText}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Follow-up suggestions (only on last assistant message, not while streaming) */}
+              {isLastAssistant && followups.length > 0 && !isStreaming && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10, paddingLeft: 4 }}>
+                  {followups.map((fup) => (
+                    <button
+                      key={fup}
+                      onClick={() => { setInput(fup); inputRef.current?.focus(); }}
+                      disabled={isBlocked}
+                      style={{
+                        padding: '8px 14px',
+                        fontSize: 14,
+                        lineHeight: 1.4,
+                        borderRadius: 8,
+                        border: '1px solid rgba(45,106,79,0.4)',
+                        backgroundColor: 'rgba(45,106,79,0.1)',
+                        color: 'var(--c-text-primary)',
+                        cursor: isBlocked ? 'not-allowed' : 'pointer',
+                        opacity: isBlocked ? 0.5 : 1,
+                        transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isBlocked) {
+                          e.currentTarget.style.backgroundColor = 'rgba(45,106,79,0.2)';
+                          e.currentTarget.style.borderColor = 'rgba(45,106,79,0.6)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(45,106,79,0.1)';
+                        e.currentTarget.style.borderColor = 'rgba(45,106,79,0.4)';
+                      }}
+                    >
+                      {fup}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
