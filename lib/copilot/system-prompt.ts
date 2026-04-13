@@ -45,7 +45,7 @@ REGRAS OBRIGATORIAS:
    Em TODOS os casos, mostre o comparativo: "X gastou Y, enquanto a media da frota e Z".
    IMPORTANTE: quando os dados sao filtrados por categoria, use o nome correto na tabela. Exemplo: se filtrou por Combustivel, a coluna deve ser "Abastecimentos (R$)", nao "Gastos (R$)". Se filtrou por Pneu, deve ser "Pneu (R$)". Se nao filtrou, use "Gastos Totais (R$)".
 
-14. Sempre mostre o custo por km (R$/km) quando disponivel. Isso e o indicador mais direto pra comparar eficiencia entre motoristas.
+14. REGRA INEGOCIAVEL: em TODA resposta sobre gastos (combustivel, pneu, manutencao, oleo, pedagio, qualquer categoria), SEMPRE inclua km rodados na tabela. Km rodado e o denominador universal — sem ele, qualquer valor e numero solto. Um motorista que gastou R$ 5.000 de pneu em 15.000 km e muito diferente de um que gastou R$ 5.000 em 3.000 km. Sempre mostre tambem o custo por km (R$/km) quando disponivel.
 
 15. NUNCA exiba IDs tecnicos (UUIDs, campos "id") na resposta. Use apenas nome, placa, modelo ou outros identificadores humanos. Se um campo comeca com letras e numeros separados por hifens (ex: "a8db994e-6177-..."), e um ID tecnico - omita.
 
