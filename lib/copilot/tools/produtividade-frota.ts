@@ -17,6 +17,8 @@ import { z } from 'zod';
 import { parsePeriod } from '@/lib/copilot/utils/period';
 import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
 import type { ToolContext } from '@/lib/copilot/tools/constants';
+import { calcularKmRealCaminhao } from '@/lib/utils/viagem-calc';
+import type { ViagemParaGap } from '@/lib/utils/viagem-calc';
 
 export const produtividadeFrotaSchema = z.object({
   periodo: z
@@ -46,6 +48,7 @@ export interface ProdutividadeFrotaResult {
     km_total_rodado: number | null;
     receita_total_centavos: number;
     receita_por_km_centavos: number | null;
+    taxa_vazio_percentual: number | null;
   };
   por_motorista: Array<{
     id: string;
@@ -122,6 +125,7 @@ export async function executeProdutividadeFrota(
         km_total_rodado: null,
         receita_total_centavos: 0,
         receita_por_km_centavos: null,
+        taxa_vazio_percentual: null,
       },
       por_motorista: [],
       por_caminhao: [],
@@ -196,18 +200,32 @@ export async function executeProdutividadeFrota(
     const canceladas = viagens.filter((v) => v.status === 'cancelada');
     const totalViagens = viagens.length;
 
-    // Resumo frota
-    let kmTotal = 0;
-    let kmValido = false;
+    // Story 20.1: Group viagens by caminhao for gap-aware km calculation
     let receitaTotal = 0;
+    const camViagensProd = new Map<string, ViagemParaGap[]>();
 
     for (const v of concluidas) {
       receitaTotal += v.valor_total;
-      if (v.km_saida != null && v.km_chegada != null && v.km_chegada > v.km_saida) {
-        kmTotal += v.km_chegada - v.km_saida;
+      if (!camViagensProd.has(v.caminhao_id)) camViagensProd.set(v.caminhao_id, []);
+      camViagensProd.get(v.caminhao_id)!.push({ id: v.id, km_saida: v.km_saida, km_chegada: v.km_chegada });
+    }
+
+    let kmTotal = 0;
+    let kmValido = false;
+    let taxaVazioSum = 0;
+    let camComKmCount = 0;
+    for (const viagensCam of camViagensProd.values()) {
+      const kmReal = calcularKmRealCaminhao(viagensCam);
+      if (kmReal.total_km > 0) {
+        kmTotal += kmReal.total_km;
         kmValido = true;
+        taxaVazioSum += kmReal.taxa_vazio_pct;
+        camComKmCount++;
       }
     }
+    const taxaVazioMedia = camComKmCount > 0
+      ? Math.round((taxaVazioSum / camComKmCount) * 100) / 100
+      : null;
 
     // Por motorista
     const motAgg = new Map<string, { viagens: number; km: number; kmValido: boolean; receita: number; diasViagem: number[]; }>();
@@ -315,6 +333,7 @@ export async function executeProdutividadeFrota(
         receita_por_km_centavos: kmValido && kmTotal > 0
           ? Math.round(receitaTotal / kmTotal)
           : null,
+        taxa_vazio_percentual: taxaVazioMedia,
       },
       por_motorista: porMotorista,
       por_caminhao: porCaminhao,

@@ -63,6 +63,7 @@ export interface ViagemStatusUpdateData {
 export interface ViagemActionResult {
   success: boolean;
   error?: string;
+  warnings?: string[];
   fieldErrors?: Partial<Record<keyof ViagemFormData, string>>;
   viagem?: Viagem;
 }

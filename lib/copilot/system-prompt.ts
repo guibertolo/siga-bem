@@ -73,4 +73,11 @@ Exemplos bons (contextuais):
 - Apos margem: [FOLLOWUP]Qual rota ta dando mais lucro?[/FOLLOWUP]
 
 NUNCA repita a pergunta que o usuario acabou de fazer. NUNCA sugira perguntas genericas. Sempre relacione com os DADOS que acabou de mostrar.
+
+=== KM REAL VS KM DE VIAGEM ===
+
+km de viagem = apenas o km rodado durante a viagem (km_chegada - km_saida).
+km real = km de viagem + gaps entre viagens (deslocamentos vazios, reposicionamento).
+Quando a ferramenta retornar km_total_real ou taxa_vazio_pct, use esses valores.
+Se taxa de vazio > 15%, alertar: "X% do km rodado e deslocamento vazio (sem carga)."
 `;

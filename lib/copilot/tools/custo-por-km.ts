@@ -16,6 +16,8 @@ import { z } from 'zod';
 import { parsePeriod } from '@/lib/copilot/utils/period';
 import { MAX_TOOL_ROWS, ToolExecutionError } from '@/lib/copilot/tools/constants';
 import type { ToolContext } from '@/lib/copilot/tools/constants';
+import { calcularKmRealCaminhao } from '@/lib/utils/viagem-calc';
+import type { ViagemParaGap } from '@/lib/utils/viagem-calc';
 
 export const custoPorKmSchema = z.object({
   periodo: z
@@ -64,6 +66,7 @@ export interface CustoPorKmResult {
 }
 
 interface ViagemRow {
+  id: string;
   caminhao_id: string;
   motorista_id: string;
   valor_total: number;
@@ -113,7 +116,7 @@ export async function executeCustoPorKm(
     // Parallel fetch
     const viagensPromise = supabase
       .from('viagem')
-      .select('caminhao_id, motorista_id, valor_total, km_saida, km_chegada')
+      .select('id, caminhao_id, motorista_id, valor_total, km_saida, km_chegada')
       .in('empresa_id', empresaIds)
       .gte('data_saida', period.startDate)
       .lte('data_saida', period.endDate)
@@ -165,28 +168,37 @@ export async function executeCustoPorKm(
     for (const m of motoristasList) motLookup.set(m.id, m.nome);
 
     // Frota totals
-    let kmTotal = 0;
-    let kmValido = false;
     let receitaTotal = 0;
     let gastoTotal = 0;
 
     // Per caminhao aggregation
-    const camKm = new Map<string, number>();
+    const camViagens = new Map<string, ViagemParaGap[]>();
     const camGasto = new Map<string, number>();
     const camMotoristas = new Map<string, Map<string, number>>();
 
     for (const v of viagens) {
       receitaTotal += v.valor_total;
-      if (v.km_saida != null && v.km_chegada != null && v.km_chegada > v.km_saida) {
-        const km = v.km_chegada - v.km_saida;
-        kmTotal += km;
-        kmValido = true;
-        camKm.set(v.caminhao_id, (camKm.get(v.caminhao_id) ?? 0) + km);
-      }
+      // Group viagens by caminhao for gap calculation
+      if (!camViagens.has(v.caminhao_id)) camViagens.set(v.caminhao_id, []);
+      camViagens.get(v.caminhao_id)!.push({ id: v.id, km_saida: v.km_saida, km_chegada: v.km_chegada });
       // Track motorista per caminhao
       if (!camMotoristas.has(v.caminhao_id)) camMotoristas.set(v.caminhao_id, new Map());
       const mots = camMotoristas.get(v.caminhao_id)!;
       mots.set(v.motorista_id, (mots.get(v.motorista_id) ?? 0) + 1);
+    }
+
+    // Story 20.1: Calculate real km per caminhao (trip + gaps, excluding outliers)
+    const camKm = new Map<string, number>();
+    let kmTotal = 0;
+    let kmValido = false;
+
+    for (const [camId, viagensCam] of camViagens) {
+      const kmReal = calcularKmRealCaminhao(viagensCam);
+      if (kmReal.total_km > 0) {
+        camKm.set(camId, kmReal.total_km);
+        kmTotal += kmReal.total_km;
+        kmValido = true;
+      }
     }
 
     // Per categoria aggregation

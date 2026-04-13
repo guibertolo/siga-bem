@@ -351,6 +351,7 @@ export default async function ViagemDetalhePage({
             viagemId={viagem.id}
             currentStatus={viagem.status as ViagemStatus}
             observacao={viagem.observacao}
+            kmSaida={viagem.km_saida}
           />
           {isEditable && (
             <div className="mt-4">

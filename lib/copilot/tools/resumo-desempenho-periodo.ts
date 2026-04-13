@@ -13,6 +13,8 @@ import { z } from 'zod';
 import { parsePeriod } from '@/lib/copilot/utils/period';
 import { ToolExecutionError } from '@/lib/copilot/tools/constants';
 import type { ToolContext } from '@/lib/copilot/tools/constants';
+import { calcularKmRealCaminhao } from '@/lib/utils/viagem-calc';
+import type { ViagemParaGap } from '@/lib/utils/viagem-calc';
 
 export const resumoDesempenhoPeriodoSchema = z.object({
   periodo: z
@@ -31,6 +33,8 @@ export interface ResumoDesempenhoPeriodoResult {
   receita_total_centavos: number;
   gasto_total_centavos: number;
   lucro_centavos: number;
+  km_total_real: number | null;
+  taxa_vazio_pct: number | null;
   top_3_categorias: Array<{ nome: string; total_centavos: number }>;
   melhor_viagem: {
     id: string;
@@ -52,6 +56,9 @@ interface ViagemRow {
   destino: string;
   valor_total: number;
   status: string;
+  km_saida: number | null;
+  km_chegada: number | null;
+  caminhao_id: string;
 }
 
 interface GastoRow {
@@ -83,6 +90,8 @@ export async function executeResumoDesempenhoPeriodo(
       receita_total_centavos: 0,
       gasto_total_centavos: 0,
       lucro_centavos: 0,
+      km_total_real: null,
+      taxa_vazio_pct: null,
       top_3_categorias: [],
       melhor_viagem: null,
       pior_viagem: null,
@@ -95,7 +104,7 @@ export async function executeResumoDesempenhoPeriodo(
     // Parallel fetch: viagens, gastos, categorias
     const viagensPromise = supabase
       .from('viagem')
-      .select('id, origem, destino, valor_total, status')
+      .select('id, origem, destino, valor_total, status, km_saida, km_chegada, caminhao_id')
       .in('empresa_id', empresaIds)
       .gte('data_saida', period.startDate)
       .lte('data_saida', period.endDate)
@@ -190,12 +199,32 @@ export async function executeResumoDesempenhoPeriodo(
       .sort((a, b) => b.total_centavos - a.total_centavos)
       .slice(0, 3);
 
+    // Story 20.1: Calculate real km including gaps
+    const camViagensResumo = new Map<string, ViagemParaGap[]>();
+    for (const v of viagens) {
+      if (!camViagensResumo.has(v.caminhao_id)) camViagensResumo.set(v.caminhao_id, []);
+      camViagensResumo.get(v.caminhao_id)!.push({ id: v.id, km_saida: v.km_saida, km_chegada: v.km_chegada });
+    }
+    let kmTotalReal = 0;
+    let taxaVazioSum = 0;
+    let camComKm = 0;
+    for (const viagensCam of camViagensResumo.values()) {
+      const kmReal = calcularKmRealCaminhao(viagensCam);
+      if (kmReal.total_km > 0) {
+        kmTotalReal += kmReal.total_km;
+        taxaVazioSum += kmReal.taxa_vazio_pct;
+        camComKm++;
+      }
+    }
+
     return {
       periodo: { start: period.startDate, end: period.endDate, label: period.label },
       qtd_viagens: viagens.length,
       receita_total_centavos: receitaTotal,
       gasto_total_centavos: gastoTotal,
       lucro_centavos: receitaTotal - gastoTotal,
+      km_total_real: kmTotalReal > 0 ? kmTotalReal : null,
+      taxa_vazio_pct: camComKm > 0 ? Math.round((taxaVazioSum / camComKm) * 100) / 100 : null,
       top_3_categorias: top3,
       melhor_viagem: melhor
         ? {

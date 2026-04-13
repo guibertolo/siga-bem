@@ -10,12 +10,14 @@ interface ViagemStatusActionsProps {
   viagemId: string;
   currentStatus: ViagemStatus;
   observacao: string | null;
+  kmSaida?: number | null;
 }
 
 export function ViagemStatusActions({
   viagemId,
   currentStatus,
   observacao,
+  kmSaida,
 }: ViagemStatusActionsProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -51,9 +53,25 @@ export function ViagemStatusActions({
       return;
     }
 
+    if (!kmChegada || kmChegada.trim() === '') {
+      setError('KM de chegada é obrigatório para concluir viagem');
+      return;
+    }
+
+    const kmNum = Number(kmChegada);
+    if (isNaN(kmNum) || kmNum < 0) {
+      setError('KM de chegada deve ser um número positivo');
+      return;
+    }
+
+    if (kmSaida != null && kmNum < kmSaida) {
+      setError(`KM de chegada (${kmNum.toLocaleString('pt-BR')}) não pode ser menor que o de saída (${kmSaida.toLocaleString('pt-BR')})`);
+      return;
+    }
+
     setError(null);
     startTransition(async () => {
-      const km = kmChegada !== '' ? Number(kmChegada) : undefined;
+      const km = Number(kmChegada);
       const result = await updateViagemStatus(
         viagemId,
         'concluida',
@@ -135,16 +153,20 @@ export function ViagemStatusActions({
           </div>
           <div>
             <label htmlFor="km_chegada" className="mb-1 block text-sm text-primary-700">
-              KM na Chegada
+              KM na Chegada (odômetro) *
             </label>
             <input
               id="km_chegada"
               type="number"
               min={0}
+              required
               value={kmChegada}
               onChange={(e) => setKmChegada(e.target.value)}
               className="block w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm"
             />
+            <p className="mt-1 text-xs text-primary-500">
+              Leia o odômetro do caminhão na chegada
+            </p>
           </div>
           <div className="flex gap-2">
             <button
