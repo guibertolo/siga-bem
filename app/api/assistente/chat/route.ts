@@ -70,7 +70,7 @@ export async function POST(request: Request) {
           messages: modelMessages,
           tools,
           stopWhen: stepCountIs(5),
-          maxOutputTokens: 1024,
+          maxOutputTokens: 512,
           maxRetries: 0,
         });
 
