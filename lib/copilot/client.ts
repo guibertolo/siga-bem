@@ -22,14 +22,14 @@ interface ProviderConfig {
 
 const PROVIDERS: ProviderConfig[] = [
   {
-    name: 'Groq (Llama 4 Scout 17B)',
-    envKey: 'GROQ_API_KEY',
-    factory: () => groq('llama-3.3-70b-versatile'),
-  },
-  {
     name: 'Gemini 2.0 Flash',
     envKey: 'GOOGLE_GENERATIVE_AI_API_KEY',
     factory: () => google('gemini-2.0-flash'),
+  },
+  {
+    name: 'Groq (Llama 3.3 70B)',
+    envKey: 'GROQ_API_KEY',
+    factory: () => groq('llama-3.3-70b-versatile'),
   },
 ];
 
