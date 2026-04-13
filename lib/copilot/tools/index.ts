@@ -48,6 +48,18 @@ import {
   desempenhoMotoristaSchema,
   executeDesempenhoMotorista,
 } from '@/lib/copilot/tools/desempenho-motorista';
+import {
+  produtividadeFrotaSchema,
+  executeProdutividadeFrota,
+} from '@/lib/copilot/tools/produtividade-frota';
+import {
+  fechamentosPendentesSchema,
+  executeFechamentosPendentes,
+} from '@/lib/copilot/tools/fechamentos-pendentes';
+import {
+  custoPorKmSchema,
+  executeCustoPorKm,
+} from '@/lib/copilot/tools/custo-por-km';
 
 /**
  * Build the full toolset for `streamText()`, injecting the
@@ -117,6 +129,24 @@ export function buildToolset(ctx: ToolContext) {
         'Perfil completo de desempenho de um motorista em um periodo: receita gerada, gastos, lucro, km rodado, litros consumidos, km/L medio, top categorias de gasto. Busca por nome parcial ou ID.',
       inputSchema: desempenhoMotoristaSchema,
       execute: wrapExecute('desempenho_motorista', executeDesempenhoMotorista, ctx),
+    }),
+    produtividade_frota: tool({
+      description:
+        'Produtividade da frota: viagens por motorista e caminhao, km rodados, ociosidade (caminhao parado), tempo medio de viagem, taxa de cancelamento, receita por km. Filtravel por motorista ou caminhao.',
+      inputSchema: produtividadeFrotaSchema,
+      execute: wrapExecute('produtividade_frota', executeProdutividadeFrota, ctx),
+    }),
+    fechamentos_pendentes: tool({
+      description:
+        'Fechamentos (acertos) pendentes e historico de pagamentos: quanto devo pro motorista, acertos abertos/fechados/pagos, saldo por motorista. Filtravel por motorista e periodo.',
+      inputSchema: fechamentosPendentesSchema,
+      execute: wrapExecute('fechamentos_pendentes', executeFechamentosPendentes, ctx),
+    }),
+    custo_por_km: tool({
+      description:
+        'Custo por km rodado (CPK) da frota: gasto total/km, receita/km, margem/km. Detalhavel por caminhao e por categoria de gasto (combustivel, pneu, manutencao, pedagio). O indicador mais completo de eficiencia operacional.',
+      inputSchema: custoPorKmSchema,
+      execute: wrapExecute('custo_por_km', executeCustoPorKm, ctx),
     }),
   };
 }
