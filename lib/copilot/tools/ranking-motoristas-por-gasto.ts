@@ -51,12 +51,12 @@ export interface RankingMotoristasPorGastoResult {
   motoristas: Array<{
     id: string;
     nome: string;
-    total_centavos: number;
+    total_reais: number;
     qtd_gastos: number;
     litros_total: number | null;
     km_rodado: number | null;
     km_por_litro: number | null;
-    custo_por_km_centavos: number | null;
+    custo_por_km_reais: number | null;
   }>;
 }
 
@@ -235,15 +235,15 @@ export async function executeRankingMotoristasPorGasto(
         return {
           id: motoristaId,
           nome: motoristaLookup.get(motoristaId) ?? 'desconhecido',
-          total_centavos: agg.total,
+          total_reais: Math.round(agg.total) / 100,
           qtd_gastos: agg.qtd,
           litros_total: hasLitros ? agg.litros : null,
           km_rodado: hasKm ? km : null,
           km_por_litro: hasKm && hasLitros
             ? Math.round((km / agg.litros) * 100) / 100
             : null,
-          custo_por_km_centavos: hasKm
-            ? Math.round(agg.total / km)
+          custo_por_km_reais: hasKm
+            ? Math.round((agg.total / km)) / 100
             : null,
         };
       });
@@ -261,8 +261,8 @@ export async function executeRankingMotoristasPorGasto(
     } else {
       rows.sort((a, b) =>
         ordem === 'decrescente'
-          ? b.total_centavos - a.total_centavos
-          : a.total_centavos - b.total_centavos,
+          ? b.total_reais - a.total_reais
+          : a.total_reais - b.total_reais,
       );
     }
 
