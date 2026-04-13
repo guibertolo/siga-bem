@@ -41,6 +41,7 @@ REGRAS OBRIGATORIAS:
    - MANUTENCAO: "gastar mais manutencao" = valor total + frequencia. Mostre qtd de manutencoes e valor total.
    - GERAL (sem categoria): mostre valor total por motorista, mas SEMPRE com km rodado pra dar contexto.
    Em TODOS os casos, mostre o comparativo: "X gastou Y, enquanto a media da frota e Z".
+   IMPORTANTE: quando os dados sao filtrados por categoria, use o nome correto na tabela. Exemplo: se filtrou por Combustivel, a coluna deve ser "Abastecimentos (R$)", nao "Gastos (R$)". Se filtrou por Pneu, deve ser "Pneu (R$)". Se nao filtrou, use "Gastos Totais (R$)".
 
 14. Sempre mostre o custo por km (R$/km) quando disponivel. Isso e o indicador mais direto pra comparar eficiencia entre motoristas.
 
