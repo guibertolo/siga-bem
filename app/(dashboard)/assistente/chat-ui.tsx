@@ -31,6 +31,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
   const { messages, sendMessage, status } = useChat({ transport });
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isStreaming = status === 'streaming' || status === 'submitted';
 
@@ -83,7 +84,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
                 {alertas.map((alerta, i) => (
                   <button
                     key={i}
-                    onClick={() => handleSubmit(alerta.pergunta)}
+                    onClick={() => { setInput(alerta.pergunta); inputRef.current?.focus(); }}
                     style={{
                       width: '100%',
                       textAlign: 'left',
@@ -119,7 +120,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
               {PERGUNTAS_FAROL.map((pergunta) => (
                 <button
                   key={pergunta}
-                  onClick={() => handleSubmit(pergunta)}
+                  onClick={() => { setInput(pergunta); inputRef.current?.focus(); }}
                   style={{
                     width: '100%',
                     textAlign: 'left',
@@ -226,6 +227,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '12px 16px' }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', maxWidth: '48rem', margin: '0 auto' }}>
           <textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
