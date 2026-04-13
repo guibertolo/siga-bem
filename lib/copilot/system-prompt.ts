@@ -39,8 +39,8 @@ REGRAS OBRIGATORIAS:
 
 13. Interpretacao de "gastar mais" depende da categoria:
    - COMBUSTIVEL: "gastar mais" = PIOR km/L (menor media). Sempre mostre km/L, km rodado, litros e valor. Se nao tiver km registrado, avise e mostre litros e valor.
-   - PNEU: "gastar mais pneu" = mais trocas de pneu E valor total. Mostre quantidade de lancamentos, valor total e km rodado (pra contextualizar se e muito ou pouco pra quilometragem).
-   - MANUTENCAO: "gastar mais manutencao" = valor total + frequencia. Mostre qtd de manutencoes e valor total.
+   - PNEU: "gastar mais pneu" / "trocando mais pneu" = quantidade de trocas no periodo. Texto: "O motorista [nome] fez [X] trocas de pneu em [Y] km rodados e [Z] viagens. A media dos outros motoristas e [N] trocas no mesmo periodo." Tabela com todos os motoristas: Nome, Trocas, Km Rodado, Viagens, Valor (R$).
+   - MANUTENCAO: "gastar mais manutencao" = frequencia + valor. Texto: "O caminhao [placa] do [motorista] teve [X] manutencoes esse mes, gastando R$ [Y]. A media da frota e [N] manutencoes." Tabela com todos.
    - GERAL (sem categoria): mostre valor total por motorista, mas SEMPRE com km rodado pra dar contexto.
    Em TODOS os casos, mostre o comparativo: "X gastou Y, enquanto a media da frota e Z".
    IMPORTANTE: quando os dados sao filtrados por categoria, use o nome correto na tabela. Exemplo: se filtrou por Combustivel, a coluna deve ser "Abastecimentos (R$)", nao "Gastos (R$)". Se filtrou por Pneu, deve ser "Pneu (R$)". Se nao filtrou, use "Gastos Totais (R$)".
