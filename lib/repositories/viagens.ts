@@ -51,7 +51,8 @@ export async function listViagensRepo(
       percentual_pagamento,
       status,
       motorista ( nome ),
-      caminhao ( placa )
+      caminhao ( placa ),
+      foto_chamada ( id )
     `, { count: 'exact' })
     .in('empresa_id', empresaIds);
 
@@ -91,6 +92,11 @@ export async function listViagensRepo(
     const mot = singleRelation<{ nome: string }>(row.motorista);
     const cam = singleRelation<{ placa: string }>(row.caminhao);
 
+    // Derive chamada_pendente: no foto_chamada records + status ativa
+    const chamadas = Array.isArray(row.foto_chamada) ? row.foto_chamada : [];
+    const statusAtiva = row.status === 'planejada' || row.status === 'em_andamento';
+    const chamadaPendente = statusAtiva && chamadas.length === 0;
+
     return {
       id: row.id,
       motorista_id: row.motorista_id,
@@ -102,6 +108,7 @@ export async function listViagensRepo(
       valor_total: row.valor_total,
       percentual_pagamento: row.percentual_pagamento,
       status: row.status,
+      chamada_pendente: chamadaPendente,
     };
   });
 

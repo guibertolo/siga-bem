@@ -182,8 +182,7 @@ export default async function BiPage({ searchParams }: BiPageProps) {
   let benchmark: Awaited<ReturnType<typeof getBenchmarkSetor>>;
 
   if (multiCtx.isMultiEmpresa) {
-    // Multi-empresa: use admin client with explicit empresa_id filter
-    // Each query runs against the admin client, no fn_switch_empresa needed
+    // Multi-empresa: use authenticated client with RLS-validated empresa access
     const [
       multiFilterOpts,
       multiAlertas,
@@ -197,17 +196,17 @@ export default async function BiPage({ searchParams }: BiPageProps) {
       multiManutencoes,
       multiBenchmark,
     ] = await Promise.all([
-      queryMultiEmpresa((admin, eid) => getBIFilterOptionsForEmpresa(admin, eid)),
-      queryMultiEmpresa((admin, eid) => getBIAlertasForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIKpisForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIMargemMotoristasForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBICategoriasBreakdownForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIRankingCaminhoesForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIEficienciaMotoristasForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBITendenciaMensalForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIEficienciaCombustivelForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => getBIManutencoesForEmpresa(admin, eid, filtros)),
-      queryMultiEmpresa((admin, eid) => {
+      queryMultiEmpresa((client, eid) => getBIFilterOptionsForEmpresa(client, eid)),
+      queryMultiEmpresa((client, eid) => getBIAlertasForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIKpisForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIMargemMotoristasForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBICategoriasBreakdownForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIRankingCaminhoesForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIEficienciaMotoristasForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBITendenciaMensalForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIEficienciaCombustivelForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => getBIManutencoesForEmpresa(client, eid, filtros)),
+      queryMultiEmpresa((client, eid) => {
         // Benchmark is global, just return first empresa's view
         void eid;
         return getBenchmarkSetor();

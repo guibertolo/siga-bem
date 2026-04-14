@@ -1,14 +1,17 @@
 /**
  * Client-side image compression utility.
  * Story 2.2 — Upload de Fotos de Comprovantes (AC3)
+ * Story 23.2 — Upload de Chamada com outputType WebP
  *
  * Compresses images to <= maxKB using Canvas API.
  * PDFs are NOT compressed — they pass through as-is.
- * Maintains aspect ratio; max dimension 1200px.
+ * Maintains aspect ratio; max dimension configurable per outputType.
  */
 
-const MAX_DIMENSION = 1200
-const INITIAL_QUALITY = 0.7
+const MAX_DIMENSION_JPEG = 1200
+const MAX_DIMENSION_WEBP = 1600
+const INITIAL_QUALITY_JPEG = 0.7
+const INITIAL_QUALITY_WEBP = 0.8
 const MIN_QUALITY = 0.1
 const QUALITY_STEP = 0.1
 const DEFAULT_MAX_KB = 200
@@ -55,17 +58,22 @@ export function validateFileType(file: File): string | null {
   return null
 }
 
+/** Supported output types for compression. */
+export type CompressOutputType = 'image/jpeg' | 'image/webp'
+
 /**
  * Compress an image file to target size using Canvas API.
- * Iteratively reduces JPEG quality until target is reached.
+ * Iteratively reduces quality until target is reached.
  *
  * @param file - The image File to compress
  * @param maxKB - Maximum output size in KB (default 200)
- * @returns Compressed Blob (always JPEG output for images)
+ * @param outputType - Output MIME type (default 'image/jpeg' for backward compat)
+ * @returns Compressed Blob in the specified output format
  */
 export function compressImage(
   file: File,
   maxKB: number = DEFAULT_MAX_KB,
+  outputType: CompressOutputType = 'image/jpeg',
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     if (!isCompressibleImage(file.type)) {
@@ -80,6 +88,10 @@ export function compressImage(
       return
     }
 
+    const isWebP = outputType === 'image/webp'
+    const maxDim = isWebP ? MAX_DIMENSION_WEBP : MAX_DIMENSION_JPEG
+    const initialQuality = isWebP ? INITIAL_QUALITY_WEBP : INITIAL_QUALITY_JPEG
+
     const img = new Image()
     const url = URL.createObjectURL(file)
 
@@ -88,13 +100,13 @@ export function compressImage(
       let { width, height } = img
 
       // Scale down if exceeds max dimension
-      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+      if (width > maxDim || height > maxDim) {
         if (width > height) {
-          height = Math.round((height / width) * MAX_DIMENSION)
-          width = MAX_DIMENSION
+          height = Math.round((height / width) * maxDim)
+          width = maxDim
         } else {
-          width = Math.round((width / height) * MAX_DIMENSION)
-          height = MAX_DIMENSION
+          width = Math.round((width / height) * maxDim)
+          height = maxDim
         }
       }
 
@@ -110,7 +122,7 @@ export function compressImage(
 
       ctx.drawImage(img, 0, 0, width, height)
 
-      let quality = INITIAL_QUALITY
+      let quality = initialQuality
 
       const tryCompress = () => {
         canvas.toBlob(
@@ -129,7 +141,7 @@ export function compressImage(
               tryCompress()
             }
           },
-          'image/jpeg',
+          outputType,
           quality,
         )
       }

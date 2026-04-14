@@ -35,6 +35,7 @@ const donoLinks = [
   { href: '/viagens', label: 'Viagens', onboardingId: 'viagens' },
   { href: '/gastos', label: 'Gastos', onboardingId: 'gastos' },
   { href: '/fechamentos', label: 'Acertos', onboardingId: 'fechamentos' },
+  { href: '/relatorios', label: 'Relatorios', onboardingId: 'relatorios' },
 ];
 
 const adminLinks = [
@@ -187,6 +188,12 @@ export default async function DashboardLayout({
             className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors"
           >
             Meu Perfil
+          </Link>
+          <Link
+            href="/privacidade"
+            className="block px-4 py-3.5 text-base font-semibold text-white/50 no-underline rounded-lg hover:bg-white/15 hover:text-white/80 transition-colors"
+          >
+            Privacidade
           </Link>
           <form action="/api/auth/signout" method="POST">
             <button

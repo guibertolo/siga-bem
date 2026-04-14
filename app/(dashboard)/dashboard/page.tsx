@@ -96,12 +96,11 @@ export default async function DashboardPage() {
   let donoData: DonoMicroData | null = null;
 
   if (multiCtx.isMultiEmpresa && isDono) {
-    // Multi-empresa mode: use admin client with explicit empresa_id filter
-    // All queries run in parallel (no fn_switch_empresa needed)
+    // Multi-empresa mode: use authenticated client with RLS-validated access
     const [multiDashboard, multiViagem, multiDono] = await Promise.all([
-      queryMultiEmpresa((admin, eid) => getDashboardDataForEmpresa(admin, eid)),
-      queryMultiEmpresa((admin, eid) => getViagemAtivaForEmpresa(admin, eid)),
-      queryMultiEmpresa((admin, eid) => getDonoMicroDataForEmpresa(admin, eid)),
+      queryMultiEmpresa((client, eid) => getDashboardDataForEmpresa(client, eid)),
+      queryMultiEmpresa((client, eid) => getViagemAtivaForEmpresa(client, eid)),
+      queryMultiEmpresa((client, eid) => getDonoMicroDataForEmpresa(client, eid)),
     ]);
     dashboardData = aggregateDashboardData(multiDashboard);
     viagemAtiva = aggregateViagemAtiva(multiViagem);

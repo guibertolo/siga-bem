@@ -56,8 +56,8 @@ export default async function FechamentosPage({ searchParams }: FechamentosPageP
   ]);
 
   if (canCreate && multiCtx.isMultiEmpresa && isDono) {
-    const multiPendentes = await queryMultiEmpresa((admin, eid) =>
-      getViagensPendentesAcertoForEmpresa(admin, eid),
+    const multiPendentes = await queryMultiEmpresa((client, eid) =>
+      getViagensPendentesAcertoForEmpresa(client, eid),
     );
     pendentesData = flattenMultiResults(
       multiPendentes.map((r) => ({

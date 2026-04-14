@@ -81,6 +81,8 @@ export interface ViagemListItem {
   valor_total: number;           // centavos
   percentual_pagamento: number;
   status: ViagemStatus;
+  /** True when viagem has no foto_chamada and status is planejada/em_andamento */
+  chamada_pendente?: boolean;
 }
 
 /**

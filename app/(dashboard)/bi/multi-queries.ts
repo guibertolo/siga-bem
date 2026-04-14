@@ -1,6 +1,6 @@
 /**
- * Multi-empresa BI actions — admin client versions that accept
- * (admin, empresaId) and filter by empresa_id explicitly.
+ * Multi-empresa BI queries — accept (client, empresaId) and filter
+ * by empresa_id explicitly. Works with both authenticated and admin clients.
  *
  * Delegates read queries to lib/repositories/bi.ts.
  */
@@ -33,80 +33,80 @@ import {
 } from '@/lib/repositories/bi';
 
 export async function getBIFilterOptionsForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
 ): Promise<{ data: BIFilterOptions | null; error: string | null }> {
-  return getBIFilterOptionsRepo(admin, [empresaId]);
+  return getBIFilterOptionsRepo(client, [empresaId]);
 }
 
 export async function getBIKpisForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIKpis | null; error: string | null }> {
-  return getBIKpisRepo(admin, [empresaId], filtros);
+  return getBIKpisRepo(client, [empresaId], filtros);
 }
 
 export async function getBIMargemMotoristasForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIMargemMotoristaItem[] | null; error: string | null }> {
-  return getBIMargemMotoristasRepo(admin, [empresaId], filtros);
+  return getBIMargemMotoristasRepo(client, [empresaId], filtros);
 }
 
 export async function getBICategoriasBreakdownForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BICategoriaItem[] | null; error: string | null }> {
-  return getBICategoriasBreakdownRepo(admin, [empresaId], filtros);
+  return getBICategoriasBreakdownRepo(client, [empresaId], filtros);
 }
 
 export async function getBIRankingCaminhoesForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIRankingCaminhaoItem[] | null; error: string | null }> {
-  return getBIRankingCaminhoesRepo(admin, [empresaId], filtros);
+  return getBIRankingCaminhoesRepo(client, [empresaId], filtros);
 }
 
 export async function getBIEficienciaMotoristasForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIEficienciaMotoristaItem[] | null; error: string | null }> {
-  return getBIEficienciaMotoristasRepo(admin, [empresaId], filtros);
+  return getBIEficienciaMotoristasRepo(client, [empresaId], filtros);
 }
 
 export async function getBITendenciaMensalForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BITendenciaMensalItem[] | null; error: string | null }> {
-  return getBITendenciaMensalRepo(admin, [empresaId], filtros);
+  return getBITendenciaMensalRepo(client, [empresaId], filtros);
 }
 
 export async function getBIEficienciaCombustivelForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIEficienciaItem[] | null; error: string | null }> {
-  return getBIEficienciaCombustivelRepo(admin, [empresaId], filtros);
+  return getBIEficienciaCombustivelRepo(client, [empresaId], filtros);
 }
 
 export async function getBIManutencoesForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIManutencaoTruckItem[] | null; error: string | null }> {
-  return getBIManutencoesRepo(admin, [empresaId], filtros);
+  return getBIManutencoesRepo(client, [empresaId], filtros);
 }
 
 export async function getBIAlertasForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
   filtros: BIFiltros,
 ): Promise<{ data: BIAlerta[] | null; verificados?: BIAlerta[]; error: string | null }> {
-  return getBIAlertasRepo(admin, [empresaId], filtros);
+  return getBIAlertasRepo(client, [empresaId], filtros);
 }

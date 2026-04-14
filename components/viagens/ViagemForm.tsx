@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { z } from 'zod';
-import { useState, useTransition, useEffect, useCallback } from 'react';
+import { useState, useRef, useTransition, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseBrlInputToCentavos, formatBRL } from '@/lib/utils/currency';
 import { calcularValorMotorista } from '@/lib/utils/viagem-calc';
@@ -14,6 +14,8 @@ import { maskCurrency } from '@/lib/utils/mask-currency';
 import { maskKm, unmaskKm } from '@/lib/utils/mask-km';
 import { EstimativaViagem } from '@/components/viagens/EstimativaViagem';
 import { CidadeAutocomplete } from '@/components/ui/CidadeAutocomplete';
+import { ChamadaUploadSection } from '@/components/viagens/ChamadaUploadSection';
+import { uploadChamada } from '@/app/(dashboard)/viagens/chamada-actions';
 import type { Viagem, ViagemFormData, ViagemActionResult } from '@/types/viagem';
 
 const viagemFormSchema = z.object({
@@ -95,6 +97,7 @@ export function ViagemForm({
   const [caminhoes, setCaminhoes] = useState(initialCaminhoes);
   const [loadingCaminhoes, setLoadingCaminhoes] = useState(false);
   const [valorMotorista, setValorMotorista] = useState<string>('');
+  const chamadaBlobRef = useRef<Blob | null>(null);
 
   const {
     register,
@@ -227,6 +230,21 @@ export function ViagemForm({
           setServerError(result.error);
         }
         return;
+      }
+
+      // Upload chamada photo if captured during creation
+      if (chamadaBlobRef.current && result.viagem?.id) {
+        try {
+          const formData = new FormData();
+          formData.append('file', chamadaBlobRef.current, 'chamada.webp');
+          formData.append('viagemId', result.viagem.id);
+          formData.append('contentType', 'image/webp');
+          await uploadChamada(formData);
+        } catch {
+          // Non-blocking: viagem was created successfully, chamada upload failed
+          // User can retry via edit page (badge "Chamada pendente" will show)
+        }
+        chamadaBlobRef.current = null;
       }
 
       router.push('/viagens');
@@ -496,6 +514,13 @@ export function ViagemForm({
           <p className="mt-1.5 text-sm text-danger font-medium">{errors.observacao.message}</p>
         )}
       </div>
+
+      {/* Foto da Chamada (Story 23.2) */}
+      <ChamadaUploadSection
+        viagemId={viagem?.id ?? null}
+        onBlobReady={(blob) => { chamadaBlobRef.current = blob; }}
+        isMotorista={isMotorista}
+      />
 
       {/* Actions */}
       <div className="flex items-center gap-4">
