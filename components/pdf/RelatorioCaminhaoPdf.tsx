@@ -292,6 +292,39 @@ export function RelatorioCaminhaoPdf({ data }: RelatorioCaminhaoPdfProps) {
           </View>
         </View>
 
+        {/* Documentation section: CRLV + IPVA */}
+        <View style={styles.custosContainer}>
+          <Text style={styles.custosTitle}>Documentacao</Text>
+          <View style={styles.custosRow}>
+            <Text style={styles.custosLabel}>CRLV</Text>
+            <Text style={styles.custosValue}>
+              {header.doc_vencimento
+                ? `Vence: ${formatDateBR(header.doc_vencimento)} (${
+                    header.doc_status === 'ok'
+                      ? 'Em dia'
+                      : header.doc_status === 'vencendo'
+                        ? 'Vencendo'
+                        : header.doc_status === 'vencido'
+                          ? 'VENCIDO'
+                          : '-'
+                  })`
+                : 'Nao informado'}
+            </Text>
+          </View>
+          <View style={styles.custosRow}>
+            <Text style={styles.custosLabel}>IPVA</Text>
+            <Text style={styles.custosValue}>
+              {header.ipva_ano_referencia
+                ? `${header.ipva_pago ? 'Pago' : 'Pendente'}${
+                    header.ipva_valor_centavos != null
+                      ? ` - ${formatBRL(header.ipva_valor_centavos)}`
+                      : ''
+                  } (${header.ipva_ano_referencia})`
+                : 'Nao informado'}
+            </Text>
+          </View>
+        </View>
+
         {/* Trips table */}
         <Text style={styles.sectionTitle}>
           Viagens ({viagens.length})

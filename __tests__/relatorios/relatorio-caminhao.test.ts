@@ -163,6 +163,69 @@ describe('Relatorio Caminhao - custos diretos', () => {
   });
 });
 
+describe('Relatorio Caminhao - doc_status (CRLV)', () => {
+  function docStatus(
+    docVencimento: string | null,
+    today: Date = new Date(),
+  ): 'ok' | 'vencendo' | 'vencido' | 'sem_data' {
+    if (!docVencimento) return 'sem_data';
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const vencimento = new Date(docVencimento + 'T00:00:00');
+    const diffMs = vencimento.getTime() - todayStart.getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return 'vencido';
+    if (diffDays <= 30) return 'vencendo';
+    return 'ok';
+  }
+
+  it('retorna sem_data quando doc_vencimento e null', () => {
+    expect(docStatus(null)).toBe('sem_data');
+  });
+
+  it('retorna vencido quando data ja passou', () => {
+    expect(docStatus('2025-01-01', new Date(2026, 3, 14))).toBe('vencido');
+  });
+
+  it('retorna vencendo quando faltam 15 dias', () => {
+    const today = new Date(2026, 3, 14); // 14/04/2026
+    expect(docStatus('2026-04-29', today)).toBe('vencendo');
+  });
+
+  it('retorna vencendo quando vence hoje (0 dias)', () => {
+    const today = new Date(2026, 3, 14);
+    expect(docStatus('2026-04-14', today)).toBe('vencendo');
+  });
+
+  it('retorna ok quando faltam mais de 30 dias', () => {
+    const today = new Date(2026, 3, 14);
+    expect(docStatus('2026-06-01', today)).toBe('ok');
+  });
+
+  it('retorna vencendo no limite exato de 30 dias', () => {
+    const today = new Date(2026, 3, 14); // 14/04/2026
+    expect(docStatus('2026-05-14', today)).toBe('vencendo');
+  });
+});
+
+describe('Relatorio Caminhao - IPVA status', () => {
+  function ipvaLabel(pago: boolean, anoRef: number | null): string {
+    if (anoRef == null) return 'Nao informado';
+    return pago ? 'Pago' : 'Pendente';
+  }
+
+  it('retorna Nao informado quando ano_referencia e null', () => {
+    expect(ipvaLabel(false, null)).toBe('Nao informado');
+  });
+
+  it('retorna Pago quando ipva_pago = true', () => {
+    expect(ipvaLabel(true, 2026)).toBe('Pago');
+  });
+
+  it('retorna Pendente quando ipva_pago = false', () => {
+    expect(ipvaLabel(false, 2026)).toBe('Pendente');
+  });
+});
+
 describe('Relatorio Caminhao - defesa em profundidade', () => {
   function verificaAcesso(caminhaoEmpresaId: string, sessaoEmpresaId: string): boolean {
     return caminhaoEmpresaId === sessaoEmpresaId;

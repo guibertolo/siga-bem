@@ -118,6 +118,11 @@ interface HeaderCaminhao {
   custo_por_km_centavos: number | null;
   margem_absoluta_centavos: number;
   margem_percentual: number | null;
+  doc_vencimento: string | null;
+  doc_status: string;
+  ipva_pago: boolean;
+  ipva_valor_centavos: number | null;
+  ipva_ano_referencia: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -486,11 +491,61 @@ export async function GET(
       [strCell('Custo/KM (R$/km)'), numCell(custoKm)],
       [strCell('Margem Bruta (R$)'), centavosCell(margemCentavos)],
       [strCell('Margem (%)'), pctCell(margemPct)],
-      [
-        strCell('Data de Geracao'),
-        strCell(formatDateTimeBR(new Date().toISOString())),
-      ],
     ];
+
+    // Add IPVA/CRLV rows for caminhao reports
+    if (tipo === 'caminhao') {
+      const camHeader = header as HeaderCaminhao;
+      const docStatusLabel: Record<string, string> = {
+        ok: 'Em dia',
+        vencendo: 'Vencendo (< 30 dias)',
+        vencido: 'Vencido',
+        sem_data: 'Nao informado',
+      };
+      resumoSheet.push(
+        [strCell(''), strCell('')],
+        [headerCell('Documentacao'), headerCell('')],
+        [
+          strCell('CRLV - Vencimento'),
+          strCell(
+            camHeader.doc_vencimento
+              ? formatDateBR(camHeader.doc_vencimento)
+              : 'Nao informado',
+          ),
+        ],
+        [
+          strCell('CRLV - Status'),
+          strCell(docStatusLabel[camHeader.doc_status] ?? camHeader.doc_status),
+        ],
+        [
+          strCell('IPVA - Status'),
+          strCell(
+            camHeader.ipva_ano_referencia
+              ? camHeader.ipva_pago
+                ? 'Pago'
+                : 'Pendente'
+              : 'Nao informado',
+          ),
+        ],
+      );
+      if (camHeader.ipva_valor_centavos != null) {
+        resumoSheet.push([
+          strCell('IPVA - Valor (R$)'),
+          centavosCell(camHeader.ipva_valor_centavos),
+        ]);
+      }
+      if (camHeader.ipva_ano_referencia != null) {
+        resumoSheet.push([
+          strCell('IPVA - Ano Referencia'),
+          numCell(camHeader.ipva_ano_referencia),
+        ]);
+      }
+    }
+
+    resumoSheet.push([
+      strCell('Data de Geracao'),
+      strCell(formatDateTimeBR(new Date().toISOString())),
+    ]);
 
     // -----------------------------------------------------------------
     // 4. Generate Excel

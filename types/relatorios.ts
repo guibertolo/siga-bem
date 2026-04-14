@@ -67,9 +67,7 @@ export interface RelatorioMotoristaActionResult {
 // Types for relatorio por caminhao.
 // Story 23.6 — RPC relatorio_caminhao_periodo
 //
-// NOTE: proximos_alertas omitido — depende de Story 18.1 (Draft).
-// Campos ipva_ano_referencia, doc_vencimento, proxima_revisao_km
-// NAO existem na tabela caminhao ate que 18.1 seja implementada.
+// IPVA/CRLV fields added after Story 18.1 implementation.
 // =============================================================================
 
 export interface RelatorioCaminhaoViagem {
@@ -97,6 +95,11 @@ export interface RelatorioCaminhaoHeader {
   custo_por_km_centavos: number | null
   margem_absoluta_centavos: number
   margem_percentual: number | null
+  doc_vencimento: string | null
+  doc_status: 'ok' | 'vencendo' | 'vencido' | 'sem_data'
+  ipva_pago: boolean
+  ipva_valor_centavos: number | null
+  ipva_ano_referencia: number | null
 }
 
 export interface RelatorioCaminhaoCustos {

@@ -1,6 +1,7 @@
 'use client';
 
 import { formatBRL } from '@/lib/utils/currency';
+import { getDocBadgeInfo } from '@/lib/utils/doc-vencimento-badge';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import type { ViagemStatus } from '@/types/database';
 import type { RelatorioCaminhaoResult } from '@/types/relatorios';
@@ -49,10 +50,7 @@ interface RelatorioCaminhaoViewProps {
 /**
  * Vista do relatorio por caminhao.
  * Story 23.6 — espelha estrutura de cards do RelatorioMotoristaView (23.5).
- *
- * NOTE: Card de alertas (IPVA/CRLV/revisao) omitido — depende de Story 18.1 (Draft).
- * Campos ipva_ano_referencia, doc_vencimento, proxima_revisao_km NAO existem
- * na tabela caminhao ate que 18.1 seja implementada.
+ * Includes IPVA/CRLV documentation badges (Story 18.1).
  */
 export function RelatorioCaminhaoView({ data, pdfUrl, xlsxUrl }: RelatorioCaminhaoViewProps) {
   const {
@@ -234,6 +232,64 @@ export function RelatorioCaminhaoView({ data, pdfUrl, xlsxUrl }: RelatorioCaminh
           ) : (
             <p className="text-sm text-primary-500">Sem viagens no período</p>
           )}
+        </div>
+      </div>
+
+      {/* ----------------------------------------------------------------- */}
+      {/* Card de documentacao: CRLV + IPVA                                */}
+      {/* ----------------------------------------------------------------- */}
+      <div className="rounded-xl border border-surface-border bg-surface-card p-4 mb-6">
+        <h3 className="text-sm font-semibold text-primary-900 mb-3">Documentacao</h3>
+        <div className="space-y-3">
+          {/* CRLV badge */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-primary-500">CRLV</span>
+            {header.doc_vencimento ? (
+              (() => {
+                const badge = getDocBadgeInfo(header.doc_vencimento);
+                return badge ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-primary-500">
+                      Vence: {formatDate(header.doc_vencimento)}
+                    </span>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.bgClass} ${badge.fgClass}`}>
+                      {badge.label}
+                    </span>
+                  </div>
+                ) : null;
+              })()
+            ) : (
+              <span className="text-sm text-primary-400">CRLV nao informado</span>
+            )}
+          </div>
+
+          {/* IPVA badge */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-primary-500">IPVA</span>
+            {header.ipva_ano_referencia ? (
+              <div className="flex items-center gap-2">
+                {header.ipva_valor_centavos != null && (
+                  <span className="text-sm text-primary-500">
+                    {formatBRL(header.ipva_valor_centavos)} ({header.ipva_ano_referencia})
+                  </span>
+                )}
+                {header.ipva_valor_centavos == null && (
+                  <span className="text-sm text-primary-500">
+                    {header.ipva_ano_referencia}
+                  </span>
+                )}
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  header.ipva_pago
+                    ? 'bg-badge-success-bg text-badge-success-fg'
+                    : 'bg-badge-warning-bg text-badge-warning-fg'
+                }`}>
+                  {header.ipva_pago ? 'Pago' : 'Pendente'}
+                </span>
+              </div>
+            ) : (
+              <span className="text-sm text-primary-400">IPVA nao informado</span>
+            )}
+          </div>
         </div>
       </div>
 
