@@ -89,6 +89,11 @@ export interface Caminhao {
   km_atual: number;
   ativo: boolean;
   observacao: string | null;
+  doc_vencimento: string | null;
+  ipva_pago: boolean;
+  ipva_valor_centavos: number | null;
+  ipva_comprovante_url: string | null;
+  ipva_ano_referencia: number | null;
   created_at: string;
   updated_at: string;
 }

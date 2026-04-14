@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth/get-user-role';
 import { validatePlaca, normalizePlaca } from '@/lib/utils/validate-placa';
 import { validateRenavam, stripRenavam } from '@/lib/utils/validate-renavam';
+import { parseBrlInputToCentavos } from '@/lib/utils/currency';
+import { isValidDateBr } from '@/lib/utils/validate-date-br';
 import type { CaminhaoActionResult, CaminhaoFormData } from '@/types/caminhao';
 
 const caminhaoSchema = z.object({
@@ -50,7 +52,35 @@ const caminhaoSchema = z.object({
     'Km deve ser um número positivo',
   ),
   observacao: z.string().max(500, 'Observação deve ter no máximo 500 caracteres'),
+  doc_vencimento: z.string().refine(isValidDateBr, 'Data invalida. Use DD/MM/AAAA'),
+  ipva_pago: z.boolean().default(false),
+  ipva_valor_centavos: z.string().refine(
+    (val) => {
+      if (val === '' || val === '0,00') return true;
+      const centavos = parseBrlInputToCentavos(val);
+      return centavos !== null && centavos >= 0;
+    },
+    'Valor invalido',
+  ),
+  ipva_ano_referencia: z.string().refine(
+    (val) => {
+      if (val === '') return true;
+      const num = parseInt(val, 10);
+      return !isNaN(num) && num >= 2000 && num <= new Date().getFullYear() + 1;
+    },
+    'Ano invalido (2000 ate ano atual + 1)',
+  ),
 });
+
+function parseDocVencimento(val: string): string | null {
+  if (!val) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+    const [d, m, y] = val.split('/');
+    return `${y}-${m}-${d}`;
+  }
+  return null;
+}
 
 function extractFieldErrors(
   error: z.ZodError,
@@ -79,6 +109,7 @@ export async function listCaminhoes(): Promise<{
     capacidade_veiculos: number;
     km_atual: number;
     ativo: boolean;
+    doc_vencimento: string | null;
   }> | null;
   error: string | null;
 }> {
@@ -94,7 +125,7 @@ export async function listCaminhoes(): Promise<{
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('caminhao')
-    .select('id, placa, modelo, marca, tipo_cegonha, capacidade_veiculos, km_atual, ativo')
+    .select('id, placa, modelo, marca, tipo_cegonha, capacidade_veiculos, km_atual, ativo, doc_vencimento')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -188,6 +219,10 @@ export async function createCaminhao(
       capacidade_veiculos: parseInt(data.capacidade_veiculos, 10),
       km_atual: data.km_atual ? parseInt(data.km_atual, 10) : 0,
       observacao: data.observacao || null,
+      doc_vencimento: parseDocVencimento(data.doc_vencimento),
+      ipva_pago: data.ipva_pago ?? false,
+      ipva_valor_centavos: data.ipva_valor_centavos ? parseBrlInputToCentavos(data.ipva_valor_centavos) : null,
+      ipva_ano_referencia: data.ipva_ano_referencia ? parseInt(data.ipva_ano_referencia, 10) : null,
     })
     .select()
     .single();
@@ -263,6 +298,10 @@ export async function updateCaminhao(
       capacidade_veiculos: parseInt(data.capacidade_veiculos, 10),
       km_atual: data.km_atual ? parseInt(data.km_atual, 10) : 0,
       observacao: data.observacao || null,
+      doc_vencimento: parseDocVencimento(data.doc_vencimento),
+      ipva_pago: data.ipva_pago ?? false,
+      ipva_valor_centavos: data.ipva_valor_centavos ? parseBrlInputToCentavos(data.ipva_valor_centavos) : null,
+      ipva_ano_referencia: data.ipva_ano_referencia ? parseInt(data.ipva_ano_referencia, 10) : null,
     })
     .eq('id', caminhaoId)
     .select()
