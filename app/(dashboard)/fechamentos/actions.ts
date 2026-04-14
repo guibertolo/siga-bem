@@ -16,6 +16,7 @@ import {
   calcularValorMotorista,
 } from '@/lib/business/fechamentos';
 import { logError } from '@/lib/observability/logger';
+import { assertOwnership, SecurityError } from '@/lib/security/assert-ownership';
 import {
   listMotoristasParaFechamentoRepo,
   previewFechamentoRepo,
@@ -411,14 +412,25 @@ async function updateFechamentoStatus(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes de qualquer operacao
+  try {
+    await assertOwnership(supabase, 'fechamento', fechamentoId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: existing, error: fetchError } = await supabase
     .from('fechamento')
     .select('status')
     .eq('id', fechamentoId)
+    .eq('empresa_id', usuario.empresa_id!)
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Fechamento não encontrado' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   const currentStatus = existing.status as FechamentoStatus;
@@ -450,6 +462,7 @@ async function updateFechamentoStatus(
     .from('fechamento')
     .update(updatePayload)
     .eq('id', fechamentoId)
+    .eq('empresa_id', usuario.empresa_id!)
     .select()
     .single();
 
@@ -610,14 +623,25 @@ export async function deleteFechamento(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes de qualquer operacao
+  try {
+    await assertOwnership(supabase, 'fechamento', fechamentoId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: existing, error: fetchError } = await supabase
     .from('fechamento')
     .select('status')
     .eq('id', fechamentoId)
+    .eq('empresa_id', usuario.empresa_id!)
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Fechamento não encontrado' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   if (existing.status !== 'aberto') {
@@ -628,7 +652,8 @@ export async function deleteFechamento(
   const { error } = await supabase
     .from('fechamento')
     .delete()
-    .eq('id', fechamentoId);
+    .eq('id', fechamentoId)
+    .eq('empresa_id', usuario.empresa_id!);
 
   if (error) {
     logError({ action: 'deleteFechamento', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { fechamentoId } }, error);

@@ -15,6 +15,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { gerarSenhaTemporaria } from '@/lib/utils/gerar-senha';
 import { isCnhExpired, isCnhExpiringSoon } from '@/lib/utils/validate-cpf';
 import { logError } from '@/lib/observability/logger';
+import { assertOwnership, SecurityError } from '@/lib/security/assert-ownership';
 
 const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as const;
 
@@ -322,8 +323,9 @@ export async function updateMotorista(
   motoristaId: string,
   formData: Omit<MotoristaFormData, 'cpf'>,
 ): Promise<MotoristaActionResult> {
+  let currentUsuario;
   try {
-    await requireRole(['dono', 'admin']);
+    currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
       success: false,
@@ -347,6 +349,16 @@ export async function updateMotorista(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes do update
+  try {
+    await assertOwnership(supabase, 'motorista', motoristaId, currentUsuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   // Parse percentual
   const percentualStr = (data as Record<string, string>).percentual_pagamento?.replace(',', '.') ?? '';
   const percentualValue = percentualStr !== '' ? parseFloat(percentualStr) : null;
@@ -363,11 +375,12 @@ export async function updateMotorista(
       percentual_pagamento: percentualValue,
     })
     .eq('id', motoristaId)
+    .eq('empresa_id', currentUsuario.empresa_id!)
     .select()
     .single();
 
   if (updateError) {
-    logError({ action: 'updateMotorista', params: { motoristaId } }, updateError);
+    logError({ action: 'updateMotorista', empresaId: currentUsuario.empresa_id, usuarioId: currentUsuario.id, params: { motoristaId } }, updateError);
     return { success: false, error: 'Erro ao atualizar motorista. Tente novamente.' };
   }
 
@@ -377,8 +390,9 @@ export async function updateMotorista(
 export async function softDeleteMotorista(
   motoristaId: string,
 ): Promise<MotoristaActionResult> {
+  let currentUsuario;
   try {
-    await requireRole(['dono', 'admin']);
+    currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
       success: false,
@@ -388,10 +402,21 @@ export async function softDeleteMotorista(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes do update
+  try {
+    await assertOwnership(supabase, 'motorista', motoristaId, currentUsuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: motorista, error } = await supabase
     .from('motorista')
     .update({ status: 'inativo' })
     .eq('id', motoristaId)
+    .eq('empresa_id', currentUsuario.empresa_id!)
     .select()
     .single();
 
@@ -405,8 +430,9 @@ export async function softDeleteMotorista(
 export async function reactivateMotorista(
   motoristaId: string,
 ): Promise<MotoristaActionResult> {
+  let currentUsuario;
   try {
-    await requireRole(['dono', 'admin']);
+    currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
       success: false,
@@ -416,10 +442,21 @@ export async function reactivateMotorista(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes do update
+  try {
+    await assertOwnership(supabase, 'motorista', motoristaId, currentUsuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: motorista, error } = await supabase
     .from('motorista')
     .update({ status: 'ativo' })
     .eq('id', motoristaId)
+    .eq('empresa_id', currentUsuario.empresa_id!)
     .select()
     .single();
 
@@ -474,8 +511,9 @@ export async function listMotoristas(): Promise<{
 export async function getMotorista(
   motoristaId: string,
 ): Promise<MotoristaActionResult> {
+  let currentUsuario;
   try {
-    await requireRole(['dono', 'admin']);
+    currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
       success: false,
@@ -485,14 +523,16 @@ export async function getMotorista(
 
   const supabase = await createClient();
 
+  // Story 21.3: filtrar por empresa_id (defesa-em-profundidade)
   const { data: motorista, error } = await supabase
     .from('motorista')
     .select('*')
     .eq('id', motoristaId)
+    .eq('empresa_id', currentUsuario.empresa_id!)
     .single();
 
   if (error || !motorista) {
-    return { success: false, error: 'Motorista não encontrado' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   return { success: true, motorista };

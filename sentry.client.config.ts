@@ -7,4 +7,11 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   debug: false,
   enabled: process.env.NODE_ENV === 'production',
+  integrations: [
+    Sentry.replayIntegration({
+      maskAllInputs: true,
+      maskAllText: true,
+      blockAllMedia: true,
+    }),
+  ],
 });

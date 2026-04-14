@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { applyCorsHeaders, handleOptions } from '@/lib/cors';
+
+const ALLOWED_METHODS = 'GET, OPTIONS';
+
+export async function OPTIONS(request: Request) {
+  return handleOptions(request, ALLOWED_METHODS) ?? new NextResponse(null, { status: 405 });
+}
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   const next = searchParams.get('next') ?? '/dashboard';
+  const requestOrigin = request.headers.get('Origin');
 
   if (code) {
     const supabase = await createClient();
@@ -24,15 +32,18 @@ export async function GET(request: Request) {
             .single();
 
           if (!usuario?.empresa_id) {
-            return NextResponse.redirect(`${origin}/selecionar-empresa`);
+            const response = NextResponse.redirect(`${origin}/selecionar-empresa`);
+            return applyCorsHeaders(response, requestOrigin, ALLOWED_METHODS);
           }
         }
       }
 
-      return NextResponse.redirect(`${origin}${next}`);
+      const response = NextResponse.redirect(`${origin}${next}`);
+      return applyCorsHeaders(response, requestOrigin, ALLOWED_METHODS);
     }
   }
 
   // Auth error — redirect back to login
-  return NextResponse.redirect(`${origin}/login`);
+  const response = NextResponse.redirect(`${origin}/login`);
+  return applyCorsHeaders(response, requestOrigin, ALLOWED_METHODS);
 }

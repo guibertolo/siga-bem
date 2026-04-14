@@ -10,7 +10,8 @@ import type {
 import { logError } from '@/lib/observability/logger'
 
 const BUCKET = 'comprovantes'
-const SIGNED_URL_EXPIRY = 3600 // 1 hour
+const SIGNED_URL_EXPIRY_LIST = 300 // 5 minutes — short-lived for listing contexts
+const SIGNED_URL_EXPIRY_DETAIL = 3600 // 1 hour — for detail/upload contexts
 
 // Validacao server-side de upload (defesa em profundidade — client tambem valida).
 // Valores alinhados com o fluxo atual: foto de recibo comprimida no client fica
@@ -137,7 +138,7 @@ export async function uploadComprovante(
   // Update foto_url on gasto with signed URL
   const { data: signedUrlData } = await supabase.storage
     .from(BUCKET)
-    .createSignedUrl(storagePath, SIGNED_URL_EXPIRY)
+    .createSignedUrl(storagePath, SIGNED_URL_EXPIRY_DETAIL)
 
   if (signedUrlData?.signedUrl) {
     await supabase
@@ -240,10 +241,12 @@ export async function listComprovantes(
 
   const supabase = await createClient()
 
+  // Story 21.3: filtrar por empresa_id (defesa-em-profundidade)
   const { data: comprovantes, error } = await supabase
     .from('foto_comprovante')
     .select('*')
     .eq('gasto_id', gastoId)
+    .eq('empresa_id', usuario.empresa_id!)
     .order('uploaded_at', { ascending: false })
 
   if (error) {
@@ -259,7 +262,7 @@ export async function listComprovantes(
     comprovantes.map(async (comp) => {
       const { data: signedUrlData } = await supabase.storage
         .from(BUCKET)
-        .createSignedUrl(comp.storage_path, SIGNED_URL_EXPIRY)
+        .createSignedUrl(comp.storage_path, SIGNED_URL_EXPIRY_LIST)
 
       return {
         ...comp,
