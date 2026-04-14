@@ -227,11 +227,24 @@ export async function createFechamento(
     saldo_motorista: 0,
   };
 
+  // Story 21.4: Validate motorista ownership before proceeding
+  const { data: motoristaOwnership } = await supabase
+    .from('motorista')
+    .select('id')
+    .eq('id', data.motorista_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (!motoristaOwnership) {
+    return { success: false, error: 'Motorista inválido' };
+  }
+
   // 2. Check for overlapping fechamento for this motorista
   const { data: overlapping } = await supabase
     .from('fechamento')
     .select('id')
     .eq('motorista_id', data.motorista_id)
+    .eq('empresa_id', usuario.empresa_id!)
     .lte('periodo_inicio', data.periodo_fim)
     .gte('periodo_fim', data.periodo_inicio)
     .limit(1);

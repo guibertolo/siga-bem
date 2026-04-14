@@ -363,6 +363,29 @@ export async function updateViagem(
     };
   }
 
+  // Story 21.4: Validate ownership of motorista_id and caminhao_id
+  const { data: motoristaOwnership } = await supabase
+    .from('motorista')
+    .select('id')
+    .eq('id', data.motorista_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (!motoristaOwnership) {
+    return { success: false, error: 'Motorista inválido' };
+  }
+
+  const { data: caminhaoOwnership } = await supabase
+    .from('caminhao')
+    .select('id')
+    .eq('id', data.caminhao_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (!caminhaoOwnership) {
+    return { success: false, error: 'Caminhão inválido' };
+  }
+
   // percentual_pagamento is NEVER updated via viagem edit
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')

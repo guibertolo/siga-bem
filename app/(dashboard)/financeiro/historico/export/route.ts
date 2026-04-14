@@ -40,9 +40,34 @@ export async function GET(request: Request) {
   // Apply filters from URL
   const motoristaIds = searchParams.get('motoristaIds');
   if (motoristaIds) {
-    const ids = motoristaIds.split(',').filter(Boolean);
-    if (ids.length > 0) {
-      query = query.in('motorista_id', ids);
+    const rawIds = motoristaIds.split(',').filter(Boolean);
+    if (rawIds.length > 0) {
+      // Story 22.6: Validate motorista IDs belong to user's empresa
+      const { data: validMotoristas } = await supabase
+        .from('motorista')
+        .select('id')
+        .in('id', rawIds)
+        .eq('empresa_id', usuario.empresa_id!);
+
+      const validIds = (validMotoristas ?? []).map((m) => m.id);
+      if (validIds.length > 0) {
+        query = query.in('motorista_id', validIds);
+      } else {
+        // No valid motorista IDs — return empty CSV
+        const bom = '\uFEFF';
+        const today = new Date().toISOString().slice(0, 10);
+        const headersCsv = [
+          'Motorista', 'CPF', 'Período Início', 'Período Fim', 'Tipo',
+          'Total Viagens (R$)', 'Total Gastos (R$)', 'Saldo (R$)', 'Status',
+        ];
+        const csv = headersCsv.map((h) => `"${h}"`).join(',');
+        return new NextResponse(bom + csv, {
+          headers: {
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': `attachment; filename="historico-fechamentos-${today}.csv"`,
+          },
+        });
+      }
     }
   }
 
