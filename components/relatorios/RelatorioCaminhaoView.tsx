@@ -3,7 +3,7 @@
 import { formatBRL } from '@/lib/utils/currency';
 import { VIAGEM_STATUS_LABELS, VIAGEM_STATUS_COLORS } from '@/types/viagem';
 import type { ViagemStatus } from '@/types/database';
-import type { RelatorioMotoristaResult } from '@/types/relatorios';
+import type { RelatorioCaminhaoResult } from '@/types/relatorios';
 
 function formatDate(isoString: string | null): string {
   if (!isoString) return '-';
@@ -24,14 +24,48 @@ function formatKm(km: number | null): string {
   return `${km.toLocaleString('pt-BR')} km`;
 }
 
-interface RelatorioMotoristaViewProps {
-  data: RelatorioMotoristaResult;
+/**
+ * Formata custo por km de centavos para R$/km com 2 casas decimais.
+ * custo_por_km_centavos = centavos por km. Ex: 150 = R$ 1,50/km.
+ */
+function formatCustoKm(centavos: number | null): string {
+  if (centavos == null) return '-';
+  return `R$ ${(centavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/km`;
+}
+
+function formatMargem(margem: number | null): { text: string; className: string } {
+  if (margem == null) return { text: '-', className: 'text-primary-500' };
+  const sinal = margem >= 0 ? '+' : '';
+  const cor = margem >= 0 ? 'text-green-600' : 'text-red-600';
+  return { text: `${sinal}${margem.toFixed(1)}%`, className: cor };
+}
+
+interface RelatorioCaminhaoViewProps {
+  data: RelatorioCaminhaoResult;
   pdfUrl?: string;
   xlsxUrl?: string;
 }
 
-export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotoristaViewProps) {
-  const { header, viagens, caminhoes_usados, dias_trabalhados, dias_ociosos, ranking_frota } = data;
+/**
+ * Vista do relatorio por caminhao.
+ * Story 23.6 — espelha estrutura de cards do RelatorioMotoristaView (23.5).
+ *
+ * NOTE: Card de alertas (IPVA/CRLV/revisao) omitido — depende de Story 18.1 (Draft).
+ * Campos ipva_ano_referencia, doc_vencimento, proxima_revisao_km NAO existem
+ * na tabela caminhao ate que 18.1 seja implementada.
+ */
+export function RelatorioCaminhaoView({ data, pdfUrl, xlsxUrl }: RelatorioCaminhaoViewProps) {
+  const {
+    header,
+    viagens,
+    motoristas_que_rodaram,
+    custos_diretos,
+    comparativo_frota,
+    dias_em_rota,
+    dias_parado,
+  } = data;
+
+  const margem = formatMargem(header.margem_percentual);
 
   return (
     <div className="w-full max-w-3xl print:max-w-none">
@@ -90,14 +124,16 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
       </div>
 
       {/* ----------------------------------------------------------------- */}
-      {/* Header com resumo                                                 */}
+      {/* Header com resumo KPIs                                            */}
       {/* ----------------------------------------------------------------- */}
       <div className="relatorio-header-fixo sticky top-0 z-10 rounded-xl border border-surface-border bg-surface-card p-4 shadow-sm mb-6 print:static print:shadow-none print:border-0 print:rounded-none print:mb-4">
-        <p className="text-xs text-primary-500 print:hidden">Relatorio de Motorista</p>
+        <p className="text-xs text-primary-500 print:hidden">Relatorio de Caminhao</p>
         <p className="hidden print:block text-sm text-primary-500 mb-2">{header.empresa_nome}</p>
-        <h2 className="text-xl font-bold text-primary-900 mt-1">{header.motorista_nome}</h2>
+        <h2 className="text-xl font-bold text-primary-900 mt-1">
+          {header.caminhao_placa} - {header.caminhao_modelo}
+        </h2>
         <p className="text-sm text-primary-500 mt-0.5">
-          CPF: {header.motorista_cpf} &middot; Periodo: {formatDate(header.periodo_inicio)} a {formatDate(header.periodo_fim)}
+          Periodo: {formatDate(header.periodo_inicio)} a {formatDate(header.periodo_fim)}
         </p>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -106,38 +142,60 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
             <p className="text-xs text-primary-500">Viagens</p>
           </div>
           <div className="rounded-lg bg-surface-hover p-3 text-center">
-            <p className="text-2xl font-bold text-primary-900">{formatKm(header.total_km_calculado)}</p>
+            <p className="text-2xl font-bold text-primary-900">{formatKm(header.km_total_calculado)}</p>
             <p className="text-xs text-primary-500">KM total</p>
           </div>
           <div className="rounded-lg bg-surface-hover p-3 text-center">
-            <p className="text-2xl font-bold text-primary-900">{formatBRL(header.total_valor_bruto_centavos)}</p>
-            <p className="text-xs text-primary-500">Valor bruto</p>
+            <p className="text-2xl font-bold text-primary-900">{formatBRL(header.receita_total_centavos)}</p>
+            <p className="text-xs text-primary-500">Receita</p>
           </div>
           <div className="rounded-lg bg-surface-hover p-3 text-center">
-            <p className="text-2xl font-bold text-success">{formatBRL(header.total_pagamento_centavos)}</p>
-            <p className="text-xs text-primary-500">Pagamento motorista</p>
+            <p className={`text-2xl font-bold ${margem.className}`}>{margem.text}</p>
+            <p className="text-xs text-primary-500">Margem</p>
+          </div>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="rounded-lg bg-surface-hover p-3 text-center">
+            <p className="text-lg font-bold text-primary-900">{formatBRL(header.custo_total_centavos)}</p>
+            <p className="text-xs text-primary-500">Custo total</p>
+          </div>
+          <div className="rounded-lg bg-surface-hover p-3 text-center">
+            <p className="text-lg font-bold text-primary-900">{formatCustoKm(header.custo_por_km_centavos)}</p>
+            <p className="text-xs text-primary-500">Custo/km</p>
+          </div>
+          <div className="rounded-lg bg-surface-hover p-3 text-center col-span-2 sm:col-span-1">
+            <p className="text-lg font-bold text-success">{formatBRL(header.margem_absoluta_centavos)}</p>
+            <p className="text-xs text-primary-500">Margem absoluta</p>
           </div>
         </div>
       </div>
 
       {/* ----------------------------------------------------------------- */}
-      {/* Cards secundarios: caminhoes, dias, ranking                       */}
+      {/* Cards secundarios: custos, dias, comparativo, motoristas          */}
       {/* ----------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-6">
-        {/* Caminhoes usados */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+        {/* Custos diretos */}
         <div className="rounded-xl border border-surface-border bg-surface-card p-4">
-          <h3 className="text-sm font-semibold text-primary-900 mb-2">Caminhoes usados</h3>
-          {caminhoes_usados.length === 0 ? (
-            <p className="text-sm text-primary-500">Nenhum</p>
-          ) : (
-            <ul className="space-y-1">
-              {caminhoes_usados.map((c) => (
-                <li key={c.placa} className="text-sm text-primary-700">
-                  <span className="font-medium">{c.placa}</span> - {c.modelo}
-                </li>
-              ))}
-            </ul>
-          )}
+          <h3 className="text-sm font-semibold text-primary-900 mb-3">Custos diretos</h3>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-primary-500">Combustível</span>
+              <span className="text-sm font-medium text-primary-900">{formatBRL(custos_diretos.combustivel_centavos)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-primary-500">Manutenção</span>
+              <span className="text-sm font-medium text-primary-900">{formatBRL(custos_diretos.manutencao_centavos)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-primary-500">Pedagio</span>
+              <span className="text-sm font-medium text-primary-900">{formatBRL(custos_diretos.pedagio_centavos)}</span>
+            </div>
+            <div className="border-t border-surface-border pt-2 flex items-center justify-between">
+              <span className="text-sm font-semibold text-primary-900">Total</span>
+              <span className="text-sm font-bold text-primary-900">{formatBRL(header.custo_total_centavos)}</span>
+            </div>
+          </div>
         </div>
 
         {/* Dias */}
@@ -145,30 +203,61 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
           <h3 className="text-sm font-semibold text-primary-900 mb-2">Dias no período</h3>
           <div className="flex gap-4">
             <div>
-              <p className="text-2xl font-bold text-primary-900">{dias_trabalhados}</p>
-              <p className="text-xs text-primary-500">Trabalhados</p>
+              <p className="text-2xl font-bold text-primary-900">{dias_em_rota}</p>
+              <p className="text-xs text-primary-500">Em rota</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-primary-400">{dias_ociosos}</p>
-              <p className="text-xs text-primary-500">Ociosos</p>
+              <p className="text-2xl font-bold text-primary-400">{dias_parado}</p>
+              <p className="text-xs text-primary-500">Parado</p>
             </div>
           </div>
         </div>
 
-        {/* Ranking */}
+        {/* Comparativo na frota */}
         <div className="rounded-xl border border-surface-border bg-surface-card p-4">
           <h3 className="text-sm font-semibold text-primary-900 mb-2">Ranking na frota</h3>
-          {ranking_frota.posicao > 0 ? (
-            <p className="text-sm text-primary-700">
-              <span className="text-2xl font-bold text-primary-900">{ranking_frota.posicao}o</span>
-              <span className="text-primary-500"> / {ranking_frota.total_motoristas} motoristas</span>
-            </p>
+          {comparativo_frota.posicao_receita > 0 ? (
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm text-primary-700">
+                  <span className="text-2xl font-bold text-primary-900">{comparativo_frota.posicao_receita}o</span>
+                  <span className="text-primary-500"> / {comparativo_frota.total_caminhoes} em receita</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-primary-700">
+                  <span className="text-2xl font-bold text-primary-900">{comparativo_frota.posicao_margem}o</span>
+                  <span className="text-primary-500"> / {comparativo_frota.total_caminhoes} em margem</span>
+                </p>
+              </div>
+            </div>
           ) : (
-            <p className="text-sm text-primary-500">Sem viagens concluídas no período</p>
+            <p className="text-sm text-primary-500">Sem viagens no período</p>
           )}
-          <p className="text-xs text-primary-400 mt-1">Por valor bruto (concluídas)</p>
         </div>
       </div>
+
+      {/* Motoristas que rodaram */}
+      {motoristas_que_rodaram.length > 0 && (
+        <div className="rounded-xl border border-surface-border bg-surface-card p-4 mb-6">
+          <h3 className="text-sm font-semibold text-primary-900 mb-3">
+            Motoristas que rodaram ({motoristas_que_rodaram.length})
+          </h3>
+          <div className="space-y-2">
+            {motoristas_que_rodaram.map((mot) => (
+              <div key={mot.cpf_mascarado} className="flex items-center justify-between text-sm">
+                <div>
+                  <span className="font-medium text-primary-900">{mot.nome}</span>
+                  <span className="text-primary-400 ml-2">{mot.cpf_mascarado}</span>
+                </div>
+                <div className="text-right text-primary-500">
+                  {mot.total_viagens} viagens &middot; {formatKm(mot.km_total_calculado)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ----------------------------------------------------------------- */}
       {/* Lista de viagens                                                  */}
@@ -192,10 +281,8 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
                 <th className="py-1 text-left">Destino</th>
                 <th className="py-1 text-right">KM</th>
                 <th className="py-1 text-right">Valor</th>
-                <th className="py-1 text-right">%</th>
-                <th className="py-1 text-right">Pagto.</th>
+                <th className="py-1 text-left">Motorista</th>
                 <th className="py-1 text-left">Status</th>
-                <th className="py-1 text-left">Caminhao</th>
               </tr>
             </thead>
             <tbody>
@@ -206,10 +293,8 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
                   <td className="py-1">{v.destino}</td>
                   <td className="py-1 text-right">{v.km_calculado != null ? v.km_calculado.toLocaleString('pt-BR') : '-'}</td>
                   <td className="py-1 text-right">{formatBRL(v.valor_total_centavos)}</td>
-                  <td className="py-1 text-right">{v.percentual_pagamento}%</td>
-                  <td className="py-1 text-right">{formatBRL(v.pagamento_centavos)}</td>
+                  <td className="py-1">{v.motorista_nome}</td>
                   <td className="py-1">{VIAGEM_STATUS_LABELS[v.status as ViagemStatus] ?? v.status}</td>
-                  <td className="py-1">{v.caminhao_placa}</td>
                 </tr>
               ))}
             </tbody>
@@ -236,7 +321,7 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
                 </span>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+              <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
                 <div>
                   <p className="text-xs text-primary-500">KM</p>
                   <p className="font-medium text-primary-900">{formatKm(v.km_calculado)}</p>
@@ -246,45 +331,10 @@ export function RelatorioMotoristaView({ data, pdfUrl, xlsxUrl }: RelatorioMotor
                   <p className="font-medium text-primary-900">{formatBRL(v.valor_total_centavos)}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-primary-500">Pagamento ({v.percentual_pagamento}%)</p>
-                  <p className="font-medium text-success">{formatBRL(v.pagamento_centavos)}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-primary-500">Caminhao</p>
-                  <p className="font-medium text-primary-900">{v.caminhao_placa} - {v.caminhao_modelo}</p>
+                  <p className="text-xs text-primary-500">Motorista</p>
+                  <p className="font-medium text-primary-900">{v.motorista_nome}</p>
                 </div>
               </div>
-
-              {/* Comprovantes miniatura */}
-              {v.comprovantes.length > 0 && (
-                <div className="mt-3 flex gap-2 overflow-x-auto">
-                  {v.comprovantes.map((comp, idx) => (
-                    comp.url_signed ? (
-                      <a
-                        key={comp.storage_path}
-                        href={comp.url_signed}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="shrink-0"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={comp.url_signed}
-                          alt={`Comprovante ${idx + 1}`}
-                          className="h-16 w-16 rounded-lg border border-surface-border object-cover"
-                        />
-                      </a>
-                    ) : (
-                      <div
-                        key={comp.storage_path}
-                        className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-surface-border bg-surface-hover text-xs text-primary-400"
-                      >
-                        Foto
-                      </div>
-                    )
-                  ))}
-                </div>
-              )}
             </div>
           ))}
         </div>

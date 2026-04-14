@@ -1,15 +1,15 @@
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
-import { gerarRelatorioMotorista } from '@/app/(dashboard)/relatorios/motorista/actions';
-import { RelatorioMotoristaView } from '@/components/relatorios/RelatorioMotoristaView';
+import { gerarRelatorioCaminhao } from '@/app/(dashboard)/relatorios/caminhao/actions';
+import { RelatorioCaminhaoView } from '@/components/relatorios/RelatorioCaminhaoView';
 
 interface PageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ inicio?: string; fim?: string }>;
 }
 
-export default async function RelatorioMotoristaPage({
+export default async function RelatorioCaminhaoPage({
   params,
   searchParams,
 }: PageProps) {
@@ -50,7 +50,7 @@ export default async function RelatorioMotoristaPage({
     );
   }
 
-  const result = await gerarRelatorioMotorista(id, inicio, fim);
+  const result = await gerarRelatorioCaminhao(id, inicio, fim);
 
   if (!result.success) {
     if (result.status === 401) {
@@ -85,10 +85,10 @@ export default async function RelatorioMotoristaPage({
         </Link>
       </div>
 
-      <RelatorioMotoristaView
+      <RelatorioCaminhaoView
         data={result.data!}
-        pdfUrl={`/relatorios/motorista/${id}/pdf?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`}
-        xlsxUrl={`/relatorios/motorista/${id}/xlsx?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`}
+        pdfUrl={`/relatorios/caminhao/${id}/pdf?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`}
+        xlsxUrl={`/relatorios/caminhao/${id}/xlsx?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`}
       />
     </div>
   );

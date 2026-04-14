@@ -20,10 +20,26 @@ export interface FotoChamada {
 }
 
 /**
+ * FotoChamada with a signed URL for display.
+ */
+export interface FotoChamadaWithUrl extends FotoChamada {
+  url: string
+}
+
+/**
  * Result from upload operations on chamada.
  */
 export interface ChamadaActionResult {
   success: boolean
   error?: string
   chamada?: FotoChamada
+}
+
+/**
+ * Result from listing chamadas for a viagem.
+ */
+export interface ChamadasListResult {
+  success: boolean
+  error?: string
+  data?: FotoChamadaWithUrl[]
 }

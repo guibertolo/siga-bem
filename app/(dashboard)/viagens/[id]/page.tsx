@@ -19,6 +19,8 @@ import { getAbastecimentosForViagem, getGastosPorViagem } from '@/app/(dashboard
 import { listCategorias } from '@/app/(dashboard)/gastos/actions';
 import { GastosViagemSection } from '@/components/gastos/GastosViagemSection';
 import { DespesaViagemSection } from '@/components/gastos/DespesaViagemSection';
+import { ChamadaMiniatura } from '@/components/viagens/ChamadaMiniatura';
+import { listChamadasViagem } from '@/app/(dashboard)/viagens/chamada-actions';
 import type { ViagemStatus } from '@/types/database';
 
 function formatDateTime(isoString: string | null): string {
@@ -51,17 +53,19 @@ export default async function ViagemDetalhePage({
   }
 
   const viagem = result.viagem!;
-  const [veiculosResult, abastecimentosResult, gastosResult, categoriasResult] = await Promise.all([
+  const [veiculosResult, abastecimentosResult, gastosResult, categoriasResult, chamadasResult] = await Promise.all([
     listVeiculosViagem(id),
     getAbastecimentosForViagem(id),
     getGastosPorViagem(id),
     listCategorias(),
+    listChamadasViagem(id),
   ]);
   const veiculos = veiculosResult.data ?? [];
   const abastecimentos = abastecimentosResult.data;
   const gastosViagem = gastosResult.data;
   const gastosTotalCentavos = gastosResult.totalCentavos;
   const categorias = categoriasResult.data ?? [];
+  const chamadas = chamadasResult.data ?? [];
   const valorMotorista = calcularValorMotorista(viagem.valor_total, viagem.percentual_pagamento);
   const distancia = calcularDistancia(viagem.km_saida, viagem.km_chegada);
 
@@ -329,6 +333,16 @@ export default async function ViagemDetalhePage({
           totalCentavos={gastosTotalCentavos}
           isDono={usuario.role === 'dono'}
         />
+
+        {/* Chamada (Story 23.3) — next to gastos/comprovantes */}
+        <div className="rounded-lg border border-surface-border bg-surface-card p-6">
+          <ChamadaMiniatura
+            chamadas={chamadas}
+            viagemId={viagem.id}
+            viagemStatus={viagem.status as 'planejada' | 'em_andamento' | 'concluida' | 'cancelada'}
+            usuarioRole={usuario.role}
+          />
+        </div>
 
         {/* Status actions */}
         <div className="rounded-lg border border-surface-border bg-surface-card p-6">
