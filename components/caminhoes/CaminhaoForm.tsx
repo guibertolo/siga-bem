@@ -69,7 +69,7 @@ const caminhaoFormSchema = z.object({
   ),
   observacao: z.string().max(500),
   doc_vencimento: z.string().refine(isValidDateBr, 'Data invalida. Use DD/MM/AAAA'),
-  ipva_pago: z.boolean().default(false),
+  ipva_pago: z.boolean(),
   ipva_valor_centavos: z.string().refine(
     (val) => {
       if (val === '' || val === '0,00') return true;
