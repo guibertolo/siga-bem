@@ -50,7 +50,7 @@ const viagemFormSchema = z.object({
       },
       'Distância estimada deve ser maior que zero',
     ),
-  km_saida: z.string(),
+  km_saida: z.string().min(1, 'KM de saída é obrigatório'),
   observacao: z.string().max(1000, 'Máximo 1000 caracteres'),
 });
 
@@ -68,7 +68,7 @@ interface ViagemFormProps {
   mode: 'create' | 'edit';
   viagem?: Viagem | null;
   motoristas: Array<{ id: string; nome: string; percentual_pagamento?: number | null }>;
-  caminhoes: Array<{ id: string; placa: string; modelo: string }>;
+  caminhoes: Array<{ id: string; placa: string; modelo: string; km_atual: number }>;
   onSubmit: (data: ViagemFormData) => Promise<ViagemActionResult>;
   /** When true, core fields (origem, destino, valor_total) are disabled */
   camposLocked?: boolean;
@@ -98,6 +98,7 @@ export function ViagemForm({
   const [loadingCaminhoes, setLoadingCaminhoes] = useState(false);
   const [valorMotorista, setValorMotorista] = useState<string>('');
   const chamadaBlobRef = useRef<Blob | null>(null);
+  const [serverWarnings, setServerWarnings] = useState<string[]>([]);
 
   const {
     register,
@@ -168,6 +169,16 @@ export function ViagemForm({
     }
   }, [watchedMotoristaId, viagem?.motorista_id, loadCaminhoes]);
 
+  // Story 20.1: Pre-fill km_saida from caminhao.km_atual when caminhao changes
+  useEffect(() => {
+    if (watchedCaminhaoId && mode === 'create') {
+      const cam = caminhoes.find((c) => c.id === watchedCaminhaoId);
+      if (cam && cam.km_atual > 0) {
+        setValue('km_saida', maskKm(String(cam.km_atual)), { shouldValidate: false });
+      }
+    }
+  }, [watchedCaminhaoId, caminhoes, mode, setValue]);
+
   // Currency mask for valor_total field
   useEffect(() => {
     if (watchedValorTotal) {
@@ -214,6 +225,7 @@ export function ViagemForm({
 
   function onFormSubmit(values: FormValues) {
     setServerError(null);
+    setServerWarnings([]);
 
     startTransition(async () => {
       const result = await onSubmit(values);
@@ -247,6 +259,13 @@ export function ViagemForm({
         chamadaBlobRef.current = null;
       }
 
+      // Show warnings but still navigate (non-blocking)
+      if (result.warnings && result.warnings.length > 0) {
+        setServerWarnings(result.warnings);
+        // Brief delay so user sees warnings before navigating
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+
       router.push('/viagens');
       router.refresh();
     });
@@ -267,6 +286,14 @@ export function ViagemForm({
       {serverError && (
         <div className="rounded-lg border border-danger/20 bg-alert-danger-bg p-4 text-base text-danger">
           {serverError}
+        </div>
+      )}
+
+      {serverWarnings.length > 0 && (
+        <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-badge-warning-fg space-y-1">
+          {serverWarnings.map((w, i) => (
+            <p key={i}>{w}</p>
+          ))}
         </div>
       )}
 
@@ -473,19 +500,22 @@ export function ViagemForm({
           )}
         </div>
 
-        {/* KM Saida */}
+        {/* KM Saida (Story 20.1: obrigatorio) */}
         <div>
           <label htmlFor="km_saida" className="mb-2 block text-base font-medium text-primary-700">
-            KM na Saida
+            KM de Saída (odômetro) *
           </label>
           <input
             id="km_saida"
             type="text"
             inputMode="numeric"
-            placeholder="Ex: 120.000"
+            placeholder="Ex: 50.000"
             {...register('km_saida')}
             className={inputClasses('km_saida')}
           />
+          <p className="mt-1 text-sm text-primary-500">
+            Leia o odômetro do caminhão antes de sair
+          </p>
           {errors.km_saida && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_saida.message}</p>
           )}

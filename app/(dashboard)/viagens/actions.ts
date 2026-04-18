@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
+import { calcularGapStats } from '@/lib/utils/viagem-calc';
 import type {
   ViagemActionResult,
   ViagemFormData,
@@ -62,8 +63,9 @@ const viagemSchema = z.object({
       'Distância estimada deve ser maior que zero',
     ),
   km_saida: z.string()
+    .min(1, 'KM de saída é obrigatório')
     .refine(
-      (val) => val === '' || (!isNaN(Number(val)) && Number(val) >= 0),
+      (val) => !isNaN(Number(val)) && Number(val) >= 0,
       'KM saída deve ser um número positivo',
     ),
   observacao: z.string().max(1000, 'Observação deve ter no máximo 1000 caracteres'),
@@ -114,7 +116,7 @@ export async function listMotoristasAtivos(): Promise<{
 export async function listCaminhoesPorMotorista(
   motoristaId?: string,
 ): Promise<{
-  data: Array<{ id: string; placa: string; modelo: string }> | null;
+  data: Array<{ id: string; placa: string; modelo: string; km_atual: number }> | null;
   error: string | null;
 }> {
   const usuario = await getCurrentUsuario();
@@ -293,9 +295,64 @@ export async function createViagem(
     return { success: false, error: 'Erro ao cadastrar viagem. Tente novamente.' };
   }
 
+  // Story 20.1 AC-3: Consistency warnings (non-blocking)
+  const warnings: string[] = [];
+  if (kmSaida != null) {
+    const { data: previousTrips } = await supabase
+      .from('viagem')
+      .select('id, km_saida, km_chegada')
+      .eq('caminhao_id', data.caminhao_id)
+      .eq('status', 'concluida')
+      .not('km_saida', 'is', null)
+      .not('km_chegada', 'is', null)
+      .order('data_saida', { ascending: false })
+      .limit(20);
+
+    if (previousTrips && previousTrips.length > 0) {
+      const lastTrip = previousTrips[0];
+      if (lastTrip.km_chegada != null && kmSaida < lastTrip.km_chegada) {
+        warnings.push(
+          `O odômetro informado (${kmSaida.toLocaleString('pt-BR')} km) é menor que o último registro (${lastTrip.km_chegada.toLocaleString('pt-BR')} km). Verifique.`,
+        );
+      } else if (lastTrip.km_chegada != null) {
+        const currentGap = kmSaida - lastTrip.km_chegada;
+        if (previousTrips.length >= 3) {
+          const historicalGaps: number[] = [];
+          for (let i = 0; i < previousTrips.length - 1; i++) {
+            const prev = previousTrips[i + 1];
+            const curr = previousTrips[i];
+            if (prev.km_chegada != null && curr.km_saida != null) {
+              const g = curr.km_saida - prev.km_chegada;
+              if (g >= 0) historicalGaps.push(g);
+            }
+          }
+          if (historicalGaps.length >= 5) {
+            const stats = calcularGapStats(historicalGaps);
+            const threshold = stats.media + 2 * stats.stddev;
+            if (currentGap > threshold) {
+              warnings.push(
+                `Diferença de ${currentGap.toLocaleString('pt-BR')} km desde a última viagem (média histórica: ${Math.round(stats.media).toLocaleString('pt-BR')} km). Tá correto?`,
+              );
+            }
+          } else if (historicalGaps.length >= 2) {
+            const tripKms = previousTrips
+              .filter((t) => t.km_saida != null && t.km_chegada != null)
+              .map((t) => (t.km_chegada as number) - (t.km_saida as number));
+            const avgTripKm = tripKms.reduce((s, k) => s + k, 0) / tripKms.length;
+            if (currentGap > avgTripKm * 0.5) {
+              warnings.push(
+                `Diferença de ${currentGap.toLocaleString('pt-BR')} km desde a última viagem. Tá correto?`,
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
   revalidatePath('/viagens');
   revalidatePath('/dashboard');
-  return { success: true, viagem };
+  return { success: true, viagem, warnings: warnings.length > 0 ? warnings : undefined };
 }
 
 /**
@@ -455,7 +512,7 @@ export async function updateViagemStatus(
 
   const { data: viagem, error: fetchError } = await supabase
     .from('viagem')
-    .select('status, motorista_id, caminhao_id')
+    .select('status, motorista_id, caminhao_id, km_saida')
     .eq('id', viagemId)
     .eq('empresa_id', usuario.empresa_id!)
     .single();
@@ -494,13 +551,29 @@ export async function updateViagemStatus(
     };
   }
 
+  // Story 20.1 AC-2: km_chegada obrigatorio ao concluir
+  if (novoStatus === 'concluida' && kmChegada == null) {
+    return {
+      success: false,
+      error: 'KM de chegada é obrigatório para concluir viagem',
+    };
+  }
+
+  // Validate km_chegada >= km_saida (when both available)
+  if (novoStatus === 'concluida' && kmChegada != null && viagem.km_saida != null) {
+    if (kmChegada < viagem.km_saida) {
+      return {
+        success: false,
+        error: `KM de chegada (${kmChegada.toLocaleString('pt-BR')}) não pode ser menor que o de saída (${viagem.km_saida.toLocaleString('pt-BR')})`,
+      };
+    }
+  }
+
   const updatePayload: Record<string, unknown> = { status: novoStatus };
 
   if (novoStatus === 'concluida') {
     updatePayload.data_chegada_real = dataChegadaReal;
-    if (kmChegada != null) {
-      updatePayload.km_chegada = kmChegada;
-    }
+    updatePayload.km_chegada = kmChegada;
   }
 
   const { data: updated, error: updateError } = await supabase

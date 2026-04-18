@@ -158,7 +158,7 @@ export async function listCaminhoesPorMotoristaRepo(
   empresaIds: string[],
   motoristaId?: string,
 ): Promise<{
-  data: Array<{ id: string; placa: string; modelo: string }> | null;
+  data: Array<{ id: string; placa: string; modelo: string; km_atual: number }> | null;
   error: string | null;
 }> {
   if (motoristaId) {
@@ -177,7 +177,7 @@ export async function listCaminhoesPorMotoristaRepo(
 
     const { data, error } = await client
       .from('caminhao')
-      .select('id, placa, modelo')
+      .select('id, placa, modelo, km_atual')
       .in('id', caminhaoIds)
       .eq('ativo', true)
       .order('placa');
@@ -188,7 +188,7 @@ export async function listCaminhoesPorMotoristaRepo(
 
   const { data, error } = await client
     .from('caminhao')
-    .select('id, placa, modelo')
+    .select('id, placa, modelo, km_atual')
     .in('empresa_id', empresaIds)
     .eq('ativo', true)
     .order('placa');
