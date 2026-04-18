@@ -14,6 +14,7 @@ import type {
 import type { ViagemStatus } from '@/types/database';
 import { VIAGEM_STATUS_TRANSITIONS } from '@/types/viagem';
 import { logError } from '@/lib/observability/logger';
+import { logAuditEvent } from '@/lib/observability/audit';
 import { assertOwnership, SecurityError } from '@/lib/security/assert-ownership';
 import {
   listViagensRepo,
@@ -350,6 +351,28 @@ export async function createViagem(
     }
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: usuario.id,
+    usuarioRole: usuario.role,
+    usuarioNome: usuario.nome,
+    empresaId: usuario.empresa_id!,
+    acao: 'create',
+    entidade: 'viagem',
+    entidadeId: viagem.id,
+    entidadeDescricao: `${data.origem} → ${data.destino}`,
+    valoresDepois: {
+      origem: data.origem,
+      destino: data.destino,
+      data_saida: data.data_saida,
+      valor_total: valorCentavos,
+      motorista_id: motoristaId,
+      caminhao_id: data.caminhao_id,
+      km_saida: kmSaida,
+      km_estimado: kmEstimado,
+    },
+  });
+
   revalidatePath('/viagens');
   revalidatePath('/dashboard');
   return { success: true, viagem, warnings: warnings.length > 0 ? warnings : undefined };
@@ -479,6 +502,32 @@ export async function updateViagem(
     return { success: false, error: 'Erro ao atualizar viagem. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: usuario.id,
+    usuarioRole: usuario.role,
+    usuarioNome: usuario.nome,
+    empresaId: usuario.empresa_id!,
+    acao: 'update',
+    entidade: 'viagem',
+    entidadeId: viagemId,
+    entidadeDescricao: `${viagem.origem} → ${viagem.destino}`,
+    valoresAntes: {
+      origem: existing.origem,
+      destino: existing.destino,
+      valor_total: existing.valor_total,
+    },
+    valoresDepois: {
+      origem: viagem.origem,
+      destino: viagem.destino,
+      valor_total: viagem.valor_total,
+      motorista_id: data.motorista_id,
+      caminhao_id: data.caminhao_id,
+      km_saida: kmSaida,
+      km_estimado: kmEstimado,
+    },
+  });
+
   revalidatePath('/viagens');
   revalidatePath('/dashboard');
   return { success: true, viagem };
@@ -596,6 +645,23 @@ export async function updateViagemStatus(
       .update({ km_atual: kmChegada })
       .eq('id', viagem.caminhao_id);
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: usuario.id,
+    usuarioRole: usuario.role,
+    usuarioNome: usuario.nome,
+    empresaId: usuario.empresa_id!,
+    acao: 'update',
+    entidade: 'viagem',
+    entidadeId: viagemId,
+    entidadeDescricao: `Status: ${viagem.status} → ${novoStatus}`,
+    valoresAntes: { status: viagem.status },
+    valoresDepois: {
+      status: novoStatus,
+      ...(novoStatus === 'concluida' && { data_chegada_real: dataChegadaReal, km_chegada: kmChegada }),
+    },
+  });
 
   revalidatePath('/viagens');
   revalidatePath('/dashboard');

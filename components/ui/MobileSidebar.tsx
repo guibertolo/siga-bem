@@ -17,6 +17,7 @@ interface MobileSidebarProps {
   adminLinks: NavLink[];
   showAdminLinks: boolean;
   showBILink: boolean;
+  isDono?: boolean;
   empresas: UserEmpresa[];
   viagensAtivasCount?: number;
   selectedEmpresaIds?: string[];
@@ -27,6 +28,7 @@ export function MobileSidebar({
   adminLinks,
   showAdminLinks,
   showBILink,
+  isDono = false,
   empresas,
   viagensAtivasCount = 0,
   selectedEmpresaIds,
@@ -217,6 +219,25 @@ export function MobileSidebar({
                 </Link>
                 );
               })}
+              {isDono && (() => {
+                const isActive = pathname === '/auditoria' || pathname.startsWith('/auditoria/');
+                return (
+                  <Link
+                    href="/auditoria"
+                    prefetch={true}
+                    onClick={() => setOpen(false)}
+                    data-onboarding-id="auditoria"
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`block px-4 py-3 text-base font-semibold no-underline rounded-lg transition-colors border-b border-white/5 ${
+                      isActive
+                        ? 'bg-white/20 text-white'
+                        : 'text-white/80 hover:bg-white/15'
+                    }`}
+                  >
+                    Auditoria
+                  </Link>
+                );
+              })()}
             </>
           )}
         </nav>

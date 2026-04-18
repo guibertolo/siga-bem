@@ -188,6 +188,16 @@ export default async function DashboardLayout({
                   {link.label}
                 </Link>
               ))}
+              {currentUsuario.role === 'dono' && (
+                <Link
+                  href="/auditoria"
+                  prefetch={true}
+                  data-onboarding-id="auditoria"
+                  className="block px-4 py-3.5 text-base font-semibold text-white/80 no-underline rounded-lg hover:bg-white/15 transition-colors border-b border-white/5"
+                >
+                  Auditoria
+                </Link>
+              )}
             </>
           )}
         </nav>
@@ -229,6 +239,7 @@ export default async function DashboardLayout({
               adminLinks={adminLinks}
               showAdminLinks={showAdminLinks}
               showBILink={showBILink}
+              isDono={currentUsuario.role === 'dono'}
               empresas={empresas}
               viagensAtivasCount={viagensAtivasCount}
               selectedEmpresaIds={multiCtx.isMultiEmpresa ? multiCtx.empresaIds : undefined}

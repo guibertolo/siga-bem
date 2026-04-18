@@ -18,6 +18,7 @@ import type { CategoriaGastoOption } from '@/types/categoria-gasto';
 import { getGastos, getGastoFilterOptions } from '@/lib/queries/gastos';
 import { generateGastosCsv } from '@/lib/utils/export-gastos-csv';
 import { logError } from '@/lib/observability/logger';
+import { logAuditEvent } from '@/lib/observability/audit';
 
 const gastoSchema = z.object({
   categoria_id: z.string().uuid('Categoria é obrigatória'),
@@ -257,6 +258,28 @@ export async function createGasto(
     return { success: false, error: 'Erro ao registrar gasto. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: usuario.id,
+    usuarioRole: usuario.role,
+    usuarioNome: usuario.nome,
+    empresaId: usuario.empresa_id!,
+    acao: 'create',
+    entidade: 'gasto',
+    entidadeId: gasto.id,
+    entidadeDescricao: data.descricao
+      ? `${data.descricao} — R$ ${(valorCentavos / 100).toFixed(2)}`
+      : `Despesa R$ ${(valorCentavos / 100).toFixed(2)}`,
+    valoresDepois: {
+      categoria_id: data.categoria_id,
+      valor: valorCentavos,
+      data: data.data,
+      motorista_id: data.motorista_id,
+      caminhao_id: data.caminhao_id,
+      viagem_id: data.viagem_id,
+    },
+  });
+
   revalidatePath('/gastos');
   revalidatePath('/dashboard');
   if (data.viagem_id) {
@@ -324,6 +347,26 @@ export async function updateGasto(
     return { success: false, error: 'Erro ao atualizar gasto. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: usuario.id,
+    usuarioRole: usuario.role,
+    usuarioNome: usuario.nome,
+    empresaId: usuario.empresa_id!,
+    acao: 'update',
+    entidade: 'gasto',
+    entidadeId: gastoId,
+    entidadeDescricao: `Despesa R$ ${(valorCentavos / 100).toFixed(2)}`,
+    valoresDepois: {
+      categoria_id: data.categoria_id,
+      valor: valorCentavos,
+      data: data.data,
+      motorista_id: motoristaId,
+      caminhao_id: data.caminhao_id,
+      viagem_id: data.viagem_id,
+    },
+  });
+
   revalidatePath('/gastos');
   revalidatePath('/dashboard');
   return { success: true, gasto };
@@ -348,6 +391,13 @@ export async function deleteGasto(
 
   const supabase = await createClient();
 
+  // Fetch antes de deletar pra registrar valores_antes na auditoria
+  const { data: gastoAntes } = await supabase
+    .from('gasto')
+    .select('categoria_id, valor, data, descricao, motorista_id, caminhao_id, viagem_id')
+    .eq('id', gastoId)
+    .single();
+
   const { error } = await supabase
     .from('gasto')
     .delete()
@@ -356,6 +406,23 @@ export async function deleteGasto(
   if (error) {
     logError({ action: 'deleteGasto', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { gastoId } }, error);
     return { success: false, error: 'Erro ao excluir gasto. Tente novamente.' };
+  }
+
+  if (gastoAntes) {
+    await logAuditEvent({
+      supabase,
+      usuarioId: usuario.id,
+      usuarioRole: usuario.role,
+      usuarioNome: usuario.nome,
+      empresaId: usuario.empresa_id!,
+      acao: 'delete',
+      entidade: 'gasto',
+      entidadeId: gastoId,
+      entidadeDescricao: gastoAntes.descricao
+        ? `${gastoAntes.descricao} — R$ ${(gastoAntes.valor / 100).toFixed(2)}`
+        : `Despesa R$ ${(gastoAntes.valor / 100).toFixed(2)}`,
+      valoresAntes: gastoAntes,
+    });
   }
 
   revalidatePath('/gastos');
