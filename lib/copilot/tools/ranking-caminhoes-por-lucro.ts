@@ -33,7 +33,6 @@ export const rankingCaminhoesPorLucroSchema = z.object({
     ),
   top_n: z
     .coerce.number()
-    .int()
     .min(1)
     .max(MAX_TOOL_ROWS)
     .optional()
