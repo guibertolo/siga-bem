@@ -15,7 +15,7 @@ import type { ToolContext } from '@/lib/copilot/tools/constants';
 
 export const motoristasCnhVencendoSchema = z.object({
   dias: z
-    .number()
+    .coerce.number()
     .int()
     .min(1)
     .max(365)

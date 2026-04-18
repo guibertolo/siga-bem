@@ -29,7 +29,7 @@ export const rentabilidadeRotaSchema = z.object({
       'Expressao em portugues: "este mes", "mes passado", "ultimos 3 meses", etc.',
     ),
   top_n: z
-    .number()
+    .coerce.number()
     .int()
     .min(1)
     .max(MAX_TOOL_ROWS)

@@ -32,7 +32,7 @@ export const rankingCaminhoesPorLucroSchema = z.object({
       'crescente = prejuizo primeiro (default). decrescente = maior lucro primeiro.',
     ),
   top_n: z
-    .number()
+    .coerce.number()
     .int()
     .min(1)
     .max(MAX_TOOL_ROWS)

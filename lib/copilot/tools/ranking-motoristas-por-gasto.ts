@@ -34,7 +34,7 @@ export const rankingMotoristasPorGastoSchema = z.object({
     .optional()
     .describe('crescente = quem gasta menos primeiro. decrescente = quem gasta mais primeiro (default).'),
   top_n: z
-    .number()
+    .coerce.number()
     .int()
     .min(1)
     .max(MAX_TOOL_ROWS)

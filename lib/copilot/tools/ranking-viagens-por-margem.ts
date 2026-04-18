@@ -41,7 +41,7 @@ export const rankingViagensPorMargemSchema = z.object({
       'crescente = pior margem primeiro (default). decrescente = maior margem primeiro.',
     ),
   top_n: z
-    .number()
+    .coerce.number()
     .int()
     .min(1)
     .max(MAX_TOOL_ROWS)

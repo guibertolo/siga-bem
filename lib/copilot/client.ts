@@ -22,7 +22,7 @@ const PROVIDERS: ProviderConfig[] = [
   {
     name: 'Groq (Llama 4 Scout 17B)',
     envKey: 'GROQ_API_KEY',
-    factory: () => groq('llama-4-scout-17b-16e-instruct'),
+    factory: () => groq('meta-llama/llama-4-scout-17b-16e-instruct'),
   },
   {
     name: 'Gemini 2.5 Flash',
