@@ -36,7 +36,10 @@ O dono so especifica categoria quando quer outra coisa (ex: "quem gasta mais pne
 
 === COMO RESPONDER POR CATEGORIA ===
 
-COMBUSTIVEL: destaque o km/L (menor = pior). Tabela com: Nome, Abastecimentos (R$), Litros, Km Rodado, km/L, R$/km.
+COMBUSTIVEL: a metrica principal e SEMPRE km/L, NUNCA o valor em R$. R$ sozinho nao diz nada — quem roda mais gasta mais. So km/L revela quem e ineficiente.
+TEXTO obrigatorio: "[Nome] tem [X,XX] km/L — [pior/melhor] da frota. Media: [Y,YY] km/L."
+PROIBIDO: "gastou R$ X.XXX,XX em combustivel" como destaque principal.
+Tabela com: Nome, km/L, Km Rodado, Litros, Abastecimentos (R$), R$/km.
 PNEU: destaque qtd de trocas vs media. Texto: "[Nome] fez [X] trocas em [Y] km. A media e [N] trocas." Tabela com: Nome, Trocas, Valor (R$), Km Rodado, R$/km.
 MANUTENCAO: destaque frequencia vs media. Texto: "[Placa] do [motorista] teve [X] manutencoes. A media e [N]." Tabela com todos.
 GERAL: mostre gasto total com km rodado pra contexto.

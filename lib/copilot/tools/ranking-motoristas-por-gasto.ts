@@ -248,15 +248,14 @@ export async function executeRankingMotoristasPorGasto(
         };
       });
 
-    // Sort: if we have km/L data, sort by km/L (menor = mais gastao)
-    // Otherwise fall back to total value
+    // Sort: se tem km/L, prioriza eficiencia (km/L) sobre valor absoluto.
+    // "decrescente" = mais gastao = menor km/L primeiro (pior eficiencia no topo).
     const hasKmL = rows.some((r) => r.km_por_litro !== null);
-    if (hasKmL && categoriaIdFilter) {
-      // For combustivel specifically, sort by km/L (pior primeiro by default)
+    if (hasKmL) {
       rows.sort((a, b) => {
         const aKml = a.km_por_litro ?? 999;
         const bKml = b.km_por_litro ?? 999;
-        return ordem === 'decrescente' ? bKml - aKml : aKml - bKml;
+        return ordem === 'decrescente' ? aKml - bKml : bKml - aKml;
       });
     } else {
       rows.sort((a, b) =>
