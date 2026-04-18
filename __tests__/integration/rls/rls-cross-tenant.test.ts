@@ -6,7 +6,8 @@ import {
   TEST_USERS,
 } from './setup';
 
-// All tests are READ-ONLY — never insert or delete data.
+// Write-isolation tests attempt invalid mutations and assert they are blocked.
+// They never persist data: INSERTs expect RLS violation, UPDATEs expect 0 rows.
 // Timeout generoso para chamadas de rede ao Supabase remoto.
 jest.setTimeout(30_000);
 
@@ -201,6 +202,203 @@ describe('RLS Cross-Tenant Isolation', () => {
 
       expect(error).toBeNull();
       assertNoneBelongTo(data ?? [], empresaIdsDono2, 'usuario_empresa');
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // combustivel_preco
+  // -----------------------------------------------------------------------
+  describe('combustivel_preco', () => {
+    it('dono1 não vê preços de combustível do dono2', async () => {
+      const { data, error } = await clientDono1
+        .from('combustivel_preco')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'combustivel_preco');
+    });
+
+    it('motorista não consegue inserir preço de combustível', async () => {
+      const { error } = await clientMot1
+        .from('combustivel_preco')
+        .insert({ preco_litro: 6.5, empresa_id: empresaIdsDono2[0] });
+
+      expect(error).not.toBeNull();
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // viagem_veiculo
+  // -----------------------------------------------------------------------
+  describe('viagem_veiculo', () => {
+    it('dono1 não vê vínculos viagem_veiculo do dono2', async () => {
+      const { data, error } = await clientDono1
+        .from('viagem_veiculo')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'viagem_veiculo');
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // alerta_dispensado
+  // -----------------------------------------------------------------------
+  describe('alerta_dispensado', () => {
+    it('dono1 não vê alertas dispensados do dono2', async () => {
+      const { data, error } = await clientDono1
+        .from('alerta_dispensado')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'alerta_dispensado');
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // foto_chamada
+  // -----------------------------------------------------------------------
+  describe('foto_chamada', () => {
+    it('dono1 não vê fotos de chamada do dono2', async () => {
+      const { data, error } = await clientDono1
+        .from('foto_chamada')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'foto_chamada');
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // view_viagens_ativas
+  // -----------------------------------------------------------------------
+  describe('view_viagens_ativas', () => {
+    it('dono1 não vê viagens ativas do dono2 via view', async () => {
+      const { data, error } = await clientDono1
+        .from('view_viagens_ativas')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'view_viagens_ativas');
+    });
+
+    it('motorista não vê viagens ativas de outra empresa via view', async () => {
+      const { data, error } = await clientMot1
+        .from('view_viagens_ativas')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'view_viagens_ativas');
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Write isolation — INSERT bloqueado cross-tenant
+  // -----------------------------------------------------------------------
+  describe('write isolation — INSERT', () => {
+    it('dono1 não consegue inserir viagem com empresa_id do dono2', async () => {
+      const { error } = await clientDono1.from('viagem').insert({
+        empresa_id: empresaIdsDono2[0],
+        origem: 'Teste',
+        destino: 'Teste',
+        valor_total: 100,
+      });
+
+      expect(error).not.toBeNull();
+    });
+
+    it('dono1 não consegue inserir gasto com empresa_id do dono2', async () => {
+      const { error } = await clientDono1.from('gasto').insert({
+        empresa_id: empresaIdsDono2[0],
+        descricao: 'Teste',
+        valor: 50,
+        categoria: 'combustivel',
+      });
+
+      expect(error).not.toBeNull();
+    });
+
+    it('dono1 não consegue inserir motorista em empresa do dono2', async () => {
+      const { error } = await clientDono1.from('motorista').insert({
+        empresa_id: empresaIdsDono2[0],
+        nome: 'Invasor',
+        cpf: '00000000000',
+      });
+
+      expect(error).not.toBeNull();
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Write isolation — UPDATE sem efeito cross-tenant
+  // -----------------------------------------------------------------------
+  describe('write isolation — UPDATE', () => {
+    it('dono1 não modifica viagens do dono2 (0 rows afetadas)', async () => {
+      // Busca um id de viagem do dono2 via client do dono2
+      const { data: rows } = await clientDono2
+        .from('viagem')
+        .select('id')
+        .limit(1);
+
+      if (!rows || rows.length === 0) return; // sem dados de teste, skip
+
+      const { data } = await clientDono1
+        .from('viagem')
+        .update({ observacao: 'invasao-rls-test' })
+        .eq('id', rows[0].id)
+        .select('id');
+
+      expect(data ?? []).toHaveLength(0);
+    });
+
+    it('dono1 não modifica caminhões do dono2 (0 rows afetadas)', async () => {
+      const { data: rows } = await clientDono2
+        .from('caminhao')
+        .select('id')
+        .limit(1);
+
+      if (!rows || rows.length === 0) return;
+
+      const { data } = await clientDono1
+        .from('caminhao')
+        .update({ apelido: 'invasao-rls-test' })
+        .eq('id', rows[0].id)
+        .select('id');
+
+      expect(data ?? []).toHaveLength(0);
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Motorista — isolamento de escrita
+  // -----------------------------------------------------------------------
+  describe('motorista role — write isolation', () => {
+    it('motorista não consegue inserir empresa', async () => {
+      const { error } = await clientMot1.from('empresa').insert({
+        razao_social: 'Empresa Invasora LTDA',
+        cnpj: '00000000000000',
+      });
+
+      expect(error).not.toBeNull();
+    });
+
+    it('motorista não consegue inserir caminhao', async () => {
+      const { error } = await clientMot1.from('caminhao').insert({
+        empresa_id: empresaIdsDono1[0],
+        placa: 'XXX0000',
+        modelo: 'Teste',
+      });
+
+      expect(error).not.toBeNull();
+    });
+
+    it('motorista não vê dados de outra empresa via fechamento', async () => {
+      const { data, error } = await clientMot1
+        .from('fechamento')
+        .select('id, empresa_id');
+
+      expect(error).toBeNull();
+      assertNoneBelongTo(data ?? [], empresaIdsDono2, 'fechamento');
     });
   });
 });
