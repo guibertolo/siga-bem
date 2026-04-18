@@ -97,6 +97,12 @@ export async function POST(request: Request) {
           maxRetries: 0,
         });
 
+        // Aguarda geracao completa server-side pra capturar erros in-stream
+        // (ex: TPM esgotado no meio da geracao). `result.text` rejeita em erro.
+        // UX: usuario ve resposta completa de uma vez em vez de streaming token a token,
+        // mas em troca fallback fica 100% silencioso pro usuario.
+        await result.text;
+
         logger.info(`using provider: ${name} (tier: ${tier})`, {});
         return result.toUIMessageStreamResponse();
       } catch (error) {
