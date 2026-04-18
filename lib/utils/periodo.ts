@@ -75,6 +75,39 @@ export function getMonthOptions(): Array<{
   return options;
 }
 
+/**
+ * Range for the current month (1st to last day).
+ * Story 23.4 — AC5
+ */
+export function rangeEsteMes(): { inicio: string; fim: string } {
+  const now = new Date();
+  return calcularRangeMensal(now.getFullYear(), now.getMonth() + 1);
+}
+
+/**
+ * Range for the previous month (1st to last day).
+ * Story 23.4 — AC5
+ */
+export function rangeMesPassado(): { inicio: string; fim: string } {
+  const now = new Date();
+  const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  return calcularRangeMensal(prev.getFullYear(), prev.getMonth() + 1);
+}
+
+/**
+ * Range from 1st of the month 3 months ago to end of current month.
+ * Story 23.4 — AC5
+ */
+export function rangeUltimos3Meses(): { inicio: string; fim: string } {
+  const now = new Date();
+  const threeAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+  const fimMesAtual = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return {
+    inicio: formatDateISO(threeAgo),
+    fim: formatDateISO(fimMesAtual),
+  };
+}
+
 function formatDateISO(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');

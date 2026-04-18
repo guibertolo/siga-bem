@@ -6,6 +6,7 @@ import { toggleCaminhaoAtivo } from '@/app/(dashboard)/caminhoes/actions';
 import { maskPlaca } from '@/lib/utils/validate-placa';
 import { cn } from '@/lib/utils/cn';
 import { OverflowMenu } from '@/components/ui/OverflowMenu';
+import { getDocBadgeInfo } from '@/lib/utils/doc-vencimento-badge';
 
 interface CaminhaoListItem {
   id: string;
@@ -16,6 +17,7 @@ interface CaminhaoListItem {
   capacidade_veiculos: number;
   km_atual: number;
   ativo: boolean;
+  doc_vencimento: string | null;
 }
 
 interface CaminhaoListProps {
@@ -58,6 +60,7 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
             <th className="px-4 py-3.5 text-base font-medium text-primary-700">Tipo</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Capacidade</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-right">Km Atual</th>
+            <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">CRLV</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Situação</th>
             <th className="px-4 py-3.5 text-base font-medium text-primary-700 text-center">Ações</th>
           </tr>
@@ -70,6 +73,21 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
       </table>
     </div>
     </>
+  );
+}
+
+function DocBadge({ docVencimento }: { docVencimento: string | null }) {
+  const badge = getDocBadgeInfo(docVencimento);
+  if (!badge) return null;
+
+  return (
+    <span className={cn(
+      'inline-block rounded-full px-3 py-1 text-xs font-semibold',
+      badge.bgClass,
+      badge.fgClass,
+    )}>
+      {badge.label}
+    </span>
   );
 }
 
@@ -93,12 +111,15 @@ function MobileCaminhaoCard({ caminhao }: { caminhao: CaminhaoListItem }) {
           <p className="text-base font-mono font-medium text-primary-900">{maskPlaca(caminhao.placa)}</p>
           <p className="text-sm text-primary-700">{caminhao.modelo} {caminhao.marca ? `- ${caminhao.marca}` : ''}</p>
         </div>
-        <span className={cn(
-          'inline-block rounded-full px-3 py-1 text-xs font-semibold',
-          caminhao.ativo ? 'bg-alert-success-bg text-success' : 'bg-alert-danger-bg text-badge-danger-fg',
-        )}>
-          {caminhao.ativo ? 'Ativo' : 'Inativo'}
-        </span>
+        <div className="flex flex-col items-end gap-1">
+          <span className={cn(
+            'inline-block rounded-full px-3 py-1 text-xs font-semibold',
+            caminhao.ativo ? 'bg-alert-success-bg text-success' : 'bg-alert-danger-bg text-badge-danger-fg',
+          )}>
+            {caminhao.ativo ? 'Ativo' : 'Inativo'}
+          </span>
+          <DocBadge docVencimento={caminhao.doc_vencimento} />
+        </div>
       </div>
       <div className="text-sm text-primary-700 space-y-0.5">
         <p>{tipoLabel} - {caminhao.capacidade_veiculos} veículos</p>
@@ -153,6 +174,9 @@ function CaminhaoRow({ caminhao }: { caminhao: CaminhaoListItem }) {
       <td className="px-4 py-3.5 text-base text-center text-primary-700">{caminhao.capacidade_veiculos}</td>
       <td className="px-4 py-3.5 text-base text-right text-primary-700">
         {caminhao.km_atual.toLocaleString('pt-BR')} km
+      </td>
+      <td className="px-4 py-3.5 text-center">
+        <DocBadge docVencimento={caminhao.doc_vencimento} />
       </td>
       <td className="px-4 py-3.5 text-center">
         <span className={cn(

@@ -44,3 +44,14 @@ export function formatarPeriodoFechamento(
 
   return `${inicioFormatado} - ${fimFormatado}`;
 }
+
+/**
+ * Format a date range as short display text.
+ * Example: "1/04 - 30/04"
+ * Story 23.4 — AC5 sub-text for period buttons.
+ */
+export function formatarRangeCurto(inicio: Date, fim: Date): string {
+  const inicioStr = `${inicio.getDate()}/${String(inicio.getMonth() + 1).padStart(2, '0')}`;
+  const fimStr = `${fim.getDate()}/${String(fim.getMonth() + 1).padStart(2, '0')}`;
+  return `${inicioStr} - ${fimStr}`;
+}

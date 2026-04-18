@@ -26,9 +26,9 @@ export default async function ViagensPage() {
   let total = 0;
 
   if (isMultiEmpresa) {
-    // Multi-empresa: use admin client with explicit empresa_id filter
-    const results = await queryMultiEmpresa((admin, eid) =>
-      listViagensForEmpresa(admin, eid),
+    // Multi-empresa: use authenticated client with RLS-validated access
+    const results = await queryMultiEmpresa((client, eid) =>
+      listViagensForEmpresa(client, eid),
     );
 
     const flattened = flattenMultiResults(

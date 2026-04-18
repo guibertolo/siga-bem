@@ -5,6 +5,13 @@ import { getCurrentUsuario } from '@/lib/auth/get-user-role';
 import { mascararCpf } from '@/lib/utils/mascarar-cpf';
 import { FECHAMENTO_STATUS_LABELS } from '@/types/fechamento';
 import type { FechamentoStatus, FechamentoTipo } from '@/types/database';
+import { applyCorsHeaders, handleOptions } from '@/lib/cors';
+
+const ALLOWED_METHODS = 'GET, OPTIONS';
+
+export async function OPTIONS(request: Request) {
+  return handleOptions(request, ALLOWED_METHODS) ?? new NextResponse(null, { status: 405 });
+}
 
 /**
  * GET /financeiro/historico/export
@@ -15,10 +22,15 @@ import type { FechamentoStatus, FechamentoTipo } from '@/types/database';
  * Only authenticated users can access (admin sees all, motorista sees own).
  */
 export async function GET(request: Request) {
+  const requestOrigin = request.headers.get('Origin');
   const usuario = await getCurrentUsuario();
 
   if (!usuario) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    return applyCorsHeaders(
+      NextResponse.json({ error: 'Não autenticado' }, { status: 401 }),
+      requestOrigin,
+      ALLOWED_METHODS,
+    );
   }
 
   const { searchParams } = new URL(request.url);
@@ -40,9 +52,38 @@ export async function GET(request: Request) {
   // Apply filters from URL
   const motoristaIds = searchParams.get('motoristaIds');
   if (motoristaIds) {
-    const ids = motoristaIds.split(',').filter(Boolean);
-    if (ids.length > 0) {
-      query = query.in('motorista_id', ids);
+    const rawIds = motoristaIds.split(',').filter(Boolean);
+    if (rawIds.length > 0) {
+      // Story 22.6: Validate motorista IDs belong to user's empresa
+      const { data: validMotoristas } = await supabase
+        .from('motorista')
+        .select('id')
+        .in('id', rawIds)
+        .eq('empresa_id', usuario.empresa_id!);
+
+      const validIds = (validMotoristas ?? []).map((m) => m.id);
+      if (validIds.length > 0) {
+        query = query.in('motorista_id', validIds);
+      } else {
+        // No valid motorista IDs — return empty CSV
+        const bom = '\uFEFF';
+        const today = new Date().toISOString().slice(0, 10);
+        const headersCsv = [
+          'Motorista', 'CPF', 'Período Início', 'Período Fim', 'Tipo',
+          'Total Viagens (R$)', 'Total Gastos (R$)', 'Saldo (R$)', 'Status',
+        ];
+        const csv = headersCsv.map((h) => `"${h}"`).join(',');
+        return applyCorsHeaders(
+          new NextResponse(bom + csv, {
+            headers: {
+              'Content-Type': 'text/csv; charset=utf-8',
+              'Content-Disposition': `attachment; filename="historico-fechamentos-${today}.csv"`,
+            },
+          }),
+          requestOrigin,
+          ALLOWED_METHODS,
+        );
+      }
     }
   }
 
@@ -74,9 +115,13 @@ export async function GET(request: Request) {
   const { data, error } = await query;
 
   if (error) {
-    return NextResponse.json(
-      { error: `Erro ao buscar fechamentos: ${error.message}` },
-      { status: 500 },
+    return applyCorsHeaders(
+      NextResponse.json(
+        { error: `Erro ao buscar fechamentos: ${error.message}` },
+        { status: 500 },
+      ),
+      requestOrigin,
+      ALLOWED_METHODS,
     );
   }
 
@@ -121,10 +166,14 @@ export async function GET(request: Request) {
   const bom = '\uFEFF';
   const today = new Date().toISOString().slice(0, 10);
 
-  return new NextResponse(bom + csv, {
-    headers: {
-      'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="historico-fechamentos-${today}.csv"`,
-    },
-  });
+  return applyCorsHeaders(
+    new NextResponse(bom + csv, {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="historico-fechamentos-${today}.csv"`,
+      },
+    }),
+    requestOrigin,
+    ALLOWED_METHODS,
+  );
 }

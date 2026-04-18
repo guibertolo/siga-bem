@@ -1,6 +1,6 @@
 /**
- * Multi-empresa dashboard actions — admin client versions that accept
- * (admin, empresaId) and filter by empresa_id explicitly.
+ * Multi-empresa dashboard queries — accept (client, empresaId) and filter
+ * by empresa_id explicitly. Works with both authenticated and admin clients.
  *
  * Delegates read queries to lib/repositories/dashboard.ts.
  */
@@ -31,22 +31,22 @@ export type {
 };
 
 export async function getDashboardDataForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
 ): Promise<DashboardData> {
-  return getDashboardDataRepo(admin, [empresaId]);
+  return getDashboardDataRepo(client, [empresaId]);
 }
 
 export async function getViagemAtivaForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
 ): Promise<ViagemAtivaData> {
-  return getViagemAtivaRepo(admin, [empresaId]);
+  return getViagemAtivaRepo(client, [empresaId]);
 }
 
 export async function getDonoMicroDataForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
 ): Promise<DonoMicroData> {
-  return getDonoMicroDataRepo(admin, [empresaId]);
+  return getDonoMicroDataRepo(client, [empresaId]);
 }

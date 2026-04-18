@@ -1,32 +1,38 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { getMultiEmpresaContext } from '@/lib/queries/multi-empresa';
 
 /**
  * Execute a query function across all selected empresas in multi-empresa mode.
  *
- * Uses the admin client (service_role) to bypass RLS and query each empresa
- * by explicit `empresa_id` filter. This avoids fn_switch_empresa, React.cache
- * issues, and context-switching bugs.
+ * Uses the authenticated client (session-based, RLS-enabled) to query each
+ * empresa. Empresa access is validated server-side via fn_get_query_empresas()
+ * RPC, which returns the intersection of selected_empresas with active bindings
+ * in usuario_empresa.
  *
- * SECURITY: Ownership is validated via getMultiEmpresaContext() which reads
- * selected_empresas from the authenticated user's record (already validated
- * at setSelectedEmpresas time via usuario_empresa).
+ * RLS SELECT policies on viagem, gasto, fechamento, motorista, caminhao allow
+ * reading data from ALL empresas the user is bound to (via fn_user_empresa_ids),
+ * not just the active one. This enables multi-empresa reads without admin client.
  *
- * @param queryFn - Receives the admin client and an empresa_id, returns data
+ * SECURITY: Double-validated:
+ *   1. getMultiEmpresaContext() validates via getUserEmpresas() (app-side)
+ *   2. fn_get_query_empresas() validates via usuario_empresa (SQL-side)
+ *   3. RLS policies enforce empresa_id = ANY(fn_user_empresa_ids())
+ *
+ * @param queryFn - Receives the authenticated client and an empresa_id, returns data
  * @returns Array of results tagged with empresa_id/name
  */
 export async function queryMultiEmpresa<T>(
-  queryFn: (admin: SupabaseClient, empresaId: string) => Promise<T>,
+  queryFn: (client: SupabaseClient, empresaId: string) => Promise<T>,
 ): Promise<Array<{ empresaId: string; empresaName: string; data: T }>> {
   const ctx = await getMultiEmpresaContext();
+  const supabase = await createClient();
 
   if (!ctx.isMultiEmpresa) {
-    // Single mode: use admin client with active empresa_id
+    // Single mode: use authenticated client with active empresa_id
     const empresaId = ctx.activeEmpresaId ?? '';
     if (!empresaId) return [];
-    const admin = createAdminClient();
-    const data = await queryFn(admin, empresaId);
+    const data = await queryFn(supabase, empresaId);
     return [{
       empresaId,
       empresaName: ctx.empresaNames.get(empresaId) ?? 'Empresa',
@@ -34,11 +40,19 @@ export async function queryMultiEmpresa<T>(
     }];
   }
 
-  const admin = createAdminClient();
+  // Multi mode: validate empresa IDs server-side via RPC
+  const { data: validatedIds, error } = await supabase
+    .rpc('fn_get_query_empresas', { selected_empresas: ctx.empresaIds });
+
+  if (error || !validatedIds || !Array.isArray(validatedIds) || validatedIds.length === 0) {
+    // Fallback: return empty if no valid empresas (AC: no error, just empty)
+    return [];
+  }
+
   const results: Array<{ empresaId: string; empresaName: string; data: T }> = [];
 
-  for (const empresaId of ctx.empresaIds) {
-    const data = await queryFn(admin, empresaId);
+  for (const empresaId of validatedIds as string[]) {
+    const data = await queryFn(supabase, empresaId);
     results.push({
       empresaId,
       empresaName: ctx.empresaNames.get(empresaId) ?? 'Empresa',

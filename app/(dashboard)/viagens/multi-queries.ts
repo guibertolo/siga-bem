@@ -1,6 +1,6 @@
 /**
- * Multi-empresa viagens actions — admin client versions that accept
- * (admin, empresaId) and filter by empresa_id explicitly.
+ * Multi-empresa viagens queries — accept (client, empresaId) and filter
+ * by empresa_id explicitly. Works with both authenticated and admin clients.
  *
  * Delegates read queries to lib/repositories/viagens.ts.
  */
@@ -10,10 +10,10 @@ import type { ViagemListItem } from '@/types/viagem';
 import { listViagensRepo } from '@/lib/repositories/viagens';
 
 export async function listViagensForEmpresa(
-  admin: SupabaseClient,
+  client: SupabaseClient,
   empresaId: string,
 ): Promise<{ data: ViagemListItem[]; total: number }> {
-  const result = await listViagensRepo(admin, [empresaId], { pageSize: 100 });
+  const result = await listViagensRepo(client, [empresaId], { pageSize: 100 });
 
   return {
     data: result.data ?? [],

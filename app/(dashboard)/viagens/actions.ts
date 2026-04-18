@@ -13,6 +13,7 @@ import type {
 import type { ViagemStatus } from '@/types/database';
 import { VIAGEM_STATUS_TRANSITIONS } from '@/types/viagem';
 import { logError } from '@/lib/observability/logger';
+import { assertOwnership, SecurityError } from '@/lib/security/assert-ownership';
 import {
   listViagensRepo,
   listMotoristasAtivosRepo,
@@ -363,6 +364,39 @@ export async function updateViagem(
     };
   }
 
+  // Story 21.4: Validate ownership of motorista_id and caminhao_id
+  const { data: motoristaOwnership } = await supabase
+    .from('motorista')
+    .select('id')
+    .eq('id', data.motorista_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (!motoristaOwnership) {
+    return { success: false, error: 'Motorista inválido' };
+  }
+
+  const { data: caminhaoOwnership } = await supabase
+    .from('caminhao')
+    .select('id')
+    .eq('id', data.caminhao_id)
+    .eq('empresa_id', usuario.empresa_id!)
+    .single();
+
+  if (!caminhaoOwnership) {
+    return { success: false, error: 'Caminhão inválido' };
+  }
+
+  // Story 21.3: assertOwnership antes do update
+  try {
+    await assertOwnership(supabase, 'viagem', viagemId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   // percentual_pagamento is NEVER updated via viagem edit
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')
@@ -379,6 +413,7 @@ export async function updateViagem(
       observacao: data.observacao || null,
     })
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .select()
     .single();
 
@@ -408,14 +443,25 @@ export async function updateViagemStatus(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes de qualquer operacao
+  try {
+    await assertOwnership(supabase, 'viagem', viagemId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: viagem, error: fetchError } = await supabase
     .from('viagem')
     .select('status, motorista_id, caminhao_id')
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .single();
 
   if (fetchError || !viagem) {
-    return { success: false, error: 'Viagem não encontrada' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   const transicoesValidas = VIAGEM_STATUS_TRANSITIONS[viagem.status as ViagemStatus];
@@ -461,6 +507,7 @@ export async function updateViagemStatus(
     .from('viagem')
     .update(updatePayload)
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .select()
     .single();
 
@@ -496,10 +543,21 @@ export async function updateViagemObservacao(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes do update
+  try {
+    await assertOwnership(supabase, 'viagem', viagemId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: viagem, error: updateError } = await supabase
     .from('viagem')
     .update({ observacao: observacao || null })
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .select()
     .single();
 
@@ -530,15 +588,26 @@ export async function deleteViagem(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes de qualquer operacao
+  try {
+    await assertOwnership(supabase, 'viagem', viagemId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   // Check status before delete
   const { data: existing, error: fetchError } = await supabase
     .from('viagem')
     .select('status')
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Viagem não encontrada' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   if (existing.status !== 'planejada') {
@@ -548,7 +617,8 @@ export async function deleteViagem(
   const { error } = await supabase
     .from('viagem')
     .delete()
-    .eq('id', viagemId);
+    .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!);
 
   if (error) {
     logError({ action: 'deleteViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, error);
@@ -587,14 +657,25 @@ export async function invalidarViagem(
 
   const supabase = await createClient();
 
+  // Story 21.3: assertOwnership antes de qualquer operacao
+  try {
+    await assertOwnership(supabase, 'viagem', viagemId, usuario.empresa_id!);
+  } catch (e) {
+    if (e instanceof SecurityError) {
+      return { success: false, error: 'Acesso negado' };
+    }
+    throw e;
+  }
+
   const { data: existing, error: fetchError } = await supabase
     .from('viagem')
     .select('status, observacao')
     .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!)
     .single();
 
   if (fetchError || !existing) {
-    return { success: false, error: 'Viagem não encontrada' };
+    return { success: false, error: 'Acesso negado' };
   }
 
   if (existing.status === 'cancelada') {
@@ -612,7 +693,8 @@ export async function invalidarViagem(
       status: 'cancelada',
       observacao: novaObservacao,
     })
-    .eq('id', viagemId);
+    .eq('id', viagemId)
+    .eq('empresa_id', usuario.empresa_id!);
 
   if (updateError) {
     logError({ action: 'invalidarViagem', empresaId: usuario.empresa_id, usuarioId: usuario.id, params: { viagemId } }, updateError);

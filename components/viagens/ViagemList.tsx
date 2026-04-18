@@ -150,9 +150,16 @@ export function ViagemList({
                   <div>
                     <div className="text-base font-bold text-primary-900">{v.origem} &rarr; {v.destino}</div>
                   </div>
-                  <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
-                    {VIAGEM_STATUS_LABELS[v.status]}
-                  </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                      {VIAGEM_STATUS_LABELS[v.status]}
+                    </span>
+                    {v.chamada_pendente && (
+                      <span className="inline-block rounded-full bg-badge-warning-bg px-3 py-1 text-xs font-semibold text-badge-warning-fg">
+                        Chamada pendente
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-2 text-sm text-primary-700 space-y-0.5">
                   <p>{v.motorista_nome} - {v.caminhao_placa}</p>
@@ -298,9 +305,16 @@ export function ViagemList({
                     <div className="text-base font-medium text-primary-900">{v.origem}</div>
                     <div className="text-sm text-primary-500">{v.destino}</div>
                   </div>
-                  <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
-                    {VIAGEM_STATUS_LABELS[v.status]}
-                  </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                      {VIAGEM_STATUS_LABELS[v.status]}
+                    </span>
+                    {v.chamada_pendente && (
+                      <span className="inline-block rounded-full bg-badge-warning-bg px-3 py-1 text-xs font-semibold text-badge-warning-fg">
+                        Chamada pendente
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-2 text-sm text-primary-700 space-y-0.5">
                   <p>{v.motorista_nome} - {v.caminhao_placa}</p>
@@ -410,9 +424,16 @@ export function ViagemList({
                       {v.percentual_pagamento}%
                     </td>
                     <td className="px-4 py-3.5">
-                      <span className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
-                        {VIAGEM_STATUS_LABELS[v.status]}
-                      </span>
+                      <div className="flex flex-col gap-1">
+                        <span className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${VIAGEM_STATUS_COLORS[v.status]}`}>
+                          {VIAGEM_STATUS_LABELS[v.status]}
+                        </span>
+                        {v.chamada_pendente && (
+                          <span className="inline-block rounded-full bg-badge-warning-bg px-3 py-1 text-xs font-semibold text-badge-warning-fg">
+                            Chamada pendente
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1">

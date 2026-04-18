@@ -218,6 +218,13 @@ export function MobileSidebar({
           >
             Meu Perfil
           </Link>
+          <Link
+            href="/privacidade"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-3 text-base font-semibold text-white/50 no-underline rounded-lg hover:bg-white/15 hover:text-white/80 transition-colors"
+          >
+            Privacidade
+          </Link>
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"

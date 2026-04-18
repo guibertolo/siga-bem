@@ -75,49 +75,44 @@ export async function createEmpresa(
     };
   }
 
-  // Insert empresa
-  const { data: empresa, error: insertError } = await supabase
-    .from('empresa')
-    .insert({
-      cnpj: formattedCNPJ,
-      razao_social: data.razao_social,
-      nome_fantasia: data.nome_fantasia || null,
-      endereco: data.endereco || null,
-      cidade: data.cidade || null,
-      estado: data.estado || null,
-      cep: data.cep || null,
-      telefone: data.telefone || null,
-      email: data.email || null,
-    })
-    .select()
-    .single();
-
-  if (insertError) {
-    if (insertError.code === '23505') {
-      return {
-        success: false,
-        fieldErrors: { cnpj: 'CNPJ ja cadastrado' },
-      };
-    }
-    logError({ action: 'createEmpresa', usuarioId: user.id }, insertError);
-    return { success: false, error: 'Erro ao cadastrar empresa. Tente novamente.' };
-  }
-
-  // Create usuario record linking auth user to empresa as 'dono'
+  // Create usuario record first (required for RPC lookup)
   const { error: usuarioError } = await supabase
     .from('usuario')
     .insert({
       auth_id: user.id,
-      empresa_id: empresa.id,
       nome: user.user_metadata?.full_name ?? user.email ?? 'Dono',
       email: user.email ?? '',
       role: 'dono',
     });
 
   if (usuarioError) {
-    // Rollback: delete empresa if usuario creation fails
-    await supabase.from('empresa').delete().eq('id', empresa.id);
-    return { success: false, error: 'Erro ao vincular usuario a empresa. Tente novamente.' };
+    // If usuario already exists (e.g., from invite flow), that's OK — continue
+    if (usuarioError.code !== '23505') {
+      logError({ action: 'createEmpresa.createUsuario', usuarioId: user.id }, usuarioError);
+      return { success: false, error: 'Erro ao criar usuario. Tente novamente.' };
+    }
+  }
+
+  // Create empresa + vinculo dono atomicamente via RPC SECURITY DEFINER
+  const { error: rpcError } = await supabase.rpc(
+    'fn_create_empresa_with_owner',
+    {
+      p_razao_social: data.razao_social,
+      p_cnpj: formattedCNPJ,
+      p_nome_fantasia: data.nome_fantasia || null,
+      p_plano: 'free',
+    },
+  );
+
+  if (rpcError) {
+    if (rpcError.code === '23505') {
+      return {
+        success: false,
+        fieldErrors: { cnpj: 'CNPJ ja cadastrado' },
+      };
+    }
+    logError({ action: 'createEmpresa', usuarioId: user.id }, rpcError);
+    return { success: false, error: 'Erro ao cadastrar empresa. Tente novamente.' };
   }
 
   redirect('/dashboard');
@@ -220,25 +215,19 @@ export async function createEmpresaAdicional(
     };
   }
 
-  // Insert empresa
-  const { data: empresa, error: insertError } = await supabase
-    .from('empresa')
-    .insert({
-      cnpj: formattedCNPJ,
-      razao_social: data.razao_social,
-      nome_fantasia: data.nome_fantasia || null,
-      endereco: data.endereco || null,
-      cidade: data.cidade || null,
-      estado: data.estado || null,
-      cep: data.cep || null,
-      telefone: data.telefone || null,
-      email: data.email || null,
-    })
-    .select()
-    .single();
+  // Create empresa + vinculo dono atomicamente via RPC SECURITY DEFINER
+  const { data: empresaId, error: rpcError } = await supabase.rpc(
+    'fn_create_empresa_with_owner',
+    {
+      p_razao_social: data.razao_social,
+      p_cnpj: formattedCNPJ,
+      p_nome_fantasia: data.nome_fantasia || null,
+      p_plano: 'free',
+    },
+  );
 
-  if (insertError) {
-    if (insertError.code === '23505') {
+  if (rpcError) {
+    if (rpcError.code === '23505') {
       return {
         success: false,
         fieldErrors: {
@@ -249,24 +238,9 @@ export async function createEmpresaAdicional(
     return { success: false, error: 'Erro ao cadastrar empresa. Tente novamente.' };
   }
 
-  // Create usuario_empresa binding with role='dono' (existing user, new empresa)
-  const { error: bindingError } = await supabase
-    .from('usuario_empresa')
-    .insert({
-      auth_id: user.id,
-      empresa_id: empresa.id,
-      role: 'dono',
-    });
-
-  if (bindingError) {
-    // Rollback: delete empresa if binding creation fails
-    await supabase.from('empresa').delete().eq('id', empresa.id);
-    return { success: false, error: 'Erro ao vincular usuario a empresa. Tente novamente.' };
-  }
-
   // Switch to the new empresa via RPC
   const { error: switchError } = await supabase.rpc('fn_switch_empresa', {
-    p_empresa_id: empresa.id,
+    p_empresa_id: empresaId,
   });
 
   if (switchError) {
