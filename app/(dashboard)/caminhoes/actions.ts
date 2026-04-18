@@ -9,6 +9,7 @@ import { validateRenavam, stripRenavam } from '@/lib/utils/validate-renavam';
 import { parseBrlInputToCentavos } from '@/lib/utils/currency';
 import { isValidDateBr } from '@/lib/utils/validate-date-br';
 import type { CaminhaoActionResult, CaminhaoFormData } from '@/types/caminhao';
+import { logAuditEvent } from '@/lib/observability/audit';
 
 const caminhaoSchema = z.object({
   placa: z.string()
@@ -237,6 +238,26 @@ export async function createCaminhao(
     return { success: false, error: 'Erro ao cadastrar caminhao. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'create',
+    entidade: 'caminhao',
+    entidadeId: caminhao.id,
+    entidadeDescricao: `${placaNormalized} — ${data.modelo}`,
+    valoresDepois: {
+      placa: placaNormalized,
+      modelo: data.modelo,
+      marca: data.marca,
+      ano: data.ano,
+      tipo_cegonha: data.tipo_cegonha,
+      capacidade_veiculos: data.capacidade_veiculos,
+    },
+  });
+
   revalidatePath('/caminhoes');
   return { success: true, caminhao };
 }
@@ -317,6 +338,26 @@ export async function updateCaminhao(
     return { success: false, error: 'Erro ao atualizar caminhao. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'caminhao',
+    entidadeId: caminhaoId,
+    entidadeDescricao: `${placaNormalized} — ${data.modelo}`,
+    valoresDepois: {
+      placa: placaNormalized,
+      modelo: data.modelo,
+      km_atual: data.km_atual,
+      doc_vencimento: parseDocVencimento(data.doc_vencimento),
+      ipva_pago: data.ipva_pago,
+      ipva_ano_referencia: data.ipva_ano_referencia,
+    },
+  });
+
   revalidatePath('/caminhoes');
   return { success: true, caminhao };
 }
@@ -329,8 +370,9 @@ export async function toggleCaminhaoAtivo(
   caminhaoId: string,
   ativo: boolean,
 ): Promise<{ error: string | null }> {
+  let currentUsuario;
   try {
-    await requireRole(['dono', 'admin']);
+    currentUsuario = await requireRole(['dono', 'admin']);
   } catch (err) {
     return {
       error: err instanceof Error ? err.message : 'Permissão insuficiente',
@@ -338,6 +380,14 @@ export async function toggleCaminhaoAtivo(
   }
 
   const supabase = await createClient();
+
+  // Capta placa antes pra descricao do audit
+  const { data: caminhaoAntes } = await supabase
+    .from('caminhao')
+    .select('placa, modelo, ativo')
+    .eq('id', caminhaoId)
+    .single();
+
   const { error } = await supabase
     .from('caminhao')
     .update({ ativo })
@@ -346,6 +396,22 @@ export async function toggleCaminhaoAtivo(
   if (error) {
     return { error: 'Erro ao alterar status do caminhao.' };
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'caminhao',
+    entidadeId: caminhaoId,
+    entidadeDescricao: caminhaoAntes
+      ? `${caminhaoAntes.placa} — ${ativo ? 'reativado' : 'inativado'}`
+      : `Status: ${ativo ? 'ativo' : 'inativo'}`,
+    valoresAntes: { ativo: caminhaoAntes?.ativo },
+    valoresDepois: { ativo },
+  });
 
   revalidatePath('/caminhoes');
   return { error: null };

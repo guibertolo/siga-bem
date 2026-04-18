@@ -15,6 +15,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { gerarSenhaTemporaria } from '@/lib/utils/gerar-senha';
 import { isCnhExpired, isCnhExpiringSoon } from '@/lib/utils/validate-cpf';
 import { logError } from '@/lib/observability/logger';
+import { logAuditEvent } from '@/lib/observability/audit';
 import { assertOwnership, SecurityError } from '@/lib/security/assert-ownership';
 
 const CNH_CATEGORIAS = ['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'] as const;
@@ -127,6 +128,24 @@ export async function createMotorista(
     logError({ action: 'createMotorista', empresaId: currentUsuario.empresa_id, usuarioId: currentUsuario.id }, insertError);
     return { success: false, error: 'Erro ao cadastrar motorista. Tente novamente.' };
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'create',
+    entidade: 'motorista',
+    entidadeId: motorista.id,
+    entidadeDescricao: data.nome,
+    valoresDepois: {
+      nome: data.nome,
+      cpf: formattedCPF,
+      cnh_validade: data.cnh_validade,
+      percentual_pagamento: percentualValue,
+    },
+  });
 
   return { success: true, motorista };
 }
@@ -384,6 +403,23 @@ export async function updateMotorista(
     return { success: false, error: 'Erro ao atualizar motorista. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'motorista',
+    entidadeId: motoristaId,
+    entidadeDescricao: data.nome,
+    valoresDepois: {
+      nome: data.nome,
+      cnh_validade: data.cnh_validade,
+      percentual_pagamento: percentualValue,
+    },
+  });
+
   return { success: true, motorista };
 }
 
@@ -424,6 +460,20 @@ export async function softDeleteMotorista(
     return { success: false, error: 'Erro ao inativar motorista. Tente novamente.' };
   }
 
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'motorista',
+    entidadeId: motoristaId,
+    entidadeDescricao: `${motorista.nome} — inativado`,
+    valoresAntes: { status: 'ativo' },
+    valoresDepois: { status: 'inativo' },
+  });
+
   return { success: true, motorista };
 }
 
@@ -463,6 +513,20 @@ export async function reactivateMotorista(
   if (error) {
     return { success: false, error: 'Erro ao reativar motorista. Tente novamente.' };
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'motorista',
+    entidadeId: motoristaId,
+    entidadeDescricao: `${motorista.nome} — reativado`,
+    valoresAntes: { status: 'inativo' },
+    valoresDepois: { status: 'ativo' },
+  });
 
   return { success: true, motorista };
 }

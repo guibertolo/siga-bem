@@ -10,6 +10,7 @@ import type {
   ToggleUsuarioAtivoInput,
   UsuarioListItem,
 } from '@/types/usuario';
+import { logAuditEvent } from '@/lib/observability/audit';
 
 /**
  * List all usuarios for the current user's empresa.
@@ -88,6 +89,23 @@ export async function inviteUsuario(
     return { error: inviteError.message };
   }
 
+  const supabase = await createClient();
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'create',
+    entidade: 'usuario',
+    entidadeDescricao: `Convidou ${input.nome} (${input.email}) como ${input.role === 'admin' ? 'gestor' : 'motorista'}`,
+    valoresDepois: {
+      email: input.email,
+      nome: input.nome,
+      role: input.role,
+    },
+  });
+
   revalidatePath('/usuarios');
   return { error: null };
 }
@@ -134,6 +152,13 @@ export async function updateUsuarioRole(
     return { error: 'Usuário não pertence à sua empresa.' };
   }
 
+  // Snapshot nome + role antes
+  const { data: targetAntes } = await supabase
+    .from('usuario')
+    .select('nome, role')
+    .eq('id', input.usuario_id)
+    .single();
+
   const { error: updateError } = await supabase
     .from('usuario')
     .update({ role: input.role })
@@ -142,6 +167,22 @@ export async function updateUsuarioRole(
   if (updateError) {
     return { error: updateError.message };
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'usuario',
+    entidadeId: input.usuario_id,
+    entidadeDescricao: targetAntes
+      ? `${targetAntes.nome}: ${targetAntes.role} → ${input.role}`
+      : `Alterou role para ${input.role}`,
+    valoresAntes: { role: targetAntes?.role },
+    valoresDepois: { role: input.role },
+  });
 
   revalidatePath('/usuarios');
   return { error: null };
@@ -194,6 +235,13 @@ export async function toggleUsuarioAtivo(
     return { error: 'Apenas o proprietario pode alterar gestores.' };
   }
 
+  // Snapshot nome antes
+  const { data: nameSnap } = await supabase
+    .from('usuario')
+    .select('nome')
+    .eq('id', input.usuario_id)
+    .single();
+
   const { error: updateError } = await supabase
     .from('usuario')
     .update({ ativo: input.ativo })
@@ -202,6 +250,22 @@ export async function toggleUsuarioAtivo(
   if (updateError) {
     return { error: updateError.message };
   }
+
+  await logAuditEvent({
+    supabase,
+    usuarioId: currentUsuario.id,
+    usuarioRole: currentUsuario.role,
+    usuarioNome: currentUsuario.nome,
+    empresaId: currentUsuario.empresa_id!,
+    acao: 'update',
+    entidade: 'usuario',
+    entidadeId: input.usuario_id,
+    entidadeDescricao: nameSnap
+      ? `${nameSnap.nome} — ${input.ativo ? 'reativado' : 'desativado'}`
+      : `Status: ${input.ativo ? 'ativo' : 'inativo'}`,
+    valoresAntes: { ativo: !input.ativo },
+    valoresDepois: { ativo: input.ativo },
+  });
 
   revalidatePath('/usuarios');
   return { error: null };
