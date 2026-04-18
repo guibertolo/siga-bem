@@ -54,8 +54,12 @@ export async function POST(request: Request) {
     const multiEmpresa = await getMultiEmpresaContext();
     const empresaIds = multiEmpresa.empresaIds;
     const tools = buildToolset({ supabase, usuario, empresaIds });
-    const modelMessages = await convertToModelMessages(messages);
-    const recentMessages = modelMessages.slice(-6);
+
+    // Slice antes do convert pra preservar integridade de turnos.
+    // convertToModelMessages expande tool calls/results em mensagens separadas, e cortar
+    // DEPOIS pode quebrar a ordem (tool_call sem tool_result adjacente) — Gemini recusa.
+    const recentUIMessages = messages.slice(-3);
+    const recentMessages = await convertToModelMessages(recentUIMessages);
 
     logger.info('chat request', {
       usuarioId: usuario.id,
@@ -70,17 +74,19 @@ export async function POST(request: Request) {
     for (const { name, tier, factory } of providers) {
       const model = factory();
       try {
-        // Probe: chamada minima (1 token) pra validar que o provider aceita requests.
-        // Detecta erros sincronos: model not found, auth invalido, rate limit, quota esgotada.
+        // Probe: chamada com as mensagens REAIS (sem tools) pra validar formato.
+        // Gemini e rigoroso com ordem de mensagens no historico e recusa estruturas invalidas.
+        // Ao passar o historico real, detectamos esse tipo de erro antes de iniciar o stream.
         // Custo: ~5 tokens por tentativa fracassada (desprezivel).
         await generateText({
           model,
-          prompt: 'ok',
-          maxOutputTokens: 1,
+          system: SYSTEM_PROMPTS[tier],
+          messages: recentMessages,
+          maxOutputTokens: 5,
           maxRetries: 0,
         });
 
-        // Probe passou. Dispara o stream real com prompt adaptado ao tier.
+        // Probe passou. Dispara o stream real com tools e prompt adaptado ao tier.
         const result = streamText({
           model,
           system: SYSTEM_PROMPTS[tier],
