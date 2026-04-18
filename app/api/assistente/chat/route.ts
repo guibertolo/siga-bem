@@ -74,7 +74,7 @@ export async function POST(request: Request) {
           system: SYSTEM_PROMPT,
           messages: recentMessages,
           tools,
-          stopWhen: stepCountIs(5),
+          stopWhen: stepCountIs(3),
           maxOutputTokens: 768,
           maxRetries: 0,
         });

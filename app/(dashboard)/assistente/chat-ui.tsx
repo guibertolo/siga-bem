@@ -44,19 +44,11 @@ interface Alerta {
 export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
   const { messages, sendMessage, status } = useChat({ transport });
   const [input, setInput] = useState('');
-  const [cooldown, setCooldown] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isStreaming = status === 'streaming' || status === 'submitted';
-  const isBlocked = isStreaming || cooldown > 0;
-
-  // Cooldown timer
-  useEffect(() => {
-    if (cooldown <= 0) return;
-    const timer = setInterval(() => setCooldown((c) => c - 1), 1000);
-    return () => clearInterval(timer);
-  }, [cooldown]);
+  const isBlocked = isStreaming;
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -69,7 +61,6 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
     if (!value || isBlocked) return;
     sendMessage({ text: value });
     setInput('');
-    setCooldown(20); // 20 segundos entre perguntas
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -336,7 +327,7 @@ export default function ChatUI({ alertas = [] }: { alertas?: Alerta[] }) {
               flexShrink: 0,
             }}
           >
-            {cooldown > 0 ? `${cooldown}s` : 'Enviar'}
+            {isStreaming ? '...' : 'Enviar'}
           </button>
         </div>
       </div>

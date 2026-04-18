@@ -2,12 +2,10 @@
  * Assistente FrotaViva — LLM com fallback automatico multi-provider.
  *
  * Providers (ordem de prioridade):
- * 1. Groq Llama 4 Scout 17B — 30 RPM, tool calling nativo, rapido, token-eficiente
- * 2. Google Gemini 2.0 Flash — 10 RPM, 250 RPD, excelente tool calling
- *
- * Llama 4 Scout 17B usa ~750 tokens por request (vs ~3-4K do 70B).
- * Com 30 RPM: ~10-15 perguntas/min (cada pergunta = 2-3 requests).
- * Se Groq bater rate limit, cai pro Gemini automaticamente.
+ * 1. Groq Llama 4 Scout 17B — 30 RPM, 1000 RPD, 500K TPD (free tier)
+ *    tool calling nativo, rapido, ~850 tok/step × 3 steps = ~200 perguntas/dia
+ * 2. Gemini 2.5 Flash — 10 RPM, 250 RPD (free tier, fallback)
+ *    OBS: Gemini 2.0 Flash depreciado, desligamento junho/2026
  */
 
 import { google } from '@ai-sdk/google';
@@ -22,14 +20,14 @@ interface ProviderConfig {
 
 const PROVIDERS: ProviderConfig[] = [
   {
-    name: 'Gemini 2.0 Flash',
-    envKey: 'GOOGLE_GENERATIVE_AI_API_KEY',
-    factory: () => google('gemini-2.0-flash'),
+    name: 'Groq (Llama 4 Scout 17B)',
+    envKey: 'GROQ_API_KEY',
+    factory: () => groq('llama-4-scout-17b-16e-instruct'),
   },
   {
-    name: 'Groq (Llama 3.3 70B)',
-    envKey: 'GROQ_API_KEY',
-    factory: () => groq('llama-3.3-70b-versatile'),
+    name: 'Gemini 2.5 Flash',
+    envKey: 'GOOGLE_GENERATIVE_AI_API_KEY',
+    factory: () => google('gemini-2.5-flash'),
   },
 ];
 
