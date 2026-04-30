@@ -299,7 +299,7 @@ export function ViagemForm({
 
       {camposLocked && (
         <div className="rounded-lg border border-warning/20 bg-alert-warning-bg p-4 text-base text-badge-warning-fg">
-          Campos definidos pelo proprietário -- origem, destino e valor não podem ser alterados.
+          O patrão já definiu origem, destino e valor da viagem. Esses campos ficam travados.
         </div>
       )}
 
@@ -365,7 +365,7 @@ export function ViagemForm({
             value={watchedOrigem}
             onChange={(val) => setValue('origem', val, { shouldValidate: true })}
             suggestions={cidadeSuggestions}
-            placeholder="Ex: Sao Paulo, SP"
+            placeholder="Ex: São Paulo, SP"
             disabled={camposLocked}
             maxLength={200}
             hasError={!!errors.origem}
@@ -398,7 +398,7 @@ export function ViagemForm({
         {/* Data de Saida */}
         <div>
           <label htmlFor="data_saida" className="mb-2 block text-base font-medium text-primary-700">
-            Data de Saida *
+            Data de Saída *
           </label>
           <input
             id="data_saida"
@@ -468,8 +468,8 @@ export function ViagemForm({
                 'bg-surface-muted cursor-not-allowed',
               )}
             />
-            <p className="mt-1 text-sm text-primary-500">
-              Herdado do cadastro do motorista. Edite no cadastro do motorista para alterar.
+            <p className="mt-1 text-base text-primary-500">
+              Definido no cadastro do motorista. Mude por lá se precisar.
             </p>
             {errors.percentual_pagamento && (
               <p className="mt-1.5 text-sm text-danger font-medium">{errors.percentual_pagamento.message}</p>
@@ -485,7 +485,7 @@ export function ViagemForm({
         {/* KM Estimado (Story 3.3 - AC1, AC7/CON-006) */}
         <div>
           <label htmlFor="km_estimado" className="mb-2 block text-base font-medium text-primary-700">
-            Distancia Estimada (km)
+            Distância da viagem (km)
           </label>
           <input
             id="km_estimado"
@@ -513,8 +513,8 @@ export function ViagemForm({
             {...register('km_saida')}
             className={inputClasses('km_saida')}
           />
-          <p className="mt-1 text-sm text-primary-500">
-            Leia o odômetro do caminhão antes de sair
+          <p className="mt-1 text-base text-primary-500">
+            Anote o número que aparece no painel do caminhão antes de sair.
           </p>
           {errors.km_saida && (
             <p className="mt-1.5 text-sm text-danger font-medium">{errors.km_saida.message}</p>

@@ -22,10 +22,11 @@ const OnboardingTutorial = dynamic(
   () => import('@/components/onboarding/OnboardingTutorial').then((m) => m.OnboardingTutorial),
 );
 
-// Motorista: menu ultra simplificado (só o essencial)
+// Motorista: menu ultra simplificado (só o essencial pra tarefa diária)
 const motoristaLinks = [
   { href: '/dashboard', label: 'Início', onboardingId: 'dashboard' },
   { href: '/viagens', label: 'Minhas Viagens', onboardingId: 'viagens' },
+  { href: '/gastos', label: 'Meus Gastos', onboardingId: 'gastos' },
 ];
 
 // Dono/Admin: menu completo com acertos unificado
@@ -35,13 +36,13 @@ const donoLinks = [
   { href: '/viagens', label: 'Viagens', onboardingId: 'viagens' },
   { href: '/gastos', label: 'Gastos', onboardingId: 'gastos' },
   { href: '/fechamentos', label: 'Acertos', onboardingId: 'fechamentos' },
-  { href: '/relatorios', label: 'Relatorios', onboardingId: 'relatorios' },
+  { href: '/relatorios', label: 'Relatórios', onboardingId: 'relatorios' },
 ];
 
 const adminLinks = [
   { href: '/motoristas', label: 'Motoristas', onboardingId: 'motoristas' },
   { href: '/caminhoes', label: 'Caminhões', onboardingId: 'caminhoes' },
-  { href: '/vinculos', label: 'Vínculos Mot./Cam.', onboardingId: 'vinculos' },
+  { href: '/vinculos', label: 'Vínculos', onboardingId: 'vinculos' },
   { href: '/usuarios', label: 'Usuários', onboardingId: 'usuarios' },
   { href: '/configuracoes/combustivel', label: 'Preço Combustível', onboardingId: 'combustivel' },
 ];

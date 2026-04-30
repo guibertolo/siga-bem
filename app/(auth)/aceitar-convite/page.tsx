@@ -26,7 +26,7 @@ export default function AceitarConvitePage() {
       if (!session) {
         setStatus('error');
         setErrorMessage(
-          'Link de convite inválido ou expirado. Solicite um novo convite.',
+          'Esse link já foi usado ou venceu. Peça um novo convite ao seu patrão pra entrar.',
         );
         return;
       }
@@ -57,10 +57,10 @@ export default function AceitarConvitePage() {
       <div className="flex min-h-screen items-center justify-center bg-surface-background">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary-300 border-t-primary-700" />
-          <p className="mt-4 text-primary-700">
+          <p className="mt-4 text-base text-primary-700">
             {status === 'loading'
-              ? 'Verificando convite...'
-              : 'Configurando seu acesso...'}
+              ? 'Conferindo seu convite...'
+              : 'Preparando seu acesso, só um instante...'}
           </p>
         </div>
       </div>
@@ -68,19 +68,22 @@ export default function AceitarConvitePage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface-background">
+    <div className="flex min-h-screen items-center justify-center bg-surface-background px-4">
       <div className="w-full max-w-md rounded-[--radius-card] border border-danger/20 bg-alert-danger-bg p-6 text-center">
-        <h2 className="text-lg font-semibold text-badge-danger-fg">
-          Erro no convite
+        <h2 className="text-xl font-semibold text-badge-danger-fg">
+          Não conseguimos entrar
         </h2>
-        <p className="mt-2 text-sm text-danger">
+        <p className="mt-3 text-base text-danger leading-relaxed">
           {errorMessage}
+        </p>
+        <p className="mt-4 text-base text-primary-700 leading-relaxed">
+          Quando receber o novo email, abra direto pelo celular e clique no botão azul.
         </p>
         <a
           href="/login"
-          className="mt-4 inline-block text-sm font-medium text-primary-700 underline hover:text-primary-900"
+          className="mt-6 inline-block min-h-[48px] rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white hover:bg-btn-primary-hover"
         >
-          Ir para login
+          Voltar pra tela de entrada
         </a>
       </div>
     </div>

@@ -28,13 +28,13 @@ export function CaminhaoList({ caminhoes }: CaminhaoListProps) {
   if (caminhoes.length === 0) {
     return (
       <div className="rounded-xl border border-surface-border bg-surface-card p-8 text-center">
-        <p className="text-base text-primary-500">Nenhum caminhão cadastrado.</p>
-        <p className="mt-1 text-sm text-text-muted">Adicione seu primeiro caminhao para comecar a gerenciar a frota.</p>
+        <p className="text-base text-primary-700">Você ainda não cadastrou nenhum caminhão.</p>
+        <p className="mt-2 text-base text-primary-500">Cadastre o primeiro pra começar a controlar sua frota.</p>
         <Link
           href="/caminhoes/cadastro"
-          className="mt-4 inline-block rounded-lg bg-btn-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-btn-primary-hover"
+          className="mt-6 inline-block rounded-lg bg-btn-primary px-6 py-3 text-base font-semibold text-white min-h-[48px] transition-colors hover:bg-btn-primary-hover"
         >
-          Cadastrar Primeiro Caminhao
+          Cadastrar primeiro caminhão
         </Link>
       </div>
     );

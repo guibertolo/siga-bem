@@ -59,12 +59,12 @@ export default function LoginPage() {
             className="w-[160px] h-auto mb-4"
             priority
           />
-          <p className="text-sm text-primary-700">
+          <p className="text-base text-primary-700">
             {mode === 'password'
               ? 'Entre com email e senha'
               : mode === 'magic-link'
-                ? 'Insira seu email para receber o link de acesso'
-                : 'Insira seu email para recuperar sua senha'}
+                ? 'Digite seu email pra receber o link de entrada'
+                : 'Digite seu email pra recuperar sua senha'}
           </p>
         </div>
 
@@ -183,7 +183,7 @@ export default function LoginPage() {
             className="text-sm text-primary-500 hover:text-primary-700 bg-transparent border-none cursor-pointer transition-colors"
           >
             {mode === 'password'
-              ? 'Entrar com link magico (sem senha)'
+              ? 'Entrar pelo email (sem precisar de senha)'
               : 'Entrar com email e senha'}
           </button>
         </div>

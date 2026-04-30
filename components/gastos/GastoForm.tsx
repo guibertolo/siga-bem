@@ -262,7 +262,7 @@ export function GastoForm({
               !!viagemIdInicial && 'cursor-not-allowed bg-surface-muted',
             )}
           >
-            <option value="">Sem viagem vinculada</option>
+            <option value="">Gasto avulso (sem viagem)</option>
             {viagens.map((v) => {
               const parts = [
                 v.motorista_nome,
@@ -366,7 +366,7 @@ export function GastoForm({
 
         <div>
           <label htmlFor="caminhao_id" className="mb-2 block text-base font-medium text-primary-900">
-            Caminhao
+            Caminhão
           </label>
           <select
             id="caminhao_id"

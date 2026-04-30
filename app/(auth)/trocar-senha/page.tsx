@@ -17,12 +17,12 @@ export default function TrocarSenhaPage() {
     setError(null);
 
     if (novaSenha.length < 8) {
-      setError('A senha deve ter no mínimo 8 caracteres');
+      setError('A senha precisa ter no mínimo 8 letras ou números');
       return;
     }
 
     if (novaSenha !== confirmarSenha) {
-      setError('As senhas nao conferem');
+      setError('As senhas não são iguais. Confira e tente de novo.');
       return;
     }
 
@@ -69,10 +69,10 @@ export default function TrocarSenhaPage() {
             priority
           />
           <h1 className="text-xl font-bold text-primary-900 text-center mb-2">
-            Troca de Senha Obrigatoria
+            Vamos criar sua senha
           </h1>
           <p className="text-base text-primary-700 text-center leading-relaxed">
-            Esta e sua primeira vez acessando o sistema. Por seguranca, defina uma nova senha.
+            Esta é a primeira vez que você entra. Pra sua segurança, escolha uma senha que só você sabe.
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export default function TrocarSenhaPage() {
                 type={showNovaSenha ? 'text' : 'password'}
                 required
                 minLength={8}
-                placeholder="Mínimo 8 caracteres"
+                placeholder="Mínimo 8 letras ou números"
                 value={novaSenha}
                 onChange={(e) => setNovaSenha(e.target.value)}
                 className="w-full h-12 rounded-default border border-surface-border px-4 pr-12 text-base text-primary-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
