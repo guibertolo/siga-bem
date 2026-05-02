@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   getConsentState,
   setConsentState,
@@ -9,6 +10,11 @@ import {
   acceptEssentialsOnly,
 } from '@/lib/lgpd/consent';
 import type { ConsentState } from '@/lib/lgpd/consent';
+
+// Rotas onde o banner NAO deve aparecer — login, trocar-senha e aceitar-convite
+// sao fluxos onde o tio precisa focar so na tarefa (nao em consentimento).
+// O banner aparece apos entrar no dashboard, com contexto.
+const ROTAS_SEM_BANNER = ['/login', '/trocar-senha', '/aceitar-convite', '/selecionar-empresa'];
 
 /**
  * CookieBanner - Barra fixa no bottom (LGPD Art. 46)
@@ -22,6 +28,7 @@ import type { ConsentState } from '@/lib/lgpd/consent';
  * - Dark mode via tokens do sistema
  */
 export function CookieBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
   const [customState, setCustomState] = useState({
@@ -30,12 +37,17 @@ export function CookieBanner() {
   });
 
   useEffect(() => {
+    // Nao mostra em rotas onde o tio precisa focar so na tarefa
+    if (ROTAS_SEM_BANNER.some((rota) => pathname.startsWith(rota))) {
+      setVisible(false);
+      return;
+    }
     // Show banner only if no consent cookie exists
     const consent = getConsentState();
     if (!consent) {
       setVisible(true);
     }
-  }, []);
+  }, [pathname]);
 
   const handleConsent = useCallback((state: ConsentState) => {
     setConsentState(state);

@@ -21,8 +21,8 @@ function EmptyState() {
       <p className="text-base font-medium text-primary-500">
         Nenhuma viagem em andamento
       </p>
-      <p className="mt-1 text-sm text-text-muted">
-        Quando voce iniciar uma viagem, ela aparecera aqui.
+      <p className="mt-1 text-base text-text-muted">
+        Quando você iniciar uma viagem, ela aparece aqui.
       </p>
     </div>
   );
