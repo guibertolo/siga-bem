@@ -1,20 +1,18 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { getAuthUser } from '@/lib/auth/get-user-role';
 
 /**
  * Checks if the authenticated user must change their password (first login).
  * Test accounts (@frotaviva.com.br) are always excluded.
  * Redirects to /trocar-senha if change is required.
  *
- * Story 8.6
+ * Story 8.6 — usa getAuthUser cacheado pra evitar round-trip extra ao Supabase.
+ * Compartilha o mesmo fetch que getCurrentUsuario via React.cache().
  */
 export async function checkMustChangePassword(): Promise<void> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
 
   if (!user) return;
 
