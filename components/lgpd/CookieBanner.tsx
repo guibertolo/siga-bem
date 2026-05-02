@@ -73,14 +73,14 @@ export function CookieBanner() {
       {/* Main banner content */}
       <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-5">
         <p className="text-base leading-relaxed text-primary-900 mb-4">
-          Para proteger seus dados conforme a lei brasileira (LGPD), precisamos
-          do seu consentimento para armazenar informacoes no seu navegador. Dados
-          essenciais para o funcionamento do sistema sao sempre mantidos.{' '}
+          Pra proteger seus dados (lei LGPD), a gente precisa que você autorize
+          o uso de algumas informações do seu navegador. As essenciais pro app
+          funcionar a gente mantém sempre.{' '}
           <Link
             href="/privacidade"
             className="font-semibold text-btn-primary underline hover:text-btn-primary-hover"
           >
-            Leia nossa Politica de Privacidade
+            Leia nossa Política de Privacidade
           </Link>
         </p>
 

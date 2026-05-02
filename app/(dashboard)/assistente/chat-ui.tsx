@@ -7,12 +7,12 @@ import remarkGfm from 'remark-gfm';
 import { useRef, useEffect, useState } from 'react';
 
 const PERGUNTAS_FAROL = [
-  'Qual caminhao deu mais prejuizo esse mes?',
+  'Qual caminhão deu mais prejuízo esse mês?',
   'Qual motorista gasta mais combustível?',
-  'Me faz um resumo do desempenho da ultima semana',
-  'Quais motoristas estao com CNH vencendo?',
+  'Me faz um resumo do desempenho da última semana',
+  'Quais motoristas estão com CNH vencendo?',
   'Qual viagem teve maior margem?',
-  'Qual rota ta dando mais lucro?',
+  'Qual rota tá dando mais lucro?',
 ];
 
 const FOLLOWUP_REGEX = /\[FOLLOWUP\](.*?)\[\/FOLLOWUP\]/g;

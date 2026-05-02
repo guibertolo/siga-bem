@@ -48,3 +48,4 @@ supabase/.temp/
 
 # lighthouse reports
 lighthouse-*.report.*
+.smoke-screenshots/
